@@ -24,8 +24,10 @@ const Calculator = {
 
   // 打开指定计算器
   open(id) {
-    const calc = this._calculators[id];
-    if (!calc) return;
+    // 将 kebab-case 转换为 camelCase（如 opamp-gain -> opampGain）
+    const camelId = id.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+    const calc = this._calculators[camelId] || this._calculators[id];
+    if (!calc) { console.warn('Calculator not found:', id); return; }
     this._active = id;
     // 创建模态框
     const modal = document.createElement('div');

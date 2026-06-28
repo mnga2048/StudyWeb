@@ -36,15 +36,20 @@
         });
         html += `</div>`;
       } else {
-        // 一级且无子项：自动控制/数据结构/工具箱/学习路径
-        // 这些是板块本身（id 对应 CourseData 的板块），让它也能展开章节
-        const isSection = CourseData[item.id] && CourseData[item.id].sections;
-        if (isSection) {
-          html += renderSectionNavItem({ id: item.id, label: item.label, icon: item.icon, badge: item.badge, badgeClass: item.badgeClass });
+        // 首页特殊处理：直接导航
+        if (item.id === 'home') {
+          html += `<a class="nav-item" data-page="home" onclick="navigateTo('home')">
+            <span class="nav-icon">${CourseData.icons[item.icon] || ''}</span><span>${item.label}</span></a>`;
         } else {
-          html += `<a class="nav-item" data-page="${item.id}" onclick="navigateTo('${item.id}')">
-            <span class="nav-icon">${CourseData.icons[item.icon] || ''}</span><span>${item.label}</span>
-            ${item.badge ? `<span class="nav-badge ${item.badgeClass}">${item.badge}</span>` : ''}</a>`;
+          // 一级且无子项：自动控制/数据结构/工具箱/学习路径
+          const isSection = CourseData[item.id] && CourseData[item.id].sections;
+          if (isSection) {
+            html += renderSectionNavItem({ id: item.id, label: item.label, icon: item.icon, badge: item.badge, badgeClass: item.badgeClass });
+          } else {
+            html += `<a class="nav-item" data-page="${item.id}" onclick="navigateTo('${item.id}')">
+              <span class="nav-icon">${CourseData.icons[item.icon] || ''}</span><span>${item.label}</span>
+              ${item.badge ? `<span class="nav-badge ${item.badgeClass}">${item.badge}</span>` : ''}</a>`;
+          }
         }
       }
     });
