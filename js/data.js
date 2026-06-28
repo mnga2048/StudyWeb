@@ -367,18 +367,924 @@ const CourseData = {
           <div><strong>考点提示</strong>：曲率公式直接记忆即可，常考"求某点曲率/曲率半径"。注意曲率只与一阶、二阶导数有关，计算时先求 $y'$ 和 $y''$ 再代入。直线曲率为 0，圆各点曲率相等。</div>
         </div>
       ` },
-      { id: 'hm-05', title: '不定积分', desc: '换元法、分部积分、特殊类型', icon: '➕', tags: ['计算重点'], goals: { exam: true }, content: '' },
-      { id: 'hm-06', title: '定积分与反常积分', desc: '牛顿-莱布尼茨公式、判敛法', icon: '∫', tags: ['核心'], goals: { exam: true }, content: '' },
-      { id: 'hm-07', title: '定积分应用', desc: '面积、体积、弧长、物理应用', icon: '📏', tags: [], goals: { exam: true }, content: '' },
-      { id: 'hm-08', title: '常微分方程', desc: '一阶可分离/齐次/线性、二阶常系数', icon: '🔄', tags: ['高频'], goals: { exam: true }, content: '' },
-      { id: 'hm-09', title: '多元函数微分学', desc: '偏导数、全微分、链式法则', icon: '🌐', tags: [], goals: { exam: true }, content: '' },
-      { id: 'hm-10', title: '多元极值与拉格朗日乘数法', desc: '条件极值、无条件极值', icon: '⛰', tags: ['高频'], goals: { exam: true }, content: '' },
-      { id: 'hm-11', title: '二重积分', desc: '直角坐标、极坐标计算', icon: '🔲', tags: ['核心'], goals: { exam: true }, content: '' },
-      { id: 'hm-12', title: '三重积分与含参积分', desc: '柱坐标、球坐标、含参变量积分', icon: '🧊', tags: [], goals: { exam: true }, content: '' },
-      { id: 'hm-13', title: '曲线积分', desc: '第一类/第二类、格林公式', icon: '〰', tags: ['高频'], goals: { exam: true }, content: '' },
-      { id: 'hm-14', title: '曲面积分', desc: '高斯公式、斯托克斯公式', icon: '🔵', tags: ['难点'], goals: { exam: true }, content: '' },
-      { id: 'hm-15', title: '无穷级数', desc: '常数项、幂级数收敛域、和函数', icon: '♾', tags: ['核心难点'], goals: { exam: true }, content: '' },
-      { id: 'hm-16', title: '傅里叶级数', desc: '狄利克雷条件、周期函数展开', icon: '🎵', tags: [], goals: { exam: true }, content: '' },
+      { id: 'hm-05', title: '不定积分', desc: '换元法、分部积分、特殊类型', icon: '➕', tags: ['计算重点'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">求导的逆运算——不定积分</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          如果说导数是"已知函数求变化率"，那么不定积分就是"已知变化率还原原函数"。它是整个积分学的基础，也是 <a href="#" onclick="navigateTo('hm-06');return false;" style="color:var(--primary)">定积分</a> 计算的核心工具。掌握不定积分的关键在于：熟记基本公式、灵活运用换元与分部两大方法、识别特殊积分类型。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">不定积分的定义</h4>
+        <div class="formula-block">
+          $$\\int f(x)\\,dx = F(x) + C$$
+          <div class="text-sm text-gray-500 mt-2">其中 F'(x) = f(x)，C 为任意常数（积分常数）</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>原函数</strong>：若 $F'(x) = f(x)$，则 $F(x)$ 是 $f(x)$ 的一个原函数</li>
+          <li><strong>不定积分</strong>：$f(x)$ 的全体原函数构成的集合，记作 $\\int f(x)\\,dx$</li>
+          <li><strong>积分常数 C</strong>：不能漏写！漏掉 C 是最常见的丢分点</li>
+        </ul>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>易错点</strong>：不定积分的结果是一个函数族（含任意常数 C），不是单个函数。计算题若漏写 "+C"，即使过程全对也会扣分。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">基本积分公式表（必须熟记）</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>序号</th><th>公式</th><th>备注</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>$\\int x^n\\,dx = \\frac{x^{n+1}}{n+1} + C \\quad (n \\ne -1)$</td><td>幂函数积分</td></tr>
+            <tr><td>2</td><td>$\\int \\frac{1}{x}\\,dx = \\ln|x| + C$</td><td>注意绝对值</td></tr>
+            <tr><td>3</td><td>$\\int e^x\\,dx = e^x + C$</td><td>指数函数</td></tr>
+            <tr><td>4</td><td>$\\int a^x\\,dx = \\frac{a^x}{\\ln a} + C$</td><td>$a>0, a \\ne 1$</td></tr>
+            <tr><td>5</td><td>$\\int \\sin x\\,dx = -\\cos x + C$</td><td>三角函数</td></tr>
+            <tr><td>6</td><td>$\\int \\cos x\\,dx = \\sin x + C$</td><td>三角函数</td></tr>
+            <tr><td>7</td><td>$\\int \\sec^2 x\\,dx = \\tan x + C$</td><td>正割平方</td></tr>
+            <tr><td>8</td><td>$\\int \\csc^2 x\\,dx = -\\cot x + C$</td><td>余割平方</td></tr>
+            <tr><td>9</td><td>$\\int \\frac{1}{\\sqrt{1-x^2}}\\,dx = \\arcsin x + C$</td><td>反三角</td></tr>
+            <tr><td>10</td><td>$\\int \\frac{1}{1+x^2}\\,dx = \\arctan x + C$</td><td>反三角</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>记忆口诀</strong>：求导公式反着背就是积分公式。比如 $(\\sin x)' = \\cos x$ 反过来就是 $\\int \\cos x\\,dx = \\sin x + C$。先把求导公式背熟，积分公式自然记住。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">第一类换元法（凑微分法）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          核心思想：把被积函数凑成 $f(\\varphi(x)) \\cdot \\varphi'(x)$ 的形式，令 $u = \\varphi(x)$ 换元。
+        </p>
+        <div class="formula-block">
+          $$\\int f(\\varphi(x)) \\cdot \\varphi'(x)\\,dx = \\int f(u)\\,du = F(u) + C = F(\\varphi(x)) + C$$
+        </div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>观察</strong>：看被积函数是否能写成 $g(\\varphi(x)) \\cdot \\varphi'(x)$ 的形式。</div></div>
+          <div class="step-item"><div><strong>凑微分</strong>：把 $\\varphi'(x)\\,dx$ 凑成 $d(\\varphi(x))$，如 $x\\,dx = \\frac{1}{2}d(x^2)$、$e^x\\,dx = d(e^x)$。</div></div>
+          <div class="step-item"><div><strong>换元</strong>：令 $u = \\varphi(x)$，化为关于 $u$ 的基本积分。</div></div>
+          <div class="step-item"><div><strong>回代</strong>：积分结果用 $x$ 表示。</div></div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>常用凑微分</strong>：$x\\,dx = \\frac{1}{2}d(x^2)$、$\\frac{1}{x}\\,dx = d(\\ln x)$、$e^x\\,dx = d(e^x)$、$\\cos x\\,dx = d(\\sin x)$、$\\frac{1}{1+x^2}\\,dx = d(\\arctan x)$。凑微分法是使用频率最高的积分方法。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">第二类换元法（变量代换法）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          当被积函数含 $\\sqrt{a^2-x^2}$、$\\sqrt{a^2+x^2}$、$\\sqrt{x^2-a^2}$ 时，用三角代换消除根号。
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>根号形式</th><th>代换</th><th>依据</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">$\\sqrt{a^2-x^2}$</td><td>$x = a\\sin t$</td><td>$1-\\sin^2 t = \\cos^2 t$</td></tr>
+            <tr><td class="font-medium">$\\sqrt{a^2+x^2}$</td><td>$x = a\\tan t$</td><td>$1+\\tan^2 t = \\sec^2 t$</td></tr>
+            <tr><td class="font-medium">$\\sqrt{x^2-a^2}$</td><td>$x = a\\sec t$</td><td>$\\sec^2 t - 1 = \\tan^2 t$</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：三角代换后别忘回代。画一个直角三角形，根据代换关系标出各边长，利用三角函数定义回代，比硬算反三角函数快得多。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">分部积分法</h4>
+        <div class="formula-block">
+          $$\\int u\\,dv = uv - \\int v\\,du$$
+          <div class="text-sm text-gray-500 mt-2">关键：合理选择 u 和 dv，使右边的积分比左边简单</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          <strong>"反对幂指三"口诀</strong>：按优先级选 $u$——反三角函数 > 对数函数 > 幂函数 > 指数函数 > 三角函数。排在前面的优先选作 $u$。
+        </p>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>分部积分适用场景</strong>：被积函数是两种不同类型函数的乘积，如 $x e^x$、$x \\sin x$、$x \\ln x$、$e^x \\sin x$ 等。对于 $\\int e^x \\sin x\\,dx$ 这类，需要两次分部积分后"循环回来"解方程。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">特殊类型积分</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>有理函数积分</strong>：$\\int \\frac{P(x)}{Q(x)}\\,dx$，先做多项式除法化为真分式，再部分分式分解</li>
+          <li><strong>三角函数有理式</strong>：用万能代换 $t = \\tan\\frac{x}{2}$，将 $\\sin x, \\cos x$ 化为 $t$ 的有理函数</li>
+          <li><strong>递推公式</strong>：如 $I_n = \\int \\sin^n x\\,dx$，通过分部积分建立 $I_n$ 与 $I_{n-2}$ 的递推关系</li>
+        </ul>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>方法选择策略</strong>：拿到积分题先看类型——有根号想换元，有乘积想分部，有理函数想分解。不要盲目尝试，先观察再动手。同一道题可能需要多种方法组合使用。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：综合运用</h4>
+        <div class="formula-block">
+          <strong>例</strong>：求 $\\int x \\sqrt{1-x^2}\\,dx$
+          <div class="text-sm text-gray-500 mt-2">解：令 $u = 1-x^2$，则 $du = -2x\\,dx$，即 $x\\,dx = -\\frac{1}{2}du$</div>
+          $$\\int x\\sqrt{1-x^2}\\,dx = -\\frac{1}{2}\\int \\sqrt{u}\\,du = -\\frac{1}{2} \\cdot \\frac{2}{3}u^{3/2} + C = -\\frac{1}{3}(1-x^2)^{3/2} + C$$
+        </div>
+      ` },
+      { id: 'hm-06', title: '定积分与反常积分', desc: '牛顿-莱布尼茨公式、判敛法', icon: '∫', tags: ['核心'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">从面积问题到积分理论</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          定积分源于"求曲边梯形面积"这一经典问题，通过"分割—取近似—求和—取极限"四步构造出积分定义。而牛顿-莱布尼茨公式将定积分计算转化为求原函数，架起了 <a href="#" onclick="navigateTo('hm-05');return false;" style="color:var(--primary)">不定积分</a> 与定积分之间的桥梁。反常积分则将积分推广到无穷区间或无界函数的情形。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">定积分的定义（黎曼和）</h4>
+        <div class="formula-block">
+          $$\\int_a^b f(x)\\,dx = \\lim_{\\lambda \\to 0} \\sum_{i=1}^{n} f(\\xi_i) \\Delta x_i$$
+          <div class="text-sm text-gray-500 mt-2">其中 $\\lambda = \\max\\{\\Delta x_i\\}$，$\\xi_i$ 是第 i 个小区间内任取的点</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>几何意义</strong>：$\\int_a^b f(x)\\,dx$ 表示曲线 $y=f(x)$ 与 x 轴之间的"代数面积"（x 轴上方为正，下方为负）</li>
+          <li><strong>可积条件</strong>：$f(x)$ 在 $[a,b]$ 上连续，或只有有限个第一类间断点，则一定可积</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">牛顿-莱布尼茨公式（微积分基本定理）</h4>
+        <div class="formula-block">
+          $$\\int_a^b f(x)\\,dx = F(b) - F(a) = F(x)\\Big|_a^b$$
+          <div class="text-sm text-gray-500 mt-2">其中 $F'(x) = f(x)$，即 $F(x)$ 是 $f(x)$ 的一个原函数</div>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>核心价值</strong>：这个公式把"求面积"（极限运算）转化为"求原函数再代值"（代数运算），是整个积分学最重要的定理。没有它，定积分几乎无法计算。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">定积分的性质</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>性质</th><th>公式</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">线性</td><td>$\\int_a^b [\\alpha f(x) + \\beta g(x)]\\,dx = \\alpha\\int_a^b f(x)\\,dx + \\beta\\int_a^b g(x)\\,dx$</td></tr>
+            <tr><td class="font-medium">区间可加</td><td>$\\int_a^b f(x)\\,dx = \\int_a^c f(x)\\,dx + \\int_c^b f(x)\\,dx$</td></tr>
+            <tr><td class="font-medium">保号性</td><td>若 $f(x) \\ge 0$，则 $\\int_a^b f(x)\\,dx \\ge 0$（$a < b$）</td></tr>
+            <tr><td class="font-medium">估值定理</td><td>$m(b-a) \\le \\int_a^b f(x)\\,dx \\le M(b-a)$，其中 $m, M$ 是 $f$ 的最小、最大值</td></tr>
+            <tr><td class="font-medium">中值定理</td><td>$\\int_a^b f(x)\\,dx = f(\\xi)(b-a)$，$\\xi \\in [a,b]$</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">定积分的计算方法</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>牛莱公式</strong>：先求不定积分得到 $F(x)$，再代入上下限 $F(b)-F(a)$。</div></div>
+          <div class="step-item"><div><strong>换元积分</strong>：$\\int_a^b f(x)\\,dx$，令 $x = \\varphi(t)$，换元同时换限：$\\int_{\\varphi^{-1}(a)}^{\\varphi^{-1}(b)} f(\\varphi(t))\\varphi'(t)\\,dt$。</div></div>
+          <div class="step-item"><div><strong>分部积分</strong>：$\\int_a^b u\\,dv = uv\\Big|_a^b - \\int_a^b v\\,du$。</div></div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>换元要换限</strong>：定积分换元时，上下限必须跟着变。如果用 $x = \\varphi(t)$ 代换，新的积分限是 $t$ 的范围，不是 $x$ 的范围。这是定积分换元与不定积分换元的最大区别。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">反常积分（广义积分）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          当积分区间无穷或被积函数无界时，定积分推广为反常积分，通过极限来定义。
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>类型</th><th>定义</th><th>收敛条件</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">无穷区间</td><td>$\\int_a^{+\\infty} f(x)\\,dx = \\lim_{b\\to+\\infty} \\int_a^b f(x)\\,dx$</td><td>极限存在则收敛</td></tr>
+            <tr><td class="font-medium">无界函数（瑕积分）</td><td>$\\int_a^b f(x)\\,dx = \\lim_{\\varepsilon\\to 0^+} \\int_a^{b-\\varepsilon} f(x)\\,dx$（$b$ 为瑕点）</td><td>极限存在则收敛</td></tr>
+          </tbody>
+        </table></div>
+        <div class="formula-block">
+          <strong>p-积分判敛</strong>：
+          $$\\int_1^{+\\infty} \\frac{1}{x^p}\\,dx \\begin{cases} \\text{收敛}, & p > 1 \\\\ \\text{发散}, & p \\le 1 \\end{cases}$$
+          $$\\int_0^1 \\frac{1}{x^p}\\,dx \\begin{cases} \\text{收敛}, & p < 1 \\\\ \\text{发散}, & p \\ge 1 \\end{cases}$$
+        </div>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：p-积分的敛散性是选择题高频考点。记忆技巧：无穷区间"大p收敛"（p>1），瑕积分"小p收敛"（p<1）。比较判别法和极限判别法是判断反常积分敛散性的主要工具。</div>
+        </div>
+      ` },
+      { id: 'hm-07', title: '定积分应用', desc: '面积、体积、弧长、物理应用', icon: '📏', tags: [], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">定积分的几何与物理应用</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          定积分的核心思想是"微元法"——把整体量分割成无穷多个微小量，再累加求和。掌握了微元法，面积、体积、弧长、物理量的计算都可以统一处理。本节是 <a href="#" onclick="navigateTo('hm-06');return false;" style="color:var(--primary)">定积分</a> 的直接应用。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">平面图形的面积</h4>
+        <div class="formula-block">
+          <strong>直角坐标</strong>：由 $y=f(x)$、$y=g(x)$、$x=a$、$x=b$ 围成的面积
+          $$S = \\int_a^b |f(x) - g(x)|\\,dx$$
+        </div>
+        <div class="formula-block">
+          <strong>参数方程</strong>：$x = x(t), y = y(t)$，$t \\in [\\alpha, \\beta]$
+          $$S = \\int_\\alpha^\\beta |y(t) \\cdot x'(t)|\\,dt$$
+        </div>
+        <div class="formula-block">
+          <strong>极坐标</strong>：$r = r(\\theta)$，$\\theta \\in [\\alpha, \\beta]$
+          $$S = \\frac{1}{2}\\int_\\alpha^\\beta r^2(\\theta)\\,d\\theta$$
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>画图先行</strong>：求面积一定要先画草图，确定曲线的交点和上下位置关系。上方函数减下方函数，不能搞反。极坐标面积公式中的 $\frac{1}{2}$ 容易遗忘。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">旋转体的体积</h4>
+        <div class="formula-block">
+          <strong>绕 x 轴旋转</strong>（圆盘法）：
+          $$V = \\pi \\int_a^b [f(x)]^2\\,dx$$
+        </div>
+        <div class="formula-block">
+          <strong>绕 y 轴旋转</strong>（柱壳法）：
+          $$V = 2\\pi \\int_a^b x \\cdot |f(x)|\\,dx$$
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>方法</th><th>适用场景</th><th>微元形状</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">圆盘法</td><td>绕旋转轴垂直的方向切片</td><td>薄圆盘（面积 $\\pi r^2$）</td></tr>
+            <tr><td class="font-medium">柱壳法</td><td>绕旋转轴平行的方向切片</td><td>薄圆柱壳（侧面积 $2\\pi r h$）</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>方法选择</strong>：绕 x 轴旋转且对 x 积分时用圆盘法；绕 y 轴旋转且对 x 积分时用柱壳法。如果曲线用 $x = g(y)$ 表示更方便，则反过来。核心原则：让微元的半径和高度都容易用积分变量表示。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">弧长</h4>
+        <div class="formula-block">
+          <strong>直角坐标</strong>：$y = f(x)$，$x \\in [a,b]$
+          $$L = \\int_a^b \\sqrt{1 + [f'(x)]^2}\\,dx$$
+        </div>
+        <div class="formula-block">
+          <strong>参数方程</strong>：$x = x(t), y = y(t)$，$t \\in [\\alpha, \\beta]$
+          $$L = \\int_\\alpha^\\beta \\sqrt{[x'(t)]^2 + [y'(t)]^2}\\,dt$$
+        </div>
+        <div class="formula-block">
+          <strong>极坐标</strong>：$r = r(\\theta)$，$\\theta \\in [\\alpha, \\beta]$
+          $$L = \\int_\\alpha^\\beta \\sqrt{r^2 + [r'(\\theta)]^2}\\,d\\theta$$
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">旋转体侧面积</h4>
+        <div class="formula-block">
+          绕 x 轴旋转的侧面积：
+          $$S = 2\\pi \\int_a^b |f(x)| \\cdot \\sqrt{1 + [f'(x)]^2}\\,dx$$
+          <div class="text-sm text-gray-500 mt-2">本质是弧长微元 $ds$ 乘以圆周长 $2\\pi r$</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">物理应用</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>变力做功</strong>：$W = \\int_a^b F(x)\\,dx$，力沿位移方向的分量对位移积分</li>
+          <li><strong>液体静压力</strong>：$P = \\int_a^b \\rho g h(x) \\cdot w(x)\\,dx$，其中 $h(x)$ 是深度，$w(x)$ 是宽度</li>
+          <li><strong>质心坐标</strong>：$\\bar{x} = \\frac{\\int x\\,dm}{\\int dm}$，用微元法求质量分布的"平均位置"</li>
+        </ul>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：面积和体积是必考内容，通常作为解答题出现。弧长公式直接记忆即可。物理应用近年考查较少，但变力做功仍需掌握。注意区分"绕 x 轴"和"绕 y 轴"用不同的公式。</div>
+        </div>
+      ` },
+      { id: 'hm-08', title: '常微分方程', desc: '一阶可分离/齐次/线性、二阶常系数', icon: '🔄', tags: ['高频'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">从方程到函数——微分方程</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          微分方程是含有未知函数及其导数的方程，其解是一个（或一族）函数。它是连接数学与工程的桥梁——电路暂态、机械振动、人口增长、化学反应速率等问题都归结为微分方程。本节聚焦常微分方程（ODE）的核心解法。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">基本概念</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>阶</strong>：方程中出现的最高阶导数的阶数，如 $y'' + y = 0$ 是二阶</li>
+          <li><strong>通解</strong>：含 n 个独立任意常数的解（n 为方程的阶）</li>
+          <li><strong>特解</strong>：给定初始条件后确定常数的解</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">一阶可分离变量方程</h4>
+        <div class="formula-block">
+          $$\\frac{dy}{dx} = f(x)g(y) \\quad \\Rightarrow \\quad \\int \\frac{dy}{g(y)} = \\int f(x)\\,dx$$
+          <div class="text-sm text-gray-500 mt-2">分离变量：把 $x$ 和 $y$ 分别移到等号两边，各自积分</div>
+        </div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>分离</strong>：将方程改写为 $\\frac{dy}{g(y)} = f(x)\\,dx$ 的形式。</div></div>
+          <div class="step-item"><div><strong>两边积分</strong>：分别对 $x$ 和 $y$ 积分。</div></div>
+          <div class="step-item"><div><strong>注意</strong>：若 $g(y_0)=0$，则 $y=y_0$ 也是解（常数解），不要遗漏。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">一阶齐次方程</h4>
+        <div class="formula-block">
+          $$\\frac{dy}{dx} = \\varphi\\left(\\frac{y}{x}\\right) \\quad \\Rightarrow \\quad \\text{令 } u = \\frac{y}{x}$$
+          <div class="text-sm text-gray-500 mt-2">换元后化为可分离变量方程：$x\\frac{du}{dx} + u = \\varphi(u)$</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">一阶线性微分方程</h4>
+        <div class="formula-block">
+          $$y' + P(x)y = Q(x)$$
+          <div class="text-sm text-gray-500 mt-2">通解公式（常数变易法推导）：</div>
+          $$y = e^{-\\int P(x)\\,dx} \\left[ \\int Q(x) e^{\\int P(x)\\,dx}\\,dx + C \\right]$$
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>记忆技巧</strong>：通解公式 = 齐次通解 $\\times$ 非齐次修正项。先求 $e^{-\\int P\\,dx}$（齐次解），再乘以修正积分。公式很长但结构清晰，考试时直接套用即可。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">伯努利方程</h4>
+        <div class="formula-block">
+          $$y' + P(x)y = Q(x)y^n \\quad (n \\ne 0,1)$$
+          <div class="text-sm text-gray-500 mt-2">令 $z = y^{1-n}$，化为一阶线性方程</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">二阶常系数齐次方程</h4>
+        <div class="formula-block">
+          $$y'' + py' + qy = 0$$
+          <div class="text-sm text-gray-500 mt-2">特征方程：$r^2 + pr + q = 0$</div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特征根情况</th><th>通解形式</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">两个不等实根 $r_1 \\ne r_2$</td><td>$y = C_1 e^{r_1 x} + C_2 e^{r_2 x}$</td></tr>
+            <tr><td class="font-medium">重根 $r_1 = r_2 = r$</td><td>$y = (C_1 + C_2 x)e^{rx}$</td></tr>
+            <tr><td class="font-medium">共轭复根 $r = \\alpha \\pm \\beta i$</td><td>$y = e^{\\alpha x}(C_1 \\cos\\beta x + C_2 \\sin\\beta x)$</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>易错点</strong>：重根时通解中必须有 $x$ 因子，即 $(C_1 + C_2 x)e^{rx}$，而不是 $C_1 e^{rx} + C_2 e^{rx}$（后者只有一个独立常数）。复根时用三角函数表示，不用指数形式。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">二阶常系数非齐次方程</h4>
+        <div class="formula-block">
+          $$y'' + py' + qy = f(x)$$
+          <div class="text-sm text-gray-500 mt-2">通解 = 对应齐次方程的通解 + 非齐次方程的一个特解</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          <strong>待定系数法</strong>设特解的形式：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>$f(x)$ 的形式</th><th>特解形式</th><th>修正</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">$P_n(x)e^{\\alpha x}$</td><td>$Q_n(x)e^{\\alpha x}$</td><td>$\\alpha$ 是特征根时乘以 $x$（重根乘 $x^2$）</td></tr>
+            <tr><td class="font-medium">$e^{\\alpha x}[P_n(x)\\cos\\beta x + Q_m(x)\\sin\\beta x]$</td><td>$x^k e^{\\alpha x}[R\\cos\\beta x + S\\sin\\beta x]$</td><td>$\\alpha \\pm \\beta i$ 是特征根时 $k=1$</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：二阶常系数方程是必考内容。先写特征方程求根，再根据根的情况写齐次通解，最后用待定系数法求特解。解的结构"齐次通解 + 非齐次特解"是核心框架。</div>
+        </div>
+      ` },
+      { id: 'hm-09', title: '多元函数微分学', desc: '偏导数、全微分、链式法则', icon: '🌐', tags: [], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">从一元到多元——升维的微分学</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          多元函数微分学是一元微分学的推广，但由于自变量增多，出现了偏导数、全微分、方向导数、梯度等新概念，连续、可微、偏导存在之间的关系也变得复杂。本节是 <a href="#" onclick="navigateTo('hm-10');return false;" style="color:var(--primary)">多元极值</a> 和 <a href="#" onclick="navigateTo('hm-11');return false;" style="color:var(--primary)">二重积分</a> 的基础。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">多元函数的极限与连续</h4>
+        <div class="formula-block">
+          $$\\lim_{(x,y) \\to (x_0,y_0)} f(x,y) = A$$
+          <div class="text-sm text-gray-500 mt-2">要求 $(x,y)$ 沿<strong>任意路径</strong>趋向 $(x_0,y_0)$ 时极限都存在且相等</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>与一元的区别</strong>：一元函数只有左右两个方向趋向，多元函数有无穷多条路径。验证极限不存在只需找两条路径极限不同；验证极限存在则需用夹逼或极坐标变换。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">偏导数</h4>
+        <div class="formula-block">
+          $$f_x(x_0,y_0) = \\lim_{\\Delta x \\to 0} \\frac{f(x_0+\\Delta x, y_0) - f(x_0,y_0)}{\\Delta x}$$
+          <div class="text-sm text-gray-500 mt-2">对 x 求偏导时，把 y 当常数，按一元函数求导</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>计算方法</strong>：求 $f_x$ 时把 $y$ 视为常数，对 $x$ 求导；求 $f_y$ 时把 $x$ 视为常数，对 $y$ 求导</li>
+          <li><strong>高阶偏导</strong>：$f_{xy}$ 表示先对 $x$ 再对 $y$ 求偏导。若 $f_{xy}$ 和 $f_{yx}$ 都连续，则 $f_{xy} = f_{yx}$（混合偏导与求导次序无关）</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">全微分</h4>
+        <div class="formula-block">
+          $$dz = f_x\\,dx + f_y\\,dy$$
+          <div class="text-sm text-gray-500 mt-2">全微分存在的必要条件：偏导 $f_x, f_y$ 都存在</div>
+          <div class="text-sm text-gray-500">全微分存在的充分条件：$f_x, f_y$ 都连续</div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>概念</th><th>关系</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">连续</td><td>$\\not\\Rightarrow$ 可微</td><td>多元函数连续不一定可微</td></tr>
+            <tr><td class="font-medium">可微</td><td>$\\Rightarrow$ 连续</td><td>可微一定连续</td></tr>
+            <tr><td class="font-medium">可微</td><td>$\\Rightarrow$ 偏导存在</td><td>可微时偏导一定存在</td></tr>
+            <tr><td class="font-medium">偏导存在</td><td>$\\not\\Rightarrow$ 可微</td><td>偏导存在不一定可微</td></tr>
+            <tr><td class="font-medium">偏导连续</td><td>$\\Rightarrow$ 可微</td><td>偏导连续是可微的充分条件</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>关系链</strong>：偏导连续 $\\Rightarrow$ 可微 $\\Rightarrow$ 连续，可微 $\\Rightarrow$ 偏导存在。但箭头不能反过来！这是选择题常考的关系辨析。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">链式法则（复合函数求导）</h4>
+        <div class="formula-block">
+          若 $z = f(u,v)$，$u = \\varphi(x,y)$，$v = \\psi(x,y)$，则：
+          $$\\frac{\\partial z}{\\partial x} = \\frac{\\partial z}{\\partial u}\\frac{\\partial u}{\\partial x} + \\frac{\\partial z}{\\partial v}\\frac{\\partial v}{\\partial x}$$
+          $$\\frac{\\partial z}{\\partial y} = \\frac{\\partial z}{\\partial u}\\frac{\\partial u}{\\partial y} + \\frac{\\partial z}{\\partial v}\\frac{\\partial v}{\\partial y}$$
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>树形图法</strong>：画出变量依赖关系的树形图，每条从因变量到自变量的路径对应一个乘积项，所有路径求和。这是记忆链式法则最直观的方法。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">隐函数求导</h4>
+        <div class="formula-block">
+          由 $F(x,y) = 0$ 确定的隐函数 $y = y(x)$：
+          $$\\frac{dy}{dx} = -\\frac{F_x}{F_y}$$
+          由 $F(x,y,z) = 0$ 确定的隐函数 $z = z(x,y)$：
+          $$\\frac{\\partial z}{\\partial x} = -\\frac{F_x}{F_z}, \\quad \\frac{\\partial z}{\\partial y} = -\\frac{F_y}{F_z}$$
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">方向导数与梯度</h4>
+        <div class="formula-block">
+          方向导数（沿方向 $\\vec{l} = (\\cos\\alpha, \\cos\\beta)$）：
+          $$\\frac{\\partial f}{\\partial l} = f_x \\cos\\alpha + f_y \\cos\\beta$$
+          梯度：
+          $$\\text{grad}\\,f = (f_x, f_y) = \\nabla f$$
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>梯度方向</strong>是函数值增长最快的方向，梯度的模是最大方向导数</li>
+          <li><strong>等值线</strong>上梯度垂直于等值线，指向函数值增大的一侧</li>
+        </ul>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：偏导计算、全微分、复合函数链式法则是计算题高频考点。隐函数求导公式要记牢（"偏谁除以偏谁，前面加负号"）。连续/可微/偏导存在的关系是选择题常客。</div>
+        </div>
+      ` },
+      { id: 'hm-10', title: '多元极值与拉格朗日乘数法', desc: '条件极值、无条件极值', icon: '⛰', tags: ['高频'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">多元函数的最优化</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          多元极值问题是 <a href="#" onclick="navigateTo('hm-09');return false;" style="color:var(--primary)">多元微分学</a> 的核心应用。无条件极值通过偏导为零找驻点，条件极值则在约束条件下用拉格朗日乘数法。这类问题在工程优化、经济学、物理学中都有广泛应用。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">无条件极值（自由极值）</h4>
+        <div class="formula-block">
+          <strong>必要条件</strong>：若 $f(x,y)$ 在 $(x_0,y_0)$ 处取极值，且偏导存在，则：
+          $$f_x(x_0,y_0) = 0, \\quad f_y(x_0,y_0) = 0$$
+          <div class="text-sm text-gray-500 mt-2">满足此条件的点称为驻点（但驻点不一定是极值点）</div>
+        </div>
+        <div class="formula-block">
+          <strong>充分条件</strong>：设 $(x_0,y_0)$ 是驻点，令 $A = f_{xx}$，$B = f_{xy}$，$C = f_{yy}$，则：
+          $$\\Delta = AC - B^2 \\begin{cases} > 0 \\text{ 且 } A > 0 & \\Rightarrow \\text{极小值} \\\\ > 0 \\text{ 且 } A < 0 & \\Rightarrow \\text{极大值} \\\\ < 0 & \\Rightarrow \\text{不是极值（鞍点）} \\\\ = 0 & \\Rightarrow \\text{无法判断，需其他方法} \\end{cases}$$
+        </div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>求驻点</strong>：解方程组 $f_x = 0, f_y = 0$，得到所有驻点。</div></div>
+          <div class="step-item"><div><strong>判别</strong>：在每个驻点处计算 $A, B, C$ 和 $\\Delta = AC - B^2$。</div></div>
+          <div class="step-item"><div><strong>结论</strong>：根据 $\\Delta$ 和 $A$ 的符号判断是极大值、极小值还是鞍点。</div></div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>鞍点</strong>：$\\Delta < 0$ 时，驻点既不是极大也不是极小，称为鞍点（形状像马鞍，在一个方向是极大，另一个方向是极小）。这与一元函数中"$f'(x_0)=0$ 但不是极值"的情况类似。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">条件极值与拉格朗日乘数法</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          求 $f(x,y,z)$ 在约束条件 $\\varphi(x,y,z) = 0$ 下的极值。
+        </p>
+        <div class="formula-block">
+          构造拉格朗日函数：
+          $$L(x,y,z,\\lambda) = f(x,y,z) + \\lambda \\varphi(x,y,z)$$
+          <div class="text-sm text-gray-500 mt-2">令所有偏导为零，解方程组：</div>
+          $$L_x = 0, \\quad L_y = 0, \\quad L_z = 0, \\quad L_\\lambda = 0$$
+        </div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>构造</strong>：写出拉格朗日函数 $L = f + \\lambda \\varphi$（约束条件个数决定 $\\lambda$ 的个数）。</div></div>
+          <div class="step-item"><div><strong>求偏导</strong>：对所有变量和 $\\lambda$ 求偏导，令其为零。</div></div>
+          <div class="step-item"><div><strong>解方程组</strong>：得到候选点。</div></div>
+          <div class="step-item"><div><strong>判断</strong>：根据实际意义或二阶条件判断是否为极值。</div></div>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>几何理解</strong>：拉格朗日乘数法的几何意义是——在极值点处，目标函数的梯度与约束曲面的法向量平行，即 $\\nabla f = -\\lambda \\nabla \\varphi$。这保证了沿约束曲面的任意方向都无法再增大（或减小）目标函数。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">多个约束条件</h4>
+        <div class="formula-block">
+          求 $f(x,y,z)$ 在 $\\varphi_1(x,y,z)=0$ 和 $\\varphi_2(x,y,z)=0$ 下的极值：
+          $$L = f + \\lambda_1 \\varphi_1 + \\lambda_2 \\varphi_2$$
+          <div class="text-sm text-gray-500 mt-2">每个约束条件对应一个拉格朗日乘子</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">实例</h4>
+        <div class="formula-block">
+          <strong>例</strong>：求 $f(x,y) = x^2 + y^2$ 在约束 $x + y = 1$ 下的最小值
+          <div class="text-sm text-gray-500 mt-2">解：$L = x^2 + y^2 + \\lambda(x+y-1)$</div>
+          $$L_x = 2x + \\lambda = 0, \\quad L_y = 2y + \\lambda = 0, \\quad L_\\lambda = x+y-1 = 0$$
+          <div class="text-sm text-gray-500 mt-2">解得 $x = y = \\frac{1}{2}$，$\\lambda = -1$，最小值 $f = \\frac{1}{2}$</div>
+        </div>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：无条件极值的判别法（$\\Delta = AC - B^2$）和拉格朗日乘数法都是解答题高频考点。计算时注意：先求驻点，再逐一判别。拉格朗日乘数法解方程组可能较复杂，要有耐心。</div>
+        </div>
+      ` },
+      { id: 'hm-11', title: '二重积分', desc: '直角坐标、极坐标计算', icon: '🔲', tags: ['核心'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">从面积到体积——二重积分</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          二重积分是定积分向二维的推广，几何意义是"曲顶柱体的体积"。它是 <a href="#" onclick="navigateTo('hm-12');return false;" style="color:var(--primary)">三重积分</a> 和 <a href="#" onclick="navigateTo('hm-13');return false;" style="color:var(--primary)">曲线积分</a> 的基础，在概率论（联合密度函数积分）中也有重要应用。关键是掌握化二重积分为累次积分的方法。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">二重积分的定义与性质</h4>
+        <div class="formula-block">
+          $$\\iint_D f(x,y)\\,d\\sigma = \\lim_{\\lambda \\to 0} \\sum_{i=1}^{n} f(\\xi_i, \\eta_i) \\Delta \\sigma_i$$
+          <div class="text-sm text-gray-500 mt-2">几何意义：以 $D$ 为底、$z=f(x,y)$ 为顶的曲顶柱体体积</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>线性</strong>：$\\iint_D [\\alpha f + \\beta g]\\,d\\sigma = \\alpha \\iint_D f\\,d\\sigma + \\beta \\iint_D g\\,d\\sigma$</li>
+          <li><strong>区域可加</strong>：$D = D_1 \\cup D_2$ 时，$\\iint_D f\\,d\\sigma = \\iint_{D_1} f\\,d\\sigma + \\iint_{D_2} f\\,d\\sigma$</li>
+          <li><strong>保号性</strong>：若 $f(x,y) \\ge 0$，则 $\\iint_D f\\,d\\sigma \\ge 0$</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">直角坐标计算</h4>
+        <div class="formula-block">
+          <strong>X 型区域</strong>（先 y 后 x）：$D: a \\le x \\le b, \\varphi_1(x) \\le y \\le \\varphi_2(x)$
+          $$\\iint_D f(x,y)\\,d\\sigma = \\int_a^b dx \\int_{\\varphi_1(x)}^{\\varphi_2(x)} f(x,y)\\,dy$$
+        </div>
+        <div class="formula-block">
+          <strong>Y 型区域</strong>（先 x 后 y）：$D: c \\le y \\le d, \\psi_1(y) \\le x \\le \\psi_2(y)$
+          $$\\iint_D f(x,y)\\,d\\sigma = \\int_c^d dy \\int_{\\psi_1(y)}^{\\psi_2(y)} f(x,y)\\,dx$$
+        </div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>画图</strong>：画出积分区域 $D$ 的草图，确定边界曲线。</div></div>
+          <div class="step-item"><div><strong>判断类型</strong>：看 $D$ 是 X 型（上下边界是 $x$ 的函数）还是 Y 型（左右边界是 $y$ 的函数）。</div></div>
+          <div class="step-item"><div><strong>确定积分限</strong>：外层积分限是常数（区域的范围），内层积分限是关于内层变量的函数。</div></div>
+          <div class="step-item"><div><strong>计算</strong>：先算内层积分（对一个变量），再算外层积分（对另一个变量）。</div></div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>积分限是关键</strong>：内层积分限一般是关于外层变量的函数，不能写反。画图确定边界关系比死记公式更可靠。交换积分次序时必须重新确定积分限。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">极坐标计算</h4>
+        <div class="formula-block">
+          当积分区域 $D$ 是圆域、扇形域或被积函数含 $x^2+y^2$ 时，用极坐标更方便：
+          $$\\iint_D f(x,y)\\,d\\sigma = \\int_\\alpha^\\beta d\\theta \\int_{r_1(\\theta)}^{r_2(\\theta)} f(r\\cos\\theta, r\\sin\\theta) \\cdot r\\,dr$$
+          <div class="text-sm text-gray-500 mt-2">注意：$d\\sigma = r\\,dr\\,d\\theta$，多了一个 $r$ 因子！</div>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>极坐标适用场景</strong>：① 积分区域是圆/环/扇形；② 被积函数含 $x^2+y^2$、$\\frac{y}{x}$ 等形式。记住面积元素 $d\\sigma = r\\,dr\\,d\\theta$，漏掉 $r$ 是最常见的错误。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">交换积分次序</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          有时先对某个变量积分很困难，交换积分次序可能简化计算。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>写出原积分限</strong>：根据原来的累次积分，写出积分区域 $D$ 的不等式描述。</div></div>
+          <div class="step-item"><div><strong>画图</strong>：画出 $D$ 的图形。</div></div>
+          <div class="step-item"><div><strong>重新描述</strong>：用另一种类型（X 型变 Y 型或反之）重新描述 $D$。</div></div>
+          <div class="step-item"><div><strong>写出新积分</strong>：按新的积分次序写出累次积分。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">利用对称性简化计算</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>区域对称 + 被积函数奇偶性</strong>：若 $D$ 关于 $x$ 轴对称，$f(x,-y)=-f(x,y)$（关于 $y$ 是奇函数），则 $\\iint_D f\\,d\\sigma = 0$</li>
+          <li><strong>轮换对称性</strong>：若 $D$ 关于 $y=x$ 对称，则 $\\iint_D f(x,y)\\,d\\sigma = \\iint_D f(y,x)\\,d\\sigma$</li>
+        </ul>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：二重积分计算是必考内容。画图确定积分区域、正确写出积分限是得分关键。交换积分次序是常见题型。极坐标下的二重积分也常考，特别是圆域上的积分。</div>
+        </div>
+      ` },
+      { id: 'hm-12', title: '三重积分与含参积分', desc: '柱坐标、球坐标、含参变量积分', icon: '🧊', tags: [], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">三维空间的积分</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          三重积分是 <a href="#" onclick="navigateTo('hm-11');return false;" style="color:var(--primary)">二重积分</a> 向三维的推广，用于计算空间物体的质量、质心、转动惯量等物理量。含参积分则是将积分视为参数的函数来研究，是分析学的重要工具。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">三重积分的定义</h4>
+        <div class="formula-block">
+          $$\\iiint_\\Omega f(x,y,z)\\,dV = \\lim_{\\lambda \\to 0} \\sum_{i=1}^{n} f(\\xi_i, \\eta_i, \\zeta_i) \\Delta V_i$$
+          <div class="text-sm text-gray-500 mt-2">物理意义：若 $f=1$，则积分值为 $\\Omega$ 的体积；若 $f=\\rho$（密度），则积分值为质量</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">直角坐标计算（先一后二 / 先二后一）</h4>
+        <div class="formula-block">
+          <strong>先一后二</strong>（投影法）：将 $\\Omega$ 投影到 $xOy$ 面得区域 $D$，$z$ 的范围为 $z_1(x,y) \\le z \\le z_2(x,y)$
+          $$\\iiint_\\Omega f\\,dV = \\iint_D \\left[ \\int_{z_1(x,y)}^{z_2(x,y)} f(x,y,z)\\,dz \\right] d\\sigma$$
+        </div>
+        <div class="formula-block">
+          <strong>先二后一</strong>（截面法）：垂直于 $z$ 轴的截面为 $D_z$
+          $$\\iiint_\\Omega f\\,dV = \\int_{c_1}^{c_2} \\left[ \\iint_{D_z} f(x,y,z)\\,d\\sigma \\right] dz$$
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>方法选择</strong>：先一后二适合截面形状随高度变化不大的情况；先二后一适合截面形状简单（如圆、矩形）的情况。选择使积分限更简单的那种。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">柱坐标</h4>
+        <div class="formula-block">
+          $$x = r\\cos\\theta, \\quad y = r\\sin\\theta, \\quad z = z$$
+          $$dV = r\\,dr\\,d\\theta\\,dz$$
+          $$\\iiint_\\Omega f\\,dV = \\int d\\theta \\int r\\,dr \\int f(r\\cos\\theta, r\\sin\\theta, z)\\,dz$$
+          <div class="text-sm text-gray-500 mt-2">适用：旋转体、圆柱形区域、被积函数含 $x^2+y^2$</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">球坐标</h4>
+        <div class="formula-block">
+          $$x = r\\sin\\varphi\\cos\\theta, \\quad y = r\\sin\\varphi\\sin\\theta, \\quad z = r\\cos\\varphi$$
+          $$dV = r^2 \\sin\\varphi\\,dr\\,d\\varphi\\,d\\theta$$
+          $$\\iiint_\\Omega f\\,dV = \\int d\\theta \\int d\\varphi \\int f \\cdot r^2 \\sin\\varphi\\,dr$$
+          <div class="text-sm text-gray-500 mt-2">适用：球形区域、被积函数含 $x^2+y^2+z^2$</div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>坐标系</th><th>体积元素</th><th>适用场景</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">直角坐标</td><td>$dx\\,dy\\,dz$</td><td>长方体、简单区域</td></tr>
+            <tr><td class="font-medium">柱坐标</td><td>$r\\,dr\\,d\\theta\\,dz$</td><td>圆柱体、旋转体</td></tr>
+            <tr><td class="font-medium">球坐标</td><td>$r^2\\sin\\varphi\\,dr\\,d\\varphi\\,d\\theta$</td><td>球体、锥体</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>球坐标角度范围</strong>：$\\theta \\in [0, 2\\pi]$（绕 z 轴旋转），$\\varphi \\in [0, \\pi]$（从正 z 轴到负 z 轴）。$\\varphi$ 不是纬度而是余纬度（从 z 轴量起），这是最容易搞混的地方。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">含参变量积分</h4>
+        <div class="formula-block">
+          $$F(t) = \\int_{a(t)}^{b(t)} f(x,t)\\,dx$$
+          <div class="text-sm text-gray-500 mt-2">对参数 $t$ 求导（莱布尼茨公式）：</div>
+          $$F'(t) = \\int_a^b \\frac{\\partial f}{\\partial t}\\,dx + f(b,t) \\cdot b'(t) - f(a,t) \\cdot a'(t)$$
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>积分号下求导</strong>：若 $f$ 和 $f_t$ 都连续，则可在积分号下对参数求导</li>
+          <li><strong>积分号下取极限</strong>：若 $f$ 在闭区域上连续，则极限和积分可交换次序</li>
+          <li><strong>应用</strong>：利用含参积分计算一些"积不出来"的定积分，如 $\\int_0^1 \\frac{x^b - x^a}{\\ln x}\\,dx = \\ln\\frac{b+1}{a+1}$</li>
+        </ul>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：三重积分在直角坐标、柱坐标、球坐标下的计算是重点。含参积分的莱布尼茨公式考查较少，但"积分号下求导"的思想在概率论中很重要。</div>
+        </div>
+      ` },
+      { id: 'hm-13', title: '曲线积分', desc: '第一类/第二类、格林公式', icon: '〰', tags: ['高频'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">沿曲线的积分</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          曲线积分将积分域从区间推广到曲线，分为第一类（对弧长）和第二类（对坐标）两种。格林公式建立了平面曲线积分与二重积分的联系，是向量分析的基本定理之一。这些内容是 <a href="#" onclick="navigateTo('hm-14');return false;" style="color:var(--primary)">曲面积分</a> 和场论的基础。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">第一类曲线积分（对弧长的积分）</h4>
+        <div class="formula-block">
+          $$\\int_L f(x,y)\\,ds = \\int_\\alpha^\\beta f(x(t),y(t)) \\sqrt{[x'(t)]^2 + [y'(t)]^2}\\,dt$$
+          <div class="text-sm text-gray-500 mt-2">$ds = \\sqrt{dx^2 + dy^2}$ 是弧长微元</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>物理意义</strong>：若 $f$ 是线密度，则积分值为曲线的质量</li>
+          <li><strong>与方向无关</strong>：$\\int_L f\\,ds = \\int_{-L} f\\,ds$，积分与曲线方向无关</li>
+          <li><strong>对称性</strong>：若 $L$ 关于 $x$ 轴对称，$f$ 关于 $y$ 是奇函数，则积分为 0</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">第二类曲线积分（对坐标的积分）</h4>
+        <div class="formula-block">
+          $$\\int_L P\\,dx + Q\\,dy = \\int_\\alpha^\\beta [P(x(t),y(t))x'(t) + Q(x(t),y(t))y'(t)]\\,dt$$
+          <div class="text-sm text-gray-500 mt-2">物理意义：力 $\\vec{F} = (P,Q)$ 沿曲线 $L$ 做的功</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>方向性</strong>：第二类曲线积分与曲线方向有关！$\\int_{-L} P\\,dx + Q\\,dy = -\\int_L P\\,dx + Q\\,dy$。这是与第一类积分的本质区别。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">两类曲线积分的关系</h4>
+        <div class="formula-block">
+          $$\\int_L P\\,dx + Q\\,dy = \\int_L (P\\cos\\alpha + Q\\cos\\beta)\\,ds$$
+          <div class="text-sm text-gray-500 mt-2">其中 $(\\cos\\alpha, \\cos\\beta)$ 是曲线 $L$ 的单位切向量</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">格林公式</h4>
+        <div class="formula-block">
+          设 $D$ 是由闭曲线 $L$（正向，逆时针）围成的区域，$P, Q$ 在 $D$ 上有连续偏导，则：
+          $$\\oint_L P\\,dx + Q\\,dy = \\iint_D \\left( \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} \\right) d\\sigma$$
+        </div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>验证条件</strong>：$P, Q$ 在 $D$ 上有连续一阶偏导，$L$ 是 $D$ 的正向边界。</div></div>
+          <div class="step-item"><div><strong>计算二重积分</strong>：求 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}$，在 $D$ 上积分。</div></div>
+          <div class="step-item"><div><strong>或补线</strong>：若 $L$ 不闭合，可补线使其闭合，用格林公式后再减去补线的积分。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">平面上曲线积分与路径无关</h4>
+        <div class="formula-block">
+          以下四个条件等价（在单连通区域内）：
+          <div class="text-sm text-gray-500 mt-2">① $\\int_L P\\,dx + Q\\,dy$ 与路径无关</div>
+          <div class="text-sm text-gray-500">② $\\oint_L P\\,dx + Q\\,dy = 0$（对任意闭曲线）</div>
+          <div class="text-sm text-gray-500">③ $\\frac{\\partial Q}{\\partial x} = \\frac{\\partial P}{\\partial y}$（在区域内处处成立）</div>
+          <div class="text-sm text-gray-500">④ $P\\,dx + Q\\,dy$ 是某个函数的全微分，即存在 $u$ 使 $du = P\\,dx + Q\\,dy$</div>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>核心条件</strong>：路径无关的关键条件是 $\\frac{\\partial Q}{\\partial x} = \\frac{\\partial P}{\\partial y}$。验证这个条件后，可选择最简单的路径（如折线）计算积分，大大简化计算。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">全微分求原函数</h4>
+        <div class="formula-block">
+          若 $P\\,dx + Q\\,dy = du$，则原函数：
+          $$u(x,y) = \\int_{(x_0,y_0)}^{(x,y)} P\\,dx + Q\\,dy$$
+          可选择折线路径 $(x_0,y_0) \\to (x,y_0) \\to (x,y)$ 计算
+        </div>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：格林公式是高频考点，常与补线技巧结合考查。路径无关的四个等价条件是选择题常客。计算曲线积分时，先判断是否可用格林公式或路径无关来简化。</div>
+        </div>
+      ` },
+      { id: 'hm-14', title: '曲面积分', desc: '高斯公式、斯托克斯公式', icon: '🔵', tags: ['难点'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">曲面上的积分与场论</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          曲面积分是 <a href="#" onclick="navigateTo('hm-13');return false;" style="color:var(--primary)">曲线积分</a> 向曲面的推广，分为第一类（对面积）和第二类（对坐标）两种。高斯公式和斯托克斯公式分别建立了曲面积分与三重积分、曲线积分的联系，构成了场论的核心内容。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">第一类曲面积分（对面积的积分）</h4>
+        <div class="formula-block">
+          $$\\iint_\\Sigma f(x,y,z)\\,dS$$
+          <div class="text-sm text-gray-500 mt-2">计算方法：投影到 $xOy$ 面，$dS = \\sqrt{1+z_x^2+z_y^2}\\,dx\\,dy$</div>
+          $$\\iint_\\Sigma f\\,dS = \\iint_{D_{xy}} f(x,y,z(x,y)) \\sqrt{1+z_x^2+z_y^2}\\,dx\\,dy$$
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>物理意义</strong>：若 $f$ 是面密度，则积分值为曲面的质量</li>
+          <li><strong>与方向无关</strong>：$\\iint_\\Sigma f\\,dS = \\iint_{-\\Sigma} f\\,dS$</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">第二类曲面积分（对坐标的积分）</h4>
+        <div class="formula-block">
+          $$\\iint_\\Sigma P\\,dy\\,dz + Q\\,dz\\,dx + R\\,dx\\,dy$$
+          <div class="text-sm text-gray-500 mt-2">物理意义：向量场 $\\vec{F} = (P,Q,R)$ 穿过曲面 $\\Sigma$ 的通量</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          <strong>计算方法</strong>：统一化为一种投影，如投影到 $xOy$ 面：
+        </p>
+        <div class="formula-block">
+          $$\\iint_\\Sigma R\\,dx\\,dy = \\pm \\iint_{D_{xy}} R(x,y,z(x,y))\\,dx\\,dy$$
+          <div class="text-sm text-gray-500 mt-2">正负号取决于曲面法向量与 $z$ 轴正方向的夹角：同向取正，反向取负</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>方向性</strong>：第二类曲面积分与曲面的侧（法向量方向）有关，改变侧则积分变号。这是与第一类曲面积分的本质区别。计算时必须明确曲面的哪一侧。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">两类曲面积分的关系</h4>
+        <div class="formula-block">
+          $$\\iint_\\Sigma P\\,dy\\,dz + Q\\,dz\\,dx + R\\,dx\\,dy = \\iint_\\Sigma (P\\cos\\alpha + Q\\cos\\beta + R\\cos\\gamma)\\,dS$$
+          <div class="text-sm text-gray-500 mt-2">其中 $(\\cos\\alpha, \\cos\\beta, \\cos\\gamma)$ 是曲面的单位法向量</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">高斯公式（散度定理）</h4>
+        <div class="formula-block">
+          设 $\\Omega$ 是由闭曲面 $\\Sigma$（外侧）围成的区域，$P, Q, R$ 有连续偏导，则：
+          $$\\oiint_\\Sigma P\\,dy\\,dz + Q\\,dz\\,dx + R\\,dx\\,dy = \\iiint_\\Omega \\left( \\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} + \\frac{\\partial R}{\\partial z} \\right) dV$$
+          <div class="text-sm text-gray-500 mt-2">右边的被积函数称为散度：$\\text{div}\\,\\vec{F} = \\nabla \\cdot \\vec{F} = P_x + Q_y + R_z$</div>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>高斯公式的意义</strong>：它将闭曲面上的通量（第二类曲面积分）转化为体积内的散度积分（三重积分）。物理上，穿过闭曲面的净通量等于内部"源"的总量。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">斯托克斯公式（旋度定理）</h4>
+        <div class="formula-block">
+          $$\\oint_L P\\,dx + Q\\,dy + R\\,dz = \\iint_\\Sigma \\left( \\frac{\\partial R}{\\partial y} - \\frac{\\partial Q}{\\partial z} \\right) dy\\,dz + \\left( \\frac{\\partial P}{\\partial z} - \\frac{\\partial R}{\\partial x} \\right) dz\\,dx + \\left( \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} \\right) dx\\,dy$$
+          <div class="text-sm text-gray-500 mt-2">$L$ 是 $\\Sigma$ 的边界曲线，方向与 $\\Sigma$ 的法向量满足右手定则</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">场论三公式的关系</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>公式</th><th>联系</th><th>物理意义</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">格林公式</td><td>平面曲线积分 ↔ 二重积分</td><td>平面场的环量 = 旋度的面积分</td></tr>
+            <tr><td class="font-medium">高斯公式</td><td>曲面积分 ↔ 三重积分</td><td>通量 = 散度的体积分</td></tr>
+            <tr><td class="font-medium">斯托克斯公式</td><td>空间曲线积分 ↔ 曲面积分</td><td>环量 = 旋度的面积分</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：高斯公式是解答题高频考点，常与补面技巧结合。曲面积分的计算（投影法）必须掌握。场论三公式的物理意义和适用条件是选择题常客。</div>
+        </div>
+      ` },
+      { id: 'hm-15', title: '无穷级数', desc: '常数项、幂级数收敛域、和函数', icon: '♾', tags: ['核心难点'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">无穷求和的学问——级数</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          无穷级数是"无穷多个数相加"的理论，核心问题是：什么条件下无穷和有意义（收敛）？收敛时和是多少？级数在函数逼近、微分方程求解、信号处理中有广泛应用，是高等数学的难点之一。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">常数项级数的基本概念</h4>
+        <div class="formula-block">
+          $$\\sum_{n=1}^{\\infty} a_n = a_1 + a_2 + a_3 + \\cdots$$
+          <div class="text-sm text-gray-500 mt-2">部分和：$S_n = a_1 + a_2 + \\cdots + a_n$；级数收敛 $\\Leftrightarrow$ $\\lim_{n\\to\\infty} S_n$ 存在</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>收敛</strong>：部分和序列有极限，级数有"和"</li>
+          <li><strong>发散</strong>：部分和无极限，级数无意义</li>
+          <li><strong>必要条件</strong>：若 $\\sum a_n$ 收敛，则 $\\lim_{n\\to\\infty} a_n = 0$（但反过来不成立！如调和级数）</li>
+        </ul>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>经典反例</strong>：调和级数 $\\sum \\frac{1}{n}$ 虽然通项趋于 0，但发散！这说明 $\\lim a_n = 0$ 只是收敛的必要条件，不是充分条件。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">正项级数判敛法</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>方法</th><th>条件</th><th>结论</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">比较判别法</td><td>$0 \\le a_n \\le b_n$</td><td>$\\sum b_n$ 收敛 $\\Rightarrow$ $\\sum a_n$ 收敛；$\\sum a_n$ 发散 $\\Rightarrow$ $\\sum b_n$ 发散</td></tr>
+            <tr><td class="font-medium">极限比较法</td><td>$\\lim \\frac{a_n}{b_n} = c \\in (0,\\infty)$</td><td>$\\sum a_n$ 与 $\\sum b_n$ 同敛散</td></tr>
+            <tr><td class="font-medium">比值法（达朗贝尔）</td><td>$\\lim \\frac{a_{n+1}}{a_n} = \\rho$</td><td>$\\rho < 1$ 收敛；$\\rho > 1$ 发散；$\\rho=1$ 不确定</td></tr>
+            <tr><td class="font-medium">根值法（柯西）</td><td>$\\lim \\sqrt[n]{a_n} = \\rho$</td><td>$\\rho < 1$ 收敛；$\\rho > 1$ 发散；$\\rho=1$ 不确定</td></tr>
+            <tr><td class="font-medium">积分判别法</td><td>$a_n = f(n)$，$f$ 正递减</td><td>$\\sum a_n$ 与 $\\int_1^\\infty f(x)\\,dx$ 同敛散</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>选择策略</strong>：含 $n!$ 或 $a^n$ 用比值法；含 $n$ 次方用根值法；通项像某个已知级数用比较法。$\\rho=1$ 时比值法和根值法失效，需换其他方法。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">交错级数与莱布尼茨判别法</h4>
+        <div class="formula-block">
+          $$\\sum_{n=1}^{\\infty} (-1)^{n-1} a_n, \\quad a_n > 0$$
+          <div class="text-sm text-gray-500 mt-2">莱布尼茨条件：$a_n$ 单调递减且 $\\lim a_n = 0$，则级数收敛</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">绝对收敛与条件收敛</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>绝对收敛</strong>：$\\sum |a_n|$ 收敛 $\\Rightarrow$ $\\sum a_n$ 收敛</li>
+          <li><strong>条件收敛</strong>：$\\sum a_n$ 收敛但 $\\sum |a_n|$ 发散</li>
+          <li><strong>绝对收敛的性质</strong>：可任意重排求和顺序，和不变；可逐项相乘</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">幂级数</h4>
+        <div class="formula-block">
+          $$\\sum_{n=0}^{\\infty} a_n (x-x_0)^n = a_0 + a_1(x-x_0) + a_2(x-x_0)^2 + \\cdots$$
+          <div class="text-sm text-gray-500 mt-2">收敛半径 $R = \\lim \\left| \\frac{a_n}{a_{n+1}} \\right|$ 或 $R = \\frac{1}{\\lim \\sqrt[n]{|a_n|}}$</div>
+        </div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>求收敛半径</strong>：用比值法或根值法求 $R$。</div></div>
+          <div class="step-item"><div><strong>确定收敛域</strong>：开区间 $(x_0-R, x_0+R)$ 内绝对收敛，还需检验端点 $x = x_0 \\pm R$ 处的敛散性。</div></div>
+          <div class="step-item"><div><strong>求和函数</strong>：逐项积分或逐项求导，化为已知级数（如几何级数），再反推。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">函数展开为幂级数</h4>
+        <div class="formula-block">
+          <strong>泰勒级数</strong>（在 $x_0=0$ 处即麦克劳林级数）：
+          $$f(x) = \\sum_{n=0}^{\\infty} \\frac{f^{(n)}(0)}{n!} x^n$$
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>函数</th><th>展开式</th><th>收敛域</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">$e^x$</td><td>$\\sum \\frac{x^n}{n!}$</td><td>$(-\\infty, +\\infty)$</td></tr>
+            <tr><td class="font-medium">$\\sin x$</td><td>$\\sum \\frac{(-1)^n x^{2n+1}}{(2n+1)!}$</td><td>$(-\\infty, +\\infty)$</td></tr>
+            <tr><td class="font-medium">$\\cos x$</td><td>$\\sum \\frac{(-1)^n x^{2n}}{(2n)!}$</td><td>$(-\\infty, +\\infty)$</td></tr>
+            <tr><td class="font-medium">$\\ln(1+x)$</td><td>$\\sum \\frac{(-1)^{n-1} x^n}{n}$</td><td>$(-1, 1]$</td></tr>
+            <tr><td class="font-medium">$\\frac{1}{1-x}$</td><td>$\\sum x^n$</td><td>$(-1, 1)$</td></tr>
+            <tr><td class="font-medium">$(1+x)^\\alpha$</td><td>$\\sum \\binom{\\alpha}{n} x^n$</td><td>$(-1, 1)$（端点视 $\\alpha$ 而定）</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：正项级数判敛、幂级数收敛域、函数展开为幂级数是三大必考内容。求和函数的方法（逐项积分/求导）和常用展开式必须熟练掌握。端点敛散性检验是丢分重灾区。</div>
+        </div>
+      ` },
+      { id: 'hm-16', title: '傅里叶级数', desc: '狄利克雷条件、周期函数展开', icon: '🎵', tags: [], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">用三角函数逼近周期信号</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          傅里叶级数的核心思想是：任何满足一定条件的周期函数都可以分解为一系列正弦和余弦函数的叠加。这个思想在信号处理、振动分析、热传导等领域有深远应用，也是 <a href="#" onclick="navigateTo('hm-15');return false;" style="color:var(--primary)">无穷级数</a> 理论的重要应用。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">三角函数系的正交性</h4>
+        <div class="formula-block">
+          $$\\int_{-\\pi}^{\\pi} \\cos mx \\cos nx\\,dx = \\begin{cases} 0, & m \\ne n \\\\ \\pi, & m = n \\ne 0 \\end{cases}$$
+          $$\\int_{-\\pi}^{\\pi} \\sin mx \\sin nx\\,dx = \\begin{cases} 0, & m \\ne n \\\\ \\pi, & m = n \\end{cases}$$
+          $$\\int_{-\\pi}^{\\pi} \\cos mx \\sin nx\\,dx = 0$$
+          <div class="text-sm text-gray-500 mt-2">正交性是推导傅里叶系数公式的基础</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">傅里叶级数展开</h4>
+        <div class="formula-block">
+          周期为 $2\\pi$ 的函数 $f(x)$ 的傅里叶级数：
+          $$f(x) \\sim \\frac{a_0}{2} + \\sum_{n=1}^{\\infty} (a_n \\cos nx + b_n \\sin nx)$$
+          <div class="text-sm text-gray-500 mt-2">傅里叶系数：</div>
+          $$a_0 = \\frac{1}{\\pi} \\int_{-\\pi}^{\\pi} f(x)\\,dx$$
+          $$a_n = \\frac{1}{\\pi} \\int_{-\\pi}^{\\pi} f(x) \\cos nx\\,dx$$
+          $$b_n = \\frac{1}{\\pi} \\int_{-\\pi}^{\\pi} f(x) \\sin nx\\,dx$$
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>记忆技巧</strong>：$a_0$ 是函数在一个周期内的平均值（乘以 2），$a_n$ 是 $f(x)$ 与 $\\cos nx$ 的"相关程度"，$b_n$ 是 $f(x)$ 与 $\\sin nx$ 的"相关程度"。系数越大，对应的频率成分越强。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">狄利克雷收敛定理</h4>
+        <div class="formula-block">
+          若 $f(x)$ 在一个周期内满足：
+          <div class="text-sm text-gray-500 mt-2">① 连续或只有有限个第一类间断点</div>
+          <div class="text-sm text-gray-500">② 只有有限个极值点</div>
+          <div class="text-sm text-gray-500">则傅里叶级数收敛，且：</div>
+          $$S(x) = \\begin{cases} f(x), & x \\text{ 是连续点} \\\\ \\frac{f(x^-) + f(x^+)}{2}, & x \\text{ 是间断点} \\end{cases}$$
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>间断点处的收敛</strong>：傅里叶级数在间断点处收敛到左右极限的平均值，而不是函数值本身。这是傅里叶级数与泰勒级数的重要区别——泰勒级数要求函数无穷次可微，傅里叶级数只需有限的光滑性。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">奇偶函数的傅里叶级数</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>函数类型</th><th>系数特点</th><th>级数形式</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">偶函数 $f(-x)=f(x)$</td><td>$b_n = 0$</td><td>余弦级数：$\\frac{a_0}{2} + \\sum a_n \\cos nx$</td></tr>
+            <tr><td class="font-medium">奇函数 $f(-x)=-f(x)$</td><td>$a_n = 0$</td><td>正弦级数：$\\sum b_n \\sin nx$</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>简化计算</strong>：利用奇偶性可以只计算一半的系数。对于定义在 $[0,\\pi]$ 上的函数，可以做奇延拓（展开为正弦级数）或偶延拓（展开为余弦级数），这在求解偏微分方程的边界值问题时非常有用。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">周期为 2l 的傅里叶级数</h4>
+        <div class="formula-block">
+          $$f(x) \\sim \\frac{a_0}{2} + \\sum_{n=1}^{\\infty} \\left( a_n \\cos\\frac{n\\pi x}{l} + b_n \\sin\\frac{n\\pi x}{l} \\right)$$
+          $$a_n = \\frac{1}{l} \\int_{-l}^{l} f(x) \\cos\\frac{n\\pi x}{l}\\,dx, \\quad b_n = \\frac{1}{l} \\int_{-l}^{l} f(x) \\sin\\frac{n\\pi x}{l}\\,dx$$
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">帕塞瓦尔等式</h4>
+        <div class="formula-block">
+          $$\\frac{1}{\\pi} \\int_{-\\pi}^{\\pi} [f(x)]^2\\,dx = \\frac{a_0^2}{2} + \\sum_{n=1}^{\\infty} (a_n^2 + b_n^2)$$
+          <div class="text-sm text-gray-500 mt-2">物理意义：信号的总能量等于各频率分量能量之和</div>
+        </div>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：求傅里叶系数是计算题高频考点，通常给一个分段函数求展开式。狄利克雷定理判断收敛性是选择题常客。利用奇偶性简化计算是常用技巧。帕塞瓦尔等式考查较少但需了解。</div>
+        </div>
+      ` },
     ]
   },
 
@@ -388,16 +1294,626 @@ const CourseData = {
     subtitle: '笔试线代核心，行列式、矩阵、向量、特征值、二次型',
     icon: '🟠',
     sections: [
-      { id: 'la-01', title: '行列式', desc: '性质、展开定理、克莱姆法则', icon: '|#', tags: ['基础'], goals: { exam: true }, content: '' },
-      { id: 'la-02', title: '矩阵运算', desc: '乘法、逆、伴随、分块矩阵', icon: '⊞', tags: ['核心'], goals: { exam: true }, content: '' },
-      { id: 'la-03', title: '初等变换与秩', desc: '行变换、矩阵秩的求法', icon: '⇅', tags: ['高频'], goals: { exam: true }, content: '' },
-      { id: 'la-04', title: '线性方程组', desc: '解的结构、Ax=0/Ax=b', icon: '∀', tags: ['核心'], goals: { exam: true }, content: '' },
-      { id: 'la-05', title: '向量组与向量空间', desc: '线性相关/无关、基与维数', icon: '→', tags: ['难点'], goals: { exam: true }, content: '' },
-      { id: 'la-06', title: '特征值与特征向量', desc: '特征多项式、对角化条件', icon: 'λ', tags: ['高频核心'], goals: { exam: true }, content: '' },
-      { id: 'la-07', title: '相似矩阵与对角化', desc: '相似条件、正交相似', icon: '≈', tags: ['核心'], goals: { exam: true }, content: '' },
-      { id: 'la-08', title: '二次型及其标准形', desc: '配方法、正交变换化标准形', icon: '⊕', tags: ['高频'], goals: { exam: true }, content: '' },
-      { id: 'la-09', title: '正交矩阵与正交变换', desc: '施密特正交化、正定二次型', icon: '⊥', tags: [], goals: { exam: true }, content: '' },
-      { id: 'la-10', title: '线性空间与线性变换', desc: '抽象空间、变换矩阵（进阶）', icon: '⟨⟩', tags: ['进阶'], goals: { exam: true }, content: '' },
+      { id: 'la-01', title: '行列式', desc: '性质、展开定理、克莱姆法则', icon: '|#', tags: ['基础'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">行列式——线性代数的起点</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          行列式是一个数，由方阵中的元素按特定规则计算得到。它是判断矩阵是否可逆、求解线性方程组、计算特征值的基础工具。掌握行列式的性质和计算方法，是学好线性代数的第一步。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">行列式的定义</h4>
+        <div class="formula-block">
+          <strong>二阶行列式</strong>：
+          $$\\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix} = ad - bc$$
+          <strong>三阶行列式</strong>（对角线法则）：
+          $$\\begin{vmatrix} a_1 & a_2 & a_3 \\\\ b_1 & b_2 & b_3 \\\\ c_1 & c_2 & c_3 \\end{vmatrix} = a_1b_2c_3 + a_2b_3c_1 + a_3b_1c_2 - a_3b_2c_1 - a_2b_1c_3 - a_1b_3c_2$$
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          <strong>n 阶行列式</strong>：$\\det(A) = |A| = \\sum_{\\text{全排列}} (-1)^{\\tau} a_{1p_1}a_{2p_2}\\cdots a_{np_n}$，其中 $\\tau$ 是排列的逆序数。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">行列式的性质（简化计算的核心）</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>性质</th><th>内容</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">转置不变</td><td>$|A^T| = |A|$</td></tr>
+            <tr><td class="font-medium">行（列）互换</td><td>两行（列）互换，行列式变号</td></tr>
+            <tr><td class="font-medium">公因子提取</td><td>某行（列）有公因子 $k$，可提到行列式外面</td></tr>
+            <tr><td class="font-medium">拆行（列）</td><td>某行（列）是两项之和，可拆成两个行列式之和</td></tr>
+            <tr><td class="font-medium">倍加不变</td><td>把某行（列）的 $k$ 倍加到另一行（列），行列式不变</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>计算策略</strong>：利用"倍加不变"性质，先把行列式化为上三角（主对角线下方全为 0），此时行列式 = 主对角线元素之积。这是计算高阶行列式最高效的方法。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">行列式按行（列）展开</h4>
+        <div class="formula-block">
+          $$|A| = \\sum_{j=1}^{n} a_{ij} A_{ij} = a_{i1}A_{i1} + a_{i2}A_{i2} + \\cdots + a_{in}A_{in}$$
+          <div class="text-sm text-gray-500 mt-2">$A_{ij} = (-1)^{i+j} M_{ij}$ 是代数余子式，$M_{ij}$ 是余子式（删去第 $i$ 行第 $j$ 列后的行列式）</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>展开技巧</strong>：选零元素最多的行（列）展开，减少计算量</li>
+          <li><strong>重要结论</strong>：$\\sum_{j=1}^{n} a_{ij} A_{kj} = 0$（$i \\ne k$），即某行元素乘以另一行的代数余子式之和为 0</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">特殊行列式</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>类型</th><th>特点</th><th>计算方法</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">上（下）三角</td><td>主对角线下（上）方全为 0</td><td>对角线元素之积</td></tr>
+            <tr><td class="font-medium">对角行列式</td><td>只有主对角线非零</td><td>对角线元素之积</td></tr>
+            <tr><td class="font-medium">范德蒙行列式</td><td>$V_n = \\prod_{i<j}(x_j - x_i)$</td><td>所有可能的差之积</td></tr>
+            <tr><td class="font-medium">分块对角</td><td>对角线上是子矩阵</td><td>各子矩阵行列式之积</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">克莱姆法则</h4>
+        <div class="formula-block">
+          对于 $n$ 个方程 $n$ 个未知数的线性方程组 $Ax = b$，若 $|A| \\ne 0$，则：
+          $$x_i = \\frac{|A_i|}{|A|}, \\quad i = 1, 2, \\ldots, n$$
+          <div class="text-sm text-gray-500 mt-2">$|A_i|$ 是用 $b$ 替换 $A$ 的第 $i$ 列后的行列式</div>
+        </div>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：行列式计算（特别是高阶）是必考内容。性质的灵活运用（化上三角、提取公因子）是解题关键。克莱姆法则虽然理论重要，但实际计算中较少使用（因为求逆更快）。</div>
+        </div>
+      ` },
+      { id: 'la-02', title: '矩阵运算', desc: '乘法、逆、伴随、分块矩阵', icon: '⊞', tags: ['核心'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">矩阵——线性变换的载体</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          矩阵是线性代数的核心对象，它既可以表示线性方程组，也可以表示线性变换。掌握矩阵的运算是学习 <a href="#" onclick="navigateTo('la-03');return false;" style="color:var(--primary)">初等变换</a>、<a href="#" onclick="navigateTo('la-04');return false;" style="color:var(--primary)">线性方程组</a>、<a href="#" onclick="navigateTo('la-06');return false;" style="color:var(--primary)">特征值</a> 等后续内容的基础。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">矩阵的基本运算</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>运算</th><th>定义</th><th>注意事项</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">加法</td><td>对应元素相加</td><td>同型矩阵才能相加</td></tr>
+            <tr><td class="font-medium">数乘</td><td>$kA$：每个元素乘以 $k$</td><td>$|kA| = k^n |A|$（不是 $k|A|$）</td></tr>
+            <tr><td class="font-medium">乘法</td><td>$(AB)_{ij} = \\sum_k a_{ik}b_{kj}$</td><td>一般 $AB \\ne BA$（不满足交换律！）</td></tr>
+            <tr><td class="font-medium">转置</td><td>$(A^T)_{ij} = a_{ji}$</td><td>$(AB)^T = B^T A^T$（顺序反转）</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>矩阵 vs 数</strong>：矩阵乘法不满足交换律（$AB \\ne BA$），不能随意交换顺序；$AB = 0$ 不能推出 $A=0$ 或 $B=0$；$AB = AC$ 不能推出 $B = C$（除非 $A$ 可逆）。这些都与数的运算不同！</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">逆矩阵</h4>
+        <div class="formula-block">
+          若 $AB = BA = E$，则 $B = A^{-1}$，即 $A$ 的逆矩阵
+          <div class="text-sm text-gray-500 mt-2">$A$ 可逆 $\\Leftrightarrow$ $|A| \\ne 0$（非奇异矩阵）</div>
+        </div>
+        <div class="formula-block">
+          <strong>求逆方法一：伴随矩阵法</strong>
+          $$A^{-1} = \\frac{1}{|A|} A^*$$
+          <div class="text-sm text-gray-500 mt-2">$A^*$ 是伴随矩阵，$(A^*)_{ij} = A_{ji}$（注意转置！）</div>
+        </div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>初等变换法</strong>：$(A | E) \\xrightarrow{\\text{行变换}} (E | A^{-1})$，把 $A$ 化为单位矩阵，右边就是 $A^{-1}$。</div></div>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>逆矩阵的性质</strong>：$(A^{-1})^{-1} = A$、$(AB)^{-1} = B^{-1}A^{-1}$（顺序反转）、$(A^T)^{-1} = (A^{-1})^T$、$(kA)^{-1} = \\frac{1}{k}A^{-1}$。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">伴随矩阵</h4>
+        <div class="formula-block">
+          $$A^* = \\begin{pmatrix} A_{11} & A_{21} & \\cdots & A_{n1} \\\\ A_{12} & A_{22} & \\cdots & A_{n2} \\\\ \\vdots & \\vdots & \\ddots & \\vdots \\\\ A_{1n} & A_{2n} & \\cdots & A_{nn} \\end{pmatrix}$$
+          <div class="text-sm text-gray-500 mt-2">伴随矩阵是代数余子式矩阵的转置</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>核心公式</strong>：$AA^* = A^*A = |A|E$</li>
+          <li><strong>秩的关系</strong>：若 $\\text{rank}(A) = n$，则 $\\text{rank}(A^*) = n$；若 $\\text{rank}(A) = n-1$，则 $\\text{rank}(A^*) = 1$；若 $\\text{rank}(A) < n-1$，则 $\\text{rank}(A^*) = 0$</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">分块矩阵</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          将大矩阵分成若干小块，简化运算。
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>分块形式</th><th>行列式</th><th>逆矩阵</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">对角分块 $\\text{diag}(A_1, A_2)$</td><td>$|A_1| \\cdot |A_2|$</td><td>$\\text{diag}(A_1^{-1}, A_2^{-1})$</td></tr>
+            <tr><td class="font-medium">三角分块</td><td>$|A_{11}| \\cdot |A_{22}|$</td><td>用公式求</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">矩阵多项式</h4>
+        <div class="formula-block">
+          $$\\varphi(A) = a_0 E + a_1 A + a_2 A^2 + \\cdots + a_m A^m$$
+          <div class="text-sm text-gray-500 mt-2">凯莱-哈密顿定理：$A$ 满足其特征方程 $\\varphi(\\lambda) = |\\lambda E - A| = 0$，即 $\\varphi(A) = O$</div>
+        </div>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：矩阵乘法、求逆、伴随矩阵的性质是核心考点。求逆通常用初等变换法（更高效），伴随矩阵法适合低阶或理论推导。分块矩阵在简化高阶矩阵运算时很有用。</div>
+        </div>
+      ` },
+      { id: 'la-03', title: '初等变换与秩', desc: '行变换、矩阵秩的求法', icon: '⇅', tags: ['高频'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">初等变换与矩阵的秩</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          初等变换是矩阵运算的核心工具，它不改变矩阵的秩和行列式的非零性。矩阵的秩反映了矩阵"本质上的大小"，是判断 <a href="#" onclick="navigateTo('la-04');return false;" style="color:var(--primary)">线性方程组</a> 解的情况的关键指标。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">三种初等行变换</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>交换两行</strong>：$r_i \\leftrightarrow r_j$</li>
+          <li><strong>某行乘以非零常数</strong>：$r_i \\times k$（$k \\ne 0$）</li>
+          <li><strong>某行加上另一行的 k 倍</strong>：$r_i + k r_j$</li>
+        </ul>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>初等矩阵</strong>：对单位矩阵做一次初等变换得到的矩阵称为初等矩阵。左乘初等矩阵 = 做行变换，右乘初等矩阵 = 做列变换。初等矩阵都可逆。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">矩阵的秩</h4>
+        <div class="formula-block">
+          $$\\text{rank}(A) = \\text{非零子式的最高阶数} = \\text{行阶梯形中非零行的个数}$$
+          <div class="text-sm text-gray-500 mt-2">$m \\times n$ 矩阵的秩满足：$0 \\le \\text{rank}(A) \\le \\min(m, n)$</div>
+        </div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>化行阶梯形</strong>：用初等行变换把矩阵化为行阶梯形（每个非零行的第一个非零元在上一行的右边）。</div></div>
+          <div class="step-item"><div><strong>数非零行</strong>：非零行的个数就是矩阵的秩。</div></div>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>秩的本质</strong>：秩是矩阵"有效信息"的维数。满秩（$\\text{rank}(A) = \\min(m,n)$）意味着矩阵没有"冗余"。秩为 0 只有零矩阵。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">秩的重要公式</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>公式</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">$\\text{rank}(A) = \\text{rank}(A^T)$</td><td>转置不改变秩</td></tr>
+            <tr><td class="font-medium">$\\text{rank}(AB) \\le \\min(\\text{rank}(A), \\text{rank}(B))$</td><td>乘积的秩不超过各因子的秩</td></tr>
+            <tr><td class="font-medium">$\\text{rank}(A+B) \\le \\text{rank}(A) + \\text{rank}(B)$</td><td>和的秩不超过秩的和</td></tr>
+            <tr><td class="font-medium">若 $P, Q$ 可逆，则 $\\text{rank}(PAQ) = \\text{rank}(A)$</td><td>可逆矩阵乘不改变秩</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">行最简形与标准形</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>行阶梯形</strong>：非零行在上，每行首个非零元（主元）在上一行右边</li>
+          <li><strong>行最简形</strong>：在行阶梯形基础上，主元为 1，主元所在列其他元素为 0</li>
+          <li><strong>标准形</strong>：$\\begin{pmatrix} E_r & 0 \\\\ 0 & 0 \\end{pmatrix}$，其中 $r = \\text{rank}(A)$</li>
+        </ul>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：求矩阵的秩是基本功，通常通过化行阶梯形来求。秩的公式（特别是乘积的秩）在证明题中常用。判断方程组解的情况需要看系数矩阵和增广矩阵的秩。</div>
+        </div>
+      ` },
+      { id: 'la-04', title: '线性方程组', desc: '解的结构、Ax=0/Ax=b', icon: '∀', tags: ['核心'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">线性方程组——线性代数的核心问题</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          线性方程组 $Ax = b$ 是线性代数最核心的问题。它串联了 <a href="#" onclick="navigateTo('la-01');return false;" style="color:var(--primary)">行列式</a>、<a href="#" onclick="navigateTo('la-02');return false;" style="color:var(--primary)">矩阵</a>、<a href="#" onclick="navigateTo('la-05');return false;" style="color:var(--primary)">向量</a> 等几乎所有概念。解的存在性由秩决定，解的结构由齐次解和特解组成。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">齐次方程组 $Ax = 0$</h4>
+        <div class="formula-block">
+          $$Ax = 0 \\text{ 一定有解（零解 } x = 0\\text{）}$$
+          <div class="text-sm text-gray-500 mt-2">是否有非零解取决于 $\\text{rank}(A)$：</div>
+          $$\\text{rank}(A) = n \\Leftrightarrow \\text{只有零解}; \\quad \\text{rank}(A) < n \\Leftrightarrow \\text{有非零解（无穷多解）}$$
+          <div class="text-sm text-gray-500 mt-2">$n$ 是未知数个数，解空间维数 = $n - \\text{rank}(A)$</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>基础解系</strong>：$n - \\text{rank}(A)$ 个线性无关的解向量，它们的所有线性组合构成全部解</li>
+          <li><strong>解的结构</strong>：$x = c_1 \\xi_1 + c_2 \\xi_2 + \\cdots + c_{n-r} \\xi_{n-r}$（$c_i$ 为任意常数）</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">非齐次方程组 $Ax = b$</h4>
+        <div class="formula-block">
+          <strong>解的存在性</strong>（秩的判别）：
+          $$\\text{rank}(A) = \\text{rank}(\\bar{A}) \\Leftrightarrow \\text{有解}; \\quad \\text{rank}(A) \\ne \\text{rank}(\\bar{A}) \\Leftrightarrow \\text{无解}$$
+          <div class="text-sm text-gray-500 mt-2">$\\bar{A} = (A | b)$ 是增广矩阵</div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>条件</th><th>解的情况</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">$\\text{rank}(A) \\ne \\text{rank}(\\bar{A})$</td><td>无解</td></tr>
+            <tr><td class="font-medium">$\\text{rank}(A) = \\text{rank}(\\bar{A}) = n$</td><td>唯一解</td></tr>
+            <tr><td class="font-medium">$\\text{rank}(A) = \\text{rank}(\\bar{A}) < n$</td><td>无穷多解</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>三句话总结</strong>：① 无解 = 秩不等；② 唯一解 = 秩等且等于未知数个数；③ 无穷多解 = 秩等但小于未知数个数。记住这三句话，选择题秒杀。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">非齐次方程组的解的结构</h4>
+        <div class="formula-block">
+          $$x = x^* + c_1 \\xi_1 + c_2 \\xi_2 + \\cdots + c_{n-r} \\xi_{n-r}$$
+          <div class="text-sm text-gray-500 mt-2">$x^*$ 是 $Ax=b$ 的一个特解，$\\xi_1, \\ldots, \\xi_{n-r}$ 是 $Ax=0$ 的基础解系</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>特解</strong>：令自由变量为 0，解出主变量</li>
+          <li><strong>基础解系</strong>：每次令一个自由变量为 1、其余为 0，解出对应的解向量</li>
+        </ul>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>非齐次解的结构</strong>：$Ax=b$ 的全部解 = 一个特解 + $Ax=0$ 的全部解。这不是简单的"加"，而是"特解 + 齐次通解"的结构。两个非齐次解之差是齐次解，非齐次解加齐次解仍是非齐次解。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">解题步骤</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>写出增广矩阵</strong>：$\\bar{A} = (A | b)$。</div></div>
+          <div class="step-item"><div><strong>行变换化阶梯形</strong>：用初等行变换化为行阶梯形。</div></div>
+          <div class="step-item"><div><strong>判断解的情况</strong>：比较 $\\text{rank}(A)$ 和 $\\text{rank}(\\bar{A})$。</div></div>
+          <div class="step-item"><div><strong>求解</strong>：若有解，继续化为行最简形，写出通解。</div></div>
+        </div>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：线性方程组是必考大题。解的结构（特解 + 齐次通解）必须熟练掌握。含参数的方程组讨论解的情况是高频题型。齐次方程组的基础解系求法是基本功。</div>
+        </div>
+      ` },
+      { id: 'la-05', title: '向量组与向量空间', desc: '线性相关/无关、基与维数', icon: '→', tags: ['难点'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">向量的线性关系</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          向量组的线性相关性是线性代数的抽象核心，它与 <a href="#" onclick="navigateTo('la-04');return false;" style="color:var(--primary)">线性方程组</a> 的解、矩阵的秩有着深刻联系。理解线性相关/无关、极大线性无关组、向量空间的基与维数，是掌握线性代数的关键。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">线性组合与线性表示</h4>
+        <div class="formula-block">
+          $$\\beta = k_1 \\alpha_1 + k_2 \\alpha_2 + \\cdots + k_s \\alpha_s$$
+          <div class="text-sm text-gray-500 mt-2">$\\beta$ 是 $\\alpha_1, \\ldots, \\alpha_s$ 的线性组合，$k_1, \\ldots, k_s$ 是组合系数</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>等价说法</strong>：$\\beta$ 可由 $\\alpha_1, \\ldots, \\alpha_s$ 线性表示 $\\Leftrightarrow$ 方程组 $x_1\\alpha_1 + \\cdots + x_s\\alpha_s = \\beta$ 有解</li>
+          <li><strong>与秩的关系</strong>：$\\text{rank}(\\alpha_1, \\ldots, \\alpha_s) = \\text{rank}(\\alpha_1, \\ldots, \\alpha_s, \\beta)$ 时可表示</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">线性相关与线性无关</h4>
+        <div class="formula-block">
+          <strong>定义</strong>：若存在不全为零的 $k_1, \\ldots, k_s$ 使 $k_1\\alpha_1 + \\cdots + k_s\\alpha_s = 0$，则 $\\alpha_1, \\ldots, \\alpha_s$ <strong>线性相关</strong>；否则<strong>线性无关</strong>。
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>判断方法</th><th>相关</th><th>无关</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">定义法</td><td>存在非零解 $k_1, \\ldots, k_s$</td><td>只有零解</td></tr>
+            <tr><td class="font-medium">秩法</td><td>$\\text{rank}(\\alpha_1, \\ldots, \\alpha_s) < s$</td><td>$\\text{rank}(\\alpha_1, \\ldots, \\alpha_s) = s$</td></tr>
+            <tr><td class="font-medium">行列式法（方阵）</td><td>$|A| = 0$</td><td>$|A| \\ne 0$</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>常见误区</strong>：① 含零向量的向量组一定线性相关；② 单个非零向量线性无关；③ 两个向量相关 $\\Leftrightarrow$ 对应分量成比例；④ 高维向量组不一定相关（如 $e_1, e_2, \\ldots, e_n$ 无关）。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">极大线性无关组</h4>
+        <div class="formula-block">
+          向量组中的一个部分组，满足：
+          <div class="text-sm text-gray-500 mt-2">① 本身线性无关</div>
+          <div class="text-sm text-gray-500">② 再添加任何原组中的向量都变得线性相关</div>
+          <div class="text-sm text-gray-500">极大无关组中向量的个数 = 向量组的秩</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">向量空间</h4>
+        <div class="formula-block">
+          <strong>定义</strong>：向量的非空集合 $V$，对加法和数乘封闭，则 $V$ 是一个向量空间。
+          <div class="text-sm text-gray-500 mt-2">基：$V$ 中极大线性无关组</div>
+          <div class="text-sm text-gray-500">维数：基中向量的个数，$\\dim(V)$</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>解空间</strong>：$Ax=0$ 的全体解构成的向量空间，维数 = $n - \\text{rank}(A)$</li>
+          <li><strong>列空间</strong>：$A$ 的列向量张成的空间，维数 = $\\text{rank}(A)$</li>
+          <li><strong>坐标</strong>：任意向量在基下的表示是唯一的</li>
+        </ul>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>核心联系</strong>：向量组的秩 = 矩阵的秩 = 行阶梯形中非零行数 = 列空间维数 = 解空间余维数。这些概念通过"秩"统一起来。</div>
+        </div>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：判断向量组的线性相关性是选择题高频考点。求极大无关组和向量组的秩是计算题。向量空间的概念在理解解的结构时很重要。</div>
+        </div>
+      ` },
+      { id: 'la-06', title: '特征值与特征向量', desc: '特征多项式、对角化条件', icon: 'λ', tags: ['高频核心'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">矩阵的"本征方向"——特征值与特征向量</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          特征值和特征向量揭示了线性变换的本质——哪些方向在变换中只被拉伸而不改变方向。它们在振动分析、主成分分析（PCA）、Google PageRank 等领域有核心应用，是线性代数最重要的概念之一。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">定义</h4>
+        <div class="formula-block">
+          $$Ax = \\lambda x \\quad (x \\ne 0)$$
+          <div class="text-sm text-gray-500 mt-2">$\\lambda$ 是 $A$ 的特征值，$x$ 是对应于 $\\lambda$ 的特征向量</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">求特征值和特征向量</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>求特征方程</strong>：$|\\lambda E - A| = 0$（或 $|A - \\lambda E| = 0$），展开得到关于 $\\lambda$ 的 $n$ 次方程。</div></div>
+          <div class="step-item"><div><strong>解特征方程</strong>：得到所有特征值 $\\lambda_1, \\lambda_2, \\ldots, \\lambda_n$（可能有重根）。</div></div>
+          <div class="step-item"><div><strong>求特征向量</strong>：对每个 $\\lambda_i$，解齐次方程组 $(\\lambda_i E - A)x = 0$，得到基础解系就是对应于 $\\lambda_i$ 的特征向量。</div></div>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>计算技巧</strong>：特征多项式 $|\\lambda E - A|$ 的展开可能很复杂，可以利用"行列式性质 + 特殊结构"简化。对于低阶矩阵，直接展开即可；高阶矩阵可用"行变换化上三角"。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">特征值的性质</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>性质</th><th>公式</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">迹（对角线之和）</td><td>$\\sum \\lambda_i = \\text{tr}(A) = \\sum a_{ii}$</td></tr>
+            <tr><td class="font-medium">行列式</td><td>$\\prod \\lambda_i = |A|$</td></tr>
+            <tr><td class="font-medium">$A^k$ 的特征值</td><td>$\\lambda_i^k$，特征向量不变</td></tr>
+            <tr><td class="font-medium">$A^{-1}$ 的特征值</td><td>$\\frac{1}{\\lambda_i}$（$\\lambda_i \\ne 0$）</td></tr>
+            <tr><td class="font-medium">$A^*$ 的特征值</td><td>$\\frac{|A|}{\\lambda_i}$</td></tr>
+            <tr><td class="font-medium">$f(A)$ 的特征值</td><td>$f(\\lambda_i)$，其中 $f$ 是多项式</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>重要结论</strong>：不同特征值对应的特征向量线性无关。$k$ 重特征值最多有 $k$ 个线性无关的特征向量（可能少于 $k$ 个）。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">特殊矩阵的特征值</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>实对称矩阵</strong>：特征值都是实数，不同特征值的特征向量正交</li>
+          <li><strong>正交矩阵</strong>：特征值的模为 1（$\\lambda = \\pm 1$ 或复数）</li>
+          <li><strong>幂等矩阵</strong>（$A^2 = A$）：特征值为 0 或 1</li>
+          <li><strong>幂零矩阵</strong>（$A^k = O$）：特征值全为 0</li>
+        </ul>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：求特征值和特征向量是必考大题。特征值的性质（迹、行列式、$A^k$ 的特征值）是选择题高频考点。实对称矩阵的性质是后续对角化的基础。</div>
+        </div>
+      ` },
+      { id: 'la-07', title: '相似矩阵与对角化', desc: '相似条件、正交相似', icon: '≈', tags: ['核心'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">相似与对角化——简化矩阵运算</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          相似矩阵表示同一线性变换在不同基下的矩阵。对角化就是找到一组特殊的基（特征向量），使得变换矩阵变成对角矩阵，从而大幅简化 <a href="#" onclick="navigateTo('la-06');return false;" style="color:var(--primary)">特征值</a> 相关的运算。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">相似矩阵的定义</h4>
+        <div class="formula-block">
+          若存在可逆矩阵 $P$，使得 $B = P^{-1}AP$，则 $A$ 与 $B$ <strong>相似</strong>，记作 $A \\sim B$。
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>相似的性质</strong>：$|A| = |B|$、$\\text{rank}(A) = \\text{rank}(B)$、$\\text{tr}(A) = \\text{tr}(B)$、特征值相同</li>
+          <li><strong>注意</strong>：特征值相同不一定相似（还需看能否对角化）</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">矩阵可对角化的条件</h4>
+        <div class="formula-block">
+          $n$ 阶矩阵 $A$ 可对角化 $\\Leftrightarrow$ $A$ 有 $n$ 个线性无关的特征向量
+          $$P^{-1}AP = \\Lambda = \\text{diag}(\\lambda_1, \\lambda_2, \\ldots, \\lambda_n)$$
+          <div class="text-sm text-gray-500 mt-2">$P$ 的列是特征向量，$\\Lambda$ 的对角元是对应的特征值</div>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>充分条件</strong>：$n$ 阶矩阵有 $n$ 个不同特征值 $\\Rightarrow$ 可对角化。实对称矩阵一定可对角化。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">对角化的步骤</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>求特征值</strong>：解 $|\\lambda E - A| = 0$，得到 $\\lambda_1, \\ldots, \\lambda_n$。</div></div>
+          <div class="step-item"><div><strong>求特征向量</strong>：对每个 $\\lambda_i$，解 $(\\lambda_i E - A)x = 0$，得到特征向量 $\\xi_i$。</div></div>
+          <div class="step-item"><div><strong>检查</strong>：若线性无关的特征向量个数 $< n$，则不可对角化。</div></div>
+          <div class="step-item"><div><strong>构造</strong>：$P = (\\xi_1, \\xi_2, \\ldots, \\xi_n)$，$\\Lambda = \\text{diag}(\\lambda_1, \\ldots, \\lambda_n)$。注意 $P$ 中列的顺序与 $\\Lambda$ 对角元的顺序对应。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">实对称矩阵的正交对角化</h4>
+        <div class="formula-block">
+          实对称矩阵 $A$ 一定可以<strong>正交对角化</strong>：
+          $$Q^{-1}AQ = Q^TAQ = \\Lambda$$
+          <div class="text-sm text-gray-500 mt-2">$Q$ 是正交矩阵（$Q^TQ = E$），列向量是单位正交的特征向量</div>
+        </div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>求特征值和特征向量</strong>：同上。</div></div>
+          <div class="step-item"><div><strong>施密特正交化</strong>：若某个特征值有多个线性无关的特征向量，需对它们正交化。</div></div>
+          <div class="step-item"><div><strong>单位化</strong>：把所有特征向量单位化（除以模长）。</div></div>
+          <div class="step-item"><div><strong>构造</strong>：$Q = (e_1, e_2, \\ldots, e_n)$，其中 $e_i$ 是单位正交特征向量。</div></div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>正交化只在重根时需要</strong>：不同特征值的特征向量天然正交（实对称矩阵），只有同一个特征值有多个特征向量时才需要施密特正交化。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">对角化的应用</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>求 $A^k$</strong>：$A^k = P\\Lambda^k P^{-1}$，对角矩阵的幂只需对角元求幂</li>
+          <li><strong>求 $f(A)$</strong>：$f(A) = Pf(\\Lambda)P^{-1}$</li>
+          <li><strong>判断相似</strong>：两个矩阵相似 $\\Leftrightarrow$ 有相同的特征值且都可对角化</li>
+        </ul>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：判断矩阵能否对角化是选择题高频考点。实对称矩阵的正交对角化是解答题必考内容。求 $A^k$ 是对角化的典型应用。</div>
+        </div>
+      ` },
+      { id: 'la-08', title: '二次型及其标准形', desc: '配方法、正交变换化标准形', icon: '⊕', tags: ['高频'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">二次型——多元二次函数的标准化</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          二次型是 $n$ 个变量的二次齐次多项式，通过坐标变换可化为只含平方项的标准形。它在优化理论（判断极值）、几何（二次曲面分类）、统计（协方差矩阵）中有重要应用，是 <a href="#" onclick="navigateTo('la-07');return false;" style="color:var(--primary)">对角化</a> 的直接应用。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">二次型的矩阵表示</h4>
+        <div class="formula-block">
+          $$f(x_1, \\ldots, x_n) = \\sum_{i=1}^{n} \\sum_{j=1}^{n} a_{ij} x_i x_j = x^T A x$$
+          <div class="text-sm text-gray-500 mt-2">$A$ 是实对称矩阵（$a_{ij} = a_{ji}$），称为二次型的矩阵</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>秩</strong>：二次型的秩 = 矩阵 $A$ 的秩</li>
+          <li><strong>标准形</strong>：只含平方项 $f = d_1 y_1^2 + d_2 y_2^2 + \\cdots + d_n y_n^2$</li>
+          <li><strong>规范形</strong>：系数为 $1, -1, 0$ 的标准形</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">化二次型为标准形</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>方法</th><th>变换类型</th><th>特点</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">正交变换法</td><td>$x = Qy$（$Q$ 正交）</td><td>保长度和角度，系数是特征值</td></tr>
+            <tr><td class="font-medium">配方法</td><td>$x = Cy$（$C$ 可逆）</td><td>计算简单，但不保几何性质</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">正交变换法（与对角化相同）</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>写出矩阵</strong>：$A$（实对称矩阵）。</div></div>
+          <div class="step-item"><div><strong>求特征值</strong>：$|\\lambda E - A| = 0$，得到 $\\lambda_1, \\ldots, \\lambda_n$。</div></div>
+          <div class="step-item"><div><strong>求特征向量</strong>：对每个 $\\lambda_i$，解 $(\\lambda_i E - A)x = 0$。</div></div>
+          <div class="step-item"><div><strong>正交化+单位化</strong>：构造正交矩阵 $Q$。</div></div>
+          <div class="step-item"><div><strong>写出标准形</strong>：$f = \\lambda_1 y_1^2 + \\lambda_2 y_2^2 + \\cdots + \\lambda_n y_n^2$。</div></div>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>正交变换法的优点</strong>：标准形的系数直接就是特征值，而且变换保持几何形状不变（旋转/反射）。这是最常用的方法。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">配方法</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          对含 $x_i$ 的所有项进行配方，逐步消去交叉项。
+        </p>
+        <div class="formula-block">
+          <strong>例</strong>：$f = x_1^2 + 2x_1x_2 + 2x_2^2$
+          <div class="text-sm text-gray-500 mt-2">配方：$f = (x_1 + x_2)^2 + x_2^2$</div>
+          <div class="text-sm text-gray-500">令 $y_1 = x_1 + x_2, y_2 = x_2$，则 $f = y_1^2 + y_2^2$</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">惯性定理</h4>
+        <div class="formula-block">
+          无论用什么可逆变换化为标准形，正系数个数 $p$（正惯性指数）和负系数个数 $q$（负惯性指数）是不变的。
+          <div class="text-sm text-gray-500 mt-2">秩 $r = p + q$，符号差 $= p - q$</div>
+        </div>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：用正交变换化二次型为标准形是解答题必考内容。配方法是备选方案。惯性定理（正负惯性指数不变）是选择题常客。</div>
+        </div>
+      ` },
+      { id: 'la-09', title: '正交矩阵与正交变换', desc: '施密特正交化、正定二次型', icon: '⊥', tags: [], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">正交性与正定性</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          正交矩阵和正交变换保持向量的长度和角度不变，是 <a href="#" onclick="navigateTo('la-07');return false;" style="color:var(--primary)">正交对角化</a> 的基础。正定二次型则与函数极值判断、优化理论密切相关。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">施密特正交化</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          把线性无关的向量组变成正交向量组的方法。
+        </p>
+        <div class="formula-block">
+          给定线性无关的 $\\alpha_1, \\alpha_2, \\alpha_3$：
+          $$\\beta_1 = \\alpha_1$$
+          $$\\beta_2 = \\alpha_2 - \\frac{(\\alpha_2, \\beta_1)}{(\\beta_1, \\beta_1)} \\beta_1$$
+          $$\\beta_3 = \\alpha_3 - \\frac{(\\alpha_3, \\beta_1)}{(\\beta_1, \\beta_1)} \\beta_1 - \\frac{(\\alpha_3, \\beta_2)}{(\\beta_2, \\beta_2)} \\beta_2$$
+          <div class="text-sm text-gray-500 mt-2">再单位化：$e_i = \\frac{\\beta_i}{|\\beta_i|}$，得到标准正交向量组</div>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>口诀</strong>：逐个减去在前面方向上的投影。$\\beta_2$ 只减去 $\\beta_1$ 方向的分量，$\\beta_3$ 减去 $\\beta_1$ 和 $\\beta_2$ 方向的分量，以此类推。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">正交矩阵</h4>
+        <div class="formula-block">
+          $$Q^T Q = Q Q^T = E \\quad \\Leftrightarrow \\quad Q^{-1} = Q^T$$
+          <div class="text-sm text-gray-500 mt-2">正交矩阵的行列式 $|Q| = \\pm 1$</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>几何意义</strong>：正交变换 = 旋转 + 反射，保持长度和角度不变</li>
+          <li><strong>列（行）向量</strong>：正交矩阵的列向量组是标准正交向量组</li>
+          <li><strong>性质</strong>：正交矩阵的乘积仍为正交矩阵，逆仍为正交矩阵</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">正定二次型</h4>
+        <div class="formula-block">
+          $$f = x^T A x > 0, \\quad \\forall x \\ne 0$$
+          <div class="text-sm text-gray-500 mt-2">$A$ 正定 $\\Leftrightarrow$ 所有特征值 $> 0$ $\\Leftrightarrow$ 所有顺序主子式 $> 0$</div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>类型</th><th>条件</th><th>特征值</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">正定</td><td>$f > 0$（$\\forall x \\ne 0$）</td><td>全 $> 0$</td></tr>
+            <tr><td class="font-medium">负定</td><td>$f < 0$（$\\forall x \\ne 0$）</td><td>全 $< 0$</td></tr>
+            <tr><td class="font-medium">半正定</td><td>$f \\ge 0$（$\\forall x$）</td><td>$\\ge 0$</td></tr>
+            <tr><td class="font-medium">半负定</td><td>$f \\le 0$（$\\forall x$）</td><td>$\\le 0$</td></tr>
+            <tr><td class="font-medium">不定</td><td>有正有负</td><td>有正有负</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>判断正定的方法</strong>：① 特征值全正；② 顺序主子式全正；③ 定义法（$x^TAx > 0$）。方法①和②最常用，方法③适合抽象证明。注意：正定矩阵一定是对称矩阵！</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">正定矩阵的性质</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li>$A$ 正定 $\\Rightarrow$ $A^{-1}$ 正定</li>
+          <li>$A$ 正定 $\\Rightarrow$ $A^*$ 正定</li>
+          <li>$A, B$ 正定 $\\Rightarrow$ $A + B$ 正定</li>
+          <li>$A$ 正定 $\\Rightarrow$ $|A| > 0$（但 $|A| > 0$ 不能推出正定）</li>
+        </ul>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：施密特正交化是计算题基本功。判断正定性（顺序主子式或特征值）是选择题高频考点。正交矩阵的性质（$|Q|=\\pm1$、列正交）也常考。</div>
+        </div>
+      ` },
+      { id: 'la-10', title: '线性空间与线性变换', desc: '抽象空间、变换矩阵（进阶）', icon: '⟨⟩', tags: ['进阶'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">抽象的线性世界</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          线性空间是向量空间的抽象推广，线性变换是矩阵的抽象本质。本节将前面的概念提升到更一般的框架，是理解现代数学和工程中抽象代数思想的基础。这部分内容较抽象，但核心思想与前面一脉相承。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">线性空间的定义</h4>
+        <div class="formula-block">
+          非空集合 $V$，定义了加法和数乘两种运算，满足八条公理（封闭性、结合律、交换律、零元、负元、数乘结合律、数乘分配律），则 $V$ 是一个<strong>线性空间</strong>（向量空间）。
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>$\\mathbb{R}^n$</strong>：$n$ 维实向量空间，最常见的线性空间</li>
+          <li><strong>多项式空间 $P_n[x]$</strong>：次数不超过 $n$ 的多项式全体</li>
+          <li><strong>矩阵空间 $M_{m \\times n}$</strong>：$m \\times n$ 矩阵全体</li>
+          <li><strong>函数空间</strong>：满足一定条件的函数全体</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">基、维数与坐标</h4>
+        <div class="formula-block">
+          <strong>基</strong>：线性空间中极大线性无关组，是"坐标系"的抽象
+          <div class="text-sm text-gray-500 mt-2"><strong>维数</strong>：基中向量的个数，$\\dim(V)$</div>
+          <div class="text-sm text-gray-500"><strong>坐标</strong>：任意向量在基下的表示是唯一的线性组合系数</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>例子</strong>：$P_2[x]$（二次多项式空间）的基可以是 $\\{1, x, x^2\\}$，维数为 3。多项式 $3 + 2x - x^2$ 在这组基下的坐标是 $(3, 2, -1)$。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">过渡矩阵与坐标变换</h4>
+        <div class="formula-block">
+          两组基 $\\alpha_1, \\ldots, \\alpha_n$ 和 $\\beta_1, \\ldots, \\beta_n$ 之间的关系：
+          $$(\\beta_1, \\ldots, \\beta_n) = (\\alpha_1, \\ldots, \\alpha_n) P$$
+          <div class="text-sm text-gray-500 mt-2">$P$ 是过渡矩阵，坐标变换：$x_\\alpha = P x_\\beta$</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">线性变换</h4>
+        <div class="formula-block">
+          映射 $T: V \\to V$ 满足：
+          $$T(\\alpha + \\beta) = T(\\alpha) + T(\\beta)$$
+          $$T(k\\alpha) = kT(\\alpha)$$
+          <div class="text-sm text-gray-500 mt-2">则 $T$ 是 $V$ 上的线性变换</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>核</strong>：$\\ker(T) = \\{\\alpha \\in V : T(\\alpha) = 0\\}$，是 $V$ 的子空间</li>
+          <li><strong>像</strong>：$\\text{Im}(T) = \\{T(\\alpha) : \\alpha \\in V\\}$，是 $V$ 的子空间</li>
+          <li><strong>维数公式</strong>：$\\dim(\\ker T) + \\dim(\\text{Im} T) = \\dim V$</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">线性变换的矩阵表示</h4>
+        <div class="formula-block">
+          选定基 $\\alpha_1, \\ldots, \\alpha_n$ 后，线性变换 $T$ 对应一个 $n \\times n$ 矩阵 $A$：
+          $$T(\\alpha_1, \\ldots, \\alpha_n) = (\\alpha_1, \\ldots, \\alpha_n) A$$
+          <div class="text-sm text-gray-500 mt-2">$A$ 的第 $j$ 列是 $T(\\alpha_j)$ 在基 $\\alpha_1, \\ldots, \\alpha_n$ 下的坐标</div>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>核心思想</strong>：线性变换是"本质"，矩阵是它在某组基下的"表示"。同一个变换在不同基下对应不同的矩阵（相似矩阵）。对角化就是找到使变换矩阵最简单的那组基（特征向量）。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">不变子空间</h4>
+        <div class="formula-block">
+          子空间 $W$ 满足 $T(W) \\subseteq W$，则 $W$ 是 $T$ 的<strong>不变子空间</strong>。
+          <div class="text-sm text-gray-500 mt-2">特征子空间是不变子空间；$\\ker T$ 和 $\\text{Im} T$ 都是不变子空间</div>
+        </div>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：线性空间和线性变换是进阶内容，考查频率较低但概念深刻。重点理解：基与坐标的关系、线性变换的矩阵表示、核与像的维数公式。这些概念有助于理解前面各节的统一框架。</div>
+        </div>
+      ` },
     ]
   },
 
