@@ -139,24 +139,50 @@ Charts.register('step-response', function(el) {
   }
 });
 
-// 伯德图（一阶系统）
+// 伯德图（一阶系统，带交互滑块）
 Charts.register('bode-plot', function(el) {
-  const K = parseFloat(el.dataset.gain || '1');
-  const T = parseFloat(el.dataset.timeconst || '1');
+  const initK = parseFloat(el.dataset.gain || '1');
+  const initT = parseFloat(el.dataset.timeconst || '1');
   const title = el.dataset.title || '一阶系统伯德图';
 
-  const freqData = [];
-  const phaseData = [];
-  for (let logw = -2; logw <= 2; logw += 0.05) {
-    const w = Math.pow(10, logw);
-    const mag = 20 * Math.log10(K / Math.sqrt(1 + (w*T)*(w*T)));
-    const phase = -Math.atan(w*T) * 180 / Math.PI;
-    freqData.push([parseFloat(logw.toFixed(2)), parseFloat(mag.toFixed(2))]);
-    phaseData.push([parseFloat(logw.toFixed(2)), parseFloat(phase.toFixed(2))]);
+  function calcData(K, T) {
+    const freqData = [], phaseData = [];
+    for (let logw = -2; logw <= 2; logw += 0.05) {
+      const w = Math.pow(10, logw);
+      const mag = 20 * Math.log10(K / Math.sqrt(1 + (w*T)*(w*T)));
+      const phase = -Math.atan(w*T) * 180 / Math.PI;
+      freqData.push([parseFloat(logw.toFixed(2)), parseFloat(mag.toFixed(2))]);
+      phaseData.push([parseFloat(logw.toFixed(2)), parseFloat(phase.toFixed(2))]);
+    }
+    return { freqData, phaseData };
   }
 
+  // 创建滑块控件
+  const controls = document.createElement('div');
+  controls.style.cssText = 'display:flex;gap:1.5rem;align-items:center;padding:0.75rem;background:var(--bg-secondary);border-radius:0.5rem;margin-top:0.5rem;font-size:0.8rem;flex-wrap:wrap;';
+  controls.innerHTML = `
+    <label style="display:flex;align-items:center;gap:0.5rem">
+      <span>K (增益):</span>
+      <input type="range" id="bode-k" min="0.1" max="10" step="0.1" value="${initK}" style="width:120px">
+      <span id="bode-k-val" style="min-width:2.5rem;font-weight:600">${initK}</span>
+    </label>
+    <label style="display:flex;align-items:center;gap:0.5rem">
+      <span>T (时间常数):</span>
+      <input type="range" id="bode-t" min="0.1" max="5" step="0.1" value="${initT}" style="width:120px">
+      <span id="bode-t-val" style="min-width:2.5rem;font-weight:600">${initT}</span>
+    </label>
+    <span style="color:var(--text-secondary)">转折频率 ωc = <span id="bode-wc" style="font-weight:600">${(1/initT).toFixed(2)}</span> rad/s</span>
+  `;
+  el.appendChild(controls);
+
+  const { freqData, phaseData } = calcData(initK, initT);
+
   if (typeof echarts !== 'undefined') {
-    const inst = echarts.init(el);
+    const chartEl = document.createElement('div');
+    chartEl.style.height = '350px';
+    el.insertBefore(chartEl, controls);
+
+    const inst = echarts.init(chartEl);
     Charts._instances.push(inst);
     inst.setOption({
       title: { text: title, textStyle: { fontSize: 14 } },
@@ -179,61 +205,115 @@ Charts.register('bode-plot', function(el) {
         { name: '相频特性', type: 'line', xAxisIndex: 1, yAxisIndex: 1, data: phaseData, showSymbol: false, lineStyle: { width: 2, color: '#ef4444' } },
       ],
     });
+
+    // 更新函数
+    function update() {
+      const K = parseFloat(document.getElementById('bode-k')?.value || initK);
+      const T = parseFloat(document.getElementById('bode-t')?.value || initT);
+      document.getElementById('bode-k-val').textContent = K.toFixed(1);
+      document.getElementById('bode-t-val').textContent = T.toFixed(1);
+      document.getElementById('bode-wc').textContent = (1/T).toFixed(2);
+      const { freqData: fd, phaseData: pd } = calcData(K, T);
+      inst.setOption({ series: [{ data: fd }, { data: pd }] });
+    }
+    el.querySelector('#bode-k')?.addEventListener('input', update);
+    el.querySelector('#bode-t')?.addEventListener('input', update);
   }
 });
 
-// 根轨迹图（二阶系统示例）
+// 根轨迹图（带交互控件）
 Charts.register('root-locus', function(el) {
   const title = el.dataset.title || '根轨迹示意图';
 
-  // 绘制单位圆和坐标轴
-  const theta = [];
-  for (let i = 0; i <= 100; i++) theta.push(i * 2 * Math.PI / 100);
-  const circleX = theta.map(t => Math.cos(t));
-  const circleY = theta.map(t => Math.sin(t));
-
-  // 示例：G(s) = K/[s(s+2)]，极点在 0 和 -2
-  const poles = [0, -2];
-  const zeros = [];
-  const locusData = [];
-  for (let K = 0; K <= 100; K += 0.5) {
-    // s(s+2) + K = 0 => s² + 2s + K = 0
-    const disc = 4 - 4*K;
-    if (disc >= 0) {
-      const s1 = (-2 + Math.sqrt(disc))/2;
-      const s2 = (-2 - Math.sqrt(disc))/2;
-      locusData.push([s1, 0]);
-      locusData.push([s2, 0]);
-    } else {
-      const real = -1;
-      const imag = Math.sqrt(-disc)/2;
-      locusData.push([real, imag]);
-      locusData.push([real, -imag]);
+  // 计算根轨迹数据
+  function calcLocus(p1, p2) {
+    const data = [];
+    for (let K = 0; K <= 200; K += 0.3) {
+      // (s-p1)(s-p2) + K = 0 => s² - (p1+p2)s + p1*p2 + K = 0
+      const b = -(p1 + p2);
+      const c = p1 * p2 + K;
+      const disc = b*b - 4*c;
+      if (disc >= 0) {
+        const s1 = (-b + Math.sqrt(disc))/2;
+        const s2 = (-b - Math.sqrt(disc))/2;
+        data.push([s1, 0]);
+        data.push([s2, 0]);
+      } else {
+        const real = -b/2;
+        const imag = Math.sqrt(-disc)/2;
+        data.push([real, imag]);
+        data.push([real, -imag]);
+      }
     }
+    return data;
   }
 
+  // 创建滑块控件
+  const controls = document.createElement('div');
+  controls.style.cssText = 'display:flex;gap:1.5rem;align-items:center;padding:0.75rem;background:var(--bg-secondary);border-radius:0.5rem;margin-top:0.5rem;font-size:0.8rem;flex-wrap:wrap;';
+  controls.innerHTML = `
+    <label style="display:flex;align-items:center;gap:0.5rem">
+      <span>极点 p₁:</span>
+      <input type="range" id="rl-p1" min="-5" max="0" step="0.1" value="0" style="width:120px">
+      <span id="rl-p1-val" style="min-width:2.5rem;font-weight:600">0</span>
+    </label>
+    <label style="display:flex;align-items:center;gap:0.5rem">
+      <span>极点 p₂:</span>
+      <input type="range" id="rl-p2" min="-5" max="0" step="0.1" value="-2" style="width:120px">
+      <span id="rl-p2-val" style="min-width:2.5rem;font-weight:600">-2</span>
+    </label>
+    <span style="color:var(--text-secondary)">G(s) = K / [(s-p₁)(s-p₂)]</span>
+  `;
+  el.appendChild(controls);
+
   if (typeof echarts !== 'undefined') {
-    const inst = echarts.init(el);
+    const chartEl = document.createElement('div');
+    chartEl.style.height = '400px';
+    el.insertBefore(chartEl, controls);
+
+    const initP1 = 0, initP2 = -2;
+    const locusData = calcLocus(initP1, initP2);
+
+    const inst = echarts.init(chartEl);
     Charts._instances.push(inst);
     inst.setOption({
-      title: { text: title, subtext: 'G(s) = K/[s(s+2)]', textStyle: { fontSize: 14 } },
+      title: { text: title, subtext: `G(s) = K / [(s-(${initP1}))(s-(${initP2}))]`, textStyle: { fontSize: 14 } },
       tooltip: { trigger: 'item' },
-      xAxis: { type: 'value', name: 'σ', min: -5, max: 2 },
-      yAxis: { type: 'value', name: 'jω', min: -4, max: 4 },
+      xAxis: { type: 'value', name: 'σ', min: -6, max: 2 },
+      yAxis: { type: 'value', name: 'jω', min: -5, max: 5 },
       series: [
         {
           type: 'line', data: locusData, showSymbol: false,
-          lineStyle: { width: 1.5, color: '#3b82f6' },
+          lineStyle: { width: 2, color: '#3b82f6' },
           name: '根轨迹'
         },
         {
-          type: 'scatter', data: poles.map(p => [p, 0]),
-          symbol: 'cross', symbolSize: 12, name: '极点',
-          itemStyle: { color: '#ef4444' }
+          type: 'scatter', data: [[initP1, 0], [initP2, 0]],
+          symbol: 'cross', symbolSize: 15, name: '极点',
+          itemStyle: { color: '#ef4444' },
+          label: { show: true, formatter: (p) => p.dataIndex === 0 ? 'p₁' : 'p₂', position: 'top' }
         },
       ],
       grid: { left: 50, right: 20, top: 60, bottom: 30 },
     });
+
+    // 更新函数
+    function update() {
+      const p1 = parseFloat(document.getElementById('rl-p1')?.value || 0);
+      const p2 = parseFloat(document.getElementById('rl-p2')?.value || -2);
+      document.getElementById('rl-p1-val').textContent = p1.toFixed(1);
+      document.getElementById('rl-p2-val').textContent = p2.toFixed(1);
+      const data = calcLocus(p1, p2);
+      inst.setOption({
+        title: { subtext: `G(s) = K / [(s-(${p1.toFixed(1)}))(s-(${p2.toFixed(1)}))]` },
+        series: [
+          { data: data },
+          { data: [[p1, 0], [p2, 0]] }
+        ]
+      });
+    }
+    el.querySelector('#rl-p1')?.addEventListener('input', update);
+    el.querySelector('#rl-p2')?.addEventListener('input', update);
   }
 });
 
@@ -352,36 +432,80 @@ Charts.register('sort-compare', function(el) {
 
 // RC 电路充放电波形
 Charts.register('rc-waveform', function(el) {
-  const R = parseFloat(el.dataset.resistance || '1000');
-  const C = parseFloat(el.dataset.capacitance || '1e-6');
+  const initR = parseFloat(el.dataset.resistance || '1000');
+  const initC = parseFloat(el.dataset.capacitance || '1e-6');
   const V0 = parseFloat(el.dataset.voltage || '5');
   const title = el.dataset.title || 'RC 充放电波形';
 
-  const tau = R * C;
-  const tmax = 5 * tau;
-  const chargeData = [];
-  const dischargeData = [];
-
-  for (let t = 0; t <= tmax; t += tmax/200) {
-    chargeData.push([parseFloat((t*1000).toFixed(2)), parseFloat((V0*(1-Math.exp(-t/tau))).toFixed(3))]);
-    dischargeData.push([parseFloat((t*1000).toFixed(2)), parseFloat((V0*Math.exp(-t/tau)).toFixed(3))]);
+  function calcData(R, C) {
+    const tau = R * C;
+    const tmax = 5 * tau;
+    const chargeData = [], dischargeData = [];
+    for (let t = 0; t <= tmax; t += tmax/200) {
+      chargeData.push([parseFloat((t*1000).toFixed(2)), parseFloat((V0*(1-Math.exp(-t/tau))).toFixed(3))]);
+      dischargeData.push([parseFloat((t*1000).toFixed(2)), parseFloat((V0*Math.exp(-t/tau)).toFixed(3))]);
+    }
+    return { chargeData, dischargeData, tau };
   }
 
+  // 创建滑块控件
+  const controls = document.createElement('div');
+  controls.style.cssText = 'display:flex;gap:1.5rem;align-items:center;padding:0.75rem;background:var(--bg-secondary);border-radius:0.5rem;margin-top:0.5rem;font-size:0.8rem;flex-wrap:wrap;';
+  controls.innerHTML = `
+    <label style="display:flex;align-items:center;gap:0.5rem">
+      <span>R (Ω):</span>
+      <input type="range" id="rc-r" min="100" max="10000" step="100" value="${initR}" style="width:120px">
+      <span id="rc-r-val" style="min-width:3.5rem;font-weight:600">${initR}</span>
+    </label>
+    <label style="display:flex;align-items:center;gap:0.5rem">
+      <span>C (μF):</span>
+      <input type="range" id="rc-c" min="0.1" max="100" step="0.1" value="${initC*1e6}" style="width:120px">
+      <span id="rc-c-val" style="min-width:3rem;font-weight:600">${initC*1e6}</span>
+    </label>
+    <span style="color:var(--text-secondary)">τ = <span id="rc-tau" style="font-weight:600">${(initR*initC*1000).toFixed(2)}</span> ms | 5τ = <span id="rc-5tau" style="font-weight:600">${(initR*initC*5000).toFixed(2)}</span> ms</span>
+  `;
+  el.appendChild(controls);
+
   if (typeof echarts !== 'undefined') {
-    const inst = echarts.init(el);
+    const chartEl = document.createElement('div');
+    chartEl.style.height = '350px';
+    el.insertBefore(chartEl, controls);
+
+    const { chargeData, dischargeData, tau } = calcData(initR, initC);
+
+    const inst = echarts.init(chartEl);
     Charts._instances.push(inst);
     inst.setOption({
-      title: { text: title, subtext: `τ = RC = ${(tau*1000).toFixed(1)} ms`, textStyle: { fontSize: 14 } },
+      title: { text: title, subtext: `τ = RC = ${(tau*1000).toFixed(2)} ms`, textStyle: { fontSize: 14 } },
       tooltip: { trigger: 'axis' },
       legend: { data: ['充电', '放电'], bottom: 0 },
       xAxis: { type: 'value', name: 't (ms)', nameLocation: 'end' },
-      yAxis: { type: 'value', name: 'Vc (V)', nameLocation: 'end' },
+      yAxis: { type: 'value', name: 'Vc (V)', nameLocation: 'end', max: V0 * 1.1 },
       series: [
         { name: '充电', type: 'line', data: chargeData, showSymbol: false, lineStyle: { width: 2, color: '#3b82f6' } },
         { name: '放电', type: 'line', data: dischargeData, showSymbol: false, lineStyle: { width: 2, color: '#ef4444', type: 'dashed' } },
       ],
       grid: { left: 60, right: 20, top: 60, bottom: 40 },
     });
+
+    // 更新函数
+    function update() {
+      const R = parseFloat(document.getElementById('rc-r')?.value || initR);
+      const C_uF = parseFloat(document.getElementById('rc-c')?.value || initC*1e6);
+      const C = C_uF * 1e-6;
+      document.getElementById('rc-r-val').textContent = R.toFixed(0);
+      document.getElementById('rc-c-val').textContent = C_uF.toFixed(1);
+      const tau = R * C;
+      document.getElementById('rc-tau').textContent = (tau*1000).toFixed(2);
+      document.getElementById('rc-5tau').textContent = (tau*5000).toFixed(2);
+      const { chargeData: cd, dischargeData: dd } = calcData(R, C);
+      inst.setOption({
+        title: { subtext: `τ = RC = ${(tau*1000).toFixed(2)} ms` },
+        series: [{ data: cd }, { data: dd }]
+      });
+    }
+    el.querySelector('#rc-r')?.addEventListener('input', update);
+    el.querySelector('#rc-c')?.addEventListener('input', update);
   }
 });
 
