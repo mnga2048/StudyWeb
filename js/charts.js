@@ -1,6 +1,5 @@
 // 图表与交互组件模块
-// 第 0 期为占位实现：只提供接口骨架，避免 app.js 调用时抛错。
-// 后续各板块（自控伯德图、数电卡诺图、电路暂态波形等）在这里逐步填充 _charts 字典。
+// 支持 ECharts 渲染和自定义 SVG 交互图表
 
 const Charts = {
   _charts: {},          // 图表类型注册表：{ 类型名: renderFn(el) }
@@ -51,9 +50,337 @@ const Charts = {
   stopAll() {
     this._timers.forEach(t => { clearInterval(t); clearTimeout(t); });
     this._timers = [];
-    // ECharts 实例由 app.js 的 cleanupPageResources 统一 dispose，这里不重复处理
   },
 
   // 注册新图表类型（供后续扩展调用）
   register(type, fn) { this._charts[type] = fn; },
 };
+
+// ==================== 注册图表类型 ====================
+
+// 阶跃响应图（二阶系统）
+Charts.register('step-response', function(el) {
+  const zeta = parseFloat(el.dataset.zeta || '0.5');
+  const omega = parseFloat(el.dataset.omega || '1');
+  const title = el.dataset.title || '二阶系统阶跃响应';
+
+  // 计算响应数据
+  const data = [];
+  const dt = 0.01;
+  const tmax = Math.max(15/omega, 10);
+  for (let t = 0; t <= tmax; t += dt) {
+    let y;
+    if (zeta < 1) {
+      // 欠阻尼
+      const wd = omega * Math.sqrt(1 - zeta*zeta);
+      const sigma = zeta * omega;
+      y = 1 - Math.exp(-sigma*t) * (Math.cos(wd*t) + (sigma/wd)*Math.sin(wd*t));
+    } else if (zeta === 1) {
+      // 临界阻尼
+      y = 1 - (1 + omega*t) * Math.exp(-omega*t);
+    } else {
+      // 过阻尼
+      const s1 = -omega*(zeta + Math.sqrt(zeta*zeta-1));
+      const s2 = -omega*(zeta - Math.sqrt(zeta*zeta-1));
+      y = 1 + (s2*Math.exp(s1*t) - s1*Math.exp(s2*t))/(s1-s2);
+    }
+    data.push([parseFloat(t.toFixed(3)), parseFloat(y.toFixed(4))]);
+  }
+
+  if (typeof echarts !== 'undefined') {
+    const inst = echarts.init(el);
+    Charts._instances.push(inst);
+    inst.setOption({
+      title: { text: title, textStyle: { fontSize: 14 } },
+      tooltip: { trigger: 'axis' },
+      xAxis: { type: 'value', name: 't', nameLocation: 'end' },
+      yAxis: { type: 'value', name: 'y(t)', nameLocation: 'end', max: zeta < 1 ? undefined : 1.05 },
+      series: [{
+        type: 'line', data: data, showSymbol: false, lineStyle: { width: 2 },
+        areaStyle: { opacity: 0.1 },
+        markLine: { data: [{ yAxis: 1, lineStyle: { type: 'dashed', color: '#999' } }] }
+      }],
+      grid: { left: 50, right: 20, top: 40, bottom: 30 },
+    });
+    // 添加参数控制
+    el.style.position = 'relative';
+    const controls = document.createElement('div');
+    controls.style.cssText = 'position:absolute;top:8px;right:8px;display:flex;gap:8px;align-items:center;font-size:12px';
+    controls.innerHTML = `
+      <label>ζ: <input type="range" id="sr-zeta" min="0" max="2" step="0.1" value="${zeta}" style="width:80px"> <span id="sr-zeta-val">${zeta}</span></label>
+      <label>ωn: <input type="range" id="sr-omega" min="0.1" max="5" step="0.1" value="${omega}" style="width:80px"> <span id="sr-omega-val">${omega}</span></label>`;
+    el.appendChild(controls);
+    const update = () => {
+      const z = parseFloat(document.getElementById('sr-zeta')?.value || zeta);
+      const w = parseFloat(document.getElementById('sr-omega')?.value || omega);
+      document.getElementById('sr-zeta-val').textContent = z.toFixed(1);
+      document.getElementById('sr-omega-val').textContent = w.toFixed(1);
+      const newData = [];
+      const tmax2 = Math.max(15/w, 10);
+      for (let t = 0; t <= tmax2; t += dt) {
+        let y;
+        if (z < 1) {
+          const wd = w * Math.sqrt(1 - z*z);
+          const sigma = z * w;
+          y = 1 - Math.exp(-sigma*t) * (Math.cos(wd*t) + (sigma/wd)*Math.sin(wd*t));
+        } else if (z === 1) {
+          y = 1 - (1 + w*t) * Math.exp(-w*t);
+        } else {
+          const s1 = -w*(z + Math.sqrt(z*z-1));
+          const s2 = -w*(z - Math.sqrt(z*z-1));
+          y = 1 + (s2*Math.exp(s1*t) - s1*Math.exp(s2*t))/(s1-s2);
+        }
+        newData.push([parseFloat(t.toFixed(3)), parseFloat(y.toFixed(4))]);
+      }
+      inst.setOption({ series: [{ data: newData }] });
+    };
+    el.querySelector('#sr-zeta')?.addEventListener('input', update);
+    el.querySelector('#sr-omega')?.addEventListener('input', update);
+  }
+});
+
+// 伯德图（一阶系统）
+Charts.register('bode-plot', function(el) {
+  const K = parseFloat(el.dataset.gain || '1');
+  const T = parseFloat(el.dataset.timeconst || '1');
+  const title = el.dataset.title || '一阶系统伯德图';
+
+  const freqData = [];
+  const phaseData = [];
+  for (let logw = -2; logw <= 2; logw += 0.05) {
+    const w = Math.pow(10, logw);
+    const mag = 20 * Math.log10(K / Math.sqrt(1 + (w*T)*(w*T)));
+    const phase = -Math.atan(w*T) * 180 / Math.PI;
+    freqData.push([parseFloat(logw.toFixed(2)), parseFloat(mag.toFixed(2))]);
+    phaseData.push([parseFloat(logw.toFixed(2)), parseFloat(phase.toFixed(2))]);
+  }
+
+  if (typeof echarts !== 'undefined') {
+    const inst = echarts.init(el);
+    Charts._instances.push(inst);
+    inst.setOption({
+      title: { text: title, textStyle: { fontSize: 14 } },
+      tooltip: { trigger: 'axis' },
+      legend: { data: ['幅频特性', '相频特性'], bottom: 0 },
+      grid: [
+        { left: 50, right: 20, top: 40, height: '35%' },
+        { left: 50, right: 20, top: '55%', height: '35%' }
+      ],
+      xAxis: [
+        { type: 'value', name: 'lg(ω)', gridIndex: 0, min: -2, max: 2 },
+        { type: 'value', name: 'lg(ω)', gridIndex: 1, min: -2, max: 2 }
+      ],
+      yAxis: [
+        { type: 'value', name: '20lg|G| (dB)', gridIndex: 0 },
+        { type: 'value', name: '∠G (°)', gridIndex: 1, min: -95, max: 5 }
+      ],
+      series: [
+        { name: '幅频特性', type: 'line', xAxisIndex: 0, yAxisIndex: 0, data: freqData, showSymbol: false, lineStyle: { width: 2, color: '#3b82f6' } },
+        { name: '相频特性', type: 'line', xAxisIndex: 1, yAxisIndex: 1, data: phaseData, showSymbol: false, lineStyle: { width: 2, color: '#ef4444' } },
+      ],
+    });
+  }
+});
+
+// 根轨迹图（二阶系统示例）
+Charts.register('root-locus', function(el) {
+  const title = el.dataset.title || '根轨迹示意图';
+
+  // 绘制单位圆和坐标轴
+  const theta = [];
+  for (let i = 0; i <= 100; i++) theta.push(i * 2 * Math.PI / 100);
+  const circleX = theta.map(t => Math.cos(t));
+  const circleY = theta.map(t => Math.sin(t));
+
+  // 示例：G(s) = K/[s(s+2)]，极点在 0 和 -2
+  const poles = [0, -2];
+  const zeros = [];
+  const locusData = [];
+  for (let K = 0; K <= 100; K += 0.5) {
+    // s(s+2) + K = 0 => s² + 2s + K = 0
+    const disc = 4 - 4*K;
+    if (disc >= 0) {
+      const s1 = (-2 + Math.sqrt(disc))/2;
+      const s2 = (-2 - Math.sqrt(disc))/2;
+      locusData.push([s1, 0]);
+      locusData.push([s2, 0]);
+    } else {
+      const real = -1;
+      const imag = Math.sqrt(-disc)/2;
+      locusData.push([real, imag]);
+      locusData.push([real, -imag]);
+    }
+  }
+
+  if (typeof echarts !== 'undefined') {
+    const inst = echarts.init(el);
+    Charts._instances.push(inst);
+    inst.setOption({
+      title: { text: title, subtext: 'G(s) = K/[s(s+2)]', textStyle: { fontSize: 14 } },
+      tooltip: { trigger: 'item' },
+      xAxis: { type: 'value', name: 'σ', min: -5, max: 2 },
+      yAxis: { type: 'value', name: 'jω', min: -4, max: 4 },
+      series: [
+        {
+          type: 'line', data: locusData, showSymbol: false,
+          lineStyle: { width: 1.5, color: '#3b82f6' },
+          name: '根轨迹'
+        },
+        {
+          type: 'scatter', data: poles.map(p => [p, 0]),
+          symbol: 'cross', symbolSize: 12, name: '极点',
+          itemStyle: { color: '#ef4444' }
+        },
+      ],
+      grid: { left: 50, right: 20, top: 60, bottom: 30 },
+    });
+  }
+});
+
+// 排序算法可视化
+Charts.register('sort-compare', function(el) {
+  const n = parseInt(el.dataset.n || '16');
+  const title = el.dataset.title || '排序算法对比';
+
+  // 生成随机数组
+  const arr = Array.from({length: n}, () => Math.floor(Math.random() * 100) + 1);
+  const sorted = [...arr].sort((a,b) => a-b);
+
+  // 渲染柱状图
+  el.innerHTML = `
+    <div style="text-align:center;margin-bottom:8px">
+      <strong>${title}</strong>
+      <div style="font-size:12px;color:var(--text-secondary)">数据规模: n=${n}</div>
+    </div>
+    <div id="sort-bars" style="display:flex;align-items:flex-end;justify-content:center;gap:2px;height:200px;border-bottom:1px solid var(--border)"></div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+      <button onclick="Charts._sortAnimate('bubble')" class="px-3 py-1 rounded text-sm" style="background:var(--primary);color:white">冒泡排序</button>
+      <button onclick="Charts._sortAnimate('insertion')" class="px-3 py-1 rounded text-sm" style="background:var(--primary);color:white">插入排序</button>
+      <button onclick="Charts._sortAnimate('selection')" class="px-3 py-1 rounded text-sm" style="background:var(--primary);color:white">选择排序</button>
+      <button onclick="Charts._sortAnimate('quick')" class="px-3 py-1 rounded text-sm" style="background:var(--primary);color:white">快速排序</button>
+    </div>
+    <div id="sort-info" style="text-align:center;margin-top:8px;font-size:13px;color:var(--text-secondary)"></div>`;
+
+  // 存储数据
+  Charts._sortData = [...arr];
+  Charts._sortN = n;
+
+  // 渲染函数
+  Charts._renderBars = function(highlights = {}) {
+    const container = document.getElementById('sort-bars');
+    if (!container) return;
+    const maxVal = Math.max(...Charts._sortData);
+    container.innerHTML = Charts._sortData.map((v, i) => {
+      const color = highlights.comparing?.includes(i) ? '#f59e0b' :
+                    highlights.swapping?.includes(i) ? '#ef4444' :
+                    highlights.sorted?.includes(i) ? '#10b981' : 'var(--primary)';
+      return `<div style="flex:1;background:${color};height:${(v/maxVal)*100}%;transition:height 0.1s;border-radius:2px 2px 0 0"></div>`;
+    }).join('');
+  };
+
+  Charts._renderBars();
+
+  // 排序动画
+  Charts._sortAnimate = async function(type) {
+    const arr = Charts._sortData;
+    const n = Charts._sortN;
+    let steps = 0;
+    const info = document.getElementById('sort-info');
+
+    const swap = async (i, j) => {
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+      steps++;
+      Charts._renderBars({ swapping: [i, j] });
+      if (info) info.textContent = `步骤: ${steps}`;
+      await new Promise(r => setTimeout(r, 30));
+    };
+
+    const compare = async (i, j) => {
+      steps++;
+      Charts._renderBars({ comparing: [i, j] });
+      if (info) info.textContent = `步骤: ${steps}`;
+      await new Promise(r => setTimeout(r, 15));
+      return arr[i] - arr[j];
+    };
+
+    if (type === 'bubble') {
+      for (let i = 0; i < n-1; i++) {
+        for (let j = 0; j < n-1-i; j++) {
+          if (await compare(j, j+1) > 0) await swap(j, j+1);
+        }
+      }
+    } else if (type === 'insertion') {
+      for (let i = 1; i < n; i++) {
+        let j = i;
+        while (j > 0 && await compare(j-1, j) > 0) {
+          await swap(j-1, j);
+          j--;
+        }
+      }
+    } else if (type === 'selection') {
+      for (let i = 0; i < n-1; i++) {
+        let min = i;
+        for (let j = i+1; j < n; j++) {
+          await compare(min, j);
+          if (arr[j] < arr[min]) min = j;
+        }
+        if (min !== i) await swap(i, min);
+      }
+    } else if (type === 'quick') {
+      async function qs(lo, hi) {
+        if (lo >= hi) return;
+        const pivot = arr[hi];
+        let i = lo;
+        for (let j = lo; j < hi; j++) {
+          await compare(j, hi);
+          if (arr[j] < pivot) {
+            if (i !== j) await swap(i, j);
+            i++;
+          }
+        }
+        if (i !== hi) await swap(i, hi);
+        await qs(lo, i-1);
+        await qs(i+1, hi);
+      }
+      await qs(0, n-1);
+    }
+
+    Charts._renderBars({ sorted: Array.from({length: n}, (_, i) => i) });
+    if (info) info.textContent = `排序完成！共 ${steps} 步`;
+  };
+});
+
+// RC 电路充放电波形
+Charts.register('rc-waveform', function(el) {
+  const R = parseFloat(el.dataset.resistance || '1000');
+  const C = parseFloat(el.dataset.capacitance || '1e-6');
+  const V0 = parseFloat(el.dataset.voltage || '5');
+  const title = el.dataset.title || 'RC 充放电波形';
+
+  const tau = R * C;
+  const tmax = 5 * tau;
+  const chargeData = [];
+  const dischargeData = [];
+
+  for (let t = 0; t <= tmax; t += tmax/200) {
+    chargeData.push([parseFloat((t*1000).toFixed(2)), parseFloat((V0*(1-Math.exp(-t/tau))).toFixed(3))]);
+    dischargeData.push([parseFloat((t*1000).toFixed(2)), parseFloat((V0*Math.exp(-t/tau)).toFixed(3))]);
+  }
+
+  if (typeof echarts !== 'undefined') {
+    const inst = echarts.init(el);
+    Charts._instances.push(inst);
+    inst.setOption({
+      title: { text: title, subtext: `τ = RC = ${(tau*1000).toFixed(1)} ms`, textStyle: { fontSize: 14 } },
+      tooltip: { trigger: 'axis' },
+      legend: { data: ['充电', '放电'], bottom: 0 },
+      xAxis: { type: 'value', name: 't (ms)', nameLocation: 'end' },
+      yAxis: { type: 'value', name: 'Vc (V)', nameLocation: 'end' },
+      series: [
+        { name: '充电', type: 'line', data: chargeData, showSymbol: false, lineStyle: { width: 2, color: '#3b82f6' } },
+        { name: '放电', type: 'line', data: dischargeData, showSymbol: false, lineStyle: { width: 2, color: '#ef4444', type: 'dashed' } },
+      ],
+      grid: { left: 60, right: 20, top: 60, bottom: 40 },
+    });
+  }
+});
