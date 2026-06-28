@@ -1321,16 +1321,271 @@ const CourseData = {
     subtitle: '线性表→树→图→查找→排序，统考大纲与工程面试双线',
     icon: '⚫',
     sections: [
-      { id: 'ds-01', title: '绪论与复杂度', desc: '时间/空间复杂度、主定理', icon: '⏱', tags: ['基础'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'ds-02', title: '线性表', desc: '顺序表 vs 链表、单/双/循环链表', icon: '🔗', tags: ['核心'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'ds-03', title: '栈与队列', desc: '顺序/链式、双端队列、表达式求值', icon: '📥', tags: ['高频'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'ds-04', title: '串', desc: 'KMP 匹配、next 数组推导', icon: '🔤', tags: ['难点'], goals: { exam: true }, content: '' },
-      { id: 'ds-05', title: '数组与特殊矩阵', desc: '压缩存储、稀疏矩阵', icon: '▦', tags: [], goals: { exam: true }, content: '' },
+      { id: 'ds-01', title: '绪论与复杂度', desc: '时间/空间复杂度、主定理', icon: '⏱', tags: ['基础'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">算法的灵魂：时间与空间复杂度</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          复杂度分析是评估算法好坏的统一标尺——它不依赖具体硬件，只描述"数据规模增长时，算法消耗如何增长"。掌握大 O 表示法和常见复杂度阶，是读懂任何算法、面试和考试的基础。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">大 O 表示法（渐进上界）</h4>
+        <div class="formula-block">
+          $T(n) = O(f(n))$：存在常数 $c$ 和 $n_0$，当 $n > n_0$ 时 $T(n) \\le c \\cdot f(n)$
+          <div class="text-sm text-gray-500 mt-2">忽略常数和低阶项，只保留增长最快的一项</div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>复杂度阶</th><th>名称</th><th>$n=10$ 时</th><th>$n=100$ 时</th><th>典型算法</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">$O(1)$</td><td>常数</td><td>1</td><td>1</td><td>数组下标访问</td></tr>
+            <tr><td class="font-medium">$O(\\log n)$</td><td>对数</td><td>3.3</td><td>6.6</td><td>二分查找</td></tr>
+            <tr><td class="font-medium">$O(n)$</td><td>线性</td><td>10</td><td>100</td><td>遍历数组</td></tr>
+            <tr><td class="font-medium">$O(n\\log n)$</td><td>线性对数</td><td>33</td><td>664</td><td>归并/快排</td></tr>
+            <tr><td class="font-medium">$O(n^2)$</td><td>平方</td><td>100</td><td>10⁴</td><td>冒泡/选择排序</td></tr>
+            <tr><td class="font-medium">$O(2^n)$</td><td>指数</td><td>1024</td><td>10³⁰</td><td>递归求斐波那契</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>增长速度直觉</strong>：$O(1) < O(\\log n) < O(n) < O(n\\log n) < O(n^2) < O(2^n) < O(n!)$。指数和阶乘复杂度在实际中几乎不可用（$n=30$ 就要上亿次运算）。面试/考试中 $O(n^2)$ 通常是暴力解，$O(n\\log n)$ 是优化解。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">复杂度计算规则</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>加法规则</strong>：$O(f(n)) + O(g(n)) = O(\\max(f(n), g(n)))$。两段代码串联，取复杂度高者。</div></div>
+          <div class="step-item"><div><strong>乘法规则</strong>：$O(f(n)) \\times O(g(n)) = O(f(n) \\cdot g(n))$。嵌套循环的复杂度相乘。</div></div>
+          <div class="step-item"><div><strong>主定理</strong>（Master Theorem）：$T(n) = aT(n/b) + f(n)$，比较 $f(n)$ 与 $n^{\\log_b a}$ 的关系判定复杂度。</div></div>
+        </div>
+        <div class="formula-block">
+          <strong>主定理三种情况</strong>：<br>
+          若 $f(n) = O(n^{\\log_b a - \\epsilon})$，则 $T(n) = \\Theta(n^{\\log_b a})$<br>
+          若 $f(n) = \\Theta(n^{\\log_b a})$，则 $T(n) = \\Theta(n^{\\log_b a} \\log n)$<br>
+          若 $f(n) = \\Omega(n^{\\log_b a + \\epsilon})$，则 $T(n) = \\Theta(f(n))$
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：分析循环复杂度</h4>
+        <div class="code-block"><span class="code-comment">// 例1：单层循环 O(n)</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i &lt; n; i++) sum += i;
+
+<span class="code-comment">// 例2：嵌套循环 O(n²)</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i &lt; n; i++)
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> j = <span class="code-number">0</span>; j &lt; n; j++) sum++;
+
+<span class="code-comment">// 例3：对数循环 O(log n)</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">1</span>; i &lt; n; i *= <span class="code-number">2</span>) sum++;  <span class="code-comment">// i 翻倍，执行 log₂n 次</span></div>
+
+        <h4 class="font-medium mt-6 mb-2">空间复杂度</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          空间复杂度衡量算法<strong>额外占用</strong>的内存（不含输入本身）：
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>原地算法</strong> $O(1)$：只用常数额外空间（如堆排序、冒泡排序）</li>
+          <li><strong>递归</strong> $O(\\text{递归深度})$：递归调用栈的深度</li>
+          <li><strong>辅助数组</strong> $O(n)$：需要额外数组（如归并排序需要 $O(n)$ 辅助空间）</li>
+        </ul>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>时间空间权衡</strong>：很多算法可以用空间换时间（哈希表加速查找），或用时间换空间（压缩存储）。工程中内存充足时优先优化时间，嵌入式/大数据场景则需平衡。详见 <a href="#" onclick="navigateTo('ds-02');return false;" style="color:var(--primary)">线性表</a> 中顺序表 vs 链表的取舍。</div>
+        </div>
+      ` },
+      { id: 'ds-02', title: '线性表', desc: '顺序表 vs 链表、单/双/循环链表', icon: '🔗', tags: ['核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">线性表：最基础的数据结构</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          线性表是 n 个数据元素的有限序列，是所有数据结构的地基。它有两种基本实现：<strong>顺序表</strong>（数组）和<strong>链表</strong>（指针连接）。理解两者的取舍——随机访问 vs 动态扩容——是后续树、图、栈、队列的基础。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">顺序表 vs 链表（核心对比）</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>顺序表（数组）</th><th>链表</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">存储方式</td><td>连续内存</td><td>分散内存 + 指针连接</td></tr>
+            <tr><td class="font-medium">随机访问</td><td>$O(1)$（下标直接定位）</td><td>$O(n)$（从头遍历）</td></tr>
+            <tr><td class="font-medium">头部插入/删除</td><td>$O(n)$（需移动元素）</td><td>$O(1)$（改指针）</td></tr>
+            <tr><td class="font-medium">中间插入/删除</td><td>$O(n)$</td><td>$O(1)$（已知节点位置时）</td></tr>
+            <tr><td class="font-medium">空间开销</td><td>无额外开销</td><td>每个节点多一个指针</td></tr>
+            <tr><td class="font-medium">缓存友好性</td><td>✅ 连续内存，缓存命中率高</td><td>❌ 分散内存，缓存不友好</td></tr>
+            <tr><td class="font-medium">扩容</td><td>需重新分配+拷贝</td><td>天然动态</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>选型口诀</strong>：读多写少、需要随机访问 → 顺序表；频繁头尾增删、长度不确定 → 链表。实际工程中顺序表（动态数组 vector）远比链表常用——现代 CPU 缓存让连续内存的速度优势压倒一切。详见 <a href="#" onclick="navigateTo('ds-01');return false;" style="color:var(--primary)">复杂度分析</a>。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">单链表的基本操作</h4>
+        <div class="code-block"><span class="code-keyword">typedef struct</span> <span class="code-func">Node</span> {
+    <span class="code-keyword">int</span> data;
+    <span class="code-keyword">struct</span> <span class="code-func">Node</span> *next;
+} <span class="code-func">Node</span>;
+
+<span class="code-comment">// 头插法建表（新节点总插在头部）O(1)</span>
+<span class="code-func">Node</span>* <span class="code-func">insertHead</span>(<span class="code-func">Node</span> *head, <span class="code-keyword">int</span> val) {
+    <span class="code-func">Node</span> *node = <span class="code-func">malloc</span>(<span class="code-keyword">sizeof</span>(<span class="code-func">Node</span>));
+    node-&gt;data = val;
+    node-&gt;next = head;  <span class="code-comment">// 新节点指向原头</span>
+    <span class="code-keyword">return</span> node;       <span class="code-comment">// 新节点成为新头</span>
+}
+
+<span class="code-comment">// 在节点 p 之后插入 O(1)</span>
+<span class="code-keyword">void</span> <span class="code-func">insertAfter</span>(<span class="code-func">Node</span> *p, <span class="code-keyword">int</span> val) {
+    <span class="code-func">Node</span> *node = <span class="code-func">malloc</span>(<span class="code-keyword">sizeof</span>(<span class="code-func">Node</span>));
+    node-&gt;data = val;
+    node-&gt;next = p-&gt;next;  <span class="code-comment">// 先连后</span>
+    p-&gt;next = node;         <span class="code-comment">// 再连前（顺序不能反！）</span>
+}</div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>指针操作经典陷阱</strong>：插入节点时必须"先连后，再连前"——如果先执行 p-&gt;next = node，原 p-&gt;next 就丢失了，无法完成连接。删除节点时要先用临时变量保存 p-&gt;next，否则 free 后无法访问后续节点。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">双链表与循环链表</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>类型</th><th>特点</th><th>适用场景</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">单链表</td><td>只有 next 指针，单向遍历</td><td>栈、队列的实现</td></tr>
+            <tr><td class="font-medium">双链表</td><td>prev + next，双向遍历，删除已知节点 O(1)</td><td>LRU 缓存、浏览器历史</td></tr>
+            <tr><td class="font-medium">循环链表</td><td>尾节点指向头，形成环</td><td>约瑟夫环、轮转调度</td></tr>
+            <tr><td class="font-medium">静态链表</td><td>用数组模拟链表（游标代替指针）</td><td>不支持指针的语言（如早期 Fortran）</td></tr>
+          </tbody>
+        </table></div>
+      ` },
+      { id: 'ds-03', title: '栈与队列', desc: '顺序/链式、双端队列、表达式求值', icon: '📥', tags: ['高频'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">栈与队列：受限的线性表</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          栈和队列是操作受限的线性表——栈只能在一端（栈顶）进出（LIFO 后进先出），队列只能一端进另一端出（FIFO 先进先出）。这种"限制"反而让它们在特定场景下高效且语义清晰，是递归、撤销、调度等场景的核心工具。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">栈 vs 队列</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>栈（Stack）</th><th>队列（Queue）</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">操作原则</td><td>LIFO（后进先出）</td><td>FIFO（先进先出）</td></tr>
+            <tr><td class="font-medium">插入端</td><td>栈顶 push</td><td>队尾 enqueue</td></tr>
+            <tr><td class="font-medium">删除端</td><td>栈顶 pop</td><td>队头 dequeue</td></tr>
+            <tr><td class="font-medium">时间复杂度</td><td>push/pop/peek 均 $O(1)$</td><td>入队/出队均 $O(1)$</td></tr>
+            <tr><td class="font-medium">典型应用</td><td>函数调用栈、括号匹配、表达式求值、DFS</td><td>任务调度、BFS、打印机队列</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">栈的经典应用：括号匹配</h4>
+        <div class="code-block"><span class="code-comment">// 判断括号串是否匹配：( { [ ] } )</span>
+<span class="code-keyword">int</span> <span class="code-func">isValid</span>(<span class="code-keyword">char</span> *s) {
+    <span class="code-func">Stack</span> st; <span class="code-func">init</span>(&amp;st);
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; s[i]; i++) {
+        <span class="code-keyword">if</span> (s[i]==<span class="code-string">'('</span>||s[i]==<span class="code-string">'['</span>||s[i]==<span class="code-string">'{'</span>)
+            <span class="code-func">push</span>(&amp;st, s[i]);           <span class="code-comment">// 左括号入栈</span>
+        <span class="code-keyword">else</span> {
+            <span class="code-keyword">if</span> (<span class="code-func">empty</span>(&amp;st)) <span class="code-keyword">return</span> <span class="code-number">0</span>;  <span class="code-comment">// 右括号但栈空，不匹配</span>
+            <span class="code-keyword">char</span> top = <span class="code-func">pop</span>(&amp;st);
+            <span class="code-keyword">if</span> (!<span class="code-func">match</span>(top, s[i])) <span class="code-keyword">return</span> <span class="code-number">0</span>;  <span class="code-comment">// 不配对</span>
+        }
+    }
+    <span class="code-keyword">return</span> <span class="code-func">empty</span>(&amp;st);  <span class="code-comment">// 栈空则全部匹配</span>
+}</div>
+
+        <h4 class="font-medium mt-6 mb-2">栈的经典应用：表达式求值（中缀转后缀）</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>中缀表达式</strong>：$A + B \\times C$（人类习惯，需考虑优先级和括号）</div></div>
+          <div class="step-item"><div><strong>后缀表达式（逆波兰）</strong>：$A\\, B\\, C\\, \\times\\, +$（计算机友好，无需括号和优先级）</div></div>
+          <div class="step-item"><div><strong>转换算法</strong>：用栈暂存运算符。遇操作数直接输出；遇运算符与栈顶比较优先级，栈顶优先级更高则先弹出输出。</div></div>
+          <div class="step-item"><div><strong>后缀求值</strong>：遇操作数入栈，遇运算符弹出两个操作数计算后结果入栈。最终栈中剩一个值即结果。</div></div>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>递归的本质就是栈</strong>：函数调用时，参数和返回地址压入"调用栈"；递归返回时弹出。所以任何递归都能用显式栈改写成迭代。系统调用栈大小有限（通常几 MB），深度递归会栈溢出——这就是为什么深度大的 DFS 要改用迭代+栈。详见 <a href="#" onclick="navigateTo('ds-11');return false;" style="color:var(--primary)">图的遍历</a>。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">循环队列（解决假溢出）</h4>
+        <div class="formula-block">
+          队头 front、队尾 rear，容量 MaxSize<br>
+          入队：$rear = (rear + 1) \\bmod MaxSize$<br>
+          出队：$front = (front + 1) \\bmod MaxSize$<br>
+          判空：$front == rear$；判满：$(rear+1) \\bmod MaxSize == front$（牺牲一个单元区分空满）
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>循环队列的"牺牲一个单元"</strong>：如果不牺牲，front==rear 既表示空也表示满，无法区分。牺牲后，满的条件是 rear 即将追上 front，空的条件是 front==rear。考试常考这个判空判满的条件。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">双端队列（Deque）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          双端队列两端都能进出，是栈和队列的超集。Python 的 collections.deque、C++ 的 std::deque 都是基于分块连续内存实现，两端操作均 $O(1)$。滑动窗口、单调队列等算法常用双端队列。
+        </p>
+      ` },
+      { id: 'ds-04', title: '串', desc: 'KMP 匹配、next 数组推导', icon: '🔤', tags: ['难点'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">串的模式匹配：从暴力到 KMP</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          串的模式匹配是"在主串中查找模式串首次出现位置"的问题。暴力法最坏 $O(nm)$，而 KMP 算法利用已匹配信息，把复杂度降到 $O(n+m)$——核心是 next 数组的巧妙构造。KMP 是数据结构的高频考点，也是理解"利用历史信息优化"思想的典范。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">暴力匹配（BF 算法）</h4>
+        <div class="code-block"><span class="code-comment">// 主串 S，模式串 T，返回 T 在 S 中首次位置</span>
+<span class="code-keyword">int</span> <span class="code-func">bfMatch</span>(<span class="code-keyword">char</span> *S, <span class="code-keyword">char</span> *T) {
+    <span class="code-keyword">int</span> i = <span class="code-number">0</span>, j = <span class="code-number">0</span>;  <span class="code-comment">// i 主串指针，j 模式串指针</span>
+    <span class="code-keyword">while</span> (S[i] &amp;&amp; T[j]) {
+        <span class="code-keyword">if</span> (S[i] == T[j]) { i++; j++; }  <span class="code-comment">// 匹配，都前进</span>
+        <span class="code-keyword">else</span> { i = i - j + <span class="code-number">1</span>; j = <span class="code-number">0</span>; }  <span class="code-comment">// 失配，i 回溯，j 归零</span>
+    }
+    <span class="code-keyword">return</span> T[j] ? -<span class="code-number">1</span> : i - j;  <span class="code-comment">// j 走完则匹配成功</span>
+}</div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>暴力的低效根源</strong>：失配时主串指针 i 回溯，之前匹配的信息全部丢弃。最坏情况（如主串 "aaaa...ab"、模式串 "aab"）每次都匹配到末尾才失败，复杂度 $O(nm)$。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">KMP 的核心思想：next 数组</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          KMP 的关键洞察：失配时，<strong>主串指针 i 不回溯</strong>，而是利用模式串自身的结构，把模式串指针 j 跳到合适位置。next[j] 记录"模式串 [0..j-1] 的最长相等前后缀长度"。
+        </p>
+        <div class="formula-block">
+          $next[j]$ = 模式串 $T[0..j-1]$ 的<strong>最长相等前后缀</strong>长度<br>
+          即：最大的 $k$，使 $T[0..k-1] = T[j-k..j-1]$<br>
+          失配时：$j = next[j]$（模式串右滑，跳过必然失配的位置）
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">next 数组求法（手工推导示例）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          模式串 $T = \\text{"ababaaab"}$，求 next 数组：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>j</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">T[j]</td><td>a</td><td>b</td><td>a</td><td>b</td><td>a</td><td>a</td><td>a</td><td>b</td></tr>
+            <tr><td class="font-medium">next[j]</td><td>-1</td><td>0</td><td>0</td><td>1</td><td>2</td><td>3</td><td>1</td><td>1</td></tr>
+          </tbody>
+        </table></div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>next[0]=-1</strong>：约定，表示模式串第一个字符就失配，i 前进。</div></div>
+          <div class="step-item"><div><strong>next[1]=0</strong>：T[0..0]="a"，无相等前后缀。</div></div>
+          <div class="step-item"><div><strong>next[3]=1</strong>：T[0..2]="aba"，前缀"a"=后缀"a"，长度 1。</div></div>
+          <div class="step-item"><div><strong>next[4]=2</strong>：T[0..3]="abab"，前缀"ab"=后缀"ab"，长度 2。</div></div>
+          <div class="step-item"><div><strong>next[5]=3</strong>：T[0..4]="ababa"，前缀"aba"=后缀"aba"，长度 3。</div></div>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>推导口诀</strong>：对每个 j，看 T[0..j-1] 这个子串，找"开头和结尾相同的最长部分"。从 j=2 开始，逐步比较前缀和后缀。next 数组是 KMP 的全部难点，会手推 next 数组就能应付大多数考试题。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">KMP 匹配主循环</h4>
+        <div class="code-block"><span class="code-keyword">int</span> <span class="code-func">kmpMatch</span>(<span class="code-keyword">char</span> *S, <span class="code-keyword">char</span> *T, <span class="code-keyword">int</span> *next) {
+    <span class="code-keyword">int</span> i = <span class="code-number">0</span>, j = <span class="code-number">0</span>;
+    <span class="code-keyword">while</span> (S[i] &amp;&amp; T[j]) {
+        <span class="code-keyword">if</span> (j == -<span class="code-number">1</span> || S[i] == T[j]) { i++; j++; }
+        <span class="code-keyword">else</span> j = next[j];  <span class="code-comment">// 失配：j 跳转，i 不动！</span>
+        <span class="code-keyword">if</span> (!T[j]) <span class="code-keyword">return</span> i - j;  <span class="code-comment">// 匹配成功</span>
+    }
+    <span class="code-keyword">return</span> -<span class="code-number">1</span>;
+}
+<span class="code-comment">// 复杂度：主串指针 i 只前进不回溯，O(n+m)</span></div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>next 数组还有优化版 nextval</strong>：当 T[next[j]] == T[j] 时，next[j] 的跳转没意义（跳过去还是会失配），可以直接 nextval[j] = nextval[next[j]]。考试中可能要求写出 nextval 数组。实际工程中，KMP 因实现复杂且常数大，不如 Boyer-Moore 或 Sunday 算法常用，但思想价值极高。</div>
+        </div>
+      ` },
+      { id: 'ds-05', title: '数组与特殊矩阵', desc: '压缩存储、稀疏矩阵', icon: '▦', tags: ['基础'], goals: { exam: true }, content: '' },
       { id: 'ds-06', title: '树与二叉树', desc: '性质、遍历、线索化', icon: '🌳', tags: ['核心'], goals: { exam: true, eng: true }, content: '' },
       { id: 'ds-07', title: 'BST 与 AVL 树', desc: '二叉搜索树、平衡二叉树', icon: '⚖', tags: ['高频'], goals: { exam: true, eng: true }, content: '' },
       { id: 'ds-08', title: '红黑树与 B 树', desc: '红黑树性质、B/B+ 树（数据库索引）', icon: '🔴', tags: ['工程'], goals: { eng: true }, content: '' },
       { id: 'ds-09', title: '堆与优先队列', desc: '建堆、堆排序、Top-K', icon: '⛰', tags: ['高频'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'ds-10', title: '哈夫曼树与并查集', desc: '哈夫曼编码、Union-Find', icon: 'forest', tags: ['高频'], goals: { exam: true }, content: '' },
+      { id: 'ds-10', title: '哈夫曼树与并查集', desc: '哈夫曼编码、Union-Find', icon: '🌲', tags: ['高频'], goals: { exam: true }, content: '' },
       { id: 'ds-11', title: '图的存储与遍历', desc: '邻接矩阵/表、DFS/BFS', icon: '🕸', tags: ['核心'], goals: { exam: true, eng: true }, content: '' },
       { id: 'ds-12', title: '图的应用', desc: '最小生成树、最短路径、拓扑排序、关键路径', icon: '🗺', tags: ['高频核心'], goals: { exam: true }, content: '' },
       { id: 'ds-13', title: '查找', desc: '折半、分块、B 树、散列表', icon: '🔍', tags: ['核心'], goals: { exam: true, eng: true }, content: '' },
@@ -2069,7 +2324,165 @@ const QuizData = {
       explanation: '直接差分 $\\frac{e_k-e_{k-1}}{T_s}$ 会放大高频噪声。解决方案：对微分项加一阶低通滤波 $d_{filt}=\\alpha \\cdot d_{new}+(1-\\alpha)\\cdot d_{filt,old}$，其中 $\\alpha=0.1\\sim0.3$。或者用"不完全微分"结构替代纯微分。'
     },
   ],
+
+  // ========== 数据结构 ds-01~ds-04 ==========
+  'ds-01': [
+    {
+      question: '算法 $T(n) = O(n^2)$，当 $n$ 翻倍（$n \\to 2n$）时，运行时间约为原来的？',
+      options: ['2 倍', '4 倍', '8 倍', '不变'],
+      answer: 1,
+      explanation: '$O(n^2)$ 表示时间与 $n^2$ 成正比。$n \\to 2n$ 时，$(2n)^2 = 4n^2$，变为原来的 4 倍。同理 $O(n)$ 翻倍变 2 倍，$O(\\log n)$ 几乎不变，$O(n\\log n)$ 约变 2 倍多。这是估算算法扩展性的关键直觉。'
+    },
+    {
+      question: '下列复杂度从小到大排列正确的是？',
+      options: ['$O(2^n) < O(n^2) < O(n\\log n) < O(n)$', '$O(\\log n) < O(n) < O(n\\log n) < O(n^2)$', '$O(1) < O(n) < O(\\log n) < O(n^2)$', '$O(n!) < O(2^n) < O(n^2)$'],
+      answer: 1,
+      explanation: '正确顺序：$O(1) < O(\\log n) < O(n) < O(n\\log n) < O(n^2) < O(2^n) < O(n!)$。选项 B 正确（缺 $O(1)$ 但其余顺序对）。选项 A 错在 $O(n^2) > O(n\\log n)$；选项 C 错在 $O(n) > O(\\log n)$；选项 D 错在 $O(n!) > O(2^n)$。'
+    },
+    {
+      question: '主定理 $T(n)=aT(n/b)+f(n)$ 中，归并排序 $T(n)=2T(n/2)+O(n)$ 的解是？',
+      options: ['$O(n)$', '$O(n\\log n)$', '$O(n^2)$', '$O(2^n)$'],
+      answer: 1,
+      explanation: '$a=2, b=2, f(n)=O(n)$。$n^{\\log_b a}=n^{\\log_2 2}=n^1=n$，恰好等于 $f(n)$，属于第二种情况，$T(n)=\\Theta(n^{\\log_b a}\\log n)=\\Theta(n\\log n)$。这就是归并排序 $O(n\\log n)$ 的由来。'
+    },
+    {
+      question: '以下代码的时间复杂度是？<br>for (int i=1; i&lt;n; i*=2) for (int j=0; j&lt;i; j++) sum++;',
+      options: ['$O(n)$', '$O(n\\log n)$', '$O(n^2)$', '$O(\\log n)$'],
+      answer: 0,
+      explanation: '外层循环 i 翻倍：1,2,4,8...，共 $\\log n$ 次。内层循环执行 i 次。总次数 $=1+2+4+\\cdots+n/2+n = 2n-1 = O(n)$（等比数列求和）。不要误判为 $O(n\\log n)$——内层次数随 i 变化，不是固定 n。'
+    },
+    {
+      question: '递归算法的空间复杂度主要取决于？',
+      options: ['递归体的代码长度', '递归调用栈的深度', '输入数据的大小', '返回值的类型'],
+      answer: 1,
+      explanation: '递归每深入一层，调用栈增加一帧（存参数、返回地址、局部变量）。递归深度即调用栈最大深度，决定空间复杂度。如二叉树递归遍历深度为树高 $h$，空间 $O(h)$。深度递归可能栈溢出。'
+    },
+    {
+      question: '"原地排序"指的是？',
+      options: ['在原数组上排序，只用 $O(1)$ 额外空间', '排序后数组回到原位置', '不需要比较的排序', '时间复杂度 $O(1)$'],
+      answer: 0,
+      explanation: '原地排序（in-place）指只用常数 $O(1)$ 额外空间完成排序。堆排序、冒泡排序、插入排序都是原地排序。归并排序需要 $O(n)$ 辅助数组，不是原地。原地性是空间复杂度概念，与时间复杂度无关。'
+    },
+  ],
+
+  'ds-02': [
+    {
+      question: '顺序表相比链表的最大优势是？',
+      options: ['插入删除快', '随机访问 $O(1)$', '内存占用小', '动态扩容方便'],
+      answer: 1,
+      explanation: '顺序表（数组）连续存储，下标访问 $O(1)$——这是数组最核心的优势。链表随机访问需 $O(n)$ 遍历。但顺序表插入删除需移动元素 $O(n)$，扩容需拷贝。读多写少选顺序表，频繁增删选链表。'
+    },
+    {
+      question: '在单链表中删除节点 p 的后继节点，正确的操作顺序是？',
+      options: ['先 free(p->next)，再 p->next = p->next->next', '先保存 q=p->next，再 p->next=q->next，最后 free(q)', '直接 p->next = NULL', '先 p->next = p->next->next，再访问 p->next free'],
+      answer: 1,
+      explanation: '必须先用临时变量 q 保存 p->next，因为改指针后原后继就丢失了。正确：q=p->next；p->next=q->next（跳过 q）；free(q)。选项 A 错在先 free 就无法访问 next 了；选项 D 错在改指针后原节点已断开。'
+    },
+    {
+      question: '带头节点的单链表，其优点是？',
+      options: ['节省一个节点的空间', '插入删除第一个元素时无需特殊处理', '遍历更快', '支持随机访问'],
+      answer: 1,
+      explanation: '头节点（dummy head）是链表开头的哨兵节点，数据域无意义。有了它，在表头插入/删除与在中间操作完全一致（都是修改某节点的 next），无需对"空表"或"第一个节点"特判。代价是多占一个节点空间。'
+    },
+    {
+      question: '双链表相比单链表的优势是？',
+      options: ['内存占用更小', '可以双向遍历，删除已知节点 $O(1)$', '插入更快', '支持随机访问'],
+      answer: 1,
+      explanation: '双链表每个节点有 prev 和 next，可双向遍历。关键优势：已知节点位置时，删除它 $O(1)$（单链表删除需先找前驱 $O(n)$）。LRU 缓存用双链表正是为了 $O(1)$ 删除任意节点。代价是每个节点多一个指针。'
+    },
+    {
+      question: '循环单链表的特点是？',
+      options: ['尾节点指向头节点，形成环', '头尾都能访问', '只能从头遍历到尾', '没有头节点'],
+      answer: 0,
+      explanation: '循环链表的尾节点 next 指回头节点（或头节点的前驱），形成环。从任意节点出发都能遍历整个链表。常用于约瑟夫问题、轮转调度、操作系统进程管理。判空条件：head->next == head。'
+    },
+    {
+      question: '静态链表是用什么模拟指针？',
+      options: ['真正的内存指针', '数组下标（游标）', '哈希表', '位图'],
+      answer: 1,
+      explanation: '静态链表用数组的下标（游标 cursor）代替指针，next 字段存的是下一个元素在数组中的下标。适用于不支持指针的语言（如早期 Fortran），或需要预分配固定内存的场景（嵌入式系统）。本质是用数组模拟链式结构。'
+    },
+  ],
+
+  'ds-03': [
+    {
+      question: '栈的操作特性是？',
+      options: ['FIFO（先进先出）', 'LIFO（后进先出）', '随机访问', '两端都能进出'],
+      answer: 1,
+      explanation: '栈是 LIFO（Last In First Out）后进先出——最后入栈的元素最先出栈。像一摞盘子，只能在顶部放/取。push/pop/peek 都在栈顶操作，均 $O(1)$。函数调用栈、撤销操作、DFS 都用栈。'
+    },
+    {
+      question: '队列的操作特性是？',
+      options: ['LIFO', 'FIFO（先进先出）', '只能在中间操作', '支持随机访问'],
+      answer: 1,
+      explanation: '队列是 FIFO（First In First Out）先进先出——先入队的先出队。像排队买票。入队在队尾（rear），出队在队头（front），均 $O(1)$。任务调度、BFS、打印机缓冲都用队列。'
+    },
+    {
+      question: '中缀表达式 $A+B*C$ 对应的后缀表达式是？',
+      options: ['$ABC*+$', '$AB+C*$', '$A+BC*$', '$+A*BC$'],
+      answer: 0,
+      explanation: '中缀转后缀：$A+B*C$。由于 * 优先级高，先算 $B*C$，后缀为 $BC*$；再与 $A$ 相加，后缀为 $A BC* +$。后缀表达式的优势：无需括号和优先级，用栈从左到右扫描即可求值。'
+    },
+    {
+      question: '循环队列容量为 MaxSize，判空和判满的条件分别是？',
+      options: ['空：front==rear；满：front==rear', '空：front==rear；满：(rear+1)%MaxSize==front', '空：rear==0；满：rear==MaxSize', '空：front==0；满：front==MaxSize-1'],
+      answer: 1,
+      explanation: '循环队列用取模实现循环。为区分空和满，牺牲一个存储单元：空条件 front==rear；满条件 (rear+1)%MaxSize==front（rear 即将追上 front，还差一格）。实际容量是 MaxSize-1。这是高频考点。'
+    },
+    {
+      question: '以下哪个问题最适合用栈解决？',
+      options: ['广度优先搜索 BFS', '括号匹配', '任务调度', '树的层序遍历'],
+      answer: 1,
+      explanation: '括号匹配是栈的经典应用：遇左括号入栈，遇右括号弹栈检查是否配对。栈的 LIFO 特性天然适合"嵌套结构"。BFS、任务调度、层序遍历用队列（FIFO）。函数调用、DFS、表达式求值用栈。'
+    },
+    {
+      question: '递归函数转换为非递归（迭代）实现，通常借助什么数据结构？',
+      options: ['队列', '栈', '堆', '哈希表'],
+      answer: 1,
+      explanation: '递归的本质是系统调用栈。手动改写为迭代时，用显式的栈模拟调用栈——把原本由系统自动压栈的参数和返回地址，手动压入自己维护的栈中。DFS 的递归版和栈版就是典型例子。深度大的递归必须改迭代以避免栈溢出。'
+    },
+  ],
+
+  'ds-04': [
+    {
+      question: 'BF（暴力）字符串匹配算法的最坏时间复杂度是？',
+      options: ['$O(n)$', '$O(m)$', '$O(n+m)$', '$O(nm)$'],
+      answer: 3,
+      explanation: 'BF 算法失配时主串指针回溯，最坏情况（如主串 "aaaa...ab"、模式串 "aab"）每次匹配到末尾才失败，复杂度 $O(nm)$。n 是主串长，m 是模式串长。这就是 KMP 要解决的问题。'
+    },
+    {
+      question: 'KMP 算法的时间复杂度是？',
+      options: ['$O(nm)$', '$O(n+m)$', '$O(n^2)$', '$O(m^2)$'],
+      answer: 1,
+      explanation: 'KMP 利用 next 数组，失配时主串指针 i 不回溯，只前进不后退，模式串指针 j 跳转。主循环 $O(n)$，预处理 next 数组 $O(m)$，总共 $O(n+m)$。这是 KMP 相对 BF 的核心优势。'
+    },
+    {
+      question: 'next[j] 数组的含义是？',
+      options: ['模式串第 j 个字符', '模式串 T[0..j-1] 的最长相等前后缀长度', '主串的位置', '匹配成功的位置'],
+      answer: 1,
+      explanation: 'next[j] = 模式串 T[0..j-1] 的最长相等前后缀长度。即最大的 k，使 T[0..k-1]==T[j-k..j-1]。失配时 j=next[j]，模式串右滑，跳过必然失配的位置。next 数组是 KMP 的核心和全部难点。'
+    },
+    {
+      question: '模式串 "abab" 的 next 数组是？',
+      options: ['-1,0,0,1', '-1,0,1,2', '0,0,0,1', '-1,0,0,0'],
+      answer: 0,
+      explanation: 'next[0]=-1（约定）。next[1]=0（T[0..0]="a" 无相等前后缀）。next[2]=0（T[0..1]="ab" 无相等前后缀）。next[3]=1（T[0..2]="aba"，前缀"a"=后缀"a"，长度 1）。所以 next=[-1,0,0,1]。'
+    },
+    {
+      question: 'KMP 算法失配时，主串指针 i 和模式串指针 j 的动作是？',
+      options: ['i 回溯，j 归零', 'i 不动，j=next[j]', 'i 前进，j 归零', 'i 和 j 都回溯'],
+      answer: 1,
+      explanation: 'KMP 的核心：失配时主串指针 i 保持不动（不回溯！），模式串指针 j 跳转到 next[j]。这利用了"已匹配前缀中，最长相等前后缀"的信息，避免重复比较。正是这一点把复杂度从 $O(nm)$ 降到 $O(n+m)$。'
+    },
+    {
+      question: 'nextval 数组是 next 数组的优化，优化条件是？',
+      options: ['当 T[j]==T[next[j]] 时，nextval[j]=nextval[next[j]]', '当 T[j]!=T[next[j]] 时优化', 'nextval[j] 总是等于 next[j]', 'nextval[j]=0'],
+      answer: 0,
+      explanation: '当 T[j]==T[next[j]] 时，跳到 next[j] 后该字符还是一样，必然再次失配，没意义。优化：直接 nextval[j]=nextval[next[j]]，跳过这个无用跳转。nextval 让 KMP 在某些模式串上减少比较次数，但最坏复杂度不变。'
+    },
+  ],
 };
+
 
 
 

@@ -26,6 +26,34 @@
 .nav-children { overflow: hidden; transition: max-height 0.25s ease; }
 .nav-children.hidden { display: none; }
 
+/* 二级菜单：板块项（可折叠，展开后显示章节） */
+.nav-section {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.4rem 0.75rem; border-radius: 0.375rem; cursor: pointer;
+  font-size: 0.85rem; font-weight: 500; color: var(--text);
+  user-select: none; transition: background 0.15s;
+}
+.nav-section:hover { background: rgba(37,99,235,0.06); }
+.nav-section .nav-section-label { display: flex; align-items: center; gap: 0.4rem; }
+.nav-section .nav-section-icon { font-size: 1rem; line-height: 1; }
+.nav-section .nav-section-count { font-size: 0.65rem; color: var(--text-secondary); font-weight: 400; }
+.nav-section svg { transition: transform 0.2s; width: 0.875rem; height: 0.875rem; color: var(--text-secondary); }
+.nav-section.open svg { transform: rotate(90deg); }
+
+/* 三级菜单：章节项（缩进，点击直接进详情页） */
+.nav-chapters { overflow: hidden; }
+.nav-chapters.hidden { display: none; }
+.nav-chapter {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.3rem 0.75rem 0.3rem 2.2rem;   /* 左缩进 2.2rem 形成层级 */
+  font-size: 0.8rem; cursor: pointer; border-radius: 0.375rem;
+  color: var(--text-secondary); transition: all 0.15s; text-decoration: none;
+}
+.nav-chapter:hover { background: rgba(37,99,235,0.06); color: var(--primary); }
+.nav-chapter.active { color: var(--primary); font-weight: 500; }
+.nav-chapter .nav-chapter-icon { font-size: 0.85rem; flex-shrink: 0; }
+.nav-chapter .nav-chapter-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
 #sidebar-toggle:hover { color: var(--primary); background: var(--bg-card); }
 #sidebar-toggle svg { transition: transform 0.3s; }
 #sidebar-toggle.sidebar-collapsed svg { transform: rotate(180deg); }

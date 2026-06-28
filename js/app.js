@@ -23,6 +23,7 @@
     let html = '';
     CourseData.nav.forEach(item => {
       if (item.children) {
+        // 一级：大类（数学/电子电路）—— 折叠分组
         const isCollapsed = !!collapsedGroups[item.id];
         html += `<div class="nav-section-title nav-group-toggle" onclick="toggleNavGroup('${item.id}')">
           <span class="flex items-center gap-1">${CourseData.icons[item.icon] || ''} ${item.label}</span>
@@ -30,14 +31,21 @@
         </div>`;
         html += `<div class="nav-children ${isCollapsed ? 'hidden' : ''}">`;
         item.children.forEach(child => {
-          html += `<a class="nav-item" data-page="${child.id}" onclick="navigateTo('${child.id}')">
-            <span>${child.label}</span></a>`;
+          // 二级：板块项 —— 可折叠，展开后显示三级章节
+          html += renderSectionNavItem(child);
         });
         html += `</div>`;
       } else {
-        html += `<a class="nav-item" data-page="${item.id}" onclick="navigateTo('${item.id}')">
-          <span class="nav-icon">${CourseData.icons[item.icon] || ''}</span><span>${item.label}</span>
-          ${item.badge ? `<span class="nav-badge ${item.badgeClass}">${item.badge}</span>` : ''}</a>`;
+        // 一级且无子项：自动控制/数据结构/工具箱/学习路径
+        // 这些是板块本身（id 对应 CourseData 的板块），让它也能展开章节
+        const isSection = CourseData[item.id] && CourseData[item.id].sections;
+        if (isSection) {
+          html += renderSectionNavItem({ id: item.id, label: item.label, icon: item.icon, badge: item.badge, badgeClass: item.badgeClass });
+        } else {
+          html += `<a class="nav-item" data-page="${item.id}" onclick="navigateTo('${item.id}')">
+            <span class="nav-icon">${CourseData.icons[item.icon] || ''}</span><span>${item.label}</span>
+            ${item.badge ? `<span class="nav-badge ${item.badgeClass}">${item.badge}</span>` : ''}</a>`;
+        }
       }
     });
 
@@ -63,6 +71,45 @@
     }
     nav.innerHTML = html;
   }
+
+  // 渲染二级板块项（可折叠，展开后列出三级章节）
+  function renderSectionNavItem(section) {
+    const data = CourseData[section.id];
+    const hasSections = data && data.sections && data.sections.length > 0;
+    const isOpen = !collapsedGroups['sec_' + section.id];   // 默认展开
+    const iconHtml = CourseData.icons[section.icon] || '';
+    const badge = section.badge ? `<span class="nav-badge ${section.badgeClass}">${section.badge}</span>` : '';
+
+    let html = `<div class="nav-section ${isOpen ? 'open' : ''}" onclick="toggleSectionGroup('${section.id}', this)">
+      <span class="nav-section-label">${iconHtml} ${section.label} ${badge}</span>
+      ${hasSections ? `<span class="flex items-center gap-1">
+        <span class="nav-section-count">${data.sections.length}节</span>
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </span>` : ''}
+    </div>`;
+
+    if (hasSections) {
+      html += `<div class="nav-chapters ${isOpen ? '' : 'hidden'}" data-section="${section.id}">`;
+      data.sections.forEach(s => {
+        html += `<a class="nav-chapter" data-page="${s.id}" onclick="navigateTo('${s.id}');event.stopPropagation();">
+          <span class="nav-chapter-icon">${s.icon || '📄'}</span>
+          <span class="nav-chapter-title">${s.title}</span>
+        </a>`;
+      });
+      html += `</div>`;
+    }
+    return html;
+  }
+
+  // 折叠/展开某个板块的章节列表
+  window.toggleSectionGroup = function (sectionId, el) {
+    const key = 'sec_' + sectionId;
+    collapsedGroups[key] = !collapsedGroups[key];
+    sessionStorage.setItem('sw_collapsed', JSON.stringify(collapsedGroups));
+    const chapters = el.nextElementSibling;
+    if (chapters) chapters.classList.toggle('hidden');
+    el.classList.toggle('open');
+  };
 
   window.toggleNavGroup = function (groupId) {
     collapsedGroups[groupId] = !collapsedGroups[groupId];
