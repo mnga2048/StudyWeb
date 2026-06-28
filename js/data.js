@@ -4109,7 +4109,831 @@ const QuizData = {
       question: '关于 $f(x)=x^3$ 在 $x=0$ 处，下列正确的是？',
       options: ['$x=0$ 是极大值点', '$x=0$ 是极小值点', '$x=0$ 是拐点但不是极值点', '$x=0$ 既是极值点又是拐点'],
       answer: 2,
-      explanation: '$f\\\'(x)=3x^2$，$f\\\'(0)=0$ 但 $f\\\'$ 在 0 左右都为正（不变号），故不是极值。而 $f\\\'\'(x)=6x$ 在 $x=0$ 左右由负变正（凹凸改变），故 $(0,0)$ 是拐点。这题警示：$f\\\'(x_0)=0$ 不一定是极值，要看变号。'
+      explanation: '$f\'(x)=3x^2$，$f\'(0)=0$ 但 $f\'$ 在 0 左右都为正（不变号），故不是极值。而 $f\'\'(x)=6x$ 在 $x=0$ 左右由负变正（凹凸改变），故 $(0,0)$ 是拐点。这题警示：$f\'(x_0)=0$ 不一定是极值，要看变号。'
+    },
+  ],
+
+  // ========== 高等数学 hm-05~hm-16 ==========
+  'hm-05': [
+    {
+      question: '不定积分 $\\int f(x)\\,dx$ 的结果是？',
+      options: ['一个函数', '一个常数', '一族函数（含任意常数 C）', '一个定值'],
+      answer: 2,
+      explanation: '不定积分是全体原函数的集合，结果是一个函数族 $F(x)+C$，其中 $C$ 是任意常数。漏写 $+C$ 是最常见的错误，考试中即使过程全对，漏 $C$ 也会扣分。'
+    },
+    {
+      question: '$\\int \\frac{1}{x}\\,dx$ 等于？',
+      options: ['$\\ln x + C$', '$\\ln|x| + C$', '$-\\frac{1}{x^2} + C$', '$\\frac{1}{x} + C$'],
+      answer: 1,
+      explanation: '注意 $\\int \\frac{1}{x}dx = \\ln|x| + C$ 必须加绝对值！因为 $x<0$ 时 $\\ln x$ 无定义，但 $\\frac{1}{x}$ 在 $x<0$ 时仍有意义。$(\\ln|x|)\' = \\frac{1}{x}$ 对所有 $x \\ne 0$ 成立。'
+    },
+    {
+      question: '第一类换元法（凑微分）的核心思想是？',
+      options: ['令 $x = \\varphi(t)$', '把被积函数凑成 $f(\\varphi(x))\\varphi\'(x)$ 的形式', '直接用公式', '分部积分'],
+      answer: 1,
+      explanation: '第一类换元法是"凑微分"：识别出被积函数中的复合结构 $f(\\varphi(x))\\varphi\'(x)$，令 $u=\\varphi(x)$ 换元。关键是要熟悉常见凑微分：$x\\,dx=\\frac{1}{2}d(x^2)$、$e^x\\,dx=d(e^x)$ 等。'
+    },
+    {
+      question: '$\\int x e^x\\,dx$ 用什么方法计算？',
+      options: ['第一类换元法', '第二类换元法', '分部积分法', '直接用公式'],
+      answer: 2,
+      explanation: '被积函数是两种不同类型（幂函数×指数函数）的乘积，适合用分部积分。令 $u=x$，$dv=e^x dx$，则 $du=dx$，$v=e^x$，原式 $= xe^x - \\int e^x dx = xe^x - e^x + C$。'
+    },
+    {
+      question: '分部积分的"反对幂指三"口诀中，优先选作 $u$ 的是？',
+      options: ['三角函数', '指数函数', '幂函数', '反三角函数'],
+      answer: 3,
+      explanation: '口诀"反对幂指三"表示选 $u$ 的优先级：反三角 > 对数 > 幂 > 指数 > 三角。排在前面的优先选作 $u$（求导后会简化），排在后面的作为 $dv$（积分后不会变更复杂）。'
+    },
+    {
+      question: '$\\int \\sqrt{1-x^2}\\,dx$ 应该用什么代换？',
+      options: ['$x = \\sin t$', '$x = \\tan t$', '$x = \\sec t$', '$x = \\frac{1}{t}$'],
+      answer: 0,
+      explanation: '被积函数含 $\\sqrt{1-x^2}$，属于 $\\sqrt{a^2-x^2}$ 型，用三角代换 $x = a\\sin t$（此处 $a=1$）。利用 $1-\\sin^2 t = \\cos^2 t$ 消去根号。记住三类根号对应的代换：$a^2-x^2$ 用 $\\sin$，$a^2+x^2$ 用 $\\tan$，$x^2-a^2$ 用 $\\sec$。'
+    },
+    {
+      question: '以下关于不定积分的说法，错误的是？',
+      options: ['$\\int [f(x)+g(x)]dx = \\int f(x)dx + \\int g(x)dx$', '$\\int kf(x)dx = k\\int f(x)dx$（$k$ 为常数）', '$\\int f(x)g(x)dx = \\int f(x)dx \\cdot \\int g(x)dx$', '求导和互为逆运算'],
+      answer: 2,
+      explanation: '积分没有乘法分配律！$\\int f(x)g(x)dx \\ne \\int f(x)dx \\cdot \\int g(x)dx$。乘积的积分需要用分部积分法或换元法，不能拆开分别积分再相乘。这是初学者常犯的概念错误。'
+    },
+  ],
+
+  'hm-06': [
+    {
+      question: '定积分 $\\int_a^b f(x)dx$ 的几何意义是？',
+      options: ['曲线的长度', '曲边梯形的面积（代数面积）', '函数的最大值', '原函数的值'],
+      answer: 1,
+      explanation: '定积分表示曲线 $y=f(x)$ 与 $x$ 轴之间的"代数面积"——$x$ 轴上方为正，下方为负。这是黎曼和的极限，不等于几何面积（几何面积需取绝对值）。'
+    },
+    {
+      question: '牛顿-莱布尼茨公式 $\\int_a^b f(x)dx = F(b)-F(a)$ 的条件是？',
+      options: ['$f(x)$ 连续', '$F(x)$ 连续', '$f(x)$ 在 $[a,b]$ 上可积且 $F\'(x)=f(x)$', '无条件成立'],
+      answer: 2,
+      explanation: '牛莱公式要求：① $f(x)$ 在 $[a,b]$ 上可积（连续或有限个第一类间断点）；② $F(x)$ 是 $f(x)$ 的原函数。两个条件缺一不可。'
+    },
+    {
+      question: '$\\int_1^{+\\infty} \\frac{1}{x^p}dx$ 收敛的条件是？',
+      options: ['$p > 0$', '$p > 1$', '$p < 1$', '$p \\ne 0$'],
+      answer: 1,
+      explanation: '这是无穷区间的 p-积分。当 $p>1$ 时 $\\int_1^{+\\infty} x^{-p}dx = \\frac{1}{p-1}$ 收敛；当 $p \\le 1$ 时发散。记忆：无穷区间"大p收敛"。'
+    },
+    {
+      question: '定积分换元时，与不定积分换元的最大区别是？',
+      options: ['不需要回代', '必须同时换积分限', '不能用三角代换', '只能用第一类换元'],
+      answer: 1,
+      explanation: '定积分换元 $x=\\varphi(t)$ 时，积分限必须跟着变：$x=a$ 对应 $t=\\varphi^{-1}(a)$，$x=b$ 对应 $t=\\varphi^{-1}(b)$。换完限后直接对 $t$ 积分求值，不需要回代。'
+    },
+    {
+      question: '$\\int_0^1 \\frac{1}{x^p}dx$（瑕积分）收敛的条件是？',
+      options: ['$p > 1$', '$p < 1$', '$p > 0$', '$p \\ne 1$'],
+      answer: 1,
+      explanation: '这是瑕积分（$x=0$ 是瑕点）。当 $p<1$ 时收敛，当 $p \\ge 1$ 时发散。记忆：瑕积分"小p收敛"，与无穷区间的"大p收敛"正好相反。'
+    },
+    {
+      question: '定积分中值定理 $\\int_a^b f(x)dx = f(\\xi)(b-a)$ 的含义是？',
+      options: ['$f(\\xi)$ 是最大值', '$f(\\xi)$ 是最小值', '存在 $\\xi \\in [a,b]$ 使得 $f(\\xi)$ 等于平均值', '$\\xi$ 是唯一的'],
+      answer: 2,
+      explanation: '中值定理说明：连续函数在区间上的积分等于某点的函数值乘以区间长度。$f(\\xi) = \\frac{1}{b-a}\\int_a^b f(x)dx$ 正是函数在 $[a,b]$ 上的平均值。$\\xi$ 不一定唯一。'
+    },
+  ],
+
+  'hm-07': [
+    {
+      question: '由 $y=f(x)$、$y=g(x)$、$x=a$、$x=b$ 围成的面积公式是？',
+      options: ['$\\int_a^b [f(x)-g(x)]dx$', '$\\int_a^b |f(x)-g(x)|dx$', '$\\int_a^b f(x)dx - \\int_a^b g(x)dx$', '$\\int_a^b [f(x)+g(x)]dx$'],
+      answer: 1,
+      explanation: '面积一定是非负的，所以要用绝对值：$S = \\int_a^b |f(x)-g(x)|dx$。如果不用绝对值，当 $f<g$ 时积分结果为负，不是面积。画图确定上下位置后再去绝对值。'
+    },
+    {
+      question: '绕 $x$ 轴旋转体的体积公式（圆盘法）是？',
+      options: ['$V = \\int_a^b f(x)dx$', '$V = \\pi\\int_a^b [f(x)]^2dx$', '$V = 2\\pi\\int_a^b x f(x)dx$', '$V = \\int_a^b 2\\pi f(x)dx$'],
+      answer: 1,
+      explanation: '圆盘法：垂直于旋转轴切片，每个薄片是圆盘，体积微元 $dV = \\pi r^2 dx = \\pi [f(x)]^2 dx$。绕 $x$ 轴旋转时半径就是 $|f(x)|$，积分得 $V = \\pi\\int_a^b [f(x)]^2 dx$。'
+    },
+    {
+      question: '柱壳法绕 $y$ 轴旋转的体积公式是？',
+      options: ['$V = \\pi\\int_a^b [f(x)]^2dx$', '$V = 2\\pi\\int_a^b x|f(x)|dx$', '$V = \\int_a^b f(x)dx$', '$V = \\pi\\int_a^b x^2 dx$'],
+      answer: 1,
+      explanation: '柱壳法：平行于旋转轴切片，每个薄片展开是圆柱壳，体积微元 $dV = 2\\pi r h \\cdot dx = 2\\pi x |f(x)| dx$。绕 $y$ 轴旋转时，半径是 $x$，高度是 $|f(x)|$。'
+    },
+    {
+      question: '曲线 $y=f(x)$ 从 $x=a$ 到 $x=b$ 的弧长公式是？',
+      options: ['$L = \\int_a^b \\sqrt{1+[f(x)]^2}dx$', '$L = \\int_a^b \\sqrt{1+[f\'(x)]^2}dx$', '$L = \\int_a^b |f(x)|dx$', '$L = \\int_a^b f\'(x)dx$'],
+      answer: 1,
+      explanation: '弧长公式：$L = \\int_a^b \\sqrt{1+[f\'(x)]^2}dx$。关键是 $ds = \\sqrt{dx^2+dy^2} = \\sqrt{1+(dy/dx)^2}dx$。注意是 $f\'(x)$ 的平方，不是 $f(x)$ 的平方。'
+    },
+    {
+      question: '极坐标下面积公式 $S = \\frac{1}{2}\\int_\\alpha^\\beta r^2(\\theta)d\\theta$ 中，$\\frac{1}{2}$ 容易遗忘，原因是？',
+      options: ['公式推导错误', '扇形面积公式 $\\frac{1}{2}r^2\\theta$ 本身就含 $\\frac{1}{2}$', '极坐标比直角坐标小一半', '是人为规定的'],
+      answer: 1,
+      explanation: '极坐标面积微元是小扇形：$dS = \\frac{1}{2}r^2 d\\theta$，来自"扇形面积 = $\\frac{1}{2} \\times$ 弧长 $\\times$ 半径 = $\\frac{1}{2}r^2 d\\theta$"。这个 $\\frac{1}{2}$ 是扇形面积公式的固有因子。'
+    },
+  ],
+
+  'hm-08': [
+    {
+      question: '微分方程 $y\' + P(x)y = Q(x)$ 的类型是？',
+      options: ['可分离变量方程', '齐次方程', '一阶线性微分方程', '伯努利方程'],
+      answer: 2,
+      explanation: '$y\' + P(x)y = Q(x)$ 是一阶线性微分方程的标准形式。"线性"指 $y$ 和 $y\'$ 都是一次的，没有 $y^2$、$yy\'$ 等非线性项。通解公式可直接套用。'
+    },
+    {
+      question: '二阶常系数齐次方程 $y\'\'+py\'+qy=0$ 的特征方程是？',
+      options: ['$r^2+pr+q=0$', '$r^2+p=0$', '$r^2+q=0$', '$r+pq=0$'],
+      answer: 0,
+      explanation: '令 $y=e^{rx}$ 代入方程，消去 $e^{rx}$（不为零）得到特征方程 $r^2+pr+q=0$。特征根决定通解形式：两个不等实根→指数叠加，重根→$(C_1+C_2x)e^{rx}$，复根→指数乘三角函数。'
+    },
+    {
+      question: '特征方程有重根 $r_1=r_2=r$ 时，通解是？',
+      options: ['$y = C_1 e^{rx} + C_2 e^{rx}$', '$y = (C_1 + C_2 x)e^{rx}$', '$y = C_1 e^{rx}$', '$y = C_1 x e^{rx}$'],
+      answer: 1,
+      explanation: '重根时两个线性无关解是 $e^{rx}$ 和 $xe^{rx}$，所以通解 $y = (C_1+C_2x)e^{rx}$。注意不能写成 $C_1 e^{rx} + C_2 e^{rx}$（只有一个独立常数），也不能漏掉 $x$ 因子。'
+    },
+    {
+      question: '特征方程有共轭复根 $r = \\alpha \\pm \\beta i$ 时，实数形式的通解是？',
+      options: ['$y = e^{\\alpha x}(C_1 \\cos\\beta x + C_2 \\sin\\beta x)$', '$y = C_1 e^{\\alpha x} + C_2 e^{\\beta x}$', '$y = C_1 e^{(\\alpha+\\beta i)x} + C_2 e^{(\\alpha-\\beta i)x}$', '$y = \\cos\\beta x + \\sin\\beta x$'],
+      answer: 0,
+      explanation: '复根时用欧拉公式将复指数化为三角函数，得到实数形式通解 $y = e^{\\alpha x}(C_1\\cos\\beta x + C_2\\sin\\beta x)$。$e^{\\alpha x}$ 是振幅包络，$\\cos\\beta x$ 和 $\\sin\\beta x$ 是振荡项。'
+    },
+    {
+      question: '$y\' + 2y = 4$ 的通解是？',
+      options: ['$y = Ce^{-2x} + 2$', '$y = Ce^{2x} + 2$', '$y = Ce^{-2x}$', '$y = Ce^{-2x} + 4$'],
+      answer: 0,
+      explanation: '这是一阶线性方程。齐次通解 $y_h = Ce^{-2x}$，特解设 $y_p = a$（常数），代入得 $2a = 4$，$a = 2$。通解 $y = Ce^{-2x} + 2$。特解也可直接观察：$y=2$ 时 $y\'=0$，$0+2\\times2=4$ 成立。'
+    },
+    {
+      question: '待定系数法中，若 $f(x) = e^{\\alpha x}$ 且 $\\alpha$ 是特征方程的单根，特解应设为？',
+      options: ['$y_p = Ae^{\\alpha x}$', '$y_p = Axe^{\\alpha x}$', '$y_p = Ax^2 e^{\\alpha x}$', '$y_p = A$'],
+      answer: 1,
+      explanation: '当 $f(x)$ 的指数 $\\alpha$ 是特征方程的单根时，标准特解 $Ae^{\\alpha x}$ 与齐次解重合，需要乘以 $x$ 修正：$y_p = Axe^{\\alpha x}$。若是重根则乘 $x^2$。这个"升幂修正"规则是待定系数法的关键。'
+    },
+  ],
+
+  'hm-09': [
+    {
+      question: '多元函数 $f(x,y)$ 在 $(x_0,y_0)$ 处偏导数 $f_x$ 存在，意味着？',
+      options: ['$f$ 在该点连续', '$f$ 在该点可微', '固定 $y=y_0$ 后 $f(x,y_0)$ 对 $x$ 可导', '$f_y$ 也一定存在'],
+      answer: 2,
+      explanation: '偏导数 $f_x(x_0,y_0)$ 的定义就是固定 $y=y_0$ 后，一元函数 $g(x) = f(x,y_0)$ 在 $x_0$ 处的导数。偏导存在不能推出连续、可微或其他偏导存在。'
+    },
+    {
+      question: '以下哪个条件能推出 $f(x,y)$ 在 $(x_0,y_0)$ 可微？',
+      options: ['$f_x$ 和 $f_y$ 都存在', '$f$ 连续', '$f_x$ 和 $f_y$ 都连续', '$f$ 有极限'],
+      answer: 2,
+      explanation: '偏导连续是可微的充分条件。关系链：偏导连续 $\\Rightarrow$ 可微 $\\Rightarrow$ 连续，可微 $\\Rightarrow$ 偏导存在。但箭头不能反过来！偏导存在或连续都不能单独推出可微。'
+    },
+    {
+      question: '$z = f(u,v)$，$u = \\varphi(x,y)$，$v = \\psi(x,y)$，则 $\\frac{\\partial z}{\\partial x}$ 等于？',
+      options: ['$\\frac{\\partial z}{\\partial u} + \\frac{\\partial z}{\\partial v}$', '$\\frac{\\partial z}{\\partial u}\\frac{\\partial u}{\\partial x} + \\frac{\\partial z}{\\partial v}\\frac{\\partial v}{\\partial x}$', '$\\frac{\\partial z}{\\partial u}\\frac{\\partial u}{\\partial x}$', '$\\frac{\\partial z}{\\partial v}\\frac{\\partial v}{\\partial x}$'],
+      answer: 1,
+      explanation: '这是链式法则：$z$ 对 $x$ 的偏导等于所有中间变量路径的贡献之和。每条路径的贡献 = 沿路径的偏导之积。$z$ 到 $x$ 有两条路：$z \\to u \\to x$ 和 $z \\to v \\to x$。'
+    },
+    {
+      question: '由 $F(x,y) = 0$ 确定的隐函数 $y = y(x)$，$\\frac{dy}{dx}$ 等于？',
+      options: ['$\\frac{F_x}{F_y}$', '$-\\frac{F_x}{F_y}$', '$\\frac{F_y}{F_x}$', '$-\\frac{F_y}{F_x}$'],
+      answer: 1,
+      explanation: '隐函数求导公式：$\\frac{dy}{dx} = -\\frac{F_x}{F_y}$。记忆口诀："偏谁除以偏谁，前面加负号"。注意是 $F$ 对 $x$ 的偏导除以 $F$ 对 $y$ 的偏导，不是反过来。'
+    },
+    {
+      question: '梯度 $\\nabla f$ 的方向是？',
+      options: ['函数值减小最快的方向', '函数值增长最快的方向', '等值线的切线方向', '任意方向'],
+      answer: 1,
+      explanation: '梯度方向是函数值增长最快的方向，梯度的模 $|\\nabla f|$ 是最大方向导数。梯度垂直于等值线，指向函数值增大的一侧。负梯度方向是下降最快的方向（梯度下降法的基础）。'
+    },
+    {
+      question: '以下关于连续、可微、偏导存在的关系，正确的是？',
+      options: ['可微 $\\Rightarrow$ 连续 $\\Rightarrow$ 偏导存在', '偏导存在 $\\Rightarrow$ 可微 $\\Rightarrow$ 连续', '可微 $\\Rightarrow$ 偏导存在 $\\Rightarrow$ 连续', '连续 $\\Rightarrow$ 偏导存在 $\\Rightarrow$ 可微'],
+      answer: 0,
+      explanation: '正确关系链：可微 $\\Rightarrow$ 连续，可微 $\\Rightarrow$ 偏导存在。但偏导存在 $\\not\\Rightarrow$ 可微，连续 $\\not\\Rightarrow$ 偏导存在。这是选择题高频考点，记住"可微是最强的条件"。'
+    },
+  ],
+
+  'hm-10': [
+    {
+      question: '无条件极值的必要条件是？',
+      options: ['$f_x = f_y = 0$', '$f_{xx} = f_{yy} = 0$', '$f_{xy} = 0$', '$\\Delta = AC - B^2 = 0$'],
+      answer: 0,
+      explanation: '极值点处偏导必须为零（驻点）。但驻点不一定是极值（如鞍点）。充分条件需要进一步用二阶偏导判别：$\\Delta = AC - B^2 > 0$ 且 $A > 0$ 为极小，$A < 0$ 为极大。'
+    },
+    {
+      question: '$\\Delta = AC - B^2 < 0$ 时，驻点是？',
+      options: ['极大值点', '极小值点', '鞍点（不是极值点）', '无法判断'],
+      answer: 2,
+      explanation: '$\\Delta < 0$ 说明在某个方向是极大，另一个方向是极小，形状像马鞍，称为鞍点。鞍点不是极值点——它在某些方向上函数值比周围大，在另一些方向上比周围小。'
+    },
+    {
+      question: '拉格朗日乘数法求 $f(x,y)$ 在约束 $\\varphi(x,y)=0$ 下的极值，构造的函数是？',
+      options: ['$L = f + \\varphi$', '$L = f + \\lambda\\varphi$', '$L = f \\cdot \\varphi$', '$L = f - \\lambda\\varphi$'],
+      answer: 1,
+      explanation: '拉格朗日函数 $L = f + \\lambda\\varphi$，其中 $\\lambda$ 是拉格朗日乘子。令 $L_x = L_y = L_\\lambda = 0$ 解方程组。每个约束条件对应一个乘子。'
+    },
+    {
+      question: '拉格朗日乘数法的几何意义是？',
+      options: ['目标函数梯度为零', '目标函数梯度与约束曲面法向量平行', '约束曲面梯度为零', '目标函数与约束相切'],
+      answer: 1,
+      explanation: '极值点处 $\\nabla f = -\\lambda \\nabla \\varphi$，即目标函数梯度与约束曲面法向量平行。这意味着沿约束曲面的任意方向，目标函数的变化率为零（达到极值）。'
+    },
+    {
+      question: '求 $f(x,y) = x^2 + y^2$ 在约束 $x + y = 1$ 下的最小值，结果是？',
+      options: ['$\\frac{1}{2}$', '$1$', '$\\frac{1}{4}$', '$2$'],
+      answer: 0,
+      explanation: '$L = x^2+y^2+\\lambda(x+y-1)$，$L_x=2x+\\lambda=0$，$L_y=2y+\\lambda=0$，得 $x=y$。代入约束 $2x=1$，$x=y=\\frac{1}{2}$。最小值 $f = \\frac{1}{4}+\\frac{1}{4} = \\frac{1}{2}$。几何意义：原点到直线 $x+y=1$ 的最短距离的平方。'
+    },
+  ],
+
+  'hm-11': [
+    {
+      question: '二重积分 $\\iint_D f(x,y)d\\sigma$ 的几何意义是？',
+      options: ['区域 D 的面积', '曲顶柱体的体积', '曲线的长度', '函数的最大值'],
+      answer: 1,
+      explanation: '二重积分表示以 $D$ 为底、$z=f(x,y)$ 为顶的曲顶柱体体积。当 $f=1$ 时积分值等于区域面积，当 $f=\\rho$（密度）时积分值等于质量。'
+    },
+    {
+      question: 'X 型区域（先 y 后 x）的积分次序是？',
+      options: ['$\\int dx \\int f\\,dy$', '$\\int dy \\int f\\,dx$', '$\\int f\\,dx$', '$\\int f\\,dy$'],
+      answer: 0,
+      explanation: 'X 型区域：先对 $y$ 积分（内层），$y$ 的积分限是 $x$ 的函数；再对 $x$ 积分（外层），$x$ 的积分限是常数。$\\int_a^b dx \\int_{\\varphi_1(x)}^{\\varphi_2(x)} f(x,y)dy$。'
+    },
+    {
+      question: '极坐标下二重积分的面积元素 $d\\sigma$ 是？',
+      options: ['$dr\\,d\\theta$', '$r\\,dr\\,d\\theta$', '$r^2\\,dr\\,d\\theta$', '$\\frac{1}{2}r\\,dr\\,d\\theta$'],
+      answer: 1,
+      explanation: '极坐标面积元素 $d\\sigma = r\\,dr\\,d\\theta$，多了一个 $r$ 因子！这是最容易漏掉的。推导：小扇形面积 = 弧长 $\\times$ 径向宽 = $r\\,d\\theta \\times dr$。'
+    },
+    {
+      question: '交换积分次序 $\\int_0^1 dx \\int_x^1 f(x,y)dy$ 后，结果是？',
+      options: ['$\\int_0^1 dy \\int_0^y f(x,y)dx$', '$\\int_0^1 dy \\int_y^1 f(x,y)dx$', '$\\int_0^1 dy \\int_0^1 f(x,y)dx$', '$\\int_0^1 dx \\int_0^x f(x,y)dy$'],
+      answer: 0,
+      explanation: '原积分：$0 \\le x \\le 1$，$x \\le y \\le 1$。画出区域：三角形，$y=x$ 下方、$y=1$ 上方。交换后：$0 \\le y \\le 1$，$0 \\le x \\le y$。所以 $\\int_0^1 dy \\int_0^y f(x,y)dx$。'
+    },
+    {
+      question: '若 $D$ 关于 $x$ 轴对称，$f(x,-y) = -f(x,y)$（关于 $y$ 是奇函数），则 $\\iint_D f\\,d\\sigma$ 等于？',
+      options: ['$2\\iint_{D_1} f\\,d\\sigma$（$D_1$ 是上半部分）', '$0$', '$\\iint_D |f|\\,d\\sigma$', '无法确定'],
+      answer: 1,
+      explanation: '区域对称 + 被积函数是奇函数 = 积分为零。这是简化计算的利器：先检查对称性和奇偶性，可能直接得出结果而无需计算。'
+    },
+    {
+      question: '计算 $\\iint_D (x^2+y^2)d\\sigma$，$D: x^2+y^2 \\le 1$，最方便的坐标是？',
+      options: ['直角坐标', '极坐标', '柱坐标', '球坐标'],
+      answer: 1,
+      explanation: '积分区域是圆，被积函数含 $x^2+y^2$，用极坐标最方便：$x^2+y^2 = r^2$，$d\\sigma = r\\,dr\\,d\\theta$。原式 $= \\int_0^{2\\pi}d\\theta \\int_0^1 r^2 \\cdot r\\,dr = 2\\pi \\cdot \\frac{1}{4} = \\frac{\\pi}{2}$。'
+    },
+  ],
+
+  'hm-12': [
+    {
+      question: '柱坐标 $(r,\\theta,z)$ 与直角坐标的关系是？',
+      options: ['$x=r\\cos\\theta, y=r\\sin\\theta, z=z$', '$x=r\\sin\\theta, y=r\\cos\\theta, z=z$', '$x=r\\cos\\theta, y=z\\sin\\theta, z=r$', '$x=z\\cos\\theta, y=z\\sin\\theta, z=r$'],
+      answer: 0,
+      explanation: '柱坐标就是在极坐标基础上加 $z$：$x=r\\cos\\theta$，$y=r\\sin\\theta$，$z=z$。体积元素 $dV = r\\,dr\\,d\\theta\\,dz$。适用场景：圆柱形区域或被积函数含 $x^2+y^2$。'
+    },
+    {
+      question: '球坐标 $(r,\\varphi,\\theta)$ 中 $\\varphi$ 的范围是？',
+      options: ['$[0, 2\\pi]$', '$[0, \\pi]$', '$[-\\pi, \\pi]$', '$[0, \\pi/2]$'],
+      answer: 1,
+      explanation: '$\\varphi$ 是从正 $z$ 轴量起的"余纬度"，范围 $[0, \\pi]$。$\\theta$ 是绕 $z$ 轴的方位角，范围 $[0, 2\\pi]$。$\\varphi$ 不是纬度（纬度从赤道量起），这是最容易搞混的。'
+    },
+    {
+      question: '球坐标的体积元素 $dV$ 是？',
+      options: ['$dr\\,d\\varphi\\,d\\theta$', '$r\\,dr\\,d\\varphi\\,d\\theta$', '$r^2\\sin\\varphi\\,dr\\,d\\varphi\\,d\\theta$', '$r^2\\,dr\\,d\\varphi\\,d\\theta$'],
+      answer: 2,
+      explanation: '球坐标体积元素 $dV = r^2\\sin\\varphi\\,dr\\,d\\varphi\\,d\\theta$。$r^2$ 来自径向，$\\sin\\varphi$ 来自纬度方向。漏掉 $\\sin\\varphi$ 是常见错误。'
+    },
+    {
+      question: '计算球体 $x^2+y^2+z^2 \\le R^2$ 的体积，最方便的方法是？',
+      options: ['直角坐标三重积分', '柱坐标', '球坐标', '二重积分'],
+      answer: 2,
+      explanation: '球体用球坐标最简单：$V = \\int_0^{2\\pi}d\\theta \\int_0^\\pi \\sin\\varphi\\,d\\varphi \\int_0^R r^2\\,dr = 2\\pi \\cdot 2 \\cdot \\frac{R^3}{3} = \\frac{4}{3}\\pi R^3$。'
+    },
+    {
+      question: '含参变量积分 $F(t) = \\int_a^b f(x,t)dx$ 对 $t$ 求导的公式是？',
+      options: ['$F\'(t) = \\int_a^b \\frac{\\partial f}{\\partial t}dx$', '$F\'(t) = f(b,t) - f(a,t)$', '$F\'(t) = \\int_a^b f(x,t)dx$', '$F\'(t) = 0$'],
+      answer: 0,
+      explanation: '莱布尼茨公式（积分限为常数时）：$F\'(t) = \\int_a^b \\frac{\\partial f}{\\partial t}dx$。可以在积分号下对参数求导，条件是 $f$ 和 $f_t$ 都连续。'
+    },
+  ],
+
+  'hm-13': [
+    {
+      question: '第一类曲线积分 $\\int_L f\\,ds$ 与曲线方向的关系是？',
+      options: ['方向反则积分变号', '与方向无关', '只与起点有关', '只与终点有关'],
+      answer: 1,
+      explanation: '第一类曲线积分（对弧长）与方向无关：$\\int_L f\\,ds = \\int_{-L} f\\,ds$。因为 $ds$ 是弧长微元（恒正），不带方向信息。第二类曲线积分（对坐标）才与方向有关。'
+    },
+    {
+      question: '格林公式 $\\oint_L P\\,dx + Q\\,dy = \\iint_D (?)\\,d\\sigma$ 中，问号处是？',
+      options: ['$\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y}$', '$\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}$', '$\\frac{\\partial P}{\\partial y} - \\frac{\\partial Q}{\\partial x}$', '$\\frac{\\partial P}{\\partial x} - \\frac{\\partial Q}{\\partial y}$'],
+      answer: 1,
+      explanation: '格林公式：$\\oint_L P\\,dx + Q\\,dy = \\iint_D (\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y})d\\sigma$。记忆：$Q$ 对 $x$ 减 $P$ 对 $y$，顺序是交叉的。'
+    },
+    {
+      question: '曲线积分与路径无关的条件是？',
+      options: ['$P = Q$', '$\\frac{\\partial P}{\\partial x} = \\frac{\\partial Q}{\\partial y}$', '$\\frac{\\partial Q}{\\partial x} = \\frac{\\partial P}{\\partial y}$', '$P_x = Q_x$'],
+      answer: 2,
+      explanation: '在单连通区域内，$\\int_L P\\,dx+Q\\,dy$ 与路径无关 $\\Leftrightarrow$ $\\frac{\\partial Q}{\\partial x} = \\frac{\\partial P}{\\partial y}$。这个条件也意味着 $P\\,dx+Q\\,dy$ 是某个函数的全微分。'
+    },
+    {
+      question: '格林公式中 $L$ 的正方向是？',
+      options: ['顺时针', '逆时针', '任意方向', '从左到右'],
+      answer: 1,
+      explanation: '格林公式要求 $L$ 是区域 $D$ 的正向边界——逆时针方向（人沿 $L$ 走，区域 $D$ 在左手边）。若 $L$ 顺时针，公式右边要加负号。'
+    },
+    {
+      question: '第二类曲线积分 $\\int_L P\\,dx + Q\\,dy$ 的物理意义是？',
+      options: ['曲线的质量', '力沿曲线做的功', '曲线的面积', '曲线的长度'],
+      answer: 1,
+      explanation: '设力 $\\vec{F} = (P, Q)$，沿曲线 $L$ 移动做的功 $W = \\int_L \\vec{F} \\cdot d\\vec{r} = \\int_L P\\,dx + Q\\,dy$。这是第二类曲线积分的物理背景。'
+    },
+  ],
+
+  'hm-14': [
+    {
+      question: '第一类曲面积分 $\\iint_\\Sigma f\\,dS$ 与曲面侧的关系是？',
+      options: ['改变侧则积分变号', '与侧无关', '只与面积有关', '只与法向量有关'],
+      answer: 1,
+      explanation: '第一类曲面积分（对面积）与曲面的侧无关，因为 $dS$ 是面积微元（恒正）。第二类曲面积分（对坐标）才与侧有关——改变侧意味着法向量反向，积分变号。'
+    },
+    {
+      question: '高斯公式将闭曲面积分转化为？',
+      options: ['曲线积分', '二重积分', '三重积分', '定积分'],
+      answer: 2,
+      explanation: '高斯公式：$\\oiint_\\Sigma P\\,dy\\,dz + Q\\,dz\\,dx + R\\,dx\\,dy = \\iiint_\\Omega (P_x + Q_y + R_z)dV$。闭曲面上的通量 = 体积内的散度积分。物理意义：穿过闭曲面的净通量等于内部"源"的总量。'
+    },
+    {
+      question: '高斯公式中，$\\Sigma$ 的方向要求是？',
+      options: ['任意方向', '内侧', '外侧', '上侧'],
+      answer: 2,
+      explanation: '高斯公式要求 $\\Sigma$ 取外侧（法向量指向 $\\Omega$ 外部）。这是物理上"净通量"的自然约定——向外为正。若取内侧，公式右边要加负号。'
+    },
+    {
+      question: '散度 $\\text{div}\\,\\vec{F} = \\nabla \\cdot \\vec{F}$ 等于？',
+      options: ['$P_x + Q_y + R_z$', '$P_x - Q_y + R_z$', '$P + Q + R$', '$P_x Q_y R_z$'],
+      answer: 0,
+      explanation: '散度是标量：$\\text{div}\\,\\vec{F} = \\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} + \\frac{\\partial R}{\\partial z}$。散度 > 0 表示"源"（流出多），散度 < 0 表示"汇"（流入多），散度 = 0 表示无源场。'
+    },
+    {
+      question: '斯托克斯公式建立了什么之间的联系？',
+      options: ['曲面积分与三重积分', '曲线积分与曲面积分', '二重积分与三重积分', '定积分与曲线积分'],
+      answer: 1,
+      explanation: '斯托克斯公式：$\\oint_L \\vec{F} \\cdot d\\vec{r} = \\iint_\\Sigma (\\nabla \\times \\vec{F}) \\cdot d\\vec{S}$。空间曲线积分 = 旋度的面积分。$L$ 是 $\\Sigma$ 的边界，方向与法向量满足右手定则。'
+    },
+  ],
+
+  'hm-15': [
+    {
+      question: '级数 $\\sum a_n$ 收敛的必要条件是？',
+      options: ['$a_n > 0$', '$\\lim_{n\\to\\infty} a_n = 0$', '$a_n$ 单调递减', '$\\sum |a_n|$ 收敛'],
+      answer: 1,
+      explanation: '收敛 $\\Rightarrow$ $\\lim a_n = 0$，但反过来不成立！调和级数 $\\sum \\frac{1}{n}$ 通项趋于 0 但发散。$\\lim a_n = 0$ 只是必要条件，不是充分条件。'
+    },
+    {
+      question: '比值判别法中 $\\lim \\frac{a_{n+1}}{a_n} = \\rho$，$\\rho < 1$ 时级数？',
+      options: ['收敛', '发散', '不确定', '条件收敛'],
+      answer: 0,
+      explanation: '比值法（达朗贝尔判别法）：$\\rho < 1$ 收敛，$\\rho > 1$ 发散，$\\rho = 1$ 不确定。含 $n!$ 或 $a^n$ 的级数首选比值法。$\\rho = 1$ 时需换其他方法。'
+    },
+    {
+      question: '幂级数 $\\sum a_n x^n$ 的收敛半径 $R$ 的求法是？',
+      options: ['$R = \\lim |\\frac{a_n}{a_{n+1}}|$', '$R = \\lim |a_n|$', '$R = \\lim |\\frac{a_{n+1}}{a_n}|$', '$R = \\frac{1}{\\lim |a_n|}$'],
+      answer: 0,
+      explanation: '收敛半径 $R = \\lim |\\frac{a_n}{a_{n+1}}|$（比值法）或 $R = \\frac{1}{\\lim \\sqrt[n]{|a_n|}}$（根值法）。注意是 $a_n$ 在上，$a_{n+1}$ 在下，不是反过来。收敛域还要检验端点。'
+    },
+    {
+      question: '$e^x$ 的麦克劳林展开式是？',
+      options: ['$\\sum \\frac{x^n}{n}$', '$\\sum \\frac{x^n}{n!}$', '$\\sum \\frac{x^{2n}}{(2n)!}$', '$\\sum (-1)^n \\frac{x^n}{n!}$'],
+      answer: 1,
+      explanation: '$e^x = \\sum_{n=0}^\\infty \\frac{x^n}{n!} = 1 + x + \\frac{x^2}{2!} + \\frac{x^3}{3!} + \\cdots$，收敛域 $(-\\infty, +\\infty)$。这是最基本的展开式，$\\sin x$ 和 $\\cos x$ 的展开可由 $e^{ix}$ 推出。'
+    },
+    {
+      question: '$\\ln(1+x)$ 的麦克劳林展开式及收敛域是？',
+      options: ['$\\sum \\frac{x^n}{n}$，$(-1,1)$', '$\\sum \\frac{(-1)^{n-1}x^n}{n}$，$(-1,1]$', '$\\sum \\frac{(-1)^n x^n}{n}$，$[-1,1)$', '$\\sum \\frac{x^n}{n+1}$，$(-1,1)$'],
+      answer: 1,
+      explanation: '$\\ln(1+x) = \\sum_{n=1}^\\infty \\frac{(-1)^{n-1}x^n}{n} = x - \\frac{x^2}{2} + \\frac{x^3}{3} - \\cdots$，收敛域 $(-1, 1]$。注意 $x=1$ 时收敛（交错级数），$x=-1$ 时发散（调和级数）。'
+    },
+    {
+      question: '交错级数 $\\sum (-1)^{n-1} a_n$（$a_n > 0$）收敛的条件是？',
+      options: ['$a_n \\to 0$', '$a_n$ 单调递减', '$a_n$ 单调递减且 $\\lim a_n = 0$', '无条件收敛'],
+      answer: 2,
+      explanation: '莱布尼茨判别法：$a_n$ 单调递减 + $\\lim a_n = 0$ $\\Rightarrow$ 交错级数收敛。两个条件缺一不可。如果 $a_n$ 不单调，即使趋于 0 也可能发散。'
+    },
+  ],
+
+  'hm-16': [
+    {
+      question: '傅里叶级数的核心思想是？',
+      options: ['用多项式逼近函数', '用三角函数（正弦/余弦）逼近周期函数', '用指数函数逼近函数', '用分段线性逼近函数'],
+      answer: 1,
+      explanation: '傅里叶级数将周期函数分解为一系列正弦和余弦函数的叠加：$f(x) \\sim \\frac{a_0}{2} + \\sum (a_n\\cos nx + b_n\\sin nx)$。这在信号处理中表示：任何信号都可分解为不同频率的正弦波。'
+    },
+    {
+      question: '偶函数 $f(-x) = f(x)$ 的傅里叶级数特点是？',
+      options: ['只有正弦项', '只有余弦项', '正弦余弦都有', '只有常数项'],
+      answer: 1,
+      explanation: '偶函数的 $b_n = 0$（因为 $f(x)\\sin nx$ 是奇函数，积分在对称区间为 0），所以只有余弦级数。类似地，奇函数只有正弦级数。利用奇偶性可只算一半系数。'
+    },
+    {
+      question: '狄利克雷收敛定理要求函数满足的条件是？',
+      options: ['处处连续', '无穷次可微', '有限个第一类间断点 + 有限个极值点', '可积'],
+      answer: 2,
+      explanation: '狄利克雷条件：① 连续或只有有限个第一类间断点；② 只有有限个极值点。满足时傅里叶级数收敛：连续点收敛到函数值，间断点收敛到左右极限的平均值。'
+    },
+    {
+      question: '傅里叶系数 $a_n$ 的计算公式中，积分区间是？',
+      options: ['$[0, 2\\pi]$', '$[-\\pi, \\pi]$', '$[0, \\pi]$', '$[-1, 1]$'],
+      answer: 1,
+      explanation: '周期为 $2\\pi$ 的傅里叶系数：$a_n = \\frac{1}{\\pi}\\int_{-\\pi}^\\pi f(x)\\cos nx\\,dx$，$b_n = \\frac{1}{\\pi}\\int_{-\\pi}^\\pi f(x)\\sin nx\\,dx$。积分区间是一个完整的周期 $[-\\pi, \\pi]$。'
+    },
+    {
+      question: '傅里叶级数在间断点处收敛到？',
+      options: ['函数值 $f(x_0)$', '左极限 $f(x_0^-)$', '右极限 $f(x_0^+)$', '左右极限的平均值 $\\frac{f(x_0^-)+f(x_0^+)}{2}$'],
+      answer: 3,
+      explanation: '傅里叶级数在间断点处收敛到左右极限的平均值，而不是函数值本身。这是傅里叶级数的特殊性质——它"看到"的是函数的极限行为，而非单点的值。'
+    },
+    {
+      question: '帕塞瓦尔等式的物理意义是？',
+      options: ['能量守恒', '信号的总能量等于各频率分量能量之和', '频率不变', '相位不变'],
+      answer: 1,
+      explanation: '帕塞瓦尔等式：$\\frac{1}{\\pi}\\int_{-\\pi}^\\pi [f(x)]^2 dx = \\frac{a_0^2}{2} + \\sum (a_n^2 + b_n^2)$。左边是信号总能量，右边是各频率分量能量之和。这说明信号分解不改变总能量。'
+    },
+  ],
+
+  // ========== 线性代数 la-01~la-10 ==========
+  'la-01': [
+    {
+      question: '二阶行列式 $\\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix}$ 的值是？',
+      options: ['$ab - cd$', '$ad - bc$', '$ac - bd$', '$ad + bc$'],
+      answer: 1,
+      explanation: '二阶行列式 = 主对角线乘积 - 副对角线乘积：$ad - bc$。这是最基础的计算，三阶及以上用展开定理或化上三角。'
+    },
+    {
+      question: '交换行列式的两行，结果？',
+      options: ['不变', '变号', '变为原来的 2 倍', '变为 0'],
+      answer: 1,
+      explanation: '性质：两行互换，行列式变号。这是行列式的基本性质之一。推论：若有两行相同，交换后行列式变号但值不变，故必为 0。'
+    },
+    {
+      question: '行列式按行展开定理中，$|A| = \\sum_j a_{ij} A_{ij}$，$A_{ij}$ 是？',
+      options: ['余子式', '代数余子式', '元素本身', '转置元素'],
+      answer: 1,
+      explanation: '$A_{ij} = (-1)^{i+j} M_{ij}$ 是代数余子式，其中 $M_{ij}$ 是余子式（删去第 $i$ 行第 $j$ 列后的行列式）。注意符号 $(-1)^{i+j}$，它决定了余子式的正负。'
+    },
+    {
+      question: '上三角行列式的值等于？',
+      options: ['所有元素之和', '主对角线元素之积', '副对角线元素之积', '0'],
+      answer: 1,
+      explanation: '上（下）三角行列式 = 主对角线元素之积。这是计算行列式的核心策略：用初等行变换化为上三角，然后直接相乘。'
+    },
+    {
+      question: '若 $|A| = 0$，则矩阵 $A$？',
+      options: ['可逆', '不可逆（奇异）', '是对角矩阵', '是零矩阵'],
+      answer: 1,
+      explanation: '$|A| = 0$ $\\Leftrightarrow$ $A$ 不可逆（奇异矩阵）。$|A| \\ne 0$ $\\Leftrightarrow$ $A$ 可逆（非奇异）。行列式是否为零是判断可逆性的充要条件。'
+    },
+    {
+      question: '范德蒙行列式的值等于？',
+      options: ['$\\prod_{i<j}(x_j - x_i)$', '$\\prod_{i<j}(x_i - x_j)$', '$\\sum x_i$', '$\\prod x_i$'],
+      answer: 0,
+      explanation: '范德蒙行列式 $V_n = \\prod_{1 \\le i < j \\le n}(x_j - x_i)$，即所有可能的"后减前"之积。当有两列相同时（某 $x_i = x_j$），行列式为 0。'
+    },
+  ],
+
+  'la-02': [
+    {
+      question: '矩阵乘法 $AB$ 的 $(i,j)$ 元素等于？',
+      options: ['$a_{ij} b_{ij}$', '$\\sum_k a_{ik} b_{kj}$', '$\\sum_k a_{ki} b_{jk}$', '$a_{i1} b_{1j}$'],
+      answer: 1,
+      explanation: '矩阵乘法：$(AB)_{ij} = \\sum_k a_{ik}b_{kj}$，即 $A$ 的第 $i$ 行与 $B$ 的第 $j$ 列的内积。注意不是对应元素相乘（那是 Hadamard 积）。'
+    },
+    {
+      question: '矩阵乘法满足交换律吗？',
+      options: ['满足', '不满足，一般 $AB \\ne BA$', '只对对称矩阵满足', '只对可逆矩阵满足'],
+      answer: 1,
+      explanation: '矩阵乘法不满足交换律！$AB \\ne BA$ 一般成立。即使 $AB$ 和 $BA$ 都有定义，它们的阶数可能不同，值也可能不同。这是矩阵与数的根本区别。'
+    },
+    {
+      question: '$A$ 可逆的充要条件是？',
+      options: ['$A = A^T$', '$|A| \\ne 0$', '$A$ 是对称矩阵', '$A$ 的元素全非零'],
+      answer: 1,
+      explanation: '$A$ 可逆 $\\Leftrightarrow$ $|A| \\ne 0$ $\\Leftrightarrow$ $\\text{rank}(A) = n$ $\\Leftrightarrow$ $Ax=0$ 只有零解 $\\Leftrightarrow$ $A$ 的列向量线性无关。这些条件彼此等价。'
+    },
+    {
+      question: '$(AB)^{-1}$ 等于？',
+      options: ['$A^{-1}B^{-1}$', '$B^{-1}A^{-1}$', '$(BA)^{-1}$', '$AB$'],
+      answer: 1,
+      explanation: '逆矩阵的"穿脱规则"：$(AB)^{-1} = B^{-1}A^{-1}$，顺序反转！类比穿衣服：先穿袜子后穿鞋，脱的时候先脱鞋后脱袜子。'
+    },
+    {
+      question: '伴随矩阵 $A^*$ 的 $(i,j)$ 元素是？',
+      options: ['$A_{ij}$（代数余子式）', '$A_{ji}$（转置位置的代数余子式）', '$M_{ij}$（余子式）', '$a_{ij}$（原元素）'],
+      answer: 1,
+      explanation: '$A^*$ 是代数余子式矩阵的转置：$(A^*)_{ij} = A_{ji}$。注意转置！$A^*$ 的第 $i$ 行第 $j$ 列是 $A$ 的第 $j$ 行第 $i$ 列的代数余子式。'
+    },
+    {
+      question: '$AA^*$ 等于？',
+      options: ['$E$', '$|A|E$', '$A$', '$A^T$'],
+      answer: 1,
+      explanation: '核心公式：$AA^* = A^*A = |A|E$。当 $|A| \\ne 0$ 时，$A^{-1} = \\frac{1}{|A|}A^*$。这是伴随矩阵法求逆的理论基础。'
+    },
+  ],
+
+  'la-03': [
+    {
+      question: '矩阵的秩等于？',
+      options: ['非零元素的个数', '非零子式的最高阶数', '行数', '列数'],
+      answer: 1,
+      explanation: '秩 = 非零子式的最高阶数 = 行阶梯形中非零行的个数。秩反映矩阵"有效信息"的维数。满秩意味着没有冗余。'
+    },
+    {
+      question: '初等行变换不改变矩阵的什么？',
+      options: ['元素', '行列式', '秩', '形状'],
+      answer: 2,
+      explanation: '初等行变换不改变矩阵的秩（也不改变行空间）。但会改变行列式的值（行互换变号，数乘扩大）。这是用行变换求秩的理论基础。'
+    },
+    {
+      question: '$m \\times n$ 矩阵 $A$ 的秩的范围是？',
+      options: ['$[1, n]$', '$[0, m]$', '$[0, \\min(m,n)]$', '$[1, \\min(m,n)]$'],
+      answer: 2,
+      explanation: '$0 \\le \\text{rank}(A) \\le \\min(m, n)$。秩为 0 只有零矩阵；秩为 $\\min(m,n)$ 称为满秩。秩不可能超过行数或列数。'
+    },
+    {
+      question: '$\\text{rank}(AB)$ 与 $\\text{rank}(A)$、$\\text{rank}(B)$ 的关系是？',
+      options: ['$\\text{rank}(AB) = \\text{rank}(A) + \\text{rank}(B)$', '$\\text{rank}(AB) \\le \\min(\\text{rank}(A), \\text{rank}(B))$', '$\\text{rank}(AB) = \\text{rank}(A) \\cdot \\text{rank}(B)$', '$\\text{rank}(AB) \\ge \\text{rank}(A)$'],
+      answer: 1,
+      explanation: '乘积的秩不超过各因子的秩：$\\text{rank}(AB) \\le \\min(\\text{rank}(A), \\text{rank}(B))$。这说明矩阵乘法不会增加"有效信息"，只能保持或减少。'
+    },
+    {
+      question: '行最简形矩阵的特点是？',
+      options: ['只有对角线非零', '主元为 1，主元所在列其他元素为 0', '所有元素为 0 或 1', '是上三角矩阵'],
+      answer: 1,
+      explanation: '行最简形：① 是行阶梯形；② 每个主元（每行首个非零元）为 1；③ 主元所在列的其他元素全为 0。行最简形是唯一的，可用于求解线性方程组。'
+    },
+    {
+      question: '若 $P$ 可逆，则 $\\text{rank}(PA)$ 等于？',
+      options: ['$\\text{rank}(A) + 1$', '$\\text{rank}(A) - 1$', '$\\text{rank}(A)$', '0'],
+      answer: 2,
+      explanation: '可逆矩阵乘不改变秩：$\\text{rank}(PA) = \\text{rank}(A)$。因为可逆矩阵可以表示为初等矩阵的乘积，而初等变换不改变秩。'
+    },
+  ],
+
+  'la-04': [
+    {
+      question: '$Ax = 0$ 有非零解的充要条件是？',
+      options: ['$|A| \\ne 0$', '$\\text{rank}(A) < n$（$n$ 为未知数个数）', '$\\text{rank}(A) = n$', '$A$ 是零矩阵'],
+      answer: 1,
+      explanation: '$Ax=0$ 有非零解 $\\Leftrightarrow$ $\\text{rank}(A) < n$ $\\Leftrightarrow$ $|A| = 0$（方阵时）。解空间维数 = $n - \\text{rank}(A)$，即自由变量的个数。'
+    },
+    {
+      question: '$Ax = b$ 有解的充要条件是？',
+      options: ['$|A| \\ne 0$', '$\\text{rank}(A) = \\text{rank}(\\bar{A})$', '$\\text{rank}(A) = n$', '$b \\ne 0$'],
+      answer: 1,
+      explanation: '$Ax=b$ 有解 $\\Leftrightarrow$ $\\text{rank}(A) = \\text{rank}(\\bar{A})$（$\\bar{A}$ 是增广矩阵）。若秩不等，说明 $b$ 不能由 $A$ 的列向量线性表示，方程组无解。'
+    },
+    {
+      question: '$Ax = b$ 有无穷多解的条件是？',
+      options: ['$\\text{rank}(A) < \\text{rank}(\\bar{A})$', '$\\text{rank}(A) = \\text{rank}(\\bar{A}) = n$', '$\\text{rank}(A) = \\text{rank}(\\bar{A}) < n$', '$|A| = 0$'],
+      answer: 2,
+      explanation: '有解（秩相等）且秩小于未知数个数（有自由变量）$\\Rightarrow$ 无穷多解。自由变量可以任意取值，每取一组值就得到一个特解。'
+    },
+    {
+      question: '$Ax = b$ 的通解结构是？',
+      options: ['$Ax = b$ 的特解', '$Ax = 0$ 的通解', '特解 + 齐次通解', '齐次通解 - 特解'],
+      answer: 2,
+      explanation: '非齐次方程通解 = 一个特解 $x^*$ + 齐次方程通解 $c_1\\xi_1 + \\cdots + c_{n-r}\\xi_{n-r}$。这不是简单的"加"，而是解空间的平移结构。'
+    },
+    {
+      question: '$Ax = 0$ 的基础解系含几个向量？',
+      options: ['$\\text{rank}(A)$', '$n - \\text{rank}(A)$', '$n$', '$m$'],
+      answer: 1,
+      explanation: '基础解系含 $n - r$ 个线性无关的解向量，其中 $n$ 是未知数个数，$r = \\text{rank}(A)$。这些向量张成解空间，解空间维数 = $n - r$。'
+    },
+    {
+      question: '三句话判断 $Ax=b$ 解的情况，正确的是？',
+      options: ['秩等唯一，秩不等无穷', '秩等无穷，秩不等唯一', '秩等且等于 $n$ 唯一，秩等但小于 $n$ 无穷，秩不等无解', '秩不等唯一，秩等无解'],
+      answer: 2,
+      explanation: '三句话：① 无解 = 秩不等；② 唯一解 = 秩等且等于 $n$；③ 无穷多解 = 秩等但小于 $n$。记住这三句话，选择题秒杀。'
+    },
+  ],
+
+  'la-05': [
+    {
+      question: '向量组 $\\alpha_1, \\alpha_2, \\alpha_3$ 线性相关的定义是？',
+      options: ['$\\alpha_1 + \\alpha_2 + \\alpha_3 = 0$', '存在不全为零的 $k_1, k_2, k_3$ 使 $k_1\\alpha_1 + k_2\\alpha_2 + k_3\\alpha_3 = 0$', '$\\alpha_1 = \\alpha_2 = \\alpha_3$', '任意 $k_1, k_2, k_3$ 都使上式为零'],
+      answer: 1,
+      explanation: '线性相关：存在不全为零的系数使线性组合为零向量。线性无关：只有全零系数才能使线性组合为零。注意"不全为零"，不是"全不为零"。'
+    },
+    {
+      question: '含零向量的向量组一定？',
+      options: ['线性无关', '线性相关', '无法判断', '秩为 0'],
+      answer: 1,
+      explanation: '含零向量一定线性相关。因为可取 $k_1=1$（对应零向量的系数），其余 $k_i=0$，则 $1 \\cdot 0 + 0 + \\cdots + 0 = 0$，系数不全为零。'
+    },
+    {
+      question: '向量组的秩等于？',
+      options: ['向量的个数', '极大线性无关组中向量的个数', '向量的维数', '零向量的个数'],
+      answer: 1,
+      explanation: '向量组的秩 = 极大线性无关组中向量的个数 = 对应矩阵的秩。秩是向量组"本质大小"的度量，与向量个数和维数都不同。'
+    },
+    {
+      question: '两个向量 $\\alpha, \\beta$ 线性相关的充要条件是？',
+      options: ['$\\alpha = \\beta$', '$\\alpha = k\\beta$（$k$ 为常数）', '$\\alpha \\perp \\beta$', '$|\\alpha| = |\\beta|$'],
+      answer: 1,
+      explanation: '两个向量相关 $\\Leftrightarrow$ 对应分量成比例 $\\Leftrightarrow$ 一个可由另一个线性表示（$\\alpha = k\\beta$ 或 $\\beta = k\\alpha$）。三个及以上向量没有这样简单的判定。'
+    },
+    {
+      question: '$n$ 维向量空间中，最多有几个线性无关的向量？',
+      options: ['$n-1$', '$n$', '$n+1$', '无穷多'],
+      answer: 1,
+      explanation: '$n$ 维空间中最多 $n$ 个线性无关的向量（基就有 $n$ 个）。$n+1$ 个 $n$ 维向量一定线性相关。这是向量空间维数的本质含义。'
+    },
+    {
+      question: '向量 $\\beta$ 可由 $\\alpha_1, \\ldots, \\alpha_s$ 线性表示的充要条件是？',
+      options: ['$\\beta = 0$', '$\\text{rank}(\\alpha_1, \\ldots, \\alpha_s) = \\text{rank}(\\alpha_1, \\ldots, \\alpha_s, \\beta)$', '$\\text{rank}(\\alpha_1, \\ldots, \\alpha_s) = s$', '$\\beta$ 与 $\\alpha_i$ 维数相同'],
+      answer: 1,
+      explanation: '$\\beta$ 可由 $\\alpha_1, \\ldots, \\alpha_s$ 表示 $\\Leftrightarrow$ 方程组 $x_1\\alpha_1 + \\cdots + x_s\\alpha_s = \\beta$ 有解 $\\Leftrightarrow$ 增广矩阵的秩 = 系数矩阵的秩。'
+    },
+  ],
+
+  'la-06': [
+    {
+      question: '$Ax = \\lambda x$（$x \\ne 0$）中，$\\lambda$ 是？',
+      options: ['特征向量', '特征值', '行列式', '秩'],
+      answer: 1,
+      explanation: '定义：若 $Ax = \\lambda x$（$x \\ne 0$），则 $\\lambda$ 是 $A$ 的特征值，$x$ 是对应于 $\\lambda$ 的特征向量。特征向量在变换中只被拉伸（乘以 $\\lambda$），不改变方向。'
+    },
+    {
+      question: '求特征值的方程是？',
+      options: ['$|A| = 0$', '$|\\lambda E - A| = 0$', '$A - \\lambda E = 0$', '$\\lambda E + A = 0$'],
+      answer: 1,
+      explanation: '特征方程 $|\\lambda E - A| = 0$（或 $|A - \\lambda E| = 0$，两者等价）。展开得到关于 $\\lambda$ 的 $n$ 次方程，解出所有特征值。'
+    },
+    {
+      question: '矩阵 $A$ 的所有特征值之和等于？',
+      options: ['$|A|$', '$\\text{tr}(A)$（迹）', '$\\text{rank}(A)$', '0'],
+      answer: 1,
+      explanation: '特征值之和 = 迹（主对角线元素之和）：$\\sum \\lambda_i = \\text{tr}(A) = \\sum a_{ii}$。特征值之积 = 行列式：$\\prod \\lambda_i = |A|$。这两个公式常用于选择题。'
+    },
+    {
+      question: '实对称矩阵的特征值一定是？',
+      options: ['实数', '复数', '正数', '非负数'],
+      answer: 0,
+      explanation: '实对称矩阵的特征值都是实数（这是实对称矩阵的重要性质）。一般矩阵的特征值可能是复数。实对称矩阵不同特征值的特征向量还正交。'
+    },
+    {
+      question: '$A^2$ 的特征值与 $A$ 的特征值的关系是？',
+      options: ['相同', '平方关系', '开方', '无关'],
+      answer: 1,
+      explanation: '若 $Ax = \\lambda x$，则 $A^2 x = A(Ax) = A(\\lambda x) = \\lambda(Ax) = \\lambda^2 x$。所以 $A^k$ 的特征值是 $\\lambda^k$，特征向量不变。'
+    },
+    {
+      question: '不同特征值对应的特征向量一定？',
+      options: ['相同', '线性相关', '线性无关', '正交'],
+      answer: 2,
+      explanation: '不同特征值对应的特征向量线性无关。实对称矩阵还有更强的结论：不同特征值的特征向量正交。但一般矩阵的特征向量不一定正交。'
+    },
+  ],
+
+  'la-07': [
+    {
+      question: '$A$ 与 $B$ 相似（$A \\sim B$）的定义是？',
+      options: ['$A = B$', '存在可逆 $P$ 使 $B = P^{-1}AP$', '$|A| = |B|$', '$A$ 与 $B$ 同阶'],
+      answer: 1,
+      explanation: '相似：存在可逆矩阵 $P$ 使 $B = P^{-1}AP$。相似矩阵表示同一线性变换在不同基下的矩阵。它们有相同的特征值、行列式、迹、秩。'
+    },
+    {
+      question: '$n$ 阶矩阵 $A$ 可对角化的充要条件是？',
+      options: ['$|A| \\ne 0$', '$A$ 有 $n$ 个不同特征值', '$A$ 有 $n$ 个线性无关的特征向量', '$A$ 是实对称矩阵'],
+      answer: 2,
+      explanation: '可对角化 $\\Leftrightarrow$ 有 $n$ 个线性无关的特征向量。$n$ 个不同特征值是充分条件（非必要），实对称矩阵一定可对角化（也是充分条件）。'
+    },
+    {
+      question: '实对称矩阵一定可以？',
+      options: ['对角化', '正交对角化', '不可对角化', '化为上三角'],
+      answer: 1,
+      explanation: '实对称矩阵一定可以正交对角化：$Q^TAQ = \\Lambda$，其中 $Q$ 是正交矩阵（列向量单位正交）。比一般对角化更强——不仅可对角化，还能用正交变换实现。'
+    },
+    {
+      question: '若 $A$ 可对角化，$A^k$ 等于？',
+      options: ['$kA$', '$P\\Lambda^k P^{-1}$', '$\\Lambda^k$', '$A^k$ 无法简化'],
+      answer: 1,
+      explanation: '$A = P\\Lambda P^{-1}$，则 $A^k = P\\Lambda^k P^{-1}$。对角矩阵的幂只需对角元求幂：$\\Lambda^k = \\text{diag}(\\lambda_1^k, \\ldots, \\lambda_n^k)$。这是对角化最实用的应用。'
+    },
+    {
+      question: '相似矩阵一定相同的量是？',
+      options: ['元素', '特征向量', '特征值', '主对角线元素'],
+      answer: 2,
+      explanation: '相似矩阵有相同的特征值（特征多项式相同）、相同的行列式、相同的迹、相同的秩。但元素和特征向量一般不同（特征向量随基变换）。'
+    },
+  ],
+
+  'la-08': [
+    {
+      question: '二次型 $f = x^TAx$ 的矩阵 $A$ 一定是？',
+      options: ['对角矩阵', '实对称矩阵', '正交矩阵', '可逆矩阵'],
+      answer: 1,
+      explanation: '二次型的矩阵必须是实对称矩阵（$A = A^T$）。如果不满足，可以强制对称化：$a_{ij} = \\frac{1}{2}(a_{ij} + a_{ji})$。'
+    },
+    {
+      question: '用正交变换化二次型为标准形，标准形的系数是？',
+      options: ['任意数', '特征值', '行列式', '迹'],
+      answer: 1,
+      explanation: '正交变换 $x = Qy$ 化二次型为 $f = \\lambda_1 y_1^2 + \\lambda_2 y_2^2 + \\cdots + \\lambda_n y_n^2$，系数就是特征值。这是正交变换法的核心优势。'
+    },
+    {
+      question: '正惯性指数 $p$ 的含义是？',
+      options: ['负系数的个数', '正系数的个数', '零系数的个数', '系数之和'],
+      answer: 1,
+      explanation: '标准形中正系数的个数 $p$ 是正惯性指数，负系数的个数 $q$ 是负惯性指数。惯性定理：无论用什么可逆变换，$p$ 和 $q$ 是不变的。'
+    },
+    {
+      question: '配方法化二次型为标准形时，使用的变换是？',
+      options: ['正交变换', '可逆线性变换', '旋转变换', '反射变换'],
+      answer: 1,
+      explanation: '配方法用的是可逆线性变换 $x = Cy$（$C$ 可逆但不一定正交）。与正交变换法的区别：配方法不保持几何性质（长度、角度），但计算更简单。'
+    },
+    {
+      question: '秩为 $r$、正惯性指数为 $p$ 的二次型，其规范形是？',
+      options: ['$y_1^2 + y_2^2 + \\cdots + y_r^2$', '$y_1^2 + \\cdots + y_p^2 - y_{p+1}^2 - \\cdots - y_r^2$', '$z_1^2 + z_2^2 + \\cdots + z_n^2$', '$y_1^2 - y_2^2 + y_3^2 - \\cdots$'],
+      answer: 1,
+      explanation: '规范形：系数只有 $1$、$-1$、$0$。$p$ 个 $1$，$q = r-p$ 个 $-1$，$n-r$ 个 $0$。规范形由 $p$ 和 $r$ 唯一确定（惯性定理）。'
+    },
+  ],
+
+  'la-09': [
+    {
+      question: '正交矩阵 $Q$ 满足？',
+      options: ['$Q^T = Q$', '$Q^TQ = E$', '$|Q| = 1$', '$Q = Q^{-1}$'],
+      answer: 1,
+      explanation: '正交矩阵定义：$Q^TQ = QQ^T = E$，即 $Q^{-1} = Q^T$。正交矩阵的行列式 $|Q| = \\pm 1$，列（行）向量是标准正交向量组。'
+    },
+    {
+      question: '施密特正交化的作用是？',
+      options: ['求逆矩阵', '把线性无关向量组变成正交向量组', '求特征值', '化对角矩阵'],
+      answer: 1,
+      explanation: '施密特正交化：给定线性无关向量组，逐个减去在前面方向上的投影，得到正交向量组。再单位化得到标准正交向量组。是构造正交基的标准方法。'
+    },
+    {
+      question: '正定矩阵的特征值一定？',
+      options: ['全为正', '全为负', '全为零', '有正有负'],
+      answer: 0,
+      explanation: '正定 $\\Leftrightarrow$ 所有特征值 > 0。负定：全 < 0。半正定：全 $\\ge 0$。半负定：全 $\\le 0$。不定：有正有负。正定性是选择题高频考点。'
+    },
+    {
+      question: '判断矩阵正定的方法是？',
+      options: ['$|A| > 0$', '所有顺序主子式 > 0', '所有元素 > 0', '$\\text{rank}(A) = n$'],
+      answer: 1,
+      explanation: '正定的充要条件：① 特征值全正；② 所有顺序主子式 > 0；③ $x^TAx > 0$（$\\forall x \\ne 0$）。方法②最实用——顺序计算主子式，有一个 $\\le 0$ 就不正定。'
+    },
+    {
+      question: '正交变换保持不变的量是？',
+      options: ['行列式', '特征值', '向量的长度和角度', '矩阵的元素'],
+      answer: 2,
+      explanation: '正交变换（旋转/反射）保持长度和角度不变：$|Qx| = |x|$，$(Qx)^T(Qy) = x^Ty$。这就是为什么正交对角化在几何上很有用——只改变坐标系，不改变几何形状。'
+    },
+    {
+      question: '$A$ 正定时，以下正确的是？',
+      options: ['$A^{-1}$ 正定', '$A^{-1}$ 负定', '$|A| < 0$', '$A$ 可以有负特征值'],
+      answer: 0,
+      explanation: '$A$ 正定 $\\Rightarrow$ $A^{-1}$ 正定（特征值为 $1/\\lambda_i > 0$）。$A$ 正定 $\\Rightarrow$ $|A| > 0$（特征值之积 > 0）。$A$ 正定 $\\Rightarrow$ $A^*$ 正定。'
+    },
+  ],
+
+  'la-10': [
+    {
+      question: '线性空间必须满足的条件是？',
+      options: ['只有加法封闭', '只有数乘封闭', '加法和数乘都封闭', '加法、数乘封闭且满足八条公理'],
+      answer: 3,
+      explanation: '线性空间（向量空间）：非空集合 + 加法和数乘两种运算 + 满足八条公理（封闭性、结合律、交换律、零元、负元、数乘结合律、数乘分配律）。'
+    },
+    {
+      question: '$P_2[x]$（次数不超过 2 的多项式空间）的维数是？',
+      options: ['2', '3', '4', '无穷'],
+      answer: 1,
+      explanation: '$P_2[x]$ 的一组基是 $\\{1, x, x^2\\}$，维数 = 3。注意：常数项 $1$ 也是基向量，不能遗漏。一般 $P_n[x]$ 的维数是 $n+1$。'
+    },
+    {
+      question: '线性变换 $T$ 的核 $\\ker(T)$ 是？',
+      options: ['$T$ 的值域', '被 $T$ 映射到零向量的全体', '$T$ 的定义域', '$T$ 的矩阵'],
+      answer: 1,
+      explanation: '核 $\\ker(T) = \\{\\alpha \\in V : T(\\alpha) = 0\\}$，是被映射到零的全体向量。核是 $V$ 的子空间，$\\dim(\\ker T) + \\dim(\\text{Im} T) = \\dim V$（维数公式）。'
+    },
+    {
+      question: '维数公式 $\\dim(\\ker T) + \\dim(\\text{Im} T) = \\dim V$ 的含义是？',
+      options: ['核和像不相交', '核和像的维数之和等于全空间维数', '核等于像', '核包含像'],
+      answer: 1,
+      explanation: '这是线性代数基本定理之一：核的维数（丢失的信息）+ 像的维数（保留的信息）= 原空间维数。类比：$Ax=b$ 中自由变量个数 + 主变量个数 = 总变量数。'
+    },
+    {
+      question: '同一线性变换在不同基下的矩阵有什么关系？',
+      options: ['相等', '相似', '正交', '无关'],
+      answer: 1,
+      explanation: '同一变换在不同基下对应相似矩阵：$B = P^{-1}AP$，$P$ 是基变换的过渡矩阵。对角化就是找到使变换矩阵最简单的那组基（特征向量基）。'
+    },
+    {
+      question: '不变子空间 $W$ 满足的条件是？',
+      options: ['$T(W) = W$', '$T(W) \\subseteq W$', '$T(W) = \\{0\\}$', '$T(W) = V$'],
+      answer: 1,
+      explanation: '不变子空间：$T(W) \\subseteq W$，即 $W$ 中的向量经变换后仍在 $W$ 中。特征子空间、核、像都是不变子空间。不变子空间可以用来简化变换矩阵（分块对角化）。'
     },
   ],
 
@@ -4817,8 +5641,1296 @@ const QuizData = {
       explanation: '当 T[j]==T[next[j]] 时，跳到 next[j] 后该字符还是一样，必然再次失配，没意义。优化：直接 nextval[j]=nextval[next[j]]，跳过这个无用跳转。nextval 让 KMP 在某些模式串上减少比较次数，但最坏复杂度不变。'
     },
   ],
+
+  // ========== 电路基础 circ-01~circ-12 ==========
+  'circ-01': [
+    {
+      question: 'KCL（基尔霍夫电流定律）的内容是？',
+      options: ['任意回路电压之和为零', '任意节点电流之和为零', '电压等于电流乘电阻', '功率等于电压乘电流'],
+      answer: 1,
+      explanation: 'KCL：对任意节点，流入电流之和 = 流出电流之和（或 $\\sum i = 0$，流入为正流出为负）。本质是电荷守恒。注意：KCL 适用于任何集总参数电路，不限于直流。'
+    },
+    {
+      question: 'KVL（基尔霍夫电压定律）的内容是？',
+      options: ['任意节点电流之和为零', '任意回路电压之和为零', '电流等于电压除电阻', '功率守恒'],
+      answer: 1,
+      explanation: 'KVL：沿任意闭合回路，电压升之和 = 电压降之和（或 $\\sum u = 0$）。本质是能量守恒。KVL 和 KCL 是电路分析的两大基石，所有电路定理都由此推导。'
+    },
+    {
+      question: '网孔分析法中，对每个网孔列方程的依据是？',
+      options: ['KCL', 'KVL', '欧姆定律', '叠加定理'],
+      answer: 1,
+      explanation: '网孔分析法：假设网孔电流（顺时针或逆时针），对每个网孔用 KVL 列电压方程。节点分析法用 KCL。选择哪种方法取决于哪种方程更少。'
+    },
+    {
+      question: '节点分析法中，参考节点（地）的电位是？',
+      options: ['1V', '0V', '任意值', '最大值'],
+      answer: 1,
+      explanation: '参考节点电位定义为 0V（接地）。其他节点电位都是相对于参考节点的电压。选择合适的参考节点（通常选连接支路最多的节点）可以简化计算。'
+    },
+    {
+      question: '理想电压源的特点是？',
+      options: ['电压恒定，电流由外电路决定', '电流恒定，电压由外电路决定', '电压和电流都恒定', '电压和电流都由外电路决定'],
+      answer: 0,
+      explanation: '理想电压源：两端电压恒定（等于源电压），电流由外电路决定。不能短路（否则电流无穷大）。理想电流源：电流恒定，电压由外电路决定。不能开路。'
+    },
+  ],
+
+  'circ-02': [
+    {
+      question: '戴维南定理的内容是？',
+      options: ['任何线性二端网络可等效为电压源串联电阻', '任何电路都可用叠加法分析', '功率最大传输条件是负载等于内阻', 'KVL 的推广'],
+      answer: 0,
+      explanation: '戴维南定理：任何线性有源二端网络，对外可等效为一个电压源 $U_{oc}$（开路电压）串联内阻 $R_0$（等效电阻）。诺顿定理是电流源并联电阻的等效形式。'
+    },
+    {
+      question: '求戴维南等效电阻 $R_0$ 的方法是？',
+      options: ['开路电压除以短路电流', '所有电阻之和', '最大电阻', '最小电阻'],
+      answer: 0,
+      explanation: '$R_0 = U_{oc} / I_{sc}$，即开路电压除以短路电流。也可用外加电源法或去除独立源后计算（电压源短路、电流源开路）。注意：含受控源时只能用 $U_{oc}/I_{sc}$ 或外加电源法。'
+    },
+    {
+      question: '最大功率传输条件是？',
+      options: ['$R_L = R_0$', '$R_L = 2R_0$', '$R_L = R_0/2$', '$R_L \\to \\infty$'],
+      answer: 0,
+      explanation: '当负载电阻 $R_L$ 等于戴维南等效电阻 $R_0$ 时，负载获得最大功率 $P_{max} = U_{oc}^2/(4R_0)$。此时传输效率只有 50%（一半功率消耗在内阻上）。'
+    },
+    {
+      question: '诺顿等效电路由什么组成？',
+      options: ['电压源串联电阻', '电流源并联电阻', '电压源并联电阻', '电流源串联电阻'],
+      answer: 1,
+      explanation: '诺顿定理：线性有源二端网络可等效为电流源 $I_{sc}$（短路电流）并联电阻 $R_0$。戴维南和诺顿可以互相转换：$U_{oc} = I_{sc} R_0$。'
+    },
+  ],
+
+  'circ-03': [
+    {
+      question: '叠加定理适用于？',
+      options: ['任何电路', '线性电路', '非线性电路', '只有直流电路'],
+      answer: 1,
+      explanation: '叠加定理：在线性电路中，多个独立源共同作用的响应 = 各独立源单独作用的响应之和。注意：① 只适用于线性电路（电压/电流）；② 功率不能叠加（$I^2R$ 是非线性的）。'
+    },
+    {
+      question: '用叠加定理时，不作用的电压源如何处理？',
+      options: ['去掉（开路）', '短路', '保留不变', '接地'],
+      answer: 1,
+      explanation: '不作用的独立源：电压源短路（$U=0$），电流源开路（$I=0$）。注意：受控源不能置零，必须保留！内阻保留在电路中。'
+    },
+    {
+      question: '叠加定理中，各分响应叠加时的符号规则是？',
+      options: ['都取正', '与原电路参考方向一致取正，相反取负', '由计算结果决定', '总是正的'],
+      answer: 1,
+      explanation: '叠加时注意方向：某独立源单独作用时，如果分响应的参考方向与原电路一致，取正号；相反取负号。这是叠加定理最容易出错的地方。'
+    },
+    {
+      question: '齐次定理（齐次性）的含义是？',
+      options: ['激励加倍，响应也加倍', '激励加倍，响应不变', '激励加倍，响应减半', '激励与响应无关'],
+      answer: 0,
+      explanation: '齐次性：线性电路中，激励扩大 $k$ 倍，响应也扩大 $k$ 倍。齐次性 + 可加性 = 线性。注意：齐次性只在单一激励源时成立，多源时用叠加定理。'
+    },
+  ],
+
+  'circ-04': [
+    {
+      question: '一阶 RC 电路的时间常数 $\\tau$ 等于？',
+      options: ['$R + C$', '$RC$', '$R/C$', '$C/R$'],
+      answer: 1,
+      explanation: '$\\tau = RC$（秒），$R$ 是从电容两端看进去的等效电阻。时间常数决定暂态过程的快慢：$\\tau$ 越大，充放电越慢。工程上认为 $5\\tau$ 后暂态结束（达到 99.3%）。'
+    },
+    {
+      question: '三要素法的三个要素是？',
+      options: ['电压、电流、电阻', '初始值、稳态值、时间常数', '电阻、电感、电容', '幅值、频率、相位'],
+      answer: 1,
+      explanation: '三要素法：$f(t) = f(\\infty) + [f(0^+) - f(\\infty)]e^{-t/\\tau}$。三个要素：① 初始值 $f(0^+)$；② 稳态值 $f(\\infty)$；③ 时间常数 $\\tau$。知道这三个就能直接写出响应。'
+    },
+    {
+      question: '换路定则的内容是？',
+      options: ['电容电压不能突变', '电感电流不能突变', '电容电压和电感电流都不能突变', '电压和电流都不能突变'],
+      answer: 2,
+      explanation: '换路定则：换路瞬间，电容电压 $u_C(0^+) = u_C(0^-)$，电感电流 $i_L(0^+) = i_L(0^-)$。因为能量不能突变（$W_C = \\frac{1}{2}Cu_C^2$，$W_L = \\frac{1}{2}Li_L^2$）。'
+    },
+    {
+      question: 'RC 电路充电时，电容电压的变化规律是？',
+      options: ['线性增长', '指数增长趋近稳态值', '正弦振荡', '恒定不变'],
+      answer: 1,
+      explanation: '充电：$u_C(t) = U_S(1 - e^{-t/RC})$，从 0 指数增长趋近 $U_S$。放电：$u_C(t) = U_0 e^{-t/RC}$，从 $U_0$ 指数衰减趋近 0。都不是线性的，是指数规律。'
+    },
+    {
+      question: '时间常数 $\\tau = RC = 1\\text{ms}$ 时，$5\\tau$ 等于多少？',
+      options: ['5ms', '5μs', '5s', '50ms'],
+      answer: 0,
+      explanation: '$5\\tau = 5 \\times 1\\text{ms} = 5\\text{ms}$。$5\\tau$ 后暂态过程基本结束（99.3%）。这是工程上判断暂态持续时间的经验法则。'
+    },
+  ],
+
+  'circ-05': [
+    {
+      question: '二阶 RLC 电路的暂态响应类型取决于？',
+      options: ['电阻大小', '特征根的性质（实根/重根/复根）', '电源频率', '电感电容的乘积'],
+      answer: 1,
+      explanation: '特征方程 $s^2 + 2\\alpha s + \\omega_0^2 = 0$，判别式决定响应类型：$\\alpha > \\omega_0$ 过阻尼（两不等实根），$\\alpha = \\omega_0$ 临界阻尼（重根），$\\alpha < \\omega_0$ 欠阻尼（共轭复根）。'
+    },
+    {
+      question: '欠阻尼响应的特点是？',
+      options: ['无振荡指数衰减', '等幅振荡', '衰减振荡', '恒定不变'],
+      answer: 2,
+      explanation: '欠阻尼（$\\alpha < \\omega_0$）：响应为衰减振荡 $e^{-\\alpha t}(A\\cos\\omega_d t + B\\sin\\omega_d t)$。振荡频率 $\\omega_d = \\sqrt{\\omega_0^2 - \\alpha^2}$，振幅按 $e^{-\\alpha t}$ 衰减。'
+    },
+    {
+      question: '过阻尼响应的特点是？',
+      options: ['快速达到稳态', '缓慢趋近稳态，无振荡', '等幅振荡', '发散振荡'],
+      answer: 1,
+      explanation: '过阻尼（$\\alpha > \\omega_0$）：响应为两个衰减指数之差 $Ae^{s_1 t} + Be^{s_2 t}$，无振荡。但比临界阻尼更慢，因为两个衰减项互相抵消。工程上一般用临界或稍欠阻尼。'
+    },
+    {
+      question: '临界阻尼的特点是？',
+      options: ['有振荡', '无振荡且最快达到稳态', '最慢达到稳态', '等幅振荡'],
+      answer: 1,
+      explanation: '临界阻尼（$\\alpha = \\omega_0$）：响应为 $(A + Bt)e^{-\\alpha t}$，无振荡且是无振荡中最快的。工程上常用临界阻尼或稍欠阻尼（允许少量超调换取更快响应）。'
+    },
+  ],
+
+  'circ-06': [
+    {
+      question: '正弦稳态分析中，相量法的核心思想是？',
+      options: ['把微分方程变成代数方程', '把时域变成频域', '用复数表示正弦量', '以上都是'],
+      answer: 3,
+      explanation: '相量法：用复数（相量）表示正弦量的幅值和初相，把微积分运算变成复数的代数运算。$u(t) = U_m\\cos(\\omega t + \\varphi)$ 对应相量 $\\dot{U} = U_m e^{j\\varphi}$。'
+    },
+    {
+      question: '阻抗 $Z$ 的定义是？',
+      options: ['$Z = R + jX$', '$Z = U/I$（相量比）', '$Z = |Z|e^{j\\varphi}$', '以上都对'],
+      answer: 3,
+      explanation: '阻抗 $Z = \\dot{U}/\\dot{I} = R + jX = |Z|e^{j\\varphi}$。实部 $R$ 是电阻，虚部 $X$ 是电抗（感抗 $\\omega L$ 为正，容抗 $-1/\\omega C$ 为负）。阻抗是交流电路分析的核心概念。'
+    },
+    {
+      question: '感抗 $X_L$ 和容抗 $X_C$ 分别是？',
+      options: ['$X_L = \\omega L$，$X_C = \\omega C$', '$X_L = \\omega L$，$X_C = 1/(\\omega C)$', '$X_L = 1/(\\omega L)$，$X_C = \\omega C$', '$X_L = L$，$X_C = C$'],
+      answer: 1,
+      explanation: '感抗 $X_L = \\omega L$（频率越高，感抗越大），容抗 $X_C = 1/(\\omega C)$（频率越高，容抗越小）。电感"通低频阻高频"，电容"通高频阻低频"。'
+    },
+    {
+      question: '谐振时电路的特点是？',
+      options: ['阻抗最大', '阻抗最小（纯电阻）', '电流最大', 'B 和 C 都对'],
+      answer: 3,
+      explanation: '串联谐振时：$X_L = X_C$，电抗为零，阻抗最小（$Z = R$），电流最大。并联谐振时：阻抗最大，电流最小。谐振频率 $\\omega_0 = 1/\\sqrt{LC}$。'
+    },
+    {
+      question: '有功功率 $P$、无功功率 $Q$、视在功率 $S$ 的关系是？',
+      options: ['$S = P + Q$', '$S^2 = P^2 + Q^2$', '$P = S + Q$', '$Q = P + S$'],
+      answer: 1,
+      explanation: '$P = UI\\cos\\varphi$（有功，单位 W），$Q = UI\\sin\\varphi$（无功，单位 var），$S = UI$（视在，单位 VA）。$S^2 = P^2 + Q^2$，功率因数 $\\cos\\varphi = P/S$。'
+    },
+  ],
+
+  'circ-07': [
+    {
+      question: 'RC 低通滤波器的截止频率 $f_c$ 等于？',
+      options: ['$f_c = RC$', '$f_c = 1/(2\\pi RC)$', '$f_c = 2\\pi RC$', '$f_c = 1/RC$'],
+      answer: 1,
+      explanation: 'RC 低通滤波器截止频率 $f_c = 1/(2\\pi RC)$，对应 $|H(f_c)| = 0.707$（-3dB）。低于 $f_c$ 的信号通过，高于 $f_c$ 的信号被衰减。'
+    },
+    {
+      question: '波特图中，一阶低通滤波器在高频段的斜率是？',
+      options: ['-10 dB/dec', '-20 dB/dec', '-40 dB/dec', '0 dB/dec'],
+      answer: 1,
+      explanation: '一阶系统高频段斜率 = -20 dB/dec（每十倍频衰减 20dB）。二阶系统高频段 = -40 dB/dec。这是从波特图判断系统阶数的方法。'
+    },
+    {
+      question: '截止频率处（$f = f_c$）的增益是？',
+      options: ['0 dB', '-3 dB', '-6 dB', '-20 dB'],
+      answer: 1,
+      explanation: '截止频率定义：增益下降到通带的 0.707 倍，即 $20\\log_{10}(0.707) \\approx -3$ dB。这就是"-3dB 带宽"的由来。'
+    },
+    {
+      question: '高通滤波器与低通滤波器的区别是？',
+      options: ['高通通过高频，低通通过低频', '高通通过低频，低通通过高频', '没有区别', '高通更复杂'],
+      answer: 0,
+      explanation: '低通：通过低频，衰减高频（$f < f_c$ 通过）。高通：通过高频，衰减低频（$f > f_c$ 通过）。带通：通过某频段。带阻（陷波）：阻止某频段。'
+    },
+  ],
+
+  'circ-08': [
+    {
+      question: '串联谐振的条件是？',
+      options: ['$X_L = X_C$', '$R = 0$', '$L = C$', '$\\omega = 0$'],
+      answer: 0,
+      explanation: '串联谐振：$\\omega L = 1/(\\omega C)$，即 $X_L = X_C$。谐振频率 $\\omega_0 = 1/\\sqrt{LC}$，$f_0 = 1/(2\\pi\\sqrt{LC})$。此时电抗为零，电路呈纯电阻性。'
+    },
+    {
+      question: '串联谐振时，品质因数 $Q$ 的定义是？',
+      options: ['$Q = \\omega_0 L / R$', '$Q = R / (\\omega_0 L)$', '$Q = L / C$', '$Q = \\omega_0 / R$'],
+      answer: 0,
+      explanation: '品质因数 $Q = \\omega_0 L / R = 1/(\\omega_0 CR) = \\frac{1}{R}\\sqrt{L/C}$。$Q$ 值越大，谐振峰越尖锐，选择性越好。$Q$ 也等于谐振时电感（或电容）电压与总电压之比。'
+    },
+    {
+      question: '并联谐振时，电路的特点是？',
+      options: ['阻抗最小', '阻抗最大', '电流最大', '电压最小'],
+      answer: 1,
+      explanation: '并联谐振：阻抗最大（理想情况为无穷大），总电流最小。与串联谐振相反。并联谐振常用于选频电路（如收音机的中频变压器）。'
+    },
+    {
+      question: '谐振电路的通频带 $BW$ 与品质因数 $Q$ 的关系是？',
+      options: ['$BW = Q \\cdot f_0$', '$BW = f_0 / Q$', '$BW = Q$', '$BW = 1/Q$'],
+      answer: 1,
+      explanation: '通频带 $BW = f_0 / Q$（或 $BW = R/L$）。$Q$ 越高，$BW$ 越窄，选择性越好但通频带越窄。设计时需要在选择性和带宽之间权衡。'
+    },
+  ],
+
+  'circ-09': [
+    {
+      question: '三相电路中，线电压与相电压的关系是？',
+      options: ['$U_L = U_P$', '$U_L = \\sqrt{3} U_P$', '$U_L = 3 U_P$', '$U_L = U_P / \\sqrt{3}$'],
+      answer: 1,
+      explanation: '星形连接（Y）：$U_L = \\sqrt{3} U_P$，$I_L = I_P$。三角形连接（Δ）：$U_L = U_P$，$I_L = \\sqrt{3} I_P$。这是三相电路的基本关系。'
+    },
+    {
+      question: '三相电路中，中线（零线）的作用是？',
+      options: ['传输有功功率', '保证三相负载不对称时各相电压平衡', '提高功率因数', '减少线路损耗'],
+      answer: 1,
+      explanation: '中线保证不对称负载时各相电压仍然对称（等于相电压）。若中线断开，不对称负载会导致各相电压不等，轻载相电压升高可能烧毁设备。所以中线上不能装熔断器。'
+    },
+    {
+      question: '对称三相电路的瞬时功率特点是？',
+      options: ['随时间脉动', '恒定不变', '为零', '无穷大'],
+      answer: 1,
+      explanation: '对称三相电路的瞬时功率 $p(t) = P_{\\text{total}} = 3U_P I_P \\cos\\varphi$ 是常数！这是三相制的重要优点——电机转矩恒定，没有振动。单相功率是脉动的。'
+    },
+  ],
+
+  'circ-10': [
+    {
+      question: '二端口网络的 Z 参数矩阵是？',
+      options: ['$\\begin{pmatrix} Z_{11} & Z_{12} \\\\ Z_{21} & Z_{22} \\end{pmatrix}$', '$\\begin{pmatrix} Y_{11} & Y_{12} \\\\ Y_{21} & Y_{22} \\end{pmatrix}$', '$\\begin{pmatrix} h_{11} & h_{12} \\\\ h_{21} & h_{22} \\end{pmatrix}$', '$\\begin{pmatrix} A & B \\\\ C & D \\end{pmatrix}$'],
+      answer: 0,
+      explanation: 'Z 参数（阻抗参数）：$\\begin{pmatrix} U_1 \\\\ U_2 \\end{pmatrix} = \\begin{pmatrix} Z_{11} & Z_{12} \\\\ Z_{21} & Z_{22} \\end{pmatrix} \\begin{pmatrix} I_1 \\\\ I_2 \\end{pmatrix}$。Y 参数是导纳参数，h 参数是混合参数。'
+    },
+    {
+      question: '互易二端口网络满足的关系是？',
+      options: ['$Z_{11} = Z_{22}$', '$Z_{12} = Z_{21}$', '$Z_{11} = Z_{12}$', '$Z_{22} = Z_{21}$'],
+      answer: 1,
+      explanation: '互易网络：$Z_{12} = Z_{21}$（或 $Y_{12} = Y_{21}$，$h_{12} = -h_{21}$）。物理含义：端口 1 激励在端口 2 的响应 = 端口 2 激励在端口 1 的响应。'
+    },
+  ],
+
+  'circ-11': [
+    {
+      question: '理想运放工作在线性区时，"虚短"的含义是？',
+      options: ['$U_+ = U_-$（同相端和反相端电压相等）', '$I_+ = I_- = 0$（输入端不取电流）', '$U_{out} = \\infty$', '$U_{in} = 0$'],
+      answer: 0,
+      explanation: '"虚短"：$U_+ \\approx U_-$（两输入端电压近似相等）。因为开环增益 $A \\to \\infty$，而输出有限，所以输入差 $U_+ - U_- \\approx 0$。注意这不是真的短路，只是电压相等。'
+    },
+    {
+      question: '理想运放的"虚断"含义是？',
+      options: ['输出端断路', '输入端不取电流（$I_+ = I_- = 0$）', '电源断路', '反馈断路'],
+      answer: 1,
+      explanation: '"虚断"：$I_+ = I_- \\approx 0$（输入端电流为零）。因为理想运放输入电阻无穷大。这是分析运放电路的重要依据——输入端不取电流，只取电压。'
+    },
+    {
+      question: '反相放大器的增益是？',
+      options: ['$A_v = R_f / R_1$', '$A_v = -R_f / R_1$', '$A_v = 1 + R_f / R_1$', '$A_v = -R_1 / R_f$'],
+      answer: 1,
+      explanation: '反相放大器：$A_v = -R_f/R_1$。负号表示输出与输入反相。同相放大器：$A_v = 1 + R_f/R_1$。这两个是最基本的运放电路。'
+    },
+    {
+      question: '同相放大器的增益是？',
+      options: ['$A_v = R_f / R_1$', '$A_v = -R_f / R_1$', '$A_v = 1 + R_f / R_1$', '$A_v = -1 - R_f / R_1$'],
+      answer: 2,
+      explanation: '同相放大器：$A_v = 1 + R_f/R_1$。特点：输入阻抗高，输出与输入同相。反相放大器输入阻抗较低（$R_1$），但电路更简单。'
+    },
+  ],
+
+  'circ-12': [
+    {
+      question: '受控源与独立源的区别是？',
+      options: ['受控源不能提供能量', '受控源的值由电路中其他变量决定', '受控源只能是电压源', '受控源只能是电流源'],
+      answer: 1,
+      explanation: '受控源（CCVS、VCVS、CCCS、VCCS）：输出受电路中某处电压或电流控制。不能独立存在，必须有独立源激励才有意义。分析时保留受控源，不能像独立源那样置零。'
+    },
+    {
+      question: '含有受控源的电路求等效电阻的方法是？',
+      options: ['直接串并联', '外加电源法（$R_0 = U/I$）', '不能求等效电阻', '把受控源也置零'],
+      answer: 1,
+      explanation: '含受控源时不能简单串并联，要用外加电源法：在端口加电压 $U$，求电流 $I$，则 $R_0 = U/I$。或用 $R_0 = U_{oc}/I_{sc}$。受控源不能置零！'
+    },
+    {
+      question: '四种受控源中，电压控制电压源（VCVS）的符号是？',
+      options: ['$\\mu U_x$（菱形）', '$r_m I_x$（菱形）', '$g_m U_x$（菱形）', '$\\beta I_x$（菱形）'],
+      answer: 0,
+      explanation: 'VCVS：输出电压 = $\\mu$ × 控制电压。CCVS：输出电压 = $r_m$ × 控制电流。VCCS：输出电流 = $g_m$ × 控制电压。CCCS：输出电流 = $\\beta$ × 控制电流。'
+    },
+  ],
+
+  // ========== 模拟电路 ana-01~ana-14 ==========
+  'ana-01': [
+    {
+      question: '二极管的伏安特性是？',
+      options: ['线性', '指数型（非线性）', '平方型', '恒定'],
+      answer: 1,
+      explanation: '二极管伏安特性：$I = I_S(e^{U/U_T} - 1)$，$U_T \\approx 26\\text{mV}$（室温）。正向指数增长，反向截止（反向饱和电流很小）。这是非线性元件。'
+    },
+    {
+      question: '硅二极管的导通电压约是？',
+      options: ['0.2V', '0.7V', '1.2V', '2.0V'],
+      answer: 1,
+      explanation: '硅二极管正向导通电压约 0.6~0.7V，锗二极管约 0.2~0.3V。这是工程估算的常用值。实际导通电压与温度、电流有关。'
+    },
+    {
+      question: '稳压管工作在什么状态？',
+      options: ['正向导通', '反向击穿', '截止', '饱和'],
+      answer: 1,
+      explanation: '稳压管利用反向击穿区的稳压特性。击穿后电压基本恒定（稳压值），电流变化很大。使用时必须串联限流电阻，否则会烧毁。'
+    },
+    {
+      question: '温度升高时，二极管的正向电压？',
+      options: ['升高', '降低', '不变', '先升后降'],
+      answer: 1,
+      explanation: '温度每升高 1°C，正向电压下降约 2~2.5mV。这是因为温度升高，载流子浓度增加，同样的电流只需要更低的电压。这也是热敏二极管测温的原理。'
+    },
+  ],
+
+  'ana-02': [
+    {
+      question: '单相桥式整流电路中，二极管的数量是？',
+      options: ['2', '4', '6', '8'],
+      answer: 1,
+      explanation: '桥式整流用 4 个二极管，组成两对交替导通的臂。正半周 D1、D3 导通，负半周 D2、D4 导通。输出全波脉动直流，比半波整流效率高。'
+    },
+    {
+      question: '滤波电容的作用是？',
+      options: ['增大输出电压', '减小输出电压的脉动', '提高效率', '降低功耗'],
+      answer: 1,
+      explanation: '电容滤波：利用电容充放电平滑脉动电压。电容越大，放电越慢，纹波越小。$C \\ge (3\\sim5)\\frac{T}{2R_L}$（$T$ 为电源周期，$R_L$ 为负载电阻）。'
+    },
+    {
+      question: '电容滤波后，输出电压的平均值？',
+      options: ['等于 $0.9U_2$', '大于 $0.9U_2$（约 $1.2U_2$）', '等于 $U_2$', '等于 $0.45U_2$'],
+      answer: 1,
+      explanation: '桥式整流电容滤波：$U_{avg} \\approx 1.2U_2$（$U_2$ 是变压器次级电压有效值）。半波整流电容滤波：$U_{avg} \\approx U_2$。无滤波时桥式为 $0.9U_2$。'
+    },
+  ],
+
+  'ana-03': [
+    {
+      question: 'BJT 三极管的三个区是？',
+      options: ['源极、漏极、栅极', '发射极、基极、集电极', '阳极、阴极、栅极', '正极、负极、控制极'],
+      answer: 1,
+      explanation: 'BJT：发射极（E）、基极（B）、集电极（C）。两个 PN 结：发射结（B-E）、集电结（B-C）。NPN 型：电流从 C 流向 E；PNP 型：电流从 E 流向 C。'
+    },
+    {
+      question: '三极管放大区的条件是？',
+      options: ['发射结正偏，集电结正偏', '发射结正偏，集电结反偏', '发射结反偏，集电结正偏', '发射结反偏，集电结反偏'],
+      answer: 1,
+      explanation: '放大区：发射结正偏（$U_{BE} \\approx 0.7V$），集电结反偏。饱和区：两个结都正偏。截止区：两个结都反偏。这是判断工作状态的关键。'
+    },
+    {
+      question: '三极管的电流放大系数 $\\beta$ 定义是？',
+      options: ['$\\beta = I_C / I_B$', '$\\beta = I_C / I_E$', '$\\beta = I_B / I_C$', '$\\beta = I_E / I_B$'],
+      answer: 0,
+      explanation: '$\\beta = I_C/I_B$（共发射极电流放大系数），一般 $\\beta = 50 \\sim 200$。$\\alpha = I_C/I_E$（共基极电流放大系数），$\\alpha \\approx 1$。$\\beta = \\alpha/(1-\\alpha)$。'
+    },
+    {
+      question: '三极管放大电路中，静态工作点的含义是？',
+      options: ['交流信号的幅值', '直流偏置的 $I_{BQ}$、$I_{CQ}$、$U_{CEQ}$', '最大输出功率', '截止频率'],
+      answer: 1,
+      explanation: '静态工作点 Q：无信号输入时的直流偏置值 $I_{BQ}$、$I_{CQ}$、$U_{CEQ}$。Q 点设置不当会导致截止失真或饱和失真。稳定 Q 点是放大电路设计的首要任务。'
+    },
+  ],
+
+  'ana-04': [
+    {
+      question: '共射放大电路的特点是？',
+      options: ['电压增益高，输入输出同相', '电压增益高，输入输出反相', '电压增益低，输入输出同相', '电压增益为 1'],
+      answer: 1,
+      explanation: '共射（CE）：电压增益高（几十到几百），输入输出反相（180° 相移）。输入阻抗中等，输出阻抗高。是最常用的放大组态。'
+    },
+    {
+      question: '共集放大电路（射极跟随器）的特点是？',
+      options: ['电压增益高', '电压增益约等于 1，输入输出同相', '电压增益为 0', '输入阻抗低'],
+      answer: 1,
+      explanation: '共集（CC）/射极跟随器：电压增益 $\\approx 1$（无电压放大），输入输出同相。特点是输入阻抗高、输出阻抗低，常用于阻抗匹配和缓冲。'
+    },
+    {
+      question: '共基放大电路的特点是？',
+      options: ['输入阻抗高', '高频特性好，输入输出同相', '电压增益低', '输出阻抗低'],
+      answer: 1,
+      explanation: '共基（CB）：电压增益高，输入输出同相，输入阻抗低，输出阻抗高。最大优点是高频特性好（没有密勒效应），常用于高频放大。'
+    },
+    {
+      question: '放大电路产生截止失真的原因是？',
+      options: ['Q 点太高', 'Q 点太低（进入截止区）', '输入信号太大', '负载太重'],
+      answer: 1,
+      explanation: '截止失真：Q 点太低，信号负半周进入截止区，输出波形底部被削平。解决：增大 $I_{BQ}$（减小 $R_B$）。饱和失真相反：Q 点太高，输出顶部被削平。'
+    },
+  ],
+
+  'ana-05': [
+    {
+      question: '稳定静态工作点的常用方法是？',
+      options: ['增大电源电压', '引入直流负反馈（分压偏置）', '减小负载电阻', '增大输入信号'],
+      answer: 1,
+      explanation: '分压偏置电路：$R_{B1}$、$R_{B2}$ 分压固定基极电位，$R_E$ 引入直流负反馈稳定 $I_C$。当 $I_C$ 增大时，$U_E$ 升高，$U_{BE}$ 减小，$I_B$ 减小，$I_C$ 回落。'
+    },
+    {
+      question: '图解法分析放大电路时，直流负载线和交流负载线的区别是？',
+      options: ['斜率不同', '直流负载线斜率 $-1/R_C$，交流负载线斜率 $-1/(R_C//R_L)$', '没有区别', '位置不同'],
+      answer: 1,
+      explanation: '直流负载线：斜率 $-1/R_C$，用于确定 Q 点。交流负载线：斜率 $-1/(R_C//R_L)$，通过 Q 点，用于分析动态范围。交流负载线更陡（阻值更小）。'
+    },
+  ],
+
+  'ana-06': [
+    {
+      question: '多级放大电路的耦合方式有？',
+      options: ['只有直接耦合', '阻容耦合、直接耦合、变压器耦合', '只有阻容耦合', '只有变压器耦合'],
+      answer: 1,
+      explanation: '三种耦合方式：①阻容耦合（简单，各级 Q 点独立，不能放大直流）；②直接耦合（可放大直流，但有零点漂移问题）；③变压器耦合（阻抗匹配，体积大）。集成电路主要用直接耦合。'
+    },
+    {
+      question: '多级放大电路的总增益等于？',
+      options: ['各级增益之和', '各级增益之积', '最后一级的增益', '第一级的增益'],
+      answer: 1,
+      explanation: '总增益 $A_v = A_{v1} \\cdot A_{v2} \\cdot \\cdots \\cdot A_{vn}$（各级增益之积）。注意：计算每级增益时要考虑后级的输入阻抗作为负载。'
+    },
+    {
+      question: '直接耦合多级放大电路的主要问题是？',
+      options: ['增益太低', '零点漂移', '带宽太窄', '输入阻抗太高'],
+      answer: 1,
+      explanation: '零点漂移：输入为零时输出缓慢漂移。主要由温度变化引起（温度漂移）。第一级漂移会被后面各级放大，影响最严重。解决：用差动放大电路作为第一级。'
+    },
+  ],
+
+  'ana-07': [
+    {
+      question: '集成运放的输入级通常采用什么电路？',
+      options: ['共射放大', '共集放大', '差动放大', '功率放大'],
+      answer: 2,
+      explanation: '差动放大电路作为输入级：抑制零点漂移（共模抑制比高），输入阻抗高。两个完全对称的管子，温度漂移互相抵消。这是集成运放的标准输入级结构。'
+    },
+    {
+      question: '差模信号是指？',
+      options: ['两个输入端的信号之和', '两个输入端的信号之差', '单端输入信号', '共模信号的反相'],
+      answer: 1,
+      explanation: '差模信号 $u_{id} = u_{i1} - u_{i2}$（两输入之差）。共模信号 $u_{ic} = (u_{i1} + u_{i2})/2$（两输入的平均值）。差动放大器放大差模、抑制共模。'
+    },
+    {
+      question: '共模抑制比 $K_{CMRR}$ 的定义是？',
+      options: ['$K_{CMRR} = A_d / A_c$', '$K_{CMRR} = A_c / A_d$', '$K_{CMRR} = A_d + A_c$', '$K_{CMRR} = A_d \\cdot A_c$'],
+      answer: 0,
+      explanation: '$K_{CMRR} = |A_d/A_c|$（差模增益与共模增益之比），通常用 dB 表示：$20\\log K_{CMRR}$。$K_{CMRR}$ 越大，抑制共模干扰能力越强。理想运放 $K_{CMRR} \\to \\infty$。'
+    },
+    {
+      question: '理想运放的开环增益是？',
+      options: ['1', '100', '无穷大', '0'],
+      answer: 2,
+      explanation: '理想运放：开环增益 $A_{od} \\to \\infty$，输入阻抗 $r_{id} \\to \\infty$，输出阻抗 $r_o \\to 0$，带宽 $BW \\to \\infty$，$K_{CMRR} \\to \\infty$。这些理想特性是分析运放电路的基础。'
+    },
+  ],
+
+  'ana-08': [
+    {
+      question: '负反馈对放大电路的影响是？',
+      options: ['增益增大', '增益减小，但稳定性提高', '增益不变', '带宽减小'],
+      answer: 1,
+      explanation: '负反馈：增益降低（$A_f = A/(1+AF)$），但增益稳定性提高、带宽展宽、非线性失真减小、输入/输出阻抗改善。"牺牲增益换性能"是负反馈的核心思想。'
+    },
+    {
+      question: '电压串联负反馈的特点是？',
+      options: ['输入阻抗降低，输出阻抗降低', '输入阻抗升高，输出阻抗降低', '输入阻抗降低，输出阻抗升高', '输入阻抗升高，输出阻抗升高'],
+      answer: 1,
+      explanation: '电压串联负反馈：输入阻抗升高（串联反馈），输出阻抗降低（电压反馈）。稳定输出电压。四种反馈组态对阻抗的影响不同，需要分别记忆。'
+    },
+    {
+      question: '判断反馈类型时，"并联反馈"对输入阻抗的影响是？',
+      options: ['增大', '减小', '不变', '无穷大'],
+      answer: 1,
+      explanation: '并联反馈：反馈信号与输入信号并联，降低输入阻抗。串联反馈：反馈信号与输入信号串联，提高输入阻抗。电流反馈稳定输出电流，电压反馈稳定输出电压。'
+    },
+    {
+      question: '深度负反馈条件下，闭环增益约等于？',
+      options: ['$A$', '$1/F$', '$AF$', '$A/(1+AF)$'],
+      answer: 1,
+      explanation: '深度负反馈（$AF \\gg 1$）：$A_f = A/(1+AF) \\approx 1/F$。闭环增益几乎只取决于反馈网络（通常是无源网络），与开环增益无关。这使得增益非常稳定。'
+    },
+  ],
+
+  'ana-09': [
+    {
+      question: '反相比例运算电路的输出电压是？',
+      options: ['$U_o = (1 + R_f/R_1)U_i$', '$U_o = -(R_f/R_1)U_i$', '$U_o = U_i$', '$U_o = -U_i$'],
+      answer: 1,
+      explanation: '反相比例：$U_o = -(R_f/R_1)U_i$。增益 $A_v = -R_f/R_1$，负号表示反相。输入阻抗较低（$R_1$），虚地点使输入端无共模信号。'
+    },
+    {
+      question: '同相比例运算电路的输出电压是？',
+      options: ['$U_o = (R_f/R_1)U_i$', '$U_o = -(R_f/R_1)U_i$', '$U_o = (1 + R_f/R_1)U_i$', '$U_o = U_i$'],
+      answer: 2,
+      explanation: '同相比例：$U_o = (1 + R_f/R_1)U_i$。增益 $A_v = 1 + R_f/R_1 \\ge 1$。输入阻抗高（运放输入端），有共模信号输入（需要注意共模抑制比）。'
+    },
+    {
+      question: '积分运算电路的输出是？',
+      options: ['$U_o = -RC \\frac{dU_i}{dt}$', '$U_o = -\\frac{1}{RC}\\int U_i\\,dt$', '$U_o = RC \\cdot U_i$', '$U_o = U_i / RC$'],
+      answer: 1,
+      explanation: '积分器：$U_o = -\\frac{1}{RC}\\int U_i\\,dt$。方波输入得到三角波输出。微分器：$U_o = -RC\\frac{dU_i}{dt}$。积分和微分互为逆运算。'
+    },
+    {
+      question: '仪用放大器（测量放大器）的特点是？',
+      options: ['增益低，输入阻抗低', '高增益、高输入阻抗、高共模抑制比', '只有反相输入', '只能放大直流'],
+      answer: 1,
+      explanation: '仪用放大器：三个运放组成，第一级双端输入高阻抗，第二级差分放大高共模抑制比。增益 $A_v = (1 + 2R_1/R_G)(R_3/R_2)$。常用于传感器信号调理。'
+    },
+  ],
+
+  'ana-10': [
+    {
+      question: '电压比较器的功能是？',
+      options: ['放大信号', '判断输入电压与参考电压的大小关系', '滤波', '积分'],
+      answer: 1,
+      explanation: '比较器：$U_i > U_{ref}$ 时输出高电平，$U_i < U_{ref}$ 时输出低电平。是运放的非线性应用（开环或正反馈）。用于波形变换、过零检测等。'
+    },
+    {
+      question: '施密特触发器的特点是？',
+      options: ['只有一个阈值', '有两个不同的阈值（滞回特性）', '输出为正弦波', '只能用作积分器'],
+      answer: 1,
+      explanation: '施密特触发器：上门限 $U_{T+}$ 和下门限 $U_{T-}$ 不同，具有滞回特性。输入上升时在 $U_{T+}$ 翻转，下降时在 $U_{T-}$ 翻转。能有效抗干扰（噪声不会引起误翻转）。'
+    },
+    {
+      question: '方波发生器（多谐振荡器）的基本组成是？',
+      options: ['运放 + RC 积分 + 正反馈', '只有电阻', '只有电容', '只有运放'],
+      answer: 0,
+      explanation: '方波发生器：运放（作为比较器）+ RC 积分（定时）+ 正反馈（产生两个暂态）。振荡频率 $f = 1/(2RC\\ln(1+2R_2/R_1))$。输出方波，电容上得到三角波。'
+    },
+  ],
+
+  'ana-11': [
+    {
+      question: '有源滤波器相比无源滤波器的优点是？',
+      options: ['更简单', '增益可大于 1，负载不影响滤波特性', '不需要电源', '频率范围更宽'],
+      answer: 1,
+      explanation: '有源滤波器：用运放 + RC 网络。优点：①可提供增益；②输出阻抗低，负载不影响滤波特性；③可实现高阶滤波。缺点：需要电源，带宽受运放限制。'
+    },
+    {
+      question: 'Sallen-Key 低通滤波器是？',
+      options: ['一阶滤波器', '二阶滤波器', '三阶滤波器', '四阶滤波器'],
+      answer: 1,
+      explanation: 'Sallen-Key 是经典的二阶有源滤波器拓扑。一个运放 + 4 个电阻 + 2 个电容实现二阶低通。级联两个 Sallen-Key 可得到四阶滤波器。'
+    },
+    {
+      question: '巴特沃斯滤波器的特点是？',
+      options: ['通带最平坦', '过渡带最陡', '相位最线性', '阶数最低'],
+      answer: 0,
+      explanation: '巴特沃斯（Butterworth）：通带最平坦（无纹波），但过渡带较宽。切比雪夫：过渡带陡但通带有纹波。贝塞尔：相位线性（群延迟恒定），适合脉冲信号。'
+    },
+  ],
+
+  'ana-12': [
+    {
+      question: '甲类功率放大器的特点是？',
+      options: ['效率最高，失真最大', '效率最低（≤50%），失真最小', '效率和失真都中等', '只能放大正半周'],
+      answer: 1,
+      explanation: '甲类：整个周期都有电流，失真最小但效率最低（理想 50%，实际 25~35%）。乙类：只有半周期导通，效率高（理想 78.5%）但有交越失真。甲乙类：介于两者之间。'
+    },
+    {
+      question: '乙类推挽功率放大器的主要问题是？',
+      options: ['效率太低', '交越失真', '增益太高', '带宽太窄'],
+      answer: 1,
+      explanation: '乙类推挽：两个管子各放大半个周期。问题是在信号过零附近（$U_{BE} < 0.5V$），两管都截止，产生交越失真。解决：加小偏置使管子微导通（变成甲乙类）。'
+    },
+    {
+      question: 'OTL 和 OCL 电路的区别是？',
+      options: ['OTL 有输出电容，OCL 无输出电容', 'OTL 效率更高', 'OCL 只能用 NPN 管', '没有区别'],
+      answer: 0,
+      explanation: 'OTL（Output TransformerLess）：有输出耦合电容，单电源供电。OCL（Output CapacitorLess）：无输出电容，双电源供电，低频特性更好。'
+    },
+    {
+      question: '功率放大器中，功率管的最大功耗发生在？',
+      options: ['输出最大功率时', '输出为零时', '输出为最大功率的一半时', '任何时候相同'],
+      answer: 2,
+      explanation: '乙类功放：最大管耗 $P_{Tmax} = V_{CC}^2/(2\\pi^2 R_L)$，发生在输出幅度为 $2V_{CC}/\\pi$ 时（不是最大输出时）。选管时要保证 $P_{CM} > P_{Tmax}$。'
+    },
+  ],
+
+  'ana-13': [
+    {
+      question: '串联型稳压电源的基本组成是？',
+      options: ['整流→滤波→稳压', '稳压→整流→滤波', '滤波→整流→稳压', '只有稳压'],
+      answer: 0,
+      explanation: '线性稳压电源：变压器→整流→滤波→稳压。串联型：调整管与负载串联，通过负反馈调节管压降使输出稳定。效率低（$\\eta \\approx U_o/U_i$），但纹波小。'
+    },
+    {
+      question: 'LDO（低压差线性稳压器）的特点是？',
+      options: ['压差大，效率高', '压差小（<1V），适合电池供电', '只能输出 5V', '需要外接电感'],
+      answer: 1,
+      explanation: 'LDO：压差通常 0.1~0.6V，电池电压下降到接近输出电压时仍能稳压。效率高于普通线性稳压器。缺点是效率仍受 $U_o/U_i$ 限制，大压差时发热严重。'
+    },
+    {
+      question: '开关电源相比线性电源的优点是？',
+      options: ['纹波更小', '效率更高（>80%）', '电路更简单', '噪声更低'],
+      answer: 1,
+      explanation: '开关电源：调整管工作在开关状态（饱和/截止），功耗小，效率可达 80~95%。缺点是纹波较大、EMI 问题。线性电源纹波小但效率低。'
+    },
+  ],
+
+  'ana-14': [
+    {
+      question: '正弦波振荡器的起振条件是？',
+      options: ['$|AF| < 1$', '$|AF| > 1$', '$|AF| = 1$', '$|AF| = 0$'],
+      answer: 1,
+      explanation: '起振条件：$|AF| > 1$（环路增益大于 1）。平衡条件：$|AF| = 1$，$\\varphi_A + \\varphi_F = 2n\\pi$（相位条件）。起振时增益略大，振幅增大后靠非线性限幅使增益降回 1。'
+    },
+    {
+      question: 'RC 文氏桥振荡器的振荡频率是？',
+      options: ['$f_0 = 1/(2\\pi RC)$', '$f_0 = RC$', '$f_0 = 1/(RC)$', '$f_0 = 2\\pi RC$'],
+      answer: 0,
+      explanation: '文氏桥振荡器：$f_0 = 1/(2\\pi RC)$，由 RC 串并联选频网络决定。$R_f/R_1 \\ge 2$ 保证起振。是最常用的低频正弦波振荡器。'
+    },
+    {
+      question: 'LC 振荡器适用于什么频率范围？',
+      options: ['低频（<1MHz）', '高频（>1MHz）', '只有 50Hz', '直流'],
+      answer: 1,
+      explanation: 'LC 振荡器：频率 $f_0 = 1/(2\\pi\\sqrt{LC})$，适合高频（MHz 级以上）。低频时 L、C 值太大不实用，用 RC 振荡器。石英晶体振荡器频率最稳定。'
+    },
+    {
+      question: '石英晶体振荡器的优点是？',
+      options: ['成本最低', '频率稳定性极高', '频率可调范围大', '输出功率大'],
+      answer: 1,
+      explanation: '石英晶体：利用压电效应，Q 值极高（$10^4 \\sim 10^6$），频率稳定性好（$10^{-6} \\sim 10^{-8}$）。缺点是频率固定（由晶体切割决定）。用于时钟基准、频率合成等。'
+    },
+  ],
+
+  // ========== 数字电路 dig-01~dig-14 ==========
+  'dig-01': [
+    {
+      question: '十进制数 13 的二进制表示是？',
+      options: ['1011', '1101', '1110', '1001'],
+      answer: 1,
+      explanation: '$13 = 8 + 4 + 1 = 2^3 + 2^2 + 2^0$，二进制为 1101。转换方法：不断除 2 取余，或直接写出各 2 的幂次之和。'
+    },
+    {
+      question: 'BCD 码（8421 码）中，十进制 9 表示为？',
+      options: ['1001', '1010', '1000', '1100'],
+      answer: 0,
+      explanation: '8421 BCD 码：用 4 位二进制表示 0~9。9 = 8+1 = 1001。注意 BCD 码与纯二进制不同：BCD 码 1010 是非法码（没有对应十进制数）。'
+    },
+    {
+      question: '格雷码的特点是？',
+      options: ['相邻码只有一位不同', '权重为 8421', '与二进制完全相同', '只能表示 4 位'],
+      answer: 0,
+      explanation: '格雷码（循环码）：相邻两个码之间只有一位不同。用于减少信号变化时的竞争冒险。二进制转格雷码：$G_i = B_i \\oplus B_{i+1}$。'
+    },
+    {
+      question: '原码、反码、补码中，零的表示唯一的是？',
+      options: ['原码', '反码', '补码', '都唯一'],
+      answer: 2,
+      explanation: '补码中 0 的表示唯一：+0 和 -0 都是 0000。原码：+0 = 0000，-0 = 1000（两种）。反码：+0 = 0000，-0 = 1111（两种）。补码多表示一个负数（-8 对于 4 位）。'
+    },
+  ],
+
+  'dig-02': [
+    {
+      question: '摩根定律（德摩根定律）的内容是？',
+      options: ['$\\overline{A+B} = \\overline{A} \\cdot \\overline{B}$', '$\\overline{A \\cdot B} = \\overline{A} + \\overline{B}$', '以上都对', '$A + \\overline{A} = 1$'],
+      answer: 2,
+      explanation: '德摩根定律：$\\overline{A+B} = \\overline{A} \\cdot \\overline{B}$（或非 = 与非），$\\overline{A \\cdot B} = \\overline{A} + \\overline{B}$（与非 = 或非）。口诀："头上开花，符号变号"。'
+    },
+    {
+      question: '卡诺图化简利用的是？',
+      options: ['代入法', '相邻最小项合并消去变量', '配方法', '展开法'],
+      answer: 1,
+      explanation: '卡诺图：相邻格（包括首尾相邻）只有一位不同，合并可消去一个变量。圈越大，消去的变量越多，表达式越简。必须圈 2^n 个 1。'
+    },
+    {
+      question: '4 变量卡诺图的最小项个数是？',
+      options: ['4', '8', '16', '32'],
+      answer: 2,
+      explanation: '4 变量（ABCD）有 $2^4 = 16$ 个最小项，对应 16 个格子。排列用格雷码顺序（00, 01, 11, 10），保证相邻格只差一位。'
+    },
+    {
+      question: '逻辑函数 $F = A + \\overline{A}B$ 化简结果是？',
+      options: ['$F = A + B$', '$F = B$', '$F = A$', '$F = AB$'],
+      answer: 0,
+      explanation: '吸收律：$A + \\overline{A}B = A + B$。证明：$A + \\overline{A}B = A(1+B) + \\overline{A}B = A + AB + \\overline{A}B = A + B(A+\\overline{A}) = A + B$。这是常用化简公式。'
+    },
+  ],
+
+  'dig-03': [
+    {
+      question: '组合逻辑电路的特点是？',
+      options: ['有记忆功能', '无记忆功能，输出只取决于当前输入', '有时钟信号', '有反馈回路'],
+      answer: 1,
+      explanation: '组合逻辑：输出只取决于当前输入（无记忆）。时序逻辑：输出取决于当前输入和过去状态（有记忆）。组合逻辑没有反馈回路和存储元件。'
+    },
+    {
+      question: '组合逻辑电路设计的一般步骤是？',
+      options: ['列真值表→写表达式→化简→画电路', '画电路→列真值表→化简', '写表达式→列真值表→画电路', '先搭电路再分析'],
+      answer: 0,
+      explanation: '设计步骤：①列真值表（根据功能要求）；②写逻辑表达式（从真值表）；③化简（卡诺图或公式法）；④画电路图。分析步骤则反过来：从电路到真值表到功能。'
+    },
+    {
+      question: '竞争冒险产生的原因是？',
+      options: ['电源电压不稳', '信号通过不同路径到达时间不同', '温度变化', '负载太重'],
+      answer: 1,
+      explanation: '竞争：信号经不同路径到达同一点的时间不同。冒险：竞争可能导致输出产生毛刺（短暂的错误脉冲）。消除方法：加冗余项、加滤波电容、用格雷码。'
+    },
+  ],
+
+  'dig-04': [
+    {
+      question: '3-8 译码器（74138）的输入输出关系是？',
+      options: ['3 位输入选择 8 个输出中的一个为低', '3 位输入选择 8 个输出中的一个为高', '8 个输入编码为 3 位输出', '没有确定关系'],
+      answer: 0,
+      explanation: '74138：3 位输入（ABC）选择 8 个输出（$\\overline{Y_0} \\sim \\overline{Y_7}$）中的一个输出低电平（低有效）。使能端 $G1=1, \\overline{G2A}=\\overline{G2B}=0$ 时工作。'
+    },
+    {
+      question: '数据选择器（MUX）的功能是？',
+      options: ['把一个数据分到多个输出', '从多个输入中选择一个到输出', '编码', '译码'],
+      answer: 1,
+      explanation: '数据选择器（MUX）：根据选择信号，从多个输入中选一个送到输出。8 选 1 MUX 有 8 个数据输入、3 个选择输入、1 个输出。功能：$Y = D_i$（$i$ 由选择信号决定）。'
+    },
+    {
+      question: '优先编码器与普通编码器的区别是？',
+      options: ['没有区别', '优先编码器只编码最高优先级的输入', '优先编码器更快', '优先编码器更简单'],
+      answer: 1,
+      explanation: '普通编码器：同时只能有一个输入有效。优先编码器：允许多个输入同时有效，只编码优先级最高的那个（如 74148，输入 $\\overline{I_7}$ 优先级最高）。'
+    },
+  ],
+
+  'dig-05': [
+    {
+      question: '半加器与全加器的区别是？',
+      options: ['半加器只能加 1 位', '半加器无进位输入，全加器有进位输入', '全加器更快', '没有区别'],
+      answer: 1,
+      explanation: '半加器：两个 1 位相加，不考虑低位进位。$S = A \\oplus B$，$C = AB$。全加器：三个 1 位相加（含低位进位 $C_{in}$）。$S = A \\oplus B \\oplus C_{in}$，$C_{out} = AB + (A \\oplus B)C_{in}$。'
+    },
+    {
+      question: '4 位并行加法器的进位方式是？',
+      options: ['串行进位（逐级传递）', '并行进位（超前进位）', '以上两种都有', '无进位'],
+      answer: 2,
+      explanation: '串行进位：简单但慢（进位逐级传递）。超前进位（并行进位）：快速但电路复杂（直接计算各级进位）。实际常用折中方案：4 位一组超前进位，组间串行。'
+    },
+    {
+      question: '数值比较器的功能是？',
+      options: ['比较两个数的大小', '两个数相加', '两个数相乘', '两个数相除'],
+      answer: 0,
+      explanation: '数值比较器：比较两个二进制数的大小，输出 $A>B$、$A=B$、$A<B$ 三个信号。7485 是 4 位比较器，可级联扩展到更多位。'
+    },
+  ],
+
+  'dig-06': [
+    {
+      question: '竞争冒险的判断方法是？',
+      options: ['看是否有反馈', '看是否存在 $A \\cdot \\overline{A}$ 或 $A + \\overline{A}$ 的形式', '看是否有译码器', '看是否有触发器'],
+      answer: 1,
+      explanation: '冒险判断：逻辑表达式中存在某个变量既以原码又以反码出现（$A \\cdot \\overline{A}$ 或 $A + \\overline{A}$），且化简时消去了该变量，则可能产生冒险。'
+    },
+    {
+      question: '消除竞争冒险的方法不包括？',
+      options: ['加冗余项', '加滤波电容', '用格雷码编码', '增加触发器'],
+      answer: 3,
+      explanation: '消除方法：①加冗余项（卡诺图中多圈一个重叠项）；②加滤波电容（吸收毛刺）；③用格雷码（每次只变一位）；④引入选通脉冲。增加触发器是时序电路的方法。'
+    },
+  ],
+
+  'dig-07': [
+    {
+      question: 'SR 触发器的约束条件是？',
+      options: ['$S + R = 0$', '$S \\cdot R = 0$', '$S = R$', '$S + R = 1$'],
+      answer: 1,
+      explanation: 'SR 触发器约束：$S \\cdot R = 0$（S 和 R 不能同时为 1）。S=R=1 时输出不定（$Q = \\overline{Q}$，违反互补性）。JK 触发器没有这个约束。'
+    },
+    {
+      question: 'D 触发器的特性方程是？',
+      options: ['$Q^{n+1} = D$', '$Q^{n+1} = S + \\overline{R}Q^n$', '$Q^{n+1} = J\\overline{Q^n} + \\overline{K}Q^n$', '$Q^{n+1} = T \\oplus Q^n$'],
+      answer: 0,
+      explanation: 'D 触发器：$Q^{n+1} = D$（时钟沿到来后，输出等于输入 D）。用于数据锁存、移位寄存器。JK 触发器：$Q^{n+1} = J\\overline{Q^n} + \\overline{K}Q^n$，功能最全。'
+    },
+    {
+      question: 'JK 触发器 J=K=1 时的功能是？',
+      options: ['置 0', '置 1', '翻转（Toggle）', '保持'],
+      answer: 2,
+      explanation: 'JK 触发器：J=K=0 保持，J=K=1 翻转（$Q^{n+1} = \\overline{Q^n}$），J=1/K=0 置 1，J=0/K=1 置 0。J=K=1 时每来一个时钟翻转一次，可用于计数器。'
+    },
+    {
+      question: '边沿触发电平触发的区别是？',
+      options: ['没有区别', '边沿触发只在时钟沿瞬间采样，更抗干扰', '边沿触发更慢', '电平触发更可靠'],
+      answer: 1,
+      explanation: '电平触发：时钟高（或低）电平期间都可能触发，容易受干扰。边沿触发：只在时钟上升沿（或下降沿）瞬间采样输入，抗干扰能力强。现代数字系统几乎都用边沿触发。'
+    },
+  ],
+
+  'dig-08': [
+    {
+      question: '时序逻辑电路与组合逻辑电路的根本区别是？',
+      options: ['有无触发器', '有无反馈', '有无记忆功能', '以上都对'],
+      answer: 3,
+      explanation: '时序逻辑：有记忆（触发器/锁存器），输出取决于当前输入和过去状态。组合逻辑：无记忆，输出只取决于当前输入。时序电路有反馈回路和时钟信号。'
+    },
+    {
+      question: '状态图中，圆圈表示？',
+      options: ['输入', '输出', '状态', '时钟'],
+      answer: 2,
+      explanation: '状态图：圆圈表示状态（标注状态编码），箭头表示状态转移（标注 输入/输出）。状态表是状态图的表格形式。状态图是分析和设计时序电路的核心工具。'
+    },
+    {
+      question: '同步时序电路与异步时序电路的区别是？',
+      options: ['同步电路有统一时钟，异步电路没有', '同步电路更快', '异步电路更简单', '没有区别'],
+      answer: 0,
+      explanation: '同步：所有触发器由同一个时钟信号控制，状态同时变化。异步：各触发器时钟不同，状态变化有先后。同步电路设计简单、可靠，是主流方案。'
+    },
+  ],
+
+  'dig-09': [
+    {
+      question: '4 位二进制计数器的模是？',
+      options: ['4', '8', '16', '32'],
+      answer: 2,
+      explanation: '4 位二进制计数器：$2^4 = 16$ 个状态（0000~1111），模为 16。n 位二进制计数器模为 $2^n$。十进制计数器模为 10（BCD 码 0000~1001）。'
+    },
+    {
+      question: '用反馈置零法实现任意模计数器的原理是？',
+      options: ['计数到目标值时清零', '计数到最大值清零', '用译码器', '用分频器'],
+      answer: 0,
+      explanation: '反馈置零法：计数到 $M$（目标模值）时，通过反馈使计数器清零。注意：对于异步清零，反馈信号持续时间短，可能不可靠。同步清零更可靠。'
+    },
+    {
+      question: '异步计数器（行波计数器）的缺点是？',
+      options: ['电路复杂', '速度慢（逐级翻转）', '功耗大', '只能计小数'],
+      answer: 1,
+      explanation: '异步计数器：低位触发器的输出作为高位的时钟，逐级翻转。缺点：延迟累积，速度慢；可能出现中间状态（毛刺）。同步计数器所有位同时翻转，速度快。'
+    },
+    {
+      question: '环形计数器的特点是？',
+      options: ['每个状态只有一个 1', '计数模等于触发器个数', '不需要译码', '以上都对'],
+      answer: 3,
+      explanation: '环形计数器：移位寄存器首尾相连，$n$ 个触发器有 $n$ 个有效状态。优点：每个状态只有一个 1，不需要译码电路。缺点：利用率低（$n$ 个触发器只有 $n$ 个有效状态，$2^n - n$ 个无效状态）。'
+    },
+  ],
+
+  'dig-10': [
+    {
+      question: '移位寄存器的基本功能是？',
+      options: ['存储数据', '数据移位（左移/右移）', '计数', '译码'],
+      answer: 1,
+      explanation: '移位寄存器：在时钟作用下，数据逐位移动。右移：$Q_i^{n+1} = Q_{i-1}^n$；左移：$Q_i^{n+1} = Q_{i+1}^n$。可用于串-并转换、乘除法运算、序列检测等。'
+    },
+    {
+      question: '串行输入并行输出（SIPO）的应用是？',
+      options: ['并-串转换', '串-并转换', '计数', '译码'],
+      answer: 1,
+      explanation: 'SIPO：串行数据输入，并行数据输出。用于串行通信接收端，把串行数据转为并行处理。PISO（并入串出）用于发送端。'
+    },
+    {
+      question: '约翰逊计数器（扭环计数器）的有效状态数是？',
+      options: ['$2n$', '$n$', '$2^n$', '$n^2$'],
+      answer: 0,
+      explanation: '约翰逊计数器：$n$ 个触发器，$2n$ 个有效状态（比环形计数器多一倍）。结构：移位寄存器末级取反后反馈到首级。自启动：需要检查无效状态能否回到有效循环。'
+    },
+  ],
+
+  'dig-11': [
+    {
+      question: '555 定时器构成多谐振荡器时，输出波形是？',
+      options: ['正弦波', '方波（矩形波）', '三角波', '锯齿波'],
+      answer: 1,
+      explanation: '555 多谐振荡器：无稳态，输出连续方波。频率 $f = 1.44/[(R_1 + 2R_2)C]$，占空比 $D = (R_1 + R_2)/(R_1 + 2R_2)$。用两个电阻和一个电容即可产生方波。'
+    },
+    {
+      question: '555 定时器构成单稳态触发器时，输出脉宽由什么决定？',
+      options: ['输入信号频率', 'R 和 C 的值', '电源电压', '负载电阻'],
+      answer: 1,
+      explanation: '单稳态：触发后输出一个固定宽度的脉冲，脉宽 $t_w = 1.1RC$。触发信号只起触发作用，脉宽由 RC 时间常数决定。用于定时、延时、脉冲整形。'
+    },
+    {
+      question: '施密特触发器的两个阈值电压分别由什么决定？',
+      options: ['$V_{CC}$', '555 内部的三个 $5k\\Omega$ 电阻分压', '外部电阻', '外部电容'],
+      answer: 1,
+      explanation: '555 内部有三个 $5k\\Omega$ 电阻对 $V_{CC}$ 分压：$V_{T+} = 2V_{CC}/3$（上阈值），$V_{T-} = V_{CC}/3$（下阈值）。回差电压 $\\Delta V = V_{CC}/3$。可通过控制电压端（CO）调节。'
+    },
+  ],
+
+  'dig-12': [
+    {
+      question: 'RAM 和 ROM 的区别是？',
+      options: ['RAM 只读，ROM 可读写', 'RAM 断电丢失数据，ROM 断电保持数据', 'RAM 更快', 'ROM 容量更大'],
+      answer: 1,
+      explanation: 'RAM（随机存取存储器）：可读可写，断电数据丢失（易失性）。ROM（只读存储器）：正常工作只读，断电数据保持（非易失性）。ROM 用于存储固定程序（如 BIOS）。'
+    },
+    {
+      question: 'SRAM 和 DRAM 的区别是？',
+      options: ['SRAM 用触发器存储，DRAM 用电容存储', 'SRAM 更慢', 'DRAM 不需要刷新', '没有区别'],
+      answer: 0,
+      explanation: 'SRAM：用触发器（6 个晶体管）存储，速度快，不需要刷新，成本高。DRAM：用电容（1 个晶体管 + 1 个电容）存储，需要定期刷新（电容会漏电），密度高，用于主存。'
+    },
+    {
+      question: '存储器容量 4K×8 的含义是？',
+      options: ['4096 个地址，每个地址 8 位', '4096 个地址，每个地址 4 位', '8192 个地址，每个地址 8 位', '4096 个字节'],
+      answer: 0,
+      explanation: '$4K = 4096$ 个存储单元（地址），每个单元 8 位（1 字节）。总容量 = $4096 \\times 8 = 32768$ 位 = 4KB。地址线需要 $\\log_2(4096) = 12$ 根。'
+    },
+  ],
+
+  'dig-13': [
+    {
+      question: 'DAC（数模转换器）的功能是？',
+      options: ['把模拟信号变成数字信号', '把数字信号变成模拟信号', '放大信号', '滤波'],
+      answer: 1,
+      explanation: 'DAC：数字→模拟。输入数字量，输出对应的模拟电压（或电流）。ADC：模拟→数字。两者是数字系统与模拟世界的接口。'
+    },
+    {
+      question: 'R-2R 梯形电阻网络 DAC 的优点是？',
+      options: ['精度最高', '只用两种阻值的电阻', '速度最快', '最便宜'],
+      answer: 1,
+      explanation: 'R-2R 梯形网络：只用 $R$ 和 $2R$ 两种阻值，便于集成和校准。权电阻网络：电阻种类多（$R, 2R, 4R, 8R, \\ldots$），位数多时阻值范围太大。'
+    },
+    {
+      question: 'ADC 的量化误差是？',
+      options: ['可以消除的', '不可避免的，最大为 ±0.5LSB', '与位数无关', '与采样率有关'],
+      answer: 1,
+      explanation: '量化误差：连续模拟量用离散数字量表示时的固有误差。n 位 ADC，量化步长 $\\Delta = V_{ref}/2^n$，最大量化误差 $\\pm 0.5\\Delta = \\pm 0.5$ LSB。位数越多，量化误差越小。'
+    },
+    {
+      question: '逐次逼近型 ADC 的工作原理是？',
+      options: ['并行比较', '二分法逐位确定', '积分法', '计数法'],
+      answer: 1,
+      explanation: '逐次逼近：用 DAC 产生二分法猜测值，与输入比较，逐位确定。n 位需要 n 个时钟周期。速度中等，精度高，是最常用的 ADC 类型。'
+    },
+  ],
+
+  'dig-14': [
+    {
+      question: 'Verilog 中 `assign` 语句用于描述？',
+      options: ['时序逻辑', '组合逻辑', '状态机', '测试平台'],
+      answer: 1,
+      explanation: '`assign`（连续赋值）用于描述组合逻辑：`assign y = a & b;`。`always` 块用于描述时序逻辑（带时钟沿）或组合逻辑（敏感列表用 `*`）。'
+    },
+    {
+      question: 'Verilog 中 `always @(posedge clk)` 描述的是？',
+      options: ['组合逻辑', '时序逻辑（上升沿触发）', '电平敏感', '异步逻辑'],
+      answer: 1,
+      explanation: '`always @(posedge clk)` 在时钟上升沿触发，描述同步时序逻辑。`always @(posedge clk or posedge rst)` 描述异步复位的时序逻辑。`always @(*)` 描述组合逻辑。'
+    },
+    {
+      question: '可综合的 Verilog 代码是指？',
+      options: ['只能仿真不能综合', '可以转换为实际电路', '只能用于 FPGA', '只能用于 ASIC'],
+      answer: 1,
+      explanation: '可综合：代码可以被综合工具转换为门级电路（FPGA 或 ASIC）。有些 Verilog 语法（如 `initial`、`#delay`）只能用于仿真，不可综合。设计时必须区分可综合代码和仿真代码。'
+    },
+    {
+      question: '阻塞赋值（`=`）和非阻塞赋值（`<=`）的区别是？',
+      options: ['没有区别', '阻塞赋值立即执行，非阻塞赋值在块结束时同时执行', '阻塞赋值用于时序逻辑', '非阻塞赋值用于组合逻辑'],
+      answer: 1,
+      explanation: '阻塞 `=`：立即赋值，后续语句看到新值（用于组合逻辑）。非阻塞 `<=`：块结束时同时赋值，后续语句看到旧值（用于时序逻辑）。原则：组合逻辑用 `=`，时序逻辑用 `<=`。'
+    },
+  ],
+
+  // ========== 数据结构 ds-05~ds-16 ==========
+  'ds-05': [
+    {
+      question: '数组存储的特点是？',
+      options: ['插入删除效率高', '随机访问效率高（O(1)）', '不需要连续空间', '大小可动态变化'],
+      answer: 1,
+      explanation: '数组：连续存储，支持随机访问（下标直接计算地址），时间 O(1)。缺点：插入/删除需要移动元素（O(n)），大小固定（静态数组）。'
+    },
+    {
+      question: '对称矩阵压缩存储后，存储空间节省了多少？',
+      options: ['0%', '约 50%', '75%', '90%'],
+      answer: 1,
+      explanation: '对称矩阵只需存储下三角（或上三角）+ 对角线，共 $n(n+1)/2$ 个元素，约为 $n^2/2$。节省约 50% 空间。映射关系：$k = i(i-1)/2 + j$（下三角按行存储）。'
+    },
+    {
+      question: '稀疏矩阵的三元组表示法是？',
+      options: ['存储所有元素', '只存储非零元素的（行，列，值）', '用链表存储', '用树存储'],
+      answer: 1,
+      explanation: '三元组：只存储非零元素，每个元素用（行号，列号，值）表示。当非零元素远少于总元素时，节省大量空间。缺点：随机访问效率降低。'
+    },
+  ],
+
+  'ds-06': [
+    {
+      question: '二叉树的前序遍历顺序是？',
+      options: ['左→根→右', '根→左→右', '左→右→根', '右→根→左'],
+      answer: 1,
+      explanation: '前序（先序）遍历：根→左→右。中序遍历：左→根→右。后序遍历：左→右→根。层序遍历：按层次从上到下从左到右。口诀："前中后"指的是根的位置。'
+    },
+    {
+      question: '完全二叉树的特点是？',
+      options: ['每个节点都有两个子节点', '除最后一层外每层都满，最后一层从左到右连续', '是满二叉树', '没有规律'],
+      answer: 1,
+      explanation: '完全二叉树：除最后一层外每层都满，最后一层节点从左到右连续。可以用数组存储：节点 $i$ 的左孩子 $2i$，右孩子 $2i+1$，父节点 $\\lfloor i/2 \\rfloor$。'
+    },
+    {
+      question: 'n 个节点的完全二叉树的高度是？',
+      options: ['$n$', '$\\log_2 n$', '$\\lfloor \\log_2 n \\rfloor + 1$', '$n-1$'],
+      answer: 2,
+      explanation: '高度 $h = \\lfloor \\log_2 n \\rfloor + 1$。例如 $n=7$ 时 $h=3$，$n=8$ 时 $h=4$。满二叉树是特殊的完全二叉树，$n = 2^h - 1$。'
+    },
+    {
+      question: '二叉树的中序遍历结果是有序的，这棵树是？',
+      options: ['完全二叉树', '二叉搜索树（BST）', '满二叉树', '平衡二叉树'],
+      answer: 1,
+      explanation: '二叉搜索树（BST）：左子树所有节点 < 根 < 右子树所有节点。中序遍历 BST 得到升序序列。这是 BST 的重要性质，可用于排序。'
+    },
+  ],
+
+  'ds-07': [
+    {
+      question: 'AVL 树的平衡条件是？',
+      options: ['左右子树高度相等', '任意节点左右子树高度差不超过 1', '所有叶子在同一层', '没有限制'],
+      answer: 1,
+      explanation: 'AVL 树：任意节点的左右子树高度差（平衡因子）$\\in \\{-1, 0, 1\\}$。插入/删除后如果不平衡，通过旋转（LL/RR/LR/RL）恢复平衡。保证查找效率 $O(\\log n)$。'
+    },
+    {
+      question: 'BST 在最坏情况下的查找时间复杂度是？',
+      options: ['$O(1)$', '$O(\\log n)$', '$O(n)$', '$O(n\\log n)$'],
+      answer: 2,
+      explanation: 'BST 最坏情况（退化为链表）：查找 $O(n)$。平衡 BST（AVL、红黑树）保证 $O(\\log n)$。所以需要自平衡树来避免最坏情况。'
+    },
+    {
+      question: 'AVL 树 LL 型不平衡需要什么旋转？',
+      options: ['左旋', '右旋', '先左后右', '先右后左'],
+      answer: 1,
+      explanation: 'LL 型：在左子树的左子树插入导致不平衡，需要右旋。RR 型：左旋。LR 型：先左旋再右旋。RL 型：先右旋再左旋。四种情况对应四种旋转。'
+    },
+  ],
+
+  'ds-08': [
+    {
+      question: '红黑树相比 AVL 树的优势是？',
+      options: ['查找更快', '插入删除时旋转次数更少（最多 3 次）', '实现更简单', '空间更小'],
+      answer: 1,
+      explanation: '红黑树：插入最多 2 次旋转，删除最多 3 次旋转。AVL 树：插入最多 2 次，删除可能需要 $O(\\log n)$ 次旋转。红黑树在频繁插入删除时性能更好。'
+    },
+    {
+      question: 'B 树主要用于？',
+      options: ['内存排序', '磁盘文件系统和数据库索引', '图算法', '字符串匹配'],
+      answer: 1,
+      explanation: 'B 树（及 B+ 树）：多路平衡搜索树，每个节点可以有多个子节点。减少树高 = 减少磁盘 I/O 次数。数据库索引（如 MySQL InnoDB）和文件系统（如 NTFS）都用 B+ 树。'
+    },
+    {
+      question: 'B+ 树与 B 树的区别是？',
+      options: ['B+ 树数据只在叶子节点，叶子节点有链表连接', 'B 树更平衡', 'B+ 树更简单', '没有区别'],
+      answer: 0,
+      explanation: 'B+ 树：数据只存在叶子节点，内部节点只存索引；叶子节点用链表连接，支持范围查询。B 树：内部节点也存数据。B+ 树更适合数据库索引（范围查询快，磁盘 I/O 少）。'
+    },
+  ],
+
+  'ds-09': [
+    {
+      question: '最大堆的特点是？',
+      options: ['根节点最小', '根节点最大，任意节点 >= 子节点', '是二叉搜索树', '叶子节点最大'],
+      answer: 1,
+      explanation: '最大堆：完全二叉树 + 任意节点的值 >= 其子节点的值。根节点是最大值。最小堆相反：根节点最小。堆用于优先队列、堆排序、Top-K 问题。'
+    },
+    {
+      question: '建堆（Build Heap）的时间复杂度是？',
+      options: ['$O(n\\log n)$', '$O(n)$', '$O(\\log n)$', '$O(n^2)$'],
+      answer: 1,
+      explanation: '建堆：从最后一个非叶子节点开始，依次向下调整。时间复杂度 $O(n)$（不是 $O(n\\log n)$！）。证明：$\\sum_{i=0}^{h} 2^i \\cdot (h-i) = O(n)$。'
+    },
+    {
+      question: '堆排序的时间复杂度是？',
+      options: ['$O(n)$', '$O(n\\log n)$', '$O(n^2)$', '$O(\\log n)$'],
+      answer: 1,
+      explanation: '堆排序：建堆 $O(n)$ + $n$ 次取堆顶并调整 $O(n\\log n)$ = $O(n\\log n)$。最坏、最好、平均都是 $O(n\\log n)$。缺点：不稳定，缓存不友好。'
+    },
+    {
+      question: 'Top-K 问题（找最大的 K 个数）的高效方法是？',
+      options: ['排序后取前 K 个', '用大小为 K 的最小堆', '用大小为 K 的最大堆', '遍历 K 次'],
+      answer: 1,
+      explanation: 'Top-K：维护一个大小为 K 的最小堆。遍历数据，比堆顶大则替换堆顶并调整。时间 $O(n\\log K)$，空间 $O(K)$。比排序 $O(n\\log n)$ 快（当 $K \\ll n$ 时）。'
+    },
+  ],
+
+  'ds-10': [
+    {
+      question: '哈夫曼树的构建原则是？',
+      options: ['权值大的节点离根近', '权值大的节点离根远', '所有叶子在同一层', '是完全二叉树'],
+      answer: 0,
+      explanation: '哈夫曼树（最优二叉树）：带权路径长度 WPL 最小。构建：每次选两个权值最小的节点合并，新节点权值为两者之和，重复直到只剩一个根。权值大的离根近。'
+    },
+    {
+      question: '哈夫曼编码的特点是？',
+      options: ['定长编码', '变长编码，频率高的字符编码短', '只能用于英文', '解码困难'],
+      answer: 1,
+      explanation: '哈夫曼编码：变长编码，频率高的字符用短编码，频率低的用长编码。是最优前缀编码（任何编码都不是另一个的前缀），保证无歧义解码。用于数据压缩。'
+    },
+    {
+      question: '并查集（Union-Find）的两个基本操作是？',
+      options: ['查找（Find）和合并（Union）', '入队和出队', '压栈和弹栈', '插入和删除'],
+      answer: 0,
+      explanation: '并查集：①Find(x)：找 x 所属集合的代表元素；②Union(x,y)：合并 x 和 y 所在的集合。路径压缩 + 按秩合并使操作近乎 $O(1)$。用于连通性判断、Kruskal 算法。'
+    },
+    {
+      question: '并查集路径压缩的目的是？',
+      options: ['减少空间', '使后续 Find 操作更快', '使树更平衡', '减少合并次数'],
+      answer: 1,
+      explanation: '路径压缩：Find 时把沿途所有节点直接指向根，使树扁平化。下次 Find 时直接找到根，时间近乎 $O(1)$。均摊复杂度 $O(\\alpha(n))$（$\\alpha$ 是反阿克曼函数，几乎为常数）。'
+    },
+  ],
+
+  'ds-11': [
+    {
+      question: '邻接矩阵和邻接表的空间复杂度分别是？',
+      options: ['都是 $O(n^2)$', '矩阵 $O(n^2)$，邻接表 $O(n+e)$', '都是 $O(n+e)$', '矩阵 $O(n+e)$，邻接表 $O(n^2)$'],
+      answer: 1,
+      explanation: '邻接矩阵：$O(n^2)$，适合稠密图。邻接表：$O(n+e)$（$e$ 为边数），适合稀疏图。邻接矩阵判断两点是否相邻 $O(1)$，邻接表需要遍历邻接链表。'
+    },
+    {
+      question: 'DFS（深度优先搜索）使用什么数据结构？',
+      options: ['队列', '栈（或递归调用栈）', '堆', '哈希表'],
+      answer: 1,
+      explanation: 'DFS：用栈（显式栈或递归调用栈）。先访问一个邻接节点，深入到底再回溯。BFS：用队列，逐层扩展。DFS 适合路径搜索、连通性判断；BFS 适合最短路径（无权图）。'
+    },
+    {
+      question: 'BFS（广度优先搜索）的时间复杂度是？',
+      options: ['$O(n)$', '$O(n+e)$', '$O(n^2)$', '$O(e)$'],
+      answer: 1,
+      explanation: 'BFS/DFS 时间复杂度：邻接表 $O(n+e)$（每个顶点和边各访问一次），邻接矩阵 $O(n^2)$（每个顶点要检查所有可能的邻接关系）。'
+    },
+    {
+      question: '拓扑排序适用于？',
+      options: ['任何图', '有向无环图（DAG）', '无向图', '有环图'],
+      answer: 1,
+      explanation: '拓扑排序：将 DAG 的所有顶点排成线性序列，使每条边 $(u,v)$ 中 $u$ 在 $v$ 前面。方法：不断删除入度为 0 的顶点。有环则无法完成拓扑排序（可用此检测环）。'
+    },
+  ],
+
+  'ds-12': [
+    {
+      question: 'Dijkstra 算法求的是？',
+      options: ['最小生成树', '单源最短路径（非负权）', '所有顶点对最短路径', '最大流'],
+      answer: 1,
+      explanation: 'Dijkstra：单源最短路径，要求边权非负。贪心策略：每次选距离最小的未访问顶点扩展。时间 $O((n+e)\\log n)$（优先队列优化）。负权边用 Bellman-Ford。'
+    },
+    {
+      question: 'Prim 算法和 Kruskal 算法求的是？',
+      options: ['最短路径', '最小生成树', '最大流', '拓扑排序'],
+      answer: 1,
+      explanation: 'Prim：从一个顶点开始，每次选最短的跨切边扩展（类似 Dijkstra）。Kruskal：按边权排序，依次加入不构成环的边。两者都用贪心，都能得到最小生成树。'
+    },
+    {
+      question: 'Floyd 算法的时间复杂度是？',
+      options: ['$O(n^2)$', '$O(n^3)$', '$O(ne)$', '$O(n^2\\log n)$'],
+      answer: 1,
+      explanation: 'Floyd：所有顶点对最短路径，$O(n^3)$。三重循环：$k, i, j$，$d[i][j] = \\min(d[i][j], d[i][k]+d[k][j])$。动态规划思想。适合稠密图，稀疏图用 $n$ 次 Dijkstra。'
+    },
+    {
+      question: '关键路径是？',
+      options: ['最短路径', '最长路径（决定工期）', '任意路径', '最小生成树'],
+      answer: 1,
+      explanation: '关键路径：AOE 网中从源到汇的最长路径，决定工程最短工期。关键活动（关键路径上的活动）没有余量，延迟则工期延长。用拓扑排序 + 求最早/最晚时间。'
+    },
+  ],
+
+  'ds-13': [
+    {
+      question: '折半查找（二分查找）的要求是？',
+      options: ['无序数组', '有序数组', '链表', '树'],
+      answer: 1,
+      explanation: '折半查找：要求数据有序（升序或降序），且支持随机访问（数组）。每次比较中间元素，缩小一半范围。时间 $O(\\log n)$。链表不能用折半查找（无法随机访问）。'
+    },
+    {
+      question: '哈希表（散列表）的查找时间复杂度是？',
+      options: ['$O(n)$', '$O(1)$（平均）', '$O(\\log n)$', '$O(n\\log n)$'],
+      answer: 1,
+      explanation: '哈希表：通过哈希函数直接计算存储位置，平均 $O(1)$。最坏 $O(n$（所有元素冲突到同一位置）。好的哈希函数 + 合适的装填因子是关键。'
+    },
+    {
+      question: '哈希冲突的解决方法有？',
+      options: ['只能换哈希函数', '开放定址法和链地址法', '只能增加表长', '无法解决'],
+      answer: 1,
+      explanation: '链地址法（拉链法）：冲突的元素用链表串起来。开放定址法：冲突时按某种探测序列找下一个空位（线性探测、二次探测、双重散列）。链地址法更常用。'
+    },
+    {
+      question: '装填因子 $\\alpha$ 的定义是？',
+      options: ['$\\alpha = n/m$（$n$ 为元素个数，$m$ 为表长）', '$\\alpha = m/n$', '$\\alpha = n + m$', '$\\alpha = n \\cdot m$'],
+      answer: 0,
+      explanation: '装填因子 $\\alpha = n/m$，$\\alpha$ 越大，冲突越多。一般控制 $\\alpha < 0.75$（链地址法可稍大）。$\\alpha$ 接近 1 时性能急剧下降。'
+    },
+  ],
+
+  'ds-14': [
+    {
+      question: '快速排序的平均时间复杂度是？',
+      options: ['$O(n)$', '$O(n\\log n)$', '$O(n^2)$', '$O(\\log n)$'],
+      answer: 1,
+      explanation: '快速排序：平均 $O(n\\log n)$，最坏 $O(n^2)$（已排序数组 + 固定选首元素为基准）。随机选基准或三数取中可避免最坏情况。实际应用中最快的比较排序。'
+    },
+    {
+      question: '归并排序的特点是？',
+      options: ['不稳定，空间 O(1)', '稳定，空间 O(n)，时间始终 O(n\\log n)', '不稳定，时间 O(n²)', '稳定，空间 O(1)'],
+      answer: 1,
+      explanation: '归并排序：稳定，时间 $O(n\\log n)$（最好最坏都是），空间 $O(n)$（需要额外数组）。缺点是空间开销。链表排序首选归并（不需要额外空间）。'
+    },
+    {
+      question: '以下排序算法中，不稳定的是？',
+      options: ['冒泡排序', '插入排序', '快速排序', '归并排序'],
+      answer: 2,
+      explanation: '不稳定排序：快速排序、选择排序、希尔排序、堆排序。稳定排序：冒泡、插入、归并、基数、计数。稳定性在多关键字排序时很重要（先按次要关键字排，再按主要关键字排）。'
+    },
+    {
+      question: '堆排序的空间复杂度是？',
+      options: ['$O(n)$', '$O(1)$', '$O(\\log n)$', '$O(n^2)$'],
+      answer: 1,
+      explanation: '堆排序：原地排序，空间 $O(1)$。时间 $O(n\\log n)$（最好最坏都是）。缺点：不稳定，缓存不友好（跳跃访问数组）。'
+    },
+    {
+      question: '基数排序的时间复杂度是？',
+      options: ['$O(n\\log n)$', '$O(d \\cdot n)$（$d$ 为位数）', '$O(n^2)$', '$O(n)$'],
+      answer: 1,
+      explanation: '基数排序：$O(d \\cdot n)$，$d$ 是最大数的位数。不基于比较，利用"分配-收集"思想。适合位数固定且范围不大的整数排序。稳定排序。'
+    },
+  ],
+
+  'ds-15': [
+    {
+      question: '外排序主要用于？',
+      options: ['内存排序', '数据量超过内存容量的排序', '链表排序', '小数据量排序'],
+      answer: 1,
+      explanation: '外排序：数据量太大无法全部装入内存，需要在磁盘上进行排序。核心思想：多路归并——先生成初始归并段，再多路归并。减少磁盘 I/O 是关键。'
+    },
+    {
+      question: '败者树在外排序中的作用是？',
+      options: ['存储数据', '在 k 路归并中快速找到最小元素', '压缩数据', '加密数据'],
+      answer: 1,
+      explanation: '败者树：完全二叉树结构，用于 k 路归并中快速找最小值。每选出一个最小值只需比较 $\\lceil \\log_2 k \\rceil$ 次（而不是 $k-1$ 次）。减少 CPU 比较时间。'
+    },
+    {
+      question: '置换-选择排序的作用是？',
+      options: ['生成更长的初始归并段', '直接完成排序', '压缩数据', '查找数据'],
+      answer: 0,
+      explanation: '置换-选择排序：用最小堆从输入中选出尽可能长的有序子序列作为初始归并段。生成的归并段长度可以超过内存容量（平均为内存大小的 2 倍），减少归并趟数。'
+    },
+  ],
+
+  'ds-16': [
+    {
+      question: '跳表（Skip List）的查找时间复杂度是？',
+      options: ['$O(n)$', '$O(\\log n)$（平均）', '$O(1)$', '$O(n\\log n)$'],
+      answer: 1,
+      explanation: '跳表：多层有序链表，底层包含所有元素，上层是"快速通道"。查找时从顶层开始，逐层下降。平均 $O(\\log n)$，与平衡树相当，但实现更简单。Redis 用跳表实现有序集合。'
+    },
+    {
+      question: '布隆过滤器（Bloom Filter）的特点是？',
+      options: ['可以删除元素', '可能误报（false positive），不会漏报', '精确查找', '空间效率低'],
+      answer: 1,
+      explanation: '布隆过滤器：用多个哈希函数 + 位数组判断元素是否存在。特点：说"不存在"一定不存在，说"存在"可能误报。空间效率极高，用于网页爬虫去重、缓存穿透防护。'
+    },
+    {
+      question: 'LRU 缓存淘汰策略是？',
+      options: ['淘汰最近最少使用的', '淘汰最先进入的', '淘汰最常用的', '随机淘汰'],
+      answer: 0,
+      explanation: 'LRU（Least Recently Used）：淘汰最久未被访问的数据。实现：哈希表 + 双向链表，查找 $O(1)$，更新 $O(1)$。操作系统页面置换、数据库缓存常用 LRU。'
+    },
+    {
+      question: 'Trie 树（字典树）的主要应用是？',
+      options: ['数值排序', '字符串前缀匹配和自动补全', '图遍历', '数值查找'],
+      answer: 1,
+      explanation: 'Trie 树：每个节点代表一个字符，从根到叶子构成一个字符串。前缀匹配 $O(m)$（$m$ 为模式串长度），与字典大小无关。用于搜索引擎自动补全、拼写检查、IP 路由表。'
+    },
+  ],
+
+
+
+
 };
-
-
-
-
