@@ -292,14 +292,14 @@ Charts.register('sort-compare', function(el) {
       steps++;
       Charts._renderBars({ swapping: [i, j] });
       if (info) info.textContent = `步骤: ${steps}`;
-      await new Promise(r => setTimeout(r, 30));
+      await new Promise(r => { const t = setTimeout(r, 30); Charts._timers.push(t); });
     };
 
     const compare = async (i, j) => {
       steps++;
       Charts._renderBars({ comparing: [i, j] });
       if (info) info.textContent = `步骤: ${steps}`;
-      await new Promise(r => setTimeout(r, 15));
+      await new Promise(r => { const t = setTimeout(r, 15); Charts._timers.push(t); });
       return arr[i] - arr[j];
     };
 
@@ -383,4 +383,281 @@ Charts.register('rc-waveform', function(el) {
       grid: { left: 60, right: 20, top: 60, bottom: 40 },
     });
   }
+});
+
+// ==================== 学习路径图表 ====================
+
+// 知识图谱（ECharts graph 力导向布局）
+Charts.register('knowledge-graph', function(el) {
+  if (typeof echarts === 'undefined' || typeof KnowledgeDeps === 'undefined') return;
+
+  const SECTION_GROUPS = ['advanced-math', 'linear-algebra', 'circuit-basics', 'analog-circuit', 'digital-circuit', 'control', 'data-structure'];
+  const groupColors = {
+    'advanced-math': '#dc2626', 'linear-algebra': '#d97706', 'circuit-basics': '#2563eb',
+    'analog-circuit': '#059669', 'digital-circuit': '#eab308', 'control': '#7c3aed', 'data-structure': '#475569'
+  };
+  const statusColors = { completed: '#059669', learning: '#d97706', pending: '#cbd5e1' };
+
+  function getMasteryScore(sectionId) {
+    const status = Progress.get(sectionId) || 'pending';
+    const accuracy = Quiz.getAccuracy(sectionId);
+    let base = status === 'completed' ? 60 : status === 'learning' ? 20 : 0;
+    if (accuracy !== null) base += accuracy * 40;
+    return Math.round(base);
+  }
+
+  const nodes = [];
+  const links = [];
+  const categories = SECTION_GROUPS.map(gId => ({ name: CourseData[gId]?.title || gId }));
+
+  // 板块节点
+  SECTION_GROUPS.forEach((gId, i) => {
+    const g = CourseData[gId];
+    if (!g) return;
+    nodes.push({
+      id: gId, name: g.title, symbolSize: 45, category: i,
+      itemStyle: { color: groupColors[gId], borderColor: '#fff', borderWidth: 2 },
+      label: { show: true, fontSize: 11, fontWeight: 'bold' }
+    });
+  });
+
+  // 知识点节点
+  SECTION_GROUPS.forEach((gId, i) => {
+    const g = CourseData[gId];
+    if (!g?.sections) return;
+    g.sections.forEach(s => {
+      const mastery = getMasteryScore(s.id);
+      const status = Progress.get(s.id) || 'pending';
+      nodes.push({
+        id: s.id, name: s.title, symbolSize: 12 + mastery * 0.15, category: i,
+        itemStyle: { color: statusColors[status], borderColor: '#fff', borderWidth: 1 },
+        label: { show: false }
+      });
+      links.push({ source: gId, target: s.id, lineStyle: { opacity: 0.1, width: 0.5 } });
+    });
+  });
+
+  // 依赖关系连线
+  Object.entries(KnowledgeDeps).forEach(([target, sources]) => {
+    if (Array.isArray(sources)) {
+      sources.forEach(src => {
+        links.push({
+          source: src, target,
+          lineStyle: { color: '#94a3b8', type: 'dashed', width: 1, opacity: 0.4 }
+        });
+      });
+    }
+  });
+
+  const inst = echarts.init(el);
+  Charts._instances.push(inst);
+  inst.setOption({
+    tooltip: {
+      formatter: function(params) {
+        if (params.dataType === 'node') {
+          const s = params.data;
+          const status = Progress.get(s.id) || 'pending';
+          const accuracy = Quiz.getAccuracy(s.id);
+          const statusText = status === 'completed' ? '✅ 已完成' : status === 'learning' ? '📖 学习中' : '⏳ 未开始';
+          const accText = accuracy !== null ? `正确率: ${Math.round(accuracy*100)}%` : '暂无答题';
+          return `<strong>${s.name}</strong><br/>${statusText}<br/>${accText}`;
+        }
+        return '';
+      }
+    },
+    series: [{
+      type: 'graph',
+      layout: 'force',
+      data: nodes,
+      links: links,
+      categories: categories,
+      roam: true,
+      draggable: true,
+      force: { repulsion: 200, gravity: 0.1, edgeLength: 80, layoutAnimation: true },
+      lineStyle: { curveness: 0.1 },
+      emphasis: { focus: 'adjacency', lineStyle: { width: 3 } },
+      label: { position: 'right', fontSize: 10 }
+    }]
+  });
+
+  inst.on('click', function(params) {
+    if (params.dataType === 'node' && params.data.id) {
+      const id = params.data.id;
+      if (AllKnowledgeIds.includes(id)) navigateTo(id);
+    }
+  });
+});
+
+// 掌握度热力图
+Charts.register('mastery-heatmap', function(el) {
+  if (typeof echarts === 'undefined') return;
+
+  const SECTION_GROUPS = ['advanced-math', 'linear-algebra', 'circuit-basics', 'analog-circuit', 'digital-circuit', 'control', 'data-structure'];
+
+  function getMasteryScore(sectionId) {
+    const status = Progress.get(sectionId) || 'pending';
+    const accuracy = Quiz.getAccuracy(sectionId);
+    let base = status === 'completed' ? 60 : status === 'learning' ? 20 : 0;
+    if (accuracy !== null) base += accuracy * 40;
+    return Math.round(base);
+  }
+
+  const yLabels = [];
+  const data = [];
+  let maxX = 0;
+
+  SECTION_GROUPS.forEach((gId, row) => {
+    const g = CourseData[gId];
+    if (!g) return;
+    yLabels.push(g.title);
+    if (g.sections.length > maxX) maxX = g.sections.length;
+    g.sections.forEach((s, col) => {
+      data.push([col, row, getMasteryScore(s.id)]);
+    });
+  });
+
+  const xLabels = Array.from({length: maxX}, () => '');
+
+  const inst = echarts.init(el);
+  Charts._instances.push(inst);
+  inst.setOption({
+    tooltip: {
+      formatter: function(params) {
+        const gId = SECTION_GROUPS[params.value[1]];
+        const s = CourseData[gId]?.sections[params.value[0]];
+        if (!s) return '';
+        const status = Progress.get(s.id) || 'pending';
+        const accuracy = Quiz.getAccuracy(s.id);
+        const statusText = status === 'completed' ? '✅ 已完成' : status === 'learning' ? '📖 学习中' : '⏳ 未开始';
+        const accText = accuracy !== null ? `正确率: ${Math.round(accuracy*100)}%` : '暂无答题';
+        return `<strong>${s.title}</strong><br/>${statusText}<br/>掌握度: ${params.value[2]}%<br/>${accText}`;
+      }
+    },
+    grid: { left: 100, right: 20, top: 10, bottom: 30 },
+    xAxis: { type: 'category', data: xLabels, splitArea: { show: true }, axisLabel: { show: false } },
+    yAxis: { type: 'category', data: yLabels, splitArea: { show: true } },
+    visualMap: {
+      min: 0, max: 100, calculable: false, orient: 'horizontal', left: 'center', bottom: 0,
+      inRange: { color: ['#e2e8f0', '#fef3c7', '#fbbf24', '#34d399', '#059669'] },
+      text: ['100%', '0%'], textStyle: { fontSize: 11 }
+    },
+    series: [{
+      type: 'heatmap',
+      data: data,
+      label: {
+        show: true,
+        formatter: function(params) { return params.value[2] > 0 ? params.value[2] + '%' : ''; },
+        fontSize: 10
+      },
+      emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0, 0, 0, 0.5)' } }
+    }]
+  });
+
+  inst.on('click', function(params) {
+    const gId = SECTION_GROUPS[params.value[1]];
+    const s = CourseData[gId]?.sections[params.value[0]];
+    if (s) navigateTo(s.id);
+  });
+});
+
+// 进度环形图
+Charts.register('progress-ring', function(el) {
+  if (typeof echarts === 'undefined') return;
+
+  const stats = Progress.getStats();
+  const inst = echarts.init(el);
+  Charts._instances.push(inst);
+  inst.setOption({
+    tooltip: { trigger: 'item' },
+    legend: { bottom: 0, textStyle: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary') } },
+    series: [{
+      type: 'pie', radius: ['45%', '70%'], avoidLabelOverlap: false,
+      label: { show: true, formatter: '{b}: {c}' },
+      data: [
+        { value: stats.completed, name: '已完成', itemStyle: { color: '#059669' } },
+        { value: stats.learning, name: '学习中', itemStyle: { color: '#d97706' } },
+        { value: stats.pending, name: '未开始', itemStyle: { color: '#cbd5e1' } },
+      ],
+    }],
+  });
+});
+
+// 板块完成率柱状图
+Charts.register('group-progress-bar', function(el) {
+  if (typeof echarts === 'undefined') return;
+
+  const SECTION_GROUPS = ['advanced-math', 'linear-algebra', 'circuit-basics', 'analog-circuit', 'digital-circuit', 'control', 'data-structure'];
+  const labels = [];
+  const completed = [];
+  const learning = [];
+  const pending = [];
+
+  SECTION_GROUPS.forEach(gId => {
+    const g = CourseData[gId];
+    if (!g) return;
+    labels.push(g.title);
+    let c = 0, l = 0, p = 0;
+    g.sections.forEach(s => {
+      const status = Progress.get(s.id) || 'pending';
+      if (status === 'completed') c++;
+      else if (status === 'learning') l++;
+      else p++;
+    });
+    completed.push(c);
+    learning.push(l);
+    pending.push(p);
+  });
+
+  const inst = echarts.init(el);
+  Charts._instances.push(inst);
+  inst.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+    legend: { data: ['已完成', '学习中', '未开始'], bottom: 0 },
+    grid: { left: 80, right: 20, top: 10, bottom: 40 },
+    xAxis: { type: 'value' },
+    yAxis: { type: 'category', data: labels },
+    series: [
+      { name: '已完成', type: 'bar', stack: 'total', data: completed, itemStyle: { color: '#059669' } },
+      { name: '学习中', type: 'bar', stack: 'total', data: learning, itemStyle: { color: '#d97706' } },
+      { name: '未开始', type: 'bar', stack: 'total', data: pending, itemStyle: { color: '#e2e8f0' } },
+    ]
+  });
+});
+
+// 自测正确率柱状图
+Charts.register('accuracy-bar', function(el) {
+  if (typeof echarts === 'undefined') return;
+
+  const SECTION_GROUPS = ['advanced-math', 'linear-algebra', 'circuit-basics', 'analog-circuit', 'digital-circuit', 'control', 'data-structure'];
+  const data = [];
+
+  SECTION_GROUPS.forEach(gId => {
+    const g = CourseData[gId];
+    if (!g) return;
+    g.sections.forEach(s => {
+      const accuracy = Quiz.getAccuracy(s.id);
+      if (accuracy !== null) {
+        data.push({ name: s.title, value: Math.round(accuracy * 100) });
+      }
+    });
+  });
+
+  data.sort((a, b) => a.value - b.value);
+
+  const inst = echarts.init(el);
+  Charts._instances.push(inst);
+  inst.setOption({
+    tooltip: { formatter: '{b}: {c}%' },
+    grid: { left: 150, right: 30, top: 10, bottom: 30 },
+    xAxis: { type: 'value', max: 100, axisLabel: { formatter: '{value}%' } },
+    yAxis: { type: 'category', data: data.map(d => d.name), axisLabel: { fontSize: 11 } },
+    series: [{
+      type: 'bar',
+      data: data.map(d => ({
+        value: d.value,
+        itemStyle: { color: d.value < 60 ? '#ef4444' : d.value < 80 ? '#f59e0b' : '#059669' }
+      })),
+      label: { show: true, position: 'right', formatter: '{c}%', fontSize: 11 }
+    }]
+  });
 });

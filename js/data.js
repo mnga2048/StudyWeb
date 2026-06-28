@@ -1951,6 +1951,10 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">RC/RL 电路在换路（开关动作）后，电压电流按指数规律从初值过渡到稳态值。掌握"三要素法"，任何一阶暂态问题都能套公式秒解。</p>
         <div class="formula-block"><strong>三要素法通用公式</strong>：<br>$f(t) = f(\\infty) + [f(0_+) - f(\\infty)]e^{-t/\\tau}$<div class="text-sm text-gray-500 mt-2">三要素：初值 $f(0_+)$、稳态值 $f(\\infty)$、时间常数 $\\tau$</div></div>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>电路</th><th>时间常数 $\\tau$</th><th>物理意义</th></tr></thead><tbody><tr><td class="font-medium">RC 电路</td><td>$\\tau = RC$</td><td>电容充电/放电快慢</td></tr><tr><td class="font-medium">RL 电路</td><td>$\\tau = L/R$</td><td>电感储能/释放快慢</td></tr></tbody></table></div>
+
+        <div class="chart-container" data-chart="rc-waveform" data-resistance="1000" data-capacitance="1e-6" data-voltage="5" data-title="RC 一阶电路充放电"></div>
+        <div class="text-xs text-center mt-1 mb-4" style="color:var(--text-secondary)">蓝色=充电，红色=放电，τ=1ms</div>
+
         <div class="step-list"><div class="step-item"><div><strong>求初值 $f(0_+)$</strong>：换路定律——电容电压不突变 $u_C(0_+)=u_C(0_-)$，电感电流不突变 $i_L(0_+)=i_L(0_-)$。其他量根据 $0_+$ 时刻等效电路求。</div></div><div class="step-item"><div><strong>求稳态值 $f(\\infty)$</strong>：$t\\to\\infty$ 时电容开路、电感短路，求直流稳态电路。</div></div><div class="step-item"><div><strong>求时间常数 $\\tau$</strong>：从储能元件看进去的等效电阻 $R_{eq}$，$\\tau=RC$ 或 $\\tau=L/R_{eq}$。</div></div></div>
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>换路定律的本质</strong>：电容储能 $\\frac{1}{2}Cu_C^2$、电感储能 $\\frac{1}{2}Li_L^2$ 不能突变（否则功率无穷大）。所以 $u_C$ 和 $i_L$ 是"状态变量"，连续变化。但电容电流、电感电压可以突变。</div></div>
       ` },
@@ -2462,6 +2466,9 @@ const CourseData = {
           </tbody>
         </table></div>
 
+        <div class="chart-container" data-chart="step-response" data-zeta="0.5" data-omega="2" data-title="二阶系统阶跃响应"></div>
+        <div class="text-xs text-center mt-1 mb-4" style="color:var(--text-secondary)">拖动滑块调节 ζ 和 ωn，观察响应曲线变化</div>
+
         <h4 class="font-medium mt-6 mb-2">欠阻尼二阶系统的性能指标公式</h4>
         <div class="formula-block">
           <strong>超调量</strong>：$\\sigma\\% = e^{-\\frac{\\pi\\zeta}{\\sqrt{1-\\zeta^2}}} \\times 100\\%$<br><br>
@@ -2617,6 +2624,9 @@ const CourseData = {
           <li><strong>相角条件</strong>：$\\angle G(s)H(s) = (2k+1)\\times 180°$（180°根轨迹，负反馈）</li>
         </ul>
 
+        <div class="chart-container" data-chart="root-locus" data-title="根轨迹 G(s)=K/[s(s+2)]"></div>
+        <div class="text-xs text-center mt-1 mb-4" style="color:var(--text-secondary)">示例：G(s)=K/[s(s+2)] 的根轨迹，极点在 0 和 -2</div>
+
         <h4 class="font-medium mt-6 mb-2">180° 根轨迹绘制法则（八条）</h4>
         <div class="overflow-x-auto"><table class="compare-table">
           <thead><tr><th>法则</th><th>内容</th><th>说明</th></tr></thead>
@@ -2690,6 +2700,9 @@ const CourseData = {
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <div><strong>快速画伯德图口诀</strong>：①把传函分解为典型环节的乘积；②幅频：从低频开始，遇到极点斜率 -20dB/dec，遇到零点斜率 +20dB/dec；③相频：每个惯性环节贡献 -90° 的渐变，每个积分环节贡献 -90° 的跳变。</div>
         </div>
+
+        <div class="chart-container" data-chart="bode-plot" data-gain="10" data-timeconst="0.1" data-title="G(s)=10/[s(0.1s+1)] 伯德图"></div>
+        <div class="text-xs text-center mt-1 mb-4" style="color:var(--text-secondary)">一阶系统伯德图：幅频（上）和相频（下）</div>
 
         <h4 class="font-medium mt-6 mb-2">奈奎斯特图（极坐标图）</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
@@ -3796,6 +3809,9 @@ const CourseData = {
           <div><strong>稳定性记忆</strong>：稳定的排序——"插冒归基"（插入、冒泡、归并、基数）。不稳定的——"快选希堆"（快排、选择、希尔、堆排序）。稳定性指相等元素排序后相对顺序不变，对多关键字排序很重要。</div>
         </div>
 
+        <div class="chart-container chart-container-lg" data-chart="sort-compare" data-n="20" data-title="排序算法动画对比"></div>
+        <div class="text-xs text-center mt-1 mb-4" style="color:var(--text-secondary)">点击按钮观看排序过程动画，比较各算法的步数差异</div>
+
         <h4 class="font-medium mt-6 mb-2">快排（最常考）</h4>
         <div class="code-block"><span class="code-comment">// 快速排序（分治：选基准 partition）</span>
 <span class="code-keyword">void</span> <span class="code-func">quickSort</span>(<span class="code-keyword">int</span> a[], <span class="code-keyword">int</span> low, <span class="code-keyword">int</span> high) {
@@ -3941,6 +3957,113 @@ const AllKnowledgeIds = (function () {
   });
   return ids;
 })();
+
+// 知识点依赖关系（用于学习路径推荐和知识图谱）
+// 格式：'目标知识点': ['前置知识点1', '前置知识点2', ...]
+const KnowledgeDeps = {
+  // === 高等数学内部链 ===
+  'hm-02': ['hm-01'],       // 一元微分学 <- 函数极限
+  'hm-03': ['hm-02'],       // 泰勒公式 <- 一元微分学
+  'hm-04': ['hm-02'],       // 导数应用 <- 一元微分学
+  'hm-05': ['hm-02'],       // 不定积分 <- 一元微分学
+  'hm-06': ['hm-05'],       // 定积分 <- 不定积分
+  'hm-07': ['hm-06'],       // 定积分应用 <- 定积分
+  'hm-08': ['hm-06'],       // 常微分方程 <- 定积分
+  'hm-09': ['hm-04'],       // 多元微分学 <- 导数应用
+  'hm-10': ['hm-09'],       // 多元极值 <- 多元微分学
+  'hm-11': ['hm-06', 'hm-09'], // 二重积分 <- 定积分 + 多元微分学
+  'hm-12': ['hm-11'],       // 三重积分 <- 二重积分
+  'hm-13': ['hm-06'],       // 曲线积分 <- 定积分
+  'hm-14': ['hm-13'],       // 曲面积分 <- 曲线积分
+  'hm-15': ['hm-06'],       // 无穷级数 <- 定积分
+  'hm-16': ['hm-15'],       // 傅里叶级数 <- 无穷级数
+
+  // === 线性代数内部链 ===
+  'la-02': ['la-01'],       // 矩阵运算 <- 行列式
+  'la-03': ['la-02'],       // 初等变换与秩 <- 矩阵运算
+  'la-04': ['la-03'],       // 线性方程组 <- 初等变换与秩
+  'la-05': ['la-04'],       // 向量组 <- 线性方程组
+  'la-06': ['la-02', 'la-04'], // 特征值 <- 矩阵运算 + 线性方程组
+  'la-07': ['la-06'],       // 相似矩阵 <- 特征值
+  'la-08': ['la-06', 'la-09'], // 二次型 <- 特征值 + 正交矩阵
+  'la-09': ['la-06'],       // 正交矩阵 <- 特征值
+  'la-10': ['la-05', 'la-07'], // 线性空间 <- 向量组 + 相似矩阵
+
+  // === 电路基础内部链 ===
+  'circ-02': ['circ-01'],   // 戴维南 <- KCL/KVL
+  'circ-03': ['circ-01'],   // 叠加定理 <- KCL/KVL
+  'circ-04': ['circ-01'],   // 一阶暂态 <- KCL/KVL
+  'circ-05': ['circ-04'],   // 二阶暂态 <- 一阶暂态
+  'circ-06': ['circ-01'],   // 正弦稳态 <- KCL/KVL
+  'circ-07': ['circ-06'],   // 频率响应 <- 正弦稳态
+  'circ-08': ['circ-06'],   // 谐振电路 <- 正弦稳态
+  'circ-09': ['circ-06'],   // 三相电路 <- 正弦稳态
+  'circ-10': ['circ-02'],   // 二端口 <- 戴维南
+  'circ-11': ['circ-06'],   // 含运放电路 <- 正弦稳态
+  'circ-12': ['circ-01'],   // 受控源 <- KCL/KVL
+
+  // === 模拟电路内部链 ===
+  'ana-02': ['ana-01'],     // 整流滤波 <- 二极管
+  'ana-03': ['ana-01'],     // BJT <- 二极管
+  'ana-04': ['ana-03'],     // 基本放大 <- BJT
+  'ana-05': ['ana-04'],     // 工作点稳定 <- 基本放大
+  'ana-06': ['ana-04'],     // 多级放大 <- 基本放大
+  'ana-07': ['ana-04'],     // 集成运放 <- 基本放大
+  'ana-08': ['ana-06'],     // 反馈放大 <- 多级放大
+  'ana-09': ['ana-07'],     // 运放线性 <- 集成运放
+  'ana-10': ['ana-07'],     // 运放非线性 <- 集成运放
+  'ana-11': ['ana-09'],     // 有源滤波 <- 运放线性
+  'ana-12': ['ana-04'],     // 功率放大 <- 基本放大
+  'ana-13': ['ana-02', 'ana-07'], // 直流稳压 <- 整流滤波 + 集成运放
+  'ana-14': ['ana-08'],     // 振荡电路 <- 反馈放大
+
+  // === 数字电路内部链 ===
+  'dig-02': ['dig-01'],     // 逻辑代数 <- 数制编码
+  'dig-03': ['dig-02'],     // 组合逻辑 <- 逻辑代数
+  'dig-04': ['dig-03'],     // 编码器/译码器 <- 组合逻辑
+  'dig-05': ['dig-03'],     // 加法器 <- 组合逻辑
+  'dig-06': ['dig-03'],     // 竞争冒险 <- 组合逻辑
+  'dig-07': ['dig-01'],     // 触发器 <- 数制编码
+  'dig-08': ['dig-07', 'dig-03'], // 时序逻辑 <- 触发器 + 组合逻辑
+  'dig-09': ['dig-08'],     // 计数器 <- 时序逻辑
+  'dig-10': ['dig-07'],     // 移位寄存器 <- 触发器
+  'dig-11': ['dig-07'],     // 555定时器 <- 触发器
+  'dig-12': ['dig-03'],     // 存储器 <- 组合逻辑
+  'dig-13': ['dig-03'],     // AD/DA <- 组合逻辑
+  'dig-14': ['dig-08'],     // Verilog <- 时序逻辑
+
+  // === 自动控制内部链 ===
+  'act-02': ['act-01'],     // 数学模型 <- 概论
+  'act-03': ['act-02', 'hm-08'], // 拉氏变换 <- 数学模型 + 常微分方程
+  'act-04': ['act-03'],     // 结构图 <- 拉氏变换
+  'act-05': ['act-03'],     // 时域分析 <- 拉氏变换
+  'act-06': ['act-05'],     // 稳定性 <- 时域分析
+  'act-07': ['act-05', 'act-06'], // 稳态误差 <- 时域分析 + 稳定性
+  'act-08': ['act-03', 'la-06'], // 根轨迹 <- 拉氏变换 + 特征值
+  'act-09': ['act-03'],     // 频域分析 <- 拉氏变换
+  'act-10': ['act-09', 'act-06'], // 奈奎斯特 <- 频域分析 + 稳定性
+  'act-11': ['act-09', 'act-05'], // 闭环频域 <- 频域分析 + 时域分析
+  'act-12': ['act-10', 'act-07'], // 系统校正 <- 奈奎斯特 + 稳态误差
+  'act-13': ['act-03'],     // 离散系统 <- 拉氏变换
+  'act-14': ['act-12'],     // PID整定 <- 系统校正
+
+  // === 数据结构内部链 ===
+  'ds-02': ['ds-01'],       // 线性表 <- 绪论
+  'ds-03': ['ds-02'],       // 栈与队列 <- 线性表
+  'ds-04': ['ds-02'],       // 串 <- 线性表
+  'ds-05': ['ds-02'],       // 数组 <- 线性表
+  'ds-06': ['ds-02'],       // 树 <- 线性表
+  'ds-07': ['ds-06'],       // BST/AVL <- 树
+  'ds-08': ['ds-07'],       // 红黑树/B树 <- BST/AVL
+  'ds-09': ['ds-06'],       // 堆 <- 树
+  'ds-10': ['ds-06'],       // 哈夫曼/并查集 <- 树
+  'ds-11': ['ds-02', 'ds-06'], // 图 <- 线性表 + 树
+  'ds-12': ['ds-11'],       // 图应用 <- 图
+  'ds-13': ['ds-07', 'ds-11'], // 查找 <- BST + 图
+  'ds-14': ['ds-02', 'ds-09'], // 排序 <- 线性表 + 堆
+  'ds-15': ['ds-14'],       // 外排序 <- 排序
+  'ds-16': ['ds-08', 'ds-11'], // 工程进阶 <- 红黑树 + 图
+};
 
 // 自测题库（按 section id 索引）。每节配 5-8 题，含概念/计算/陷阱三类。
 const QuizData = {

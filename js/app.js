@@ -408,17 +408,182 @@
 
   // ========== 学习路径页 ==========
   function renderRoadmapPage() {
+    const stats = Progress.getStats();
+    const completionRate = Math.round(stats.completed / stats.total * 100);
+
+    // 计算学习路径推荐
+    function getRecommendedPath() {
+      const learning = [];
+      const unlocked = [];
+      const locked = [];
+
+      AllKnowledgeIds.forEach(id => {
+        const status = Progress.get(id) || 'pending';
+        const section = findSection(id);
+        if (!section) return;
+
+        const deps = KnowledgeDeps[id] || [];
+        const depsCompleted = deps.filter(d => Progress.get(d) === 'completed').length;
+        const allDepsMet = deps.length === 0 || depsCompleted === deps.length;
+
+        const item = { id, title: section.title, icon: section.icon, deps, depsCompleted, allDepsMet };
+
+        if (status === 'learning') {
+          learning.push(item);
+        } else if (status === 'pending' && allDepsMet) {
+          unlocked.push(item);
+        } else if (status === 'pending') {
+          locked.push(item);
+        }
+      });
+
+      return { learning, unlocked, locked };
+    }
+
+    function findSection(id) {
+      for (const gId of SECTION_GROUPS) {
+        const g = CourseData[gId];
+        if (!g?.sections) continue;
+        const s = g.sections.find(s => s.id === id);
+        if (s) return s;
+      }
+      return null;
+    }
+
+    // 计算薄弱环节
+    function getWeakSections() {
+      const weak = [];
+      AllKnowledgeIds.forEach(id => {
+        const accuracy = Quiz.getAccuracy(id);
+        if (accuracy !== null && accuracy < 0.6) {
+          const section = findSection(id);
+          if (section) weak.push({ id, title: section.title, accuracy: Math.round(accuracy * 100) });
+        }
+      });
+      return weak.sort((a, b) => a.accuracy - b.accuracy);
+    }
+
+    const { learning, unlocked } = getRecommendedPath();
+    const weakSections = getWeakSections();
+
     return `<div>
-      <div class="page-hero"><h1>学习路径</h1><p>推荐的学习顺序与阶段规划，按依赖关系循序渐进</p></div>
-      ${renderPlaceholder('学习路径规划中', '🗺', '将提供按板块的知识图谱与推荐学习顺序，标注前置依赖关系与建议学习时长。')}
-      <div class="knowledge-card">
-        <h3>推荐学习顺序（概览）</h3>
-        <p class="card-desc mb-4">专业课之间存在明确的依赖关系。建议按以下顺序系统学习：</p>
-        <div class="step-list">
-          <div class="step-item"><div><strong>第一阶段 · 数学筑基</strong>：高等数学（微积分为核心）→ 线性代数（矩阵、特征值是后续电路/自控的工具）</div></div>
-          <div class="step-item"><div><strong>第二阶段 · 电路入门</strong>：电路基础（KCL/KVL、暂态）→ 模拟电路（需电路基础+微积分）→ 数字电路（相对独立，可并行）</div></div>
-          <div class="step-item"><div><strong>第三阶段 · 控制理论</strong>：自动控制原理（需拉氏变换、复数、电路基础，工程应用为主）</div></div>
-          <div class="step-item"><div><strong>第四阶段 · 算法数据</strong>：数据结构（相对独立，计算机统考大纲与工程面试核心）</div></div>
+      <div class="page-hero">
+        <h1>学习路径</h1>
+        <p>知识图谱 · 学习推荐 · 掌握度分析 · 学习统计</p>
+      </div>
+
+      <div class="roadmap-tabs">
+        <button class="roadmap-tab active" onclick="switchRoadmapTab('graph', this)">📊 知识图谱</button>
+        <button class="roadmap-tab" onclick="switchRoadmapTab('path', this)">🎯 学习推荐</button>
+        <button class="roadmap-tab" onclick="switchRoadmapTab('heatmap', this)">🌡 掌握度</button>
+        <button class="roadmap-tab" onclick="switchRoadmapTab('stats', this)">📈 学习统计</button>
+      </div>
+
+      <!-- Tab 1: 知识图谱 -->
+      <div id="tab-graph" class="roadmap-panel active">
+        <div class="knowledge-card mb-4">
+          <p class="card-desc">7 大板块 × 96 个知识点的依赖关系图。节点颜色表示学习状态：<span style="color:#059669">绿色=已完成</span>、<span style="color:#d97706">橙色=学习中</span>、<span style="color:#cbd5e1">灰色=未开始</span>。点击节点跳转到对应知识点。</p>
+        </div>
+        <div class="chart-container chart-container-lg" data-chart="knowledge-graph"></div>
+      </div>
+
+      <!-- Tab 2: 学习路径推荐 -->
+      <div id="tab-path" class="roadmap-panel">
+        ${learning.length > 0 ? `
+        <div class="knowledge-card mb-4">
+          <h3>📖 继续学习（当前进度）</h3>
+          <p class="card-desc mb-3">这些章节你已经开始学习，建议优先完成：</p>
+          ${learning.map(item => `
+            <div class="path-card" onclick="navigateTo('${item.id}')">
+              <div class="path-icon">${item.icon}</div>
+              <div class="flex-1">
+                <div class="path-title">${item.title}</div>
+                <div class="path-desc">前置知识已就绪</div>
+              </div>
+              <span class="path-badge path-badge-unlocked">继续</span>
+            </div>
+          `).join('')}
+        </div>` : ''}
+
+        <div class="knowledge-card mb-4">
+          <h3>🔓 推荐下一步</h3>
+          <p class="card-desc mb-3">前置知识已全部完成，可以开始学习：</p>
+          ${unlocked.length > 0 ? unlocked.slice(0, 10).map(item => `
+            <div class="path-card" onclick="navigateTo('${item.id}')">
+              <div class="path-icon">${item.icon}</div>
+              <div class="flex-1">
+                <div class="path-title">${item.title}</div>
+                <div class="path-desc">前置 ${item.depsCompleted}/${item.deps.length} 已完成</div>
+              </div>
+              <span class="path-badge path-badge-unlocked">可学</span>
+            </div>
+          `).join('') : '<p class="text-gray-500 text-sm">暂无可推荐的新章节</p>'}
+        </div>
+
+        <div class="knowledge-card">
+          <h3>💡 学习建议</h3>
+          <div class="step-list">
+            <div class="step-item"><div><strong>第一阶段 · 数学筑基</strong>：高等数学（微积分为核心）→ 线性代数（矩阵、特征值是后续电路/自控的工具）</div></div>
+            <div class="step-item"><div><strong>第二阶段 · 电路入门</strong>：电路基础（KCL/KVL、暂态）→ 模拟电路（需电路基础+微积分）→ 数字电路（相对独立，可并行）</div></div>
+            <div class="step-item"><div><strong>第三阶段 · 控制理论</strong>：自动控制原理（需拉氏变换、复数、电路基础，工程应用为主）</div></div>
+            <div class="step-item"><div><strong>第四阶段 · 算法数据</strong>：数据结构（相对独立，计算机统考大纲与工程面试核心）</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: 掌握度热力图 -->
+      <div id="tab-heatmap" class="roadmap-panel">
+        <div class="knowledge-card mb-4">
+          <p class="card-desc">每个格子代表一个知识点，颜色越深掌握度越高。掌握度 = 学习状态(60%) + 自测正确率(40%)。点击格子跳转到对应知识点。</p>
+        </div>
+        <div class="chart-container chart-container-lg" data-chart="mastery-heatmap"></div>
+      </div>
+
+      <!-- Tab 4: 学习统计 -->
+      <div id="tab-stats" class="roadmap-panel">
+        <div class="stat-card-grid mb-4">
+          <div class="stat-card">
+            <div class="stat-value">${stats.completed}</div>
+            <div class="stat-label">已完成章节</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${stats.learning}</div>
+            <div class="stat-label">学习中</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${completionRate}%</div>
+            <div class="stat-label">完成率</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${stats.total}</div>
+            <div class="stat-label">总知识点</div>
+          </div>
+        </div>
+
+        <div class="knowledge-card mb-4">
+          <h3>📊 整体进度</h3>
+          <div class="chart-container" data-chart="progress-ring" style="height:300px"></div>
+        </div>
+
+        <div class="knowledge-card mb-4">
+          <h3>📊 各板块完成情况</h3>
+          <div class="chart-container" data-chart="group-progress-bar" style="height:350px"></div>
+        </div>
+
+        ${weakSections.length > 0 ? `
+        <div class="knowledge-card mb-4">
+          <h3>⚠️ 薄弱环节（正确率 &lt; 60%）</h3>
+          <p class="card-desc mb-3">建议重点复习以下章节：</p>
+          <div>
+            ${weakSections.map(s => `
+              <span class="weak-tag" onclick="navigateTo('${s.id}')" style="cursor:pointer">${s.title} (${s.accuracy}%)</span>
+            `).join('')}
+          </div>
+        </div>` : ''}
+
+        <div class="knowledge-card">
+          <h3>📊 自测正确率分布</h3>
+          <div class="chart-container chart-container-lg" data-chart="accuracy-bar"></div>
         </div>
       </div>
     </div>`;
@@ -432,6 +597,19 @@
       <div class="ph-desc">${desc || '该功能正在建设中，敬请期待。'}</div>
     </div>`;
   }
+
+  // ========== 学习路径 Tab 切换 ==========
+  window.switchRoadmapTab = function(tabId, btn) {
+    document.querySelectorAll('.roadmap-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.roadmap-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const panel = document.getElementById('tab-' + tabId);
+    if (panel) {
+      panel.classList.add('active');
+      // 延迟渲染图表，确保容器可见
+      requestAnimationFrame(() => { Charts.renderAll('page-container'); });
+    }
+  };
 
   // ========== 交互功能 ==========
   window.toggleAccordion = function (btn) {

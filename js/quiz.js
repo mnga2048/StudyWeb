@@ -22,6 +22,18 @@ const Quiz = {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
   },
 
+  // 获取某节的正确率（0~1），无答题记录返回 null
+  getAccuracy(sectionId) {
+    const results = this.getResults()[sectionId];
+    if (!results) return null;
+    let total = 0, correct = 0;
+    Object.values(results).forEach(entry => {
+      const e = this._getResultEntry(entry);
+      if (e) { total++; if (e.correct) correct++; }
+    });
+    return total > 0 ? correct / total : null;
+  },
+
   // 渲染一整组测验
   render(sectionId, quizData) {
     if (!quizData || quizData.length === 0) return '';

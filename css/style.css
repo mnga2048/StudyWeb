@@ -377,3 +377,176 @@
   .chart-container { height: 240px; }
   #topbar [style*="global-progress"] { display: none !important; }
 }
+
+/* ====== 学习路径页面样式 ====== */
+.roadmap-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+}
+
+.roadmap-tab {
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.roadmap-tab:hover {
+  color: var(--text);
+}
+
+.roadmap-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+.roadmap-panel {
+  display: none;
+}
+
+.roadmap-panel.active {
+  display: block;
+}
+
+/* 热力图样式 */
+.heatmap-grid {
+  display: grid;
+  gap: 3px;
+  overflow-x: auto;
+}
+
+.heatmap-cell {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.15s;
+  position: relative;
+}
+
+.heatmap-cell:hover {
+  transform: scale(1.3);
+  z-index: 10;
+}
+
+.heatmap-label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 60px;
+}
+
+/* 推荐路径卡片 */
+.path-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  margin-bottom: 0.75rem;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.path-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.path-card .path-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.path-card .path-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.path-card .path-desc {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.path-badge {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.path-badge-unlocked {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.path-badge-locked {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.dark .path-badge-unlocked {
+  background: #064e3b;
+  color: #6ee7b7;
+}
+
+.dark .path-badge-locked {
+  background: #78350f;
+  color: #fcd34d;
+}
+
+/* 统计卡片 */
+.stat-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.stat-card {
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  text-align: center;
+}
+
+.stat-card .stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.stat-card .stat-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+/* 薄弱环节标签 */
+.weak-tag {
+  display: inline-block;
+  padding: 0.25rem 0.625rem;
+  background: #fef2f2;
+  color: #991b1b;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  margin: 0.25rem;
+}
+
+.dark .weak-tag {
+  background: #450a0a;
+  color: #fca5a5;
+}
