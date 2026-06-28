@@ -812,14 +812,506 @@ const CourseData = {
           <div><strong>考点总结</strong>：①先检查系数是否齐全同号（快速排除明显不稳定）；②三阶以下直接用系数不等式（如三阶 $a_2 a_1 > a_3 a_0$）；③四阶以上用劳斯表；④整行为零的处理是难点，必考。</div>
         </div>
       ` },
-      { id: 'act-07', title: '稳态误差', desc: '误差系数法、系统型别', icon: '📏', tags: ['高频'], goals: { eng: true }, content: '' },
-      { id: 'act-08', title: '根轨迹法', desc: '180°/0° 根轨迹绘制法则', icon: '🌿', tags: ['核心难点'], goals: { eng: true }, content: '' },
-      { id: 'act-09', title: '频域分析', desc: '奈奎斯特图、伯德图', icon: '〰️', tags: ['核心'], goals: { eng: true }, content: '' },
-      { id: 'act-10', title: '奈奎斯特稳定判据', desc: '稳定裕度、相位/幅值裕度', icon: '🌀', tags: ['难点核心'], goals: { eng: true }, content: '' },
-      { id: 'act-11', title: '闭环频域与时域指标', desc: '指标换算、闭环频率特性', icon: '🔁', tags: ['工程'], goals: { eng: true }, content: '' },
-      { id: 'act-12', title: '系统校正', desc: '超前/滞后/滞后-超前/PID', icon: '🔧', tags: ['工程核心'], goals: { eng: true }, content: '' },
-      { id: 'act-13', title: '离散系统基础', desc: 'z 变换、脉冲传函、稳定性', icon: '⏱', tags: ['进阶'], goals: { eng: true }, content: '' },
-      { id: 'act-14', title: '工程实战：PID 整定', desc: 'Ziegler-Nichols、Cohen-Coon + STM32', icon: '💻', tags: ['工程'], goals: { eng: true }, content: '' },
+      { id: 'act-07', title: '稳态误差', desc: '误差系数法、系统型别', icon: '📏', tags: ['高频'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">稳态精度：系统最终能跟踪多准</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          <a href="#" onclick="navigateTo('act-05');return false;" style="color:var(--primary)">时域分析</a> 关注响应的动态过程（快不快、振不振），而稳态误差关注的是<strong>最终精度</strong>——当过渡过程结束后，输出与期望值之间的永久偏差。本节建立稳态误差的系统化分析方法，核心工具是"系统型别"与"误差系数"。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">稳态误差的定义</h4>
+        <div class="formula-block">
+          $e_{ss} = \\lim_{t\\to\\infty} e(t) = \\lim_{t\\to\\infty}[r(t) - y(t)]$
+          <div class="text-sm text-gray-500 mt-2">e(t) 是误差信号（输入-输出），稳态误差是过渡过程结束后误差的终值</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>终值定理</strong>：$e_{ss}=\\lim_{t\\to\\infty}e(t)=\\lim_{s\\to 0}sE(s)$，其中 $E(s)$ 是误差的拉氏变换。这是计算稳态误差的核心工具——不需要反变换回时域，直接在 s 域取极限。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">系统型别（Type Number）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          系统型别由开环传函中<strong>积分环节的个数</strong>决定：
+        </p>
+        <div class="formula-block">
+          $G(s)H(s) = \\frac{K\\prod(\\tau_i s+1)}{s^\\nu \\prod(T_j s+1)}$
+          <div class="text-sm text-gray-500 mt-2">$\\nu$ = 0 为 0 型系统，$\\nu$ = 1 为 I 型系统，$\\nu$ = 2 为 II 型系统</div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>系统型别</th><th>阶跃误差</th><th>斜坡误差</th><th>抛物线误差</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">0 型</td><td>$\\frac{1}{1+K_p}$（有差）</td><td>$\\infty$（无法跟踪）</td><td>$\\infty$（无法跟踪）</td></tr>
+            <tr><td class="font-medium">I 型</td><td>0（无差）</td><td>$\\frac{1}{K_v}$（有差）</td><td>$\\infty$（无法跟踪）</td></tr>
+            <tr><td class="font-medium">II 型</td><td>0（无差）</td><td>0（无差）</td><td>$\\frac{1}{K_a}$（有差）</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">误差系数（静态误差系数）</h4>
+        <div class="formula-block">
+          <strong>位置误差系数</strong>：$K_p = \\lim_{s\\to 0}G(s)H(s)$<br><br>
+          <strong>速度误差系数</strong>：$K_v = \\lim_{s\\to 0}sG(s)H(s)$<br><br>
+          <strong>加速度误差系数</strong>：$K_a = \\lim_{s\\to 0}s^2 G(s)H(s)$
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>记忆口诀</strong>：型别数 = 能无差跟踪的输入信号阶数 - 1。I 型系统无差跟踪阶跃，II 型系统无差跟踪斜坡。型别越高精度越高，但稳定性越差（高型别系统更难稳定）——精度和稳定性的矛盾再次出现。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">扰动引起的稳态误差</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          当干扰 $d(t)$ 作用在被控对象输入端时，稳态误差还取决于<strong>干扰作用点之前</strong>的控制器积分环节数：
+        </p>
+        <div class="formula-block">
+          $e_{ss,d} = -\\lim_{s\\to 0}\\frac{s \\cdot D(s)}{1 + G_c(s)G_p(s)H(s)}$
+          <div class="text-sm text-gray-500 mt-2">要消除扰动误差，控制器 $G_c(s)$ 必须在干扰作用点之前包含足够的积分环节</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>工程误区</strong>：型别越高≠系统越好。II 型系统虽然斜坡无差，但两个积分环节使相位滞后 -180°，极易不稳定。工程中 I 型系统（含 1 个积分）是最常用的选择——阶跃无差且容易稳定。PID 中的 I 项就是人为增加积分环节。</div>
+        </div>
+      ` },
+      { id: 'act-08', title: '根轨迹法', desc: '180°/0° 根轨迹绘制法则', icon: '🌿', tags: ['核心难点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">根轨迹：极点随增益变化的轨迹</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          根轨迹法是分析闭环极点随开环增益 K 变化而移动的图形化方法。它直观展示了 K 从小到大变化时，闭环极点在 s 平面上的运动轨迹——从而判断系统何时稳定、何时振荡、何时发散。本节重点掌握 180° 根轨迹的绘制法则。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">根轨迹的基本概念</h4>
+        <div class="formula-block">
+          闭环特征方程：$1 + KG(s)H(s) = 0$，即 $KG(s)H(s) = -1$
+          <div class="text-sm text-gray-500 mt-2">根轨迹是满足此方程的所有 s 点的集合（K 从 0 → +∞）</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>起点</strong>：K=0 时，闭环极点 = 开环极点（根轨迹从开环极点出发）</li>
+          <li><strong>终点</strong>：K→∞ 时，闭环极点趋向开环零点或无穷远</li>
+          <li><strong>幅值条件</strong>：$|KG(s)H(s)|=1$（用于确定 K 值对应的精确位置）</li>
+          <li><strong>相角条件</strong>：$\\angle G(s)H(s) = (2k+1)\\times 180°$（180°根轨迹，负反馈）</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">180° 根轨迹绘制法则（八条）</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>法则</th><th>内容</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">① 起点终点</td><td>起于开环极点，终于开环零点或∞</td><td>K=0 在极点，K=∞ 在零点</td></tr>
+            <tr><td class="font-medium">② 分支数</td><td>= 开环极点数 n（n≥m 时）</td><td>每条分支对应一个闭环极点的轨迹</td></tr>
+            <tr><td class="font-medium">③ 对称性</td><td>根轨迹关于实轴对称</td><td>复极点必成共轭对出现</td></tr>
+            <tr><td class="font-medium">④ 实轴上的根轨迹</td><td>实轴上某点右侧的开环零极点总数为奇数，则该点在根轨迹上</td><td>最常用的判据</td></tr>
+            <tr><td class="font-medium">⑤ 渐近线</td><td>$\\sigma_a = \\frac{\\sum p_i - \\sum z_i}{n-m}$，$\\theta_a = \\frac{(2k+1)\\times 180°}{n-m}$</td><td>n-m 条渐近线，交于实轴上 $\\sigma_a$</td></tr>
+            <tr><td class="font-medium">⑥ 分离/会合点</td><td>$\\frac{dK}{ds}=0$ 的解</td><td>根轨迹在实轴上分叉或合并的点</td></tr>
+            <tr><td class="font-medium">⑦ 与虚轴交点</td><td>用劳斯表或令 $s=j\\omega$ 代入特征方程</td><td>决定临界稳定的 K 值</td></tr>
+            <tr><td class="font-medium">⑧ 出射/入射角</td><td>用相角条件计算复极点/零点处的出发角度</td><td>复极点处根轨迹离开的角度</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>实用优先级</strong>：考试/工程中最常用的是法则④（实轴判断）、⑤（渐近线）、⑥（分离点）。掌握这三条就能画出根轨迹的大致形状。法则⑧（出射角）较复杂，但复极点附近的轨迹走向必须用它。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：$G(s)=\\frac{K}{s(s+2)(s+4)}$ 的根轨迹</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>起点</strong>：三个开环极点 $p_1=0, p_2=-2, p_3=-4$，无开环零点。三条分支全部走向∞。</div></div>
+          <div class="step-item"><div><strong>渐近线</strong>：$n-m=3$，$\\sigma_a=\\frac{0-2-4}{3}=-2$，$\\theta_a=60°, 180°, 300°$。三条渐近线交于 $(-2,0)$。</div></div>
+          <div class="step-item"><div><strong>实轴根轨迹</strong>：$[0,-2]$ 段（右侧奇数个极点）和 $[-4,-\\infty)$ 段。</div></div>
+          <div class="step-item"><div><strong>分离点</strong>：$K=-s(s+2)(s+4)=-(s^3+6s^2+8s)$，$\\frac{dK}{ds}=-(3s^2+12s+8)=0$，$s=-0.845$（在根轨迹上）。</div></div>
+          <div class="step-item"><div><strong>与虚轴交点</strong>：特征方程 $s^3+6s^2+8s+K=0$，劳斯表：$s^1$ 行 $\\frac{48-K}{6}=0 \\Rightarrow K=48$，$s^2$ 行 $6s^2+48=0 \\Rightarrow s=\\pm j2.83$。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">0° 根轨迹（正反馈系统）</h4>
+        <div class="formula-block">
+          相角条件：$\\angle G(s)H(s) = 2k \\times 180°$（偶数倍 180°）
+          <div class="text-sm text-gray-500 mt-2">实轴判断法则相反：右侧偶数个零极点的区段在根轨迹上</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>180° vs 0° 的区别</strong>：负反馈系统用 180° 根轨迹（最常见），正反馈系统用 0° 根轨迹。考试中约 90% 是 180° 根轨迹。遇到正反馈时千万别用错相角条件——用错会画出完全不同的轨迹。</div>
+        </div>
+      ` },
+      { id: 'act-09', title: '频域分析', desc: '奈奎斯特图、伯德图', icon: '〰️', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">频域分析：用频率响应描述系统</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          频域分析不直接看时域响应，而是研究系统对不同频率正弦输入的稳态响应——幅值如何变化、相位如何偏移。伯德图（Bode Plot）是频域分析的核心工具，它用两张图（幅频+相频）完整描述系统的频率特性，是工程中最常用的分析和设计手段。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">频率响应的物理意义</h4>
+        <div class="formula-block">
+          对 $G(j\\omega)$：输入 $r(t)=A\\sin(\\omega t)$，稳态输出 $y(t)=A|G(j\\omega)|\\sin(\\omega t + \\angle G(j\\omega))$
+          <div class="text-sm text-gray-500 mt-2">$|G(j\\omega)|$ 是幅值增益，$\\angle G(j\\omega)$ 是相位偏移，都是频率 $\\omega$ 的函数</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>低频段</strong>：增益大，输出忠实跟踪输入（精度由低频段决定）</li>
+          <li><strong>高频段</strong>：增益小，噪声被衰减（抗干扰由高频段决定）</li>
+          <li><strong>中频段</strong>：增益从大到小的过渡带，决定系统的稳定性和快速性</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">伯德图的绘制方法</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          伯德图由<strong>幅频特性</strong>（$20\\log|G(j\\omega)|$ vs $\\log\\omega$）和<strong>相频特性</strong>（$\\angle G(j\\omega)$ vs $\\log\\omega$）两张图组成。渐近线画法：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>典型环节</th><th>传递函数</th><th>幅频渐近线</th><th>相频</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">比例环节</td><td>$K$</td><td>水平线 $20\\log K$ dB</td><td>0°（恒定）</td></tr>
+            <tr><td class="font-medium">积分环节</td><td>$\\frac{1}{s}$</td><td>斜率 -20 dB/dec</td><td>-90°（恒定）</td></tr>
+            <tr><td class="font-medium">惯性环节</td><td>$\\frac{1}{Ts+1}$</td><td>低频 0 dB，转折频率 $\\omega=1/T$ 后斜率 -20 dB/dec</td><td>0° → -90°（转折处 -45°）</td></tr>
+            <tr><td class="font-medium">振荡环节</td><td>$\\frac{\\omega_n^2}{s^2+2\\zeta\\omega_n s+\\omega_n^2}$</td><td>低频 0 dB，转折频率 $\\omega_n$ 后斜率 -40 dB/dec</td><td>0° → -180°（转折处 -90°）</td></tr>
+            <tr><td class="font-medium">一阶微分</td><td>$\\tau s+1$</td><td>低频 0 dB，转折后斜率 +20 dB/dec</td><td>0° → +90°</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>快速画伯德图口诀</strong>：①把传函分解为典型环节的乘积；②幅频：从低频开始，遇到极点斜率 -20dB/dec，遇到零点斜率 +20dB/dec；③相频：每个惯性环节贡献 -90° 的渐变，每个积分环节贡献 -90° 的跳变。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">奈奎斯特图（极坐标图）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          奈奎斯特图是 $G(j\\omega)$ 在复平面上的轨迹（$\\omega$ 从 $-\\infty$ 到 $+\\infty$），每个频率点对应一个向量：
+        </p>
+        <div class="formula-block">
+          $G(j\\omega) = \\text{Re}[G(j\\omega)] + j\\text{Im}[G(j\\omega)]$
+          <div class="text-sm text-gray-500 mt-2">横轴=实部，纵轴=虚部。每个 $\\omega$ 值对应平面上一个点，连成曲线</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>伯德图 vs 奈奎斯特图</strong>：伯德图是奈奎斯特图的"拆开版"——把幅值和相位分别画在两张图上。伯德图更直观易画（渐近线近似），工程中最常用；奈奎斯特图更紧凑（一张图包含全部信息），是奈奎斯特稳定判据的基础。详见 <a href="#" onclick="navigateTo('act-10');return false;" style="color:var(--primary)">奈奎斯特稳定判据</a>。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：画 $G(s)=\\frac{10}{s(0.1s+1)}$ 的伯德图</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>分解环节</strong>：比例 K=10（$20\\log10=20$ dB），积分 $1/s$（-20dB/dec），惯性 $1/(0.1s+1)$（转折频率 $\\omega=10$ rad/s）。</div></div>
+          <div class="step-item"><div><strong>幅频渐近线</strong>：低频起始高度 20dB，斜率 -20dB/dec（积分）；$\\omega=10$ 处叠加惯性环节，斜率变 -40dB/dec。</div></div>
+          <div class="step-item"><div><strong>相频</strong>：积分贡献 -90° 恒定，惯性环节在 $\\omega=10$ 附近从 0° 渐变到 -90°，总相位从 -90° 渐变到 -180°。</div></div>
+        </div>
+      ` },
+      { id: 'act-10', title: '奈奎斯特稳定判据', desc: '稳定裕度、相位/幅值裕度', icon: '🌀', tags: ['难点核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">奈奎斯特判据：用开环判断闭环稳定性</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          奈奎斯特稳定判据是频域分析的巅峰——它用<strong>开环频率响应</strong>（奈奎斯特图）直接判断<strong>闭环系统</strong>是否稳定，无需解特征方程、无需找极点。更关键的是，它能定量给出"离不稳定还有多远"（稳定裕度），这是工程设计的核心依据。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">奈奎斯特判据的核心结论</h4>
+        <div class="formula-block">
+          设开环传函 $G(s)H(s)$ 有 $P$ 个右半平面极点，奈奎斯特曲线绕 $(-1,j0)$ 点的圈数为 $N$（逆时针为正），则闭环右半平面极点数 $Z = P - N$
+          <div class="text-sm text-gray-500 mt-2">稳定条件：$Z=0$，即 $N=P$（奈奎斯特曲线逆时针绕 $(-1,j0)$ 点的圈数 = 开环右半平面极点数）</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>最常见情况</strong>：开环稳定（P=0），则稳定条件简化为 $N=0$——奈奎斯特曲线不包围 $(-1,j0)$ 点，闭环系统就稳定。这就是为什么奈奎斯特图上 $(-1,j0)$ 这个点如此关键。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">稳定裕度（衡量"离不稳定有多远"）</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>裕度</th><th>定义</th><th>物理意义</th><th>工程典型值</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">幅值裕度 $G_m$</td><td>$G_m = \\frac{1}{|G(j\\omega_{pc})|}$（$\\omega_{pc}$ 处相位=-180°时的幅值倒数）</td><td>相位到-180°时还能承受多大增益</td><td>$G_m > 6$ dB（即幅值裕度 > 2 倍）</td></tr>
+            <tr><td class="font-medium">相位裕度 $\\gamma$</td><td>$\\gamma = 180° + \\angle G(j\\omega_{gc})$（$\\omega_{gc}$ 处幅值=1 时的相位余量）</td><td>增益到 0dB 时相位还差多少到-180°</td><td>$\\gamma = 30°\\sim 60°$（典型 45°）</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>伯德图上看裕度</strong>：相位裕度 $\\gamma$——在幅频曲线穿越 0dB 的频率 $\\omega_{gc}$ 处，看相频曲线距离 -180° 还有多远。幅值裕度 $G_m$——在相频曲线穿越 -180° 的频率 $\\omega_{pc}$ 处，看幅频曲线距离 0dB 还有多远。这两个裕度是工程设计的核心指标。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">裕度与系统性能的关系</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>相位裕度 $\\gamma$</th><th>超调量 $\\sigma\\%$</th><th>系统表现</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">$\\gamma \\approx 20°$</td><td>~45%</td><td>振荡剧烈，工程不接受</td></tr>
+            <tr><td class="font-medium">$\\gamma \\approx 45°$</td><td>~16%</td><td>快速且平稳，工程最佳</td></tr>
+            <tr><td class="font-medium">$\\gamma \\approx 60°$</td><td>~5%</td><td>平稳但稍慢</td></tr>
+            <tr><td class="font-medium">$\\gamma \\approx 90°$</td><td>~0%</td><td>过阻尼，响应很慢</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>两个裕度必须同时满足</strong>：只看相位裕度不够——有些系统相位裕度足够但幅值裕度很小（相位裕度和幅值裕度不一致）。工程中要求 $\\gamma > 30°$ 且 $G_m > 6$ dB 同时满足。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">裕度的计算步骤</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>画伯德图</strong>（渐近线近似即可）。</div></div>
+          <div class="step-item"><div><strong>找增益穿越频率 $\\omega_{gc}$</strong>：幅频曲线穿越 0dB 的频率。计算此频率处的相位 $\\angle G(j\\omega_{gc})$，相位裕度 $\\gamma=180°+\\angle G(j\\omega_{gc})$。</div></div>
+          <div class="step-item"><div><strong>找相位穿越频率 $\\omega_{pc}$</strong>：相频曲线穿越 -180° 的频率。计算此频率处的幅值 $|G(j\\omega_{pc})|$，幅值裕度 $G_m=20\\log\\frac{1}{|G(j\\omega_{pc})|}$ dB。</div></div>
+        </div>
+      ` },
+      { id: 'act-11', title: '闭环频域与时域指标', desc: '指标换算、闭环频率特性', icon: '🔁', tags: ['工程'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">闭环指标：从开环特性推断闭环性能</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          <a href="#" onclick="navigateTo('act-10');return false;" style="color:var(--primary)">奈奎斯特判据</a> 用开环特性判断稳定性，但工程中更关心的是<strong>闭环系统的性能</strong>——超调多少、响应多快。本节建立开环频域指标（相位裕度）与闭环时域指标（超调量）之间的经验换算关系，以及闭环频率特性的绘制方法。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">闭环频率特性</h4>
+        <div class="formula-block">
+          闭环频率响应：$T(j\\omega) = \\frac{G(j\\omega)}{1+G(j\\omega)H(j\\omega)}$（单位反馈时 $H=1$）
+          <div class="text-sm text-gray-500 mt-2">闭环幅频 $|T(j\\omega)|$ 描述各频率信号通过闭环系统后的增益变化</div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>闭环频域指标</th><th>定义</th><th>意义</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">谐振峰值 $M_r$</td><td>$|T(j\\omega)|$ 的最大值</td><td>$M_r$ 越大系统越振荡，$M_r=1$ 表示无谐振</td></tr>
+            <tr><td class="font-medium">谐振频率 $\\omega_r$</td><td>出现 $M_r$ 的频率</td><td>$\\omega_r$ 越大系统响应越快</td></tr>
+            <tr><td class="font-medium">带宽 $\\omega_b$</td><td>$|T(j\\omega)|$ 降到 $\\frac{1}{\\sqrt{2}}$（-3dB）的频率</td><td>带宽越大系统越快，但抗高频噪声越差</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">开环频域指标 ↔ 闭环时域指标（经验公式）</h4>
+        <div class="formula-block">
+          <strong>相位裕度 $\\gamma$ 与超调量 $\\sigma\\%$ 的近似关系</strong>（二阶系统精确，高阶系统近似）：<br><br>
+          $\\sigma\\% \\approx 0.16 + 0.4(M_r - 1)$，其中 $M_r \\approx \\frac{1}{\\sin\\gamma}$<br><br>
+          <strong>相位裕度 $\\gamma$ 与调节时间 $t_s$ 的近似关系</strong>：<br><br>
+          $t_s \\approx \\frac{\\pi}{\\omega_{gc}}(2 + \\frac{1.5(M_r-1)}{\\sin\\gamma} + \\frac{M_r-1}{\\sin^2\\gamma})$
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>工程快速估算</strong>：$\\gamma=45° \\Rightarrow M_r \\approx 1.41 \\Rightarrow \\sigma\\% \\approx 20\\%$，$\\gamma=60° \\Rightarrow \\sigma\\% \\approx 7\\%$。记住"45° 对应 15%~20% 超调"这个经验锚点，足以应对大多数工程场景。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">闭环频域指标与时域指标的关系总结</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>频域指标</th><th>时域对应</th><th>趋势</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">$M_r$ 增大</td><td>超调 $\\sigma\\%$ 增大</td><td>$M_r=1$ 无超调，$M_r>1.5$ 振荡明显</td></tr>
+            <tr><td class="font-medium">$\\omega_b$ 增大</td><td>调节时间 $t_s$ 减小</td><td>带宽越大系统越快</td></tr>
+            <tr><td class="font-medium">$\\gamma$ 增大</td><td>超调减小但响应变慢</td><td>与 <a href="#" onclick="navigateTo('act-05');return false;" style="color:var(--primary)">时域分析</a> 中 $\\zeta$ 增大的效果一致</td></tr>
+            <tr><td class="font-medium">$G_m$ 增大</td><td>系统更稳定</td><td>幅值裕度是稳定性的"余量"</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>这些公式是近似的</strong>：精确关系只在二阶系统成立。高阶系统中，$M_r \\approx 1/\\sin\\gamma$ 和 $\\sigma\\% \\approx 0.16+0.4(M_r-1)$ 都是经验近似，误差可达 5%~10%。工程中更常用查表法（上表）而非精确公式。</div>
+        </div>
+      ` },
+      { id: 'act-12', title: '系统校正', desc: '超前/滞后/滞后-超前/PID', icon: '🔧', tags: ['工程核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">校正：让不满足性能指标的系统达标</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          前面的分析告诉我们系统"现在怎样"，校正设计告诉我们"怎么改"。校正的本质是在系统中<strong>加入额外的控制器</strong>，修改开环频率特性，使闭环满足稳定性、快速性、精度等指标。本节重点掌握超前/滞后校正的原理和设计步骤，以及 PID 控制器的频域理解。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">三种校正方式</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>校正方式</th><th>作用</th><th>频率特性</th><th>典型应用</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">串联校正</td><td>在前向通道加校正装置 $G_c(s)$</td><td>修改开环频率响应</td><td>最常用，设计灵活</td></tr>
+            <tr><td class="font-medium">反馈校正</td><td>在局部回路加反馈</td><td>改变局部特性</td><td>内环控制（电流环/速度环）</td></tr>
+            <tr><td class="font-medium">前馈校正</td><td>在输入端加补偿</td><td>不改变闭环极点</td><td>提高跟踪精度、补偿干扰</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">超前校正（Lead Compensation）</h4>
+        <div class="formula-block">
+          $G_c(s) = K_c \\cdot \\frac{\\alpha Ts + 1}{Ts + 1}$，其中 $\\alpha > 1$
+          <div class="text-sm text-gray-500 mt-2">零点在极点左侧（$-1/(\\alpha T)$ vs $-1/T$），提供正相位（超前角）</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>作用</strong>：增加相位裕度，改善稳定性，减小超调</li>
+          <li><strong>适用场景</strong>：系统稳定但相位裕度不足（超调过大）</li>
+          <li><strong>代价</strong>：增大带宽（响应更快但抗高频噪声变差）</li>
+        </ul>
+        <div class="step-list">
+          <div class="step-item"><div><strong>确定期望相位裕度</strong>：根据性能指标（如 $\\gamma_{new}=45°$），计算需要补充的相位 $\\phi_m=\\gamma_{new}-\\gamma_{old}+5°\\sim 10°$（留余量）。</div></div>
+          <div class="step-item"><div><strong>计算 $\\alpha$</strong>：$\\alpha=\\frac{1+\\sin\\phi_m}{1-\\sin\\phi_m}$。</div></div>
+          <div class="step-item"><div><strong>确定校正网络频率</strong>：将最大超前角频率设在新的增益穿越频率处，使校正效果最大化。</div></div>
+          <div class="step-item"><div><strong>验证</strong>：重新画伯德图，检查新的 $\\gamma$ 和 $G_m$ 是否满足要求。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">滞后校正（Lag Compensation）</h4>
+        <div class="formula-block">
+          $G_c(s) = K_c \\cdot \\frac{Ts + 1}{\\beta Ts + 1}$，其中 $\\beta > 1$
+          <div class="text-sm text-gray-500 mt-2">极点在零点右侧，提供负相位（滞后角），但设计在低频段使其不影响穿越频率处的相位</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>作用</strong>：提高低频增益（改善稳态精度），不显著改变相位裕度</li>
+          <li><strong>适用场景</strong>：系统稳定性足够但精度不足（稳态误差大）</li>
+          <li><strong>代价</strong>：降低带宽（响应变慢）</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">PID 控制器的频域理解</h4>
+        <div class="formula-block">
+          $G_c(s) = K_p + \\frac{K_i}{s} + K_d s = K_p(1 + \\frac{1}{T_i s} + T_d s)$
+          <div class="text-sm text-gray-500 mt-2">$K_p$=比例增益，$K_i$=积分增益，$K_d$=微分增益，$T_i=K_p/K_i$=积分时间，$T_d=K_d/K_p$=微分时间</div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>PID 项</th><th>频域作用</th><th>时域效果</th><th>工程角色</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">P（比例）</td><td>整体抬高增益</td><td>加快响应、减小误差</td><td>基本控制作用</td></tr>
+            <tr><td class="font-medium">I（积分）</td><td>低频段增加 +20dB/dec 斜率</td><td>消除稳态误差</td><td>相当于滞后校正（提高低频增益）</td></tr>
+            <tr><td class="font-medium">D（微分）</td><td>高频段增加 +20dB/dec 斜率</td><td>预测趋势、抑制超调</td><td>相当于超前校正（增加相位裕度）</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>PID 就是超前-滞后校正的工业版</strong>：I 项 = 滞后校正（提高低频增益→消除稳态误差），D 项 = 超前校正（增加相位裕度→改善稳定性）。理解了超前/滞后校正，就理解了 PID 调参的本质——调 $K_i$ 影响低频，调 $K_d$ 影响中高频，调 $K_p$ 影响全局。详见 <a href="#" onclick="navigateTo('act-14');return false;" style="color:var(--primary)">PID 整定工程实战</a>。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>工程中最常见的校正方案</strong>：纯 P 控制有稳态误差，纯 I 控制响应慢且可能积分饱和，纯 D 控制对噪声敏感。工程中最常用的是 PI 控制（无 D 项）或 PID 控制。电机控制中电流环通常只用 PI（响应快、D 项放大噪声），速度环用完整 PID。</div>
+        </div>
+      ` },
+      { id: 'act-13', title: '离散系统基础', desc: 'z 变换、脉冲传函、稳定性', icon: '⏱', tags: ['进阶'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">离散系统：数字控制的数学基础</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          现代控制系统大多用计算机（MCU/DSP）实现——传感器信号经 ADC 采样离散化，控制算法在离散时间域运算，输出经 DAC 或 PWM 驱动执行器。离散系统理论是连续系统理论在采样数据框架下的推广，z 变换对应拉氏变换，脉冲传递函数对应传递函数。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">采样与保持</h4>
+        <div class="formula-block">
+          采样周期 $T_s$（采样频率 $f_s=1/T_s$），采样信号 $f^*(t) = \\sum_{n=0}^{\\infty} f(nT_s)\\delta(t-nT_s)$
+          <div class="text-sm text-gray-500 mt-2">采样将连续信号变成脉冲序列，零阶保持器（ZOH）将脉冲"展宽"为阶梯信号</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>奈奎斯特采样定理</strong>：$f_s > 2f_{max}$（采样频率必须大于信号最高频率的 2 倍），否则发生频率混叠。工程中通常取 $f_s = (5\\sim 10)f_{max}$ 留足余量。对电机控制：速度环采样 1kHz~10kHz，电流环 10kHz~100kHz。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">z 变换</h4>
+        <div class="formula-block">
+          $F(z) = \\sum_{n=0}^{\\infty} f(nT_s) z^{-n}$，其中 $z = e^{sT_s}$
+          <div class="text-sm text-gray-500 mt-2">$z$ 变换是离散系统的拉氏变换，$z^{-1}$ 对应"延迟一个采样周期"</div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>$f(nT_s)$（离散时域）</th><th>$F(z)$（z 域）</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">$\\delta(n)$（单位脉冲）</td><td>$1$</td><td></td></tr>
+            <tr><td class="font-medium">$1(n)$（单位阶跃）</td><td>$\\frac{z}{z-1}$</td><td>对应连续域 $1/s$</td></tr>
+            <tr><td class="font-medium">$n$（单位斜坡）</td><td>$\\frac{z}{(z-1)^2}$</td><td>对应连续域 $1/s^2$</td></tr>
+            <tr><td class="font-medium">$a^n$（指数）</td><td>$\\frac{z}{z-a}$</td><td>对应连续域 $1/(s-\\ln a)$</td></tr>
+            <tr><td class="font-medium">$e^{-anT_s}$</td><td>$\\frac{z}{z-e^{-aT_s}}$</td><td>直接从 $e^{at}$ 离散化</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">脉冲传递函数</h4>
+        <div class="formula-block">
+          $G(z) = \\frac{Y(z)}{R(z)} = \\mathcal{Z}[G_h(s)G_p(s)]$
+          <div class="text-sm text-gray-500 mt-2">含零阶保持器时，$G_h(s)=\\frac{1-e^{-sT_s}}{s}$，需与被控对象一起做 z 变换</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>工程实现</strong>：在 MCU 中，PID 控制器的 z 域实现就是"差分方程"——用当前和过去的采样值计算控制输出。z 变换的"延迟" $z^{-1}$ 在代码中就是"上一次的值"。详见 <a href="#" onclick="navigateTo('act-14');return false;" style="color:var(--primary)">PID 整定工程实战</a> 中的离散 PID 代码。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">离散系统的稳定性判据</h4>
+        <div class="formula-block">
+          <strong>z 域稳定条件</strong>：所有闭环极点必须在单位圆内（$|z_i|<1$）
+          <div class="text-sm text-gray-500 mt-2">s 域左半平面 → z 域单位圆内；s 域虚轴 → z 域单位圆上；s 域右半平面 → z 域单位圆外</div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>连续域</th><th>离散域</th><th>系统状态</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">左半平面</td><td>单位圆内 $|z|<1$</td><td>稳定</td></tr>
+            <tr><td class="font-medium">虚轴</td><td>单位圆上 $|z|=1$</td><td>临界稳定</td></tr>
+            <tr><td class="font-medium">右半平面</td><td>单位圆外 $|z|>1$</td><td>不稳定</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>双线性变换</strong>（Tustin 变换）：$s=\\frac{2}{T_s}\\frac{z-1}{z+1}$，把连续域设计的控制器直接映射到离散域。工程中在 MATLAB/Simulink 里做连续域设计，然后用 Tustin 变换自动生成离散控制器代码。</div>
+        </div>
+      ` },
+      { id: 'act-14', title: '工程实战：PID 整定', desc: 'Ziegler-Nichols、Cohen-Coon + STM32', icon: '💻', tags: ['工程'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">PID 整定：从理论到工程落地</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          <a href="#" onclick="navigateTo('act-12');return false;" style="color:var(--primary)">系统校正</a> 告诉我们 PID 的频域本质——P 抬增益、I 补低频、D 加超前。本节解决工程中最实际的问题：<strong>三个参数怎么确定？</strong>介绍 Ziegler-Nichols 和 Cohen-Coon 两大经典整定法，并给出 STM32 平台的离散 PID 代码实现。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">Ziegler-Nichols 临界比例法（闭环整定）</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：纯 P 测试</strong>。去掉 I 和 D，只保留 P，从小到大增大 $K_p$，直到系统出现<strong>等幅持续振荡</strong>。记录此时的 $K_p=K_u$（临界增益）和振荡周期 $T_u$（临界周期）。</div></div>
+          <div class="step-item"><div><strong>第二步：查表计算</strong>。根据 $K_u$ 和 $T_u$ 查 Ziegler-Nichols 表。</div></div>
+          <div class="step-item"><div><strong>第三步：微调</strong>。Z-N 参数是初始值，实际需根据响应微调——通常先减小 $K_p$ 10%~20% 降低超调。</div></div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>控制器类型</th><th>$K_p$</th><th>$T_i$（积分时间）</th><th>$T_d$（微分时间）</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">P</td><td>$0.5K_u$</td><td>$\\infty$（无积分）</td><td>0</td></tr>
+            <tr><td class="font-medium">PI</td><td>$0.45K_u$</td><td>$0.83T_u$</td><td>0</td></tr>
+            <tr><td class="font-medium">PID</td><td>$0.6K_u$</td><td>$0.5T_u$</td><td>$0.125T_u$</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">Cohen-Coon 反应曲线法（开环整定）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          对被控对象做开环阶跃测试，记录<strong>反应曲线</strong>（S 形曲线），从中提取两个参数：
+        </p>
+        <div class="formula-block">
+          $L$（延迟时间）：响应开始变化的时间（从阶跃施加到响应开始的延迟）<br>
+          $T$（时间常数）：响应从开始变化到达到 63.2% 终值的时间<br>
+          $R=L/T$（延迟比）
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>控制器类型</th><th>$K_p$</th><th>$T_i$</th><th>$T_d$</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">PI</td><td>$\\frac{1}{KR}(1+\\frac{0.35R}{1-R})$</td><td>$L\\frac{3.3-3R}{1+1.2R}$</td><td>0</td></tr>
+            <tr><td class="font-medium">PID</td><td>$\\frac{1}{KR}(1+\\frac{0.35R}{1-R})$</td><td>$L\\frac{2.5-2R}{1-0.39R}$</td><td>$L\\frac{0.37-0.37R}{1-0.81R}$</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>Z-N vs Cohen-Coon 选型</strong>：Z-N 法需要闭环临界振荡（可能对设备有风险），适合实验室调试；Cohen-Coon 法用开环测试（更安全），适合现场整定。Cohen-Coon 的参数通常比 Z-N 更温和（超调更小），但对延迟比 $R>0.5$ 的大延迟系统效果差。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">离散 PID 代码实现（STM32 平台）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          MCU 中实现的是<strong>离散 PID</strong>——用差分方程代替微分方程，每次采样计算一次控制量。以下是位置式 PID 的典型实现：
+        </p>
+        <div class="code-block"><span class="code-comment">/**
+ * 位置式 PID 控制器（离散实现）
+ * @param setpoint  目标值
+ * @param feedback  当前反馈值
+ * @return          控制输出
+ */</span>
+<span class="code-keyword">typedef struct</span> {
+    <span class="code-keyword">float</span> Kp, Ki, Kd;      <span class="code-comment">// PID 三个增益</span>
+    <span class="code-keyword">float</span> integral;          <span class="code-comment">// 积分累积器</span>
+    <span class="code-keyword">float</span> prev_error;        <span class="code-comment">// 上一次误差（微分用）</span>
+    <span class="code-keyword">float</span> out_min, out_max;  <span class="code-comment">// 输出限幅</span>
+} <span class="code-func">PID_t</span>;
+
+<span class="code-keyword">float</span> <span class="code-func">PID_Update</span>(<span class="code-func">PID_t</span> *pid, <span class="code-keyword">float</span> setpoint, <span class="code-keyword">float</span> feedback) {
+    <span class="code-keyword">float</span> error = setpoint - feedback;
+    pid->integral += error;  <span class="code-comment">// 积分累加</span>
+    <span class="code-comment">// 积分限幅（抗积分饱和）</span>
+    <span class="code-keyword">if</span> (pid->integral > pid->out_max) pid->integral = pid->out_max;
+    <span class="code-keyword">if</span> (pid->integral < pid->out_min) pid->integral = pid->out_min;
+    <span class="code-keyword">float</span> derivative = error - pid->prev_error;  <span class="code-comment">// 微分（差分近似）</span>
+    <span class="code-keyword">float</span> output = pid->Kp * error
+                   + pid->Ki * pid->integral
+                   + pid->Kd * derivative;
+    <span class="code-comment">// 输出限幅</span>
+    <span class="code-keyword">if</span> (output > pid->out_max) output = pid->out_max;
+    <span class="code-keyword">if</span> (output < pid->out_min) output = pid->out_min;
+    pid->prev_error = error;
+    <span class="code-keyword">return</span> output;
+}</div>
+
+        <h4 class="font-medium mt-6 mb-2">增量式 PID（工程优选）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          增量式 PID 输出的是<strong>控制量的变化量</strong> $\\Delta u$，而非绝对值，天然抗积分饱和且掉电安全：
+        </p>
+        <div class="code-block"><span class="code-comment">// 增量式 PID：输出 Δu，调用方自行累加</span>
+<span class="code-keyword">float</span> <span class="code-func">PID_Incremental</span>(<span class="code-func">PID_t</span> *pid, <span class="code-keyword">float</span> setpoint, <span class="code-keyword">float</span> feedback) {
+    <span class="code-keyword">float</span> error = setpoint - feedback;
+    <span class="code-keyword">float</span> delta_u = pid->Kp * (error - pid->prev_error)
+                    + pid->Ki * error
+                    + pid->Kd * (error - <span class="code-number">2</span>*pid->prev_error + pid->prev_error2);
+    pid->prev_error2 = pid->prev_error;
+    pid->prev_error = error;
+    <span class="code-keyword">return</span> delta_u;  <span class="code-comment">// 调用方: u += delta_u</span>
+}</div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>工程中的三个致命陷阱</strong>：①<strong>积分饱和</strong>——输出限幅后积分继续累积，导致大幅超调（代码中已加积分限幅）；②<strong>微分噪声</strong>——直接差分放大高频噪声，需加低通滤波（$\\alpha$ 滤波）；③<strong>采样周期不稳</strong>——PID 的 $K_i$/$K_d$ 与采样周期 $T_s$ 相关，$T_s$ 变化会导致参数漂移。建议在定时器中断中固定调用 PID。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">工程调参顺序（推荐）</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>先 P 后 I 再 D</strong>：先只加 P 到临界振荡，再加 I 消除稳态误差，最后加 D 抑制超调。</div></div>
+          <div class="step-item"><div><strong>从小到大</strong>：$K_p$ 从 0.1 倍估计值开始，逐步增大；$K_i$ 从 $K_p/(10T_u)$ 开始；$K_d$ 从 $K_p \\cdot T_u/10$ 开始。</div></div>
+          <div class="step-item"><div><strong>观察响应</strong>：每次调参后给阶跃输入，看超调、调节时间、稳态误差三项指标。</div></div>
+          <div class="step-item"><div><strong>最终微调</strong>：超调大→减 $K_p$ 或加 $K_d$；稳态误差大→加 $K_i$；振荡→减所有参数。</div></div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>参考资源</strong>：电机控制中 PID 整定的完整工程案例（含速度环/电流环双环调试、STM32 代码）可参考 <a href="#" onclick="navigateTo('act-05');return false;" style="color:var(--primary)">时域分析</a> 中的性能指标定义。实际项目中建议用 MATLAB/Simulink 先做仿真验证，再上板调试。</div>
+        </div>
+      ` },
     ]
   },
 
@@ -1270,6 +1762,314 @@ const QuizData = {
       explanation: '两种判据数学上完全等价——都可以从特征方程系数推导出稳定性条件。劳斯用表格形式，赫尔维茨用行列式形式。工程中劳斯表更常用，因为表格计算比行列式展开更直观、更不容易出错。'
     },
   ],
+
+  // ========== 自动控制 act-07~act-14 ==========
+  'act-07': [
+    {
+      question: 'I 型系统对阶跃输入的稳态误差是？',
+      options: ['$\\frac{1}{1+K_p}$', '0', '$\\frac{1}{K_v}$', '$\\infty$'],
+      answer: 1,
+      explanation: 'I 型系统（开环传函含 1 个积分环节）对阶跃输入无稳态误差。这是 I 型系统最重要的特性——含积分环节就能消除阶跃误差。0 型系统对阶跃有差，II 型系统对斜坡无差。'
+    },
+    {
+      question: '系统型别由什么决定？',
+      options: ['闭环极点个数', '开环传函中积分环节的个数', '开环增益 K 的大小', '闭环零点个数'],
+      answer: 1,
+      explanation: '系统型别 = 开环传函 $G(s)H(s)$ 中 $s^\\nu$ 的 $\\nu$ 值。$\\nu=0$ 是 0 型，$\\nu=1$ 是 I 型，$\\nu=2$ 是 II 型。型别越高精度越高，但稳定性越差。'
+    },
+    {
+      question: '速度误差系数 $K_v$ 的定义是？',
+      options: ['$K_v = \\lim_{s\\to 0}G(s)H(s)$', '$K_v = \\lim_{s\\to 0}sG(s)H(s)$', '$K_v = \\lim_{s\\to 0}s^2G(s)H(s)$', '$K_v = G(0)H(0)$'],
+      answer: 1,
+      explanation: '$K_v = \\lim_{s\\to 0}sG(s)H(s)$。三个误差系数分别是：$K_p=\\lim G(s)H(s)$（位置），$K_v=\\lim sG(s)H(s)$（速度），$K_a=\\lim s^2G(s)H(s)$（加速度）。注意 s 的幂次递增。'
+    },
+    {
+      question: 'II 型系统对斜坡输入的稳态误差是？',
+      options: ['$\\frac{1}{K_v}$', '0', '$\\frac{1}{K_a}$', '$\\infty$'],
+      answer: 1,
+      explanation: 'II 型系统（2 个积分环节）对斜坡输入无稳态误差。型别数 = 能无差跟踪的输入信号阶数 - 1：I 型无差跟踪阶跃（0 阶），II 型无差跟踪斜坡（1 阶）。'
+    },
+    {
+      question: '为什么工程中很少用 II 型系统？',
+      options: ['精度不够', '两个积分环节使相位滞后-180°，极易不稳定', '计算太复杂', '成本太高'],
+      answer: 1,
+      explanation: '每个积分环节贡献 -90° 相位滞后，两个就是 -180°。到达 -180° 时若增益还大于 1，闭环就不稳定了。II 型系统需要精心设计才能稳定，工程中更常用 I 型 + 高增益来兼顾精度和稳定性。'
+    },
+    {
+      question: '增大开环增益 K 对稳态误差和稳定性的影响分别是？',
+      options: ['误差减小，稳定性变好', '误差减小，稳定性变差', '误差增大，稳定性变好', '无影响'],
+      answer: 1,
+      explanation: 'K 增大 → 误差系数增大 → 稳态误差减小（精度提高）。但 K 增大也使增益裕度减小 → 离不稳定更近。这就是"精度与稳定性的矛盾"——PID 整定的核心就是在两者之间找平衡。'
+    },
+  ],
+
+  'act-08': [
+    {
+      question: '180° 根轨迹的起点和终点分别是？',
+      options: ['起点=开环零点，终点=开环极点', '起点=开环极点，终点=开环零点或∞', '起点=原点，终点=∞', '起点=∞，终点=原点'],
+      answer: 1,
+      explanation: 'K=0 时闭环极点=开环极点（根轨迹从极点出发），K→∞ 时闭环极点趋向开环零点或无穷远。这是根轨迹最基本的事实。'
+    },
+    {
+      question: '实轴上某点在根轨迹上的条件是？',
+      options: ['右侧零极点总数为偶数', '右侧零极点总数为奇数', '左侧零极点总数为奇数', '该点是开环极点'],
+      answer: 1,
+      explanation: '180° 根轨迹的实轴判断法则：某点右侧的开环零极点总数为奇数，则该点在根轨迹上。0° 根轨迹则要求偶数个。这是画根轨迹时最常用的快速判据。'
+    },
+    {
+      question: '根轨迹的渐近线交于实轴的点 $\\sigma_a$ 是？',
+      options: ['$\\sigma_a = \\frac{\\sum z_i - \\sum p_i}{n-m}$', '$\\sigma_a = \\frac{\\sum p_i - \\sum z_i}{n-m}$', '$\\sigma_a = \\frac{\\sum p_i + \\sum z_i}{n-m}$', '$\\sigma_a = 0$'],
+      answer: 1,
+      explanation: '$\\sigma_a = \\frac{\\sum p_i - \\sum z_i}{n-m}$，其中 $p_i$ 是开环极点，$z_i$ 是开环零点，$n$ 是极点数，$m$ 是零点数。渐近线从这个点向外辐射，角度为 $\\frac{(2k+1)\\times 180°}{n-m}$。'
+    },
+    {
+      question: '分离点的求法是？',
+      options: ['解 $G(s)=0$', '解 $\\frac{dK}{ds}=0$', '解特征方程', '令 $s=j\\omega$'],
+      answer: 1,
+      explanation: '分离点是根轨迹在实轴上分叉或合并的点。从特征方程 $K=-1/G(s)$ 出发，令 $\\frac{dK}{ds}=0$ 求解。注意要检验解是否在根轨迹上（右侧奇数个零极点）。'
+    },
+    {
+      question: '根轨迹与虚轴的交点用什么方法求？',
+      options: ['令 $s=0$', '用劳斯表或令 $s=j\\omega$ 代入特征方程', '求渐近线', '计算出射角'],
+      answer: 1,
+      explanation: '两种方法：①列劳斯表，找某行首元素为 0 时的 K 值，再用辅助方程求 $\\omega$；②直接令 $s=j\\omega$ 代入特征方程，分离实部虚部联立求解。方法①更系统，方法②更直观。'
+    },
+    {
+      question: '开环传函 $G(s)=\\frac{K}{s(s+1)}$ 的根轨迹有几条渐近线？',
+      options: ['0 条', '1 条', '2 条', '3 条'],
+      answer: 2,
+      explanation: '极点数 n=2（$p_1=0, p_2=-1$），零点数 m=0，渐近线数 = n-m = 2 条。角度为 90° 和 270°（即沿虚轴上下延伸），交于 $\\sigma_a=-0.5$。两条渐近线意味着根轨迹最终沿虚轴方向趋向无穷。'
+    },
+  ],
+
+  'act-09': [
+    {
+      question: '伯德图的横坐标和纵坐标分别是什么？',
+      options: ['$\\omega$ 和 $|G|$', '$\\log\\omega$ 和 $20\\log|G|$ (dB)', '实部和虚部', '频率和相位'],
+      answer: 1,
+      explanation: '伯德图幅频特性：横轴 $\\log\\omega$（对数频率），纵轴 $20\\log|G(j\\omega)|$ dB（分贝）。对数坐标使得各环节的渐近线都是直线，便于手工绘制。相频特性横轴同，纵轴是角度。'
+    },
+    {
+      question: '积分环节 $\\frac{1}{s}$ 的伯德图幅频渐近线斜率是？',
+      options: ['0 dB/dec', '-20 dB/dec', '+20 dB/dec', '-40 dB/dec'],
+      answer: 1,
+      explanation: '$|1/(j\\omega)|=1/\\omega$，$20\\log(1/\\omega)=-20\\log\\omega$，斜率 -20 dB/dec。每增加 10 倍频（dec），幅值下降 20dB。同理 $1/s^2$ 斜率 -40 dB/dec。'
+    },
+    {
+      question: '惯性环节 $\\frac{1}{Ts+1}$ 的转折频率是？',
+      options: ['$\\omega=T$', '$\\omega=1/T$', '$\\omega=\\sqrt{T}$', '$\\omega=1/\\sqrt{T}$'],
+      answer: 1,
+      explanation: '转折频率 $\\omega_c=1/T$。低于转折频率时幅频为 0dB（增益≈1），高于转折频率时斜率 -20dB/dec。转折频率处实际值比渐近线低 3dB。'
+    },
+    {
+      question: '奈奎斯特图与伯德图的关系是？',
+      options: ['完全不同的图', '伯德图是奈奎斯特图的"拆开版"（幅值和相位分开画）', '奈奎斯特图更详细', '伯德图只能画一阶系统'],
+      answer: 1,
+      explanation: '奈奎斯特图是 $G(j\\omega)$ 在复平面上的曲线（一张图），伯德图把同一个信息拆成幅频和相频两张图。伯德图更直观易画（渐近线近似），工程中最常用；奈奎斯特图更紧凑，是奈奎斯特稳定判据的基础。'
+    },
+    {
+      question: '系统 $G(s)=\\frac{10}{s(0.1s+1)}$ 的低频段斜率是？',
+      options: ['0 dB/dec', '-20 dB/dec', '-40 dB/dec', '+20 dB/dec'],
+      answer: 1,
+      explanation: '分解：K=10（+20dB 水平线），$1/s$（-20dB/dec），$1/(0.1s+1)$（转折频率 10rad/s 后 -20dB/dec）。低频段只受积分环节影响，斜率 -20dB/dec。在 $\\omega=10$ 处叠加惯性环节后变 -40dB/dec。'
+    },
+    {
+      question: '伯德图中"带宽"的定义是？',
+      options: ['幅频曲线穿越 0dB 的频率', '闭环幅频降到 -3dB 的频率', '相频降到 -90° 的频率', '幅频开始下降的频率'],
+      answer: 1,
+      explanation: '带宽 $\\omega_b$ 是闭环频率响应 $|T(j\\omega)|$ 降到 $1/\\sqrt{2}$（-3dB）的频率。带宽越大系统越快（能响应更高频率的信号），但抗高频噪声越差。注意带宽是闭环指标，穿越频率是开环指标。'
+    },
+  ],
+
+  'act-10': [
+    {
+      question: '奈奎斯特判据中，闭环右半平面极点数 $Z$ 的计算公式是？',
+      options: ['$Z=N$', '$Z=P-N$', '$Z=N-P$', '$Z=P+N$'],
+      answer: 1,
+      explanation: '$Z=P-N$，其中 P 是开环右半平面极点数，N 是奈奎斯特曲线绕 $(-1,j0)$ 逆时针圈数。稳定条件 $Z=0$ 即 $N=P$。开环稳定时 P=0，简化为 N=0（不绕 $(-1,j0)$ 点）。'
+    },
+    {
+      question: '相位裕度 $\\gamma$ 的定义是？',
+      options: ['$\\gamma = 180° + \\angle G(j\\omega_{gc})$', '$\\gamma = \\angle G(j\\omega_{gc})$', '$\\gamma = 180° - \\angle G(j\\omega_{gc})$', '$\\gamma = |G(j\\omega_{gc})|$'],
+      answer: 0,
+      explanation: '在增益穿越频率 $\\omega_{gc}$（$|G(j\\omega_{gc})|=1$ 即 0dB）处，相位裕度 $\\gamma=180°+\\angle G(j\\omega_{gc})$。若 $\\angle G=-135°$，则 $\\gamma=45°$。$\\gamma>0$ 表示还有余量，$\\gamma<0$ 表示已经不稳定。'
+    },
+    {
+      question: '工程中推荐的相位裕度范围是？',
+      options: ['$5°\\sim 15°$', '$30°\\sim 60°$', '$70°\\sim 90°$', '$120°\\sim 150°$'],
+      answer: 1,
+      explanation: '$\\gamma=30°\\sim 60°$ 是工程最佳范围。$\\gamma=45°$ 时超调约 16%，快速且平稳；$\\gamma<30°$ 超调过大甚至不稳定；$\\gamma>60°$ 过于保守，响应很慢。典型设计目标是 $\\gamma=45°$。'
+    },
+    {
+      question: '幅值裕度 $G_m$ 是在哪个频率处计算的？',
+      options: ['增益穿越频率 $\\omega_{gc}$', '相位穿越频率 $\\omega_{pc}$（相位=-180°）', '带宽频率 $\\omega_b$', '任意频率'],
+      answer: 1,
+      explanation: '$G_m=1/|G(j\\omega_{pc})|$，$\\omega_{pc}$ 是相频曲线穿越 -180° 的频率。此时看幅频曲线距离 0dB 还有多远——这个距离就是幅值裕度。$G_m>6$dB 表示还有 2 倍以上的增益余量。'
+    },
+    {
+      question: '如果奈奎斯特曲线恰好穿过 $(-1,j0)$ 点，系统处于什么状态？',
+      options: ['稳定', '不稳定', '临界稳定（等幅振荡）', '无法判断'],
+      answer: 2,
+      explanation: '穿过 $(-1,j0)$ 意味着存在某个频率 $\\omega$ 使 $G(j\\omega)=-1$，即 $|G|=1$ 且相位=-180°。此时闭环特征方程有纯虚根，系统处于临界稳定（等幅持续振荡）。这正是 Ziegler-Nichols 临界比例法的实验状态。'
+    },
+    {
+      question: '开环稳定（P=0）的系统，闭环稳定的奈奎斯特判据简化为？',
+      options: ['奈奎斯特曲线包围 $(-1,j0)$ 点', '奈奎斯特曲线不包围 $(-1,j0)$ 点', '奈奎斯特曲线穿过原点', '奈奎斯特曲线在左半平面'],
+      answer: 1,
+      explanation: 'P=0 时稳定条件 $N=P=0$——奈奎斯特曲线不绕 $(-1,j0)$ 点。这是工程中最常见的情况（大多数被控对象本身是稳定的）。'
+    },
+  ],
+
+  'act-11': [
+    {
+      question: '闭环谐振峰值 $M_r$ 增大意味着？',
+      options: ['系统更稳定', '系统超调增大、更振荡', '系统响应更快', '稳态误差减小'],
+      answer: 1,
+      explanation: '$M_r$ 是闭环幅频的最大值。$M_r=1$ 表示无谐振（不振荡），$M_r>1$ 表示某频率附近增益放大（振荡）。$M_r$ 与超调量正相关：$M_r\\approx1.2$ 时超调约 5%，$M_r\\approx1.5$ 时超调约 25%。'
+    },
+    {
+      question: '相位裕度 $\\gamma=45°$ 时，对应的近似超调量约为？',
+      options: ['0%', '16%', '35%', '50%'],
+      answer: 1,
+      explanation: '经验公式 $M_r \\approx 1/\\sin 45° \\approx 1.41$，$\\sigma\\% \\approx 0.16+0.4(1.41-1) \\approx 32\\%$。更精确的二阶系统公式给出约 16%。工程中记住"45° 对应 15%~20% 超调"即可。'
+    },
+    {
+      question: '带宽 $\\omega_b$ 增大的效果是？',
+      options: ['响应变快但抗噪声变差', '响应变慢但更平稳', '精度提高', '稳定性变好'],
+      answer: 0,
+      explanation: '带宽越大系统能响应更高频率的信号→响应更快。但同时高频噪声也能通过→抗噪声变差。工程中需要在快速性和抗噪声之间权衡。电机控制中电流环带宽通常 1kHz~5kHz，速度环 50Hz~200Hz。'
+    },
+    {
+      question: '开环增益穿越频率 $\\omega_{gc}$ 与闭环带宽 $\\omega_b$ 的关系是？',
+      options: ['完全相等', '$\\omega_b \\approx \\omega_{gc}$（量级相近）', '$\\omega_b = 2\\omega_{gc}$', '无关系'],
+      answer: 1,
+      explanation: '对于大多数系统，$\\omega_b$ 和 $\\omega_{gc}$ 量级相近（$\\omega_b$ 略大于 $\\omega_{gc}$）。这是工程中常用的近似——设计时用 $\\omega_{gc}$ 估计带宽，不需要画闭环频率特性。'
+    },
+    {
+      question: '二阶系统中相位裕度 $\\gamma$ 与阻尼比 $\\zeta$ 的近似关系是？',
+      options: ['$\\gamma = \\zeta \\times 100°$', '$\\gamma \\approx 100\\zeta$（$\\zeta<0.7$ 时近似成立）', '$\\gamma = 45°\\zeta$', '无关系'],
+      answer: 1,
+      explanation: '二阶系统中 $\\gamma \\approx 100\\zeta$（$\\zeta<0.7$ 时误差<5%）。$\\zeta=0.5$ 时 $\\gamma\\approx50°$，$\\zeta=0.707$ 时 $\\gamma\\approx65°$。这个近似把频域指标（$\\gamma$）和时域指标（$\\zeta$）直接联系起来。'
+    },
+  ],
+
+  'act-12': [
+    {
+      question: '超前校正的主要作用是？',
+      options: ['消除稳态误差', '增加相位裕度、改善稳定性', '增大带宽', '降低增益'],
+      answer: 1,
+      explanation: '超前校正在中频段提供正相位（超前角），直接增加相位裕度→减小超调、改善稳定性。附带效果是增大带宽（响应更快），但也会降低高频抗噪声能力。'
+    },
+    {
+      question: '滞后校正的主要作用是？',
+      options: ['增加相位裕度', '提高低频增益、改善稳态精度', '增大带宽', '增加超调'],
+      answer: 1,
+      explanation: '滞后校正在低频段增大增益→提高稳态精度（减小稳态误差）。设计时让滞后角出现在低频段，不影响穿越频率处的相位裕度。代价是带宽减小（响应变慢）。'
+    },
+    {
+      question: 'PID 控制器中，I 项在频域中的作用等效于？',
+      options: ['超前校正', '滞后校正', '陷波滤波', '全通滤波'],
+      answer: 1,
+      explanation: 'I 项 $K_i/s$ 在低频段增加 +20dB/dec 斜率（相当于增加低频增益），与滞后校正的作用一致——都是提高低频增益来消除稳态误差。这就是为什么含 I 项的系统阶跃无差。'
+    },
+    {
+      question: 'PID 控制器中，D 项在频域中的作用等效于？',
+      options: ['滞后校正', '超前校正', '低通滤波', '带阻滤波'],
+      answer: 1,
+      explanation: 'D 项 $K_d s$ 在中高频段增加 +20dB/dec 斜率和正相位，与超前校正的作用一致——增加相位裕度→改善稳定性、抑制超调。但 D 项也放大高频噪声，所以工程中常加低通滤波。'
+    },
+    {
+      question: '超前校正的代价是？',
+      options: ['稳态误差增大', '带宽增大、抗高频噪声变差', '系统变得不稳定', '响应变慢'],
+      answer: 1,
+      explanation: '超前校正增大中高频增益→带宽增大→响应更快但噪声也更容易通过。如果系统工作在噪声环境中（如电机电流环），需要在超前校正后加低通滤波，或者限制 D 项增益。'
+    },
+    {
+      question: '工程中最常用的控制方案是？',
+      options: ['纯 P 控制', 'PI 控制', 'PD 控制', '纯 D 控制'],
+      answer: 1,
+      explanation: 'PI 控制（P+I）是最常用的工程方案——P 保证快速性，I 消除稳态误差，无 D 项避免放大噪声。电机电流环、温度控制、液位控制大多用 PI。需要更高性能时（如速度环）才加 D 项。'
+    },
+  ],
+
+  'act-13': [
+    {
+      question: 'z 变换中 $z^{-1}$ 的物理意义是？',
+      options: ['乘以采样周期', '延迟一个采样周期', '积分', '微分'],
+      answer: 1,
+      explanation: '$z^{-1}$ 对应"延迟一个采样周期 $T_s$"。在代码中 $z^{-1}X(z)$ 就是"上一次采样的 x 值"。这是离散系统差分方程的核心——用过去的值计算当前输出。'
+    },
+    {
+      question: '奈奎斯特采样定理要求？',
+      options: ['$f_s > f_{max}$', '$f_s > 2f_{max}$', '$f_s > 10f_{max}$', '$f_s = f_{max}$'],
+      answer: 1,
+      explanation: '$f_s > 2f_{max}$（采样频率 > 信号最高频率的 2 倍），否则发生频率混叠。工程中取 $f_s=(5\\sim10)f_{max}$ 留余量。电机控制中：速度环 1kHz，电流环 10kHz~100kHz。'
+    },
+    {
+      question: '离散系统的稳定条件是？',
+      options: ['所有极点在左半平面', '所有极点在单位圆内', '所有极点在单位圆外', '所有极点在虚轴上'],
+      answer: 1,
+      explanation: 'z 域稳定条件：所有闭环极点 $|z_i|<1$（在单位圆内）。对应关系：s 域左半平面→z 域单位圆内，s 域虚轴→z 域单位圆上，s 域右半平面→z 域单位圆外。'
+    },
+    {
+      question: '双线性变换（Tustin 变换）的公式是？',
+      options: ['$z=e^{sT_s}$', '$s=\\frac{2}{T_s}\\frac{z-1}{z+1}$', '$s=\\frac{z-1}{T_s}$', '$z=sT_s+1$'],
+      answer: 1,
+      explanation: 'Tustin 变换 $s=\\frac{2}{T_s}\\frac{z-1}{z+1}$ 把连续域映射到离散域。工程中在 MATLAB 里做连续域设计，用 Tustin 变换自动生成离散控制器代码。比直接在离散域设计更直观。'
+    },
+    {
+      question: '零阶保持器（ZOH）的作用是？',
+      options: ['滤除高频噪声', '将脉冲信号展宽为阶梯信号', '将连续信号离散化', '将离散信号连续化'],
+      answer: 1,
+      explanation: 'ZOH 将采样得到的脉冲序列"保持"到下一个采样时刻，输出是阶梯状信号。这是 DAC 的典型行为——输出电压在一个采样周期内保持不变。ZOH 引入的相位滞后约为 $T_s/2$，采样频率越高影响越小。'
+    },
+  ],
+
+  'act-14': [
+    {
+      question: 'Ziegler-Nichols 临界比例法的第一步是？',
+      options: ['直接给一组 PID 参数', '只保留 P，增大到等幅振荡，记录 $K_u$ 和 $T_u$', '做开环阶跃测试', '用 Cohen-Coon 公式计算'],
+      answer: 1,
+      explanation: 'Z-N 法：①只保留 P，增大 $K_p$ 到等幅振荡→记录临界增益 $K_u$ 和周期 $T_u$；②查表得 PID 参数。关键是找到"临界振荡"状态——此时 $K_p=K_u$，系统处于稳定边界。'
+    },
+    {
+      question: 'Ziegler-Nichols 法中，PID 控制器的 $K_p$ 取值是？',
+      options: ['$0.5K_u$', '$0.45K_u$', '$0.6K_u$', '$K_u$'],
+      answer: 2,
+      explanation: 'Z-N 表：P 控制 $0.5K_u$，PI 控制 $0.45K_u$，PID 控制 $0.6K_u$。注意 PID 的 $K_p$ 比 PI 大——因为 D 项提供了额外的相位裕度，允许更大的增益而不失稳。'
+    },
+    {
+      question: 'Cohen-Coon 法与 Z-N 法的主要区别是？',
+      options: ['Cohen-Coon 更精确', 'Cohen-Coon 用开环测试（更安全），Z-N 用闭环临界振荡', 'Cohen-Coon 只能用于一阶系统', '无区别'],
+      answer: 1,
+      explanation: 'Z-N 法需要闭环临界振荡（可能对设备有风险），Cohen-Coon 法用开环阶跃测试提取延迟 L 和时间常数 T（更安全）。Cohen-Coon 参数通常更温和（超调更小），但对大延迟系统效果差。'
+    },
+    {
+      question: '位置式 PID 代码中，为什么要对积分项做限幅？',
+      options: ['防止计算溢出', '抗积分饱和——输出饱和后积分继续累积会导致大幅超调', '提高精度', '降低计算量'],
+      answer: 1,
+      explanation: '积分饱和是 PID 最常见的工程问题：当执行器饱和（输出到限）后，误差仍存在，积分继续累积。当误差反向时，积分值很大需要很长时间才能"退饱和"，期间产生大幅超调。积分限幅是解决此问题的最简单方法。'
+    },
+    {
+      question: '增量式 PID 相比位置式 PID 的优势是？',
+      options: ['计算更快', '天然抗积分饱和、掉电无冲击', '精度更高', '不需要反馈'],
+      answer: 1,
+      explanation: '增量式输出 $\\Delta u$（变化量）而非绝对值。优势：①没有积分累加器，不会积分饱和；②掉电重启时 $\\Delta u$ 从 0 开始，不会有累积值冲击执行器；③只用到最近 2~3 次误差，计算量小。代价是调用方需要自行累加输出。'
+    },
+    {
+      question: '工程调参的推荐顺序是？',
+      options: ['先 D 后 I 再 P', '先 P 后 I 再 D', '先 I 后 P 再 D', '三个同时调'],
+      answer: 1,
+      explanation: '先 P 后 I 再 D：①只加 P 到响应快速但有稳态误差；②加 I 消除稳态误差（可能增加超调）；③加 D 抑制超调（可能放大噪声）。每步只调一个参数，观察响应变化，逐步逼近最佳参数。'
+    },
+    {
+      question: 'PID 代码中"微分项噪声放大"问题的解决方案是？',
+      options: ['增大 $K_d$', '对微分项加低通滤波（$\\alpha$ 滤波）', '减小采样周期', '去掉 D 项'],
+      answer: 1,
+      explanation: '直接差分 $\\frac{e_k-e_{k-1}}{T_s}$ 会放大高频噪声。解决方案：对微分项加一阶低通滤波 $d_{filt}=\\alpha \\cdot d_{new}+(1-\\alpha)\\cdot d_{filt,old}$，其中 $\\alpha=0.1\\sim0.3$。或者用"不完全微分"结构替代纯微分。'
+    },
+  ],
 };
+
 
 
