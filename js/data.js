@@ -42,13 +42,13 @@ const CourseData = {
   // ========== 首页数据 ==========
   home: {
     title: '专业课学习平台 · StudyWeb',
-    subtitle: '应试 + 工程双线并重，覆盖电子、自动化、电气专业核心课程，系统化学习考研笔试与工程实战知识',
-    intro: '本项目把分散在课本、视频、真题里的专业课知识，系统化、可视化、可交互地组织在一个网站里。数学/数电/模电侧重考研笔试考点与计算训练，自动控制/电子电路侧重工程应用与实战仿真，数据结构兼顾 408 考研与工程面试。配合交互图表、公式可视化、自测练习，做到"看得懂、记得牢、用得上"。',
+    subtitle: '应试 + 工程双线并重，覆盖电子、自动化、电气专业核心课程，系统化学习笔试考点与工程实战知识',
+    intro: '本项目把分散在课本、视频、真题里的专业课知识，系统化、可视化、可交互地组织在一个网站里。数学/数电/模电侧重学习笔试考点与计算训练，自动控制/电子电路侧重工程应用与实战仿真，数据结构兼顾计算机统考大纲与工程面试。配合交互图表、公式可视化、自测练习，做到"看得懂、记得牢、用得上"。',
     features: [
       { icon: '📚', label: '系统化知识', desc: '7 大板块、96+ 知识点按学习路径递进，应试与工程双标签筛选' },
       { icon: '🧮', label: '公式与计算', desc: 'KaTeX 渲染全部数学/控制公式，配套矩阵计算器、拉氏变换查表等工具' },
       { icon: '🎮', label: '交互可视化', desc: '伯德图、根轨迹、卡诺图、运放电路、排序算法等可交互原理图' },
-      { icon: '✏️', label: '自测与真题', desc: '每节配自测题，数学/数电/模电含考研真题模块，支持错题记录' },
+      { icon: '✏️', label: '自测与真题', desc: '每节配自测题，数学/数电/模电含笔试真题模块，支持错题记录' },
     ],
     stats: [
       { label: '知识板块', value: '7', color: 'blue' },
@@ -57,20 +57,20 @@ const CourseData = {
       { label: '计算工具', value: '9', color: 'orange' },
     ],
     sections: [
-      { id: 'advanced-math', title: '高等数学', desc: '极限、微积分、级数、微分方程，考研数学一全考点', icon: '🔴', level: '应试' },
-      { id: 'linear-algebra', label: '线性代数', title: '线性代数', desc: '行列式、矩阵、特征值、二次型，考研线代核心', icon: '🟠', level: '应试' },
+      { id: 'advanced-math', title: '高等数学', desc: '极限、微积分、级数、微分方程，工学类高数全考点', icon: '🔴', level: '应试' },
+      { id: 'linear-algebra', label: '线性代数', title: '线性代数', desc: '行列式、矩阵、特征值、二次型，笔试线代核心', icon: '🟠', level: '应试' },
       { id: 'circuit-basics', title: '电路基础', desc: 'KCL/KVL、戴维南、一阶/二阶暂态、相量法', icon: '🔵', level: '应试+工程' },
       { id: 'analog-circuit', title: '模拟电路', desc: '二极管、三极管、运放、反馈、功率放大、电源', icon: '🟢', level: '应试+工程' },
       { id: 'digital-circuit', title: '数字电路', desc: '逻辑代数、组合/时序、卡诺图、触发器、HDL', icon: '🟡', level: '应试+工程' },
       { id: 'control', title: '自动控制原理', desc: '时域/频域/根轨迹/校正，工程应用侧重', icon: '🟣', level: '工程' },
-      { id: 'data-structure', title: '数据结构', desc: '线性表→树→图→查找→排序，408 核心与工程实战', icon: '⚫', level: '应试+工程' },
+      { id: 'data-structure', title: '数据结构', desc: '线性表→树→图→查找→排序，统考大纲与工程实战', icon: '⚫', level: '应试+工程' },
     ],
   },
 
   // ========== 高等数学 ==========
   'advanced-math': {
     title: '高等数学',
-    subtitle: '考研数学一核心考点，覆盖极限、一元/多元微积分、级数、微分方程',
+    subtitle: '工学类高等数学核心考点，覆盖极限、一元/多元微积分、级数、微分方程',
     icon: '🔴',
     sections: [
       { id: 'hm-01', title: '函数极限与连续', desc: '等价无穷小、夹逼准则、洛必达法则', icon: '📈', tags: ['高频考点'], goals: { exam: true }, content: '' },
@@ -95,7 +95,7 @@ const CourseData = {
   // ========== 线性代数 ==========
   'linear-algebra': {
     title: '线性代数',
-    subtitle: '考研线代核心，行列式、矩阵、向量、特征值、二次型',
+    subtitle: '笔试线代核心，行列式、矩阵、向量、特征值、二次型',
     icon: '🟠',
     sections: [
       { id: 'la-01', title: '行列式', desc: '性质、展开定理、克莱姆法则', icon: '|#', tags: ['基础'], goals: { exam: true }, content: '' },
@@ -204,7 +204,7 @@ const CourseData = {
   // ========== 数据结构 ==========
   'data-structure': {
     title: '数据结构',
-    subtitle: '线性表→树→图→查找→排序，408 核心与工程面试双线',
+    subtitle: '线性表→树→图→查找→排序，统考大纲与工程面试双线',
     icon: '⚫',
     sections: [
       { id: 'ds-01', title: '绪论与复杂度', desc: '时间/空间复杂度、主定理', icon: '⏱', tags: ['基础'], goals: { exam: true, eng: true }, content: '' },

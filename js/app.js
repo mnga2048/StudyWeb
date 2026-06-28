@@ -371,7 +371,7 @@
           <div class="step-item"><div><strong>第一阶段 · 数学筑基</strong>：高等数学（微积分为核心）→ 线性代数（矩阵、特征值是后续电路/自控的工具）</div></div>
           <div class="step-item"><div><strong>第二阶段 · 电路入门</strong>：电路基础（KCL/KVL、暂态）→ 模拟电路（需电路基础+微积分）→ 数字电路（相对独立，可并行）</div></div>
           <div class="step-item"><div><strong>第三阶段 · 控制理论</strong>：自动控制原理（需拉氏变换、复数、电路基础，工程应用为主）</div></div>
-          <div class="step-item"><div><strong>第四阶段 · 算法数据</strong>：数据结构（相对独立，考研 408 与工程面试核心）</div></div>
+          <div class="step-item"><div><strong>第四阶段 · 算法数据</strong>：数据结构（相对独立，计算机统考大纲与工程面试核心）</div></div>
         </div>
       </div>
     </div>`;
