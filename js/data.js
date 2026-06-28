@@ -407,18 +407,89 @@ const CourseData = {
     subtitle: '电路分析入门，所有电子课程的共同地基',
     icon: '🔵',
     sections: [
-      { id: 'circ-01', title: '基尔霍夫定律', desc: 'KCL/KVL、节点法、网孔法', icon: '⚡', tags: ['基础必学'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'circ-02', title: '戴维南/诺顿等效', desc: '等效电源定理、等效电阻', icon: '🔀', tags: ['高频'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'circ-03', title: '叠加定理与齐次定理', desc: '线性电路叠加原理', icon: '➗', tags: [], goals: { exam: true }, content: '' },
-      { id: 'circ-04', title: '一阶电路暂态', desc: 'RC/RL、三要素法', icon: '📈', tags: ['核心'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'circ-05', title: '二阶电路暂态', desc: 'RLC 过阻尼/临界/欠阻尼', icon: '〰', tags: ['难点'], goals: { exam: true }, content: '' },
-      { id: 'circ-06', title: '正弦稳态分析', desc: '相量法、阻抗、导纳', icon: ' sinusoid', tags: ['核心'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'circ-07', title: '频率响应与滤波器', desc: 'RC 低通/高通、波特图入门', icon: '📶', tags: ['工程'], goals: { eng: true }, content: '' },
-      { id: 'circ-08', title: '谐振电路', desc: '串联/并联谐振、品质因数', icon: '🎯', tags: ['高频'], goals: { exam: true }, content: '' },
-      { id: 'circ-09', title: '三相电路', desc: '星形/三角形、功率计算', icon: '⚙', tags: [], goals: { exam: true }, content: '' },
-      { id: 'circ-10', title: '二端口网络', desc: 'Z/Y/H 参数及其互换', icon: '⬛', tags: ['难点'], goals: { exam: true }, content: '' },
-      { id: 'circ-11', title: '含运放的电路分析', desc: '理想运放线性区模型', icon: '🔺', tags: ['工程'], goals: { eng: true }, content: '' },
-      { id: 'circ-12', title: '受控源与电路定理扩展', desc: '受控源处理、定理适用性', icon: '🔌', tags: [], goals: { exam: true }, content: '' },
+      { id: 'circ-01', title: '基尔霍夫定律', desc: 'KCL/KVL、节点法、网孔法', icon: '⚡', tags: ['基础必学'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">基尔霍夫定律：电路分析的地基</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">基尔霍夫定律（KCL/KVL）是所有电路分析的出发点，无论电路多复杂，归根结底都基于这两条定律。掌握节点电压法和网孔电流法，就能系统化求解任何线性电路。</p>
+        <h4 class="font-medium mt-6 mb-2">KCL 与 KVL</h4>
+        <div class="formula-block">KCL（电流定律）：$\\sum i_{in} = \\sum i_{out}$（节点电流代数和为零）<br><br>KVL（电压定律）：$\\sum u = 0$（回路电压代数和为零）<div class="text-sm text-gray-500 mt-2">KCL 本质是电荷守恒，KVL 本质是能量守恒</div></div>
+        <h4 class="font-medium mt-6 mb-2">节点电压法 vs 网孔电流法</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>方法</th><th>变量</th><th>适用</th><th>方程数</th></tr></thead><tbody><tr><td class="font-medium">节点电压法</td><td>各节点对参考点电压</td><td>节点少并联多</td><td>n-1（n 为节点数）</td></tr><tr><td class="font-medium">网孔电流法</td><td>各独立网孔的假想电流</td><td>网孔少串联多</td><td>b-n+1（b 为支路数）</td></tr></tbody></table></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>选型口诀</strong>：节点少用节点法，网孔少用网孔法。含理想电压源优先节点法（电压源接参考点则该节点电压已知），含理想电流源优先网孔法（电流源所在网孔电流已知）。</div></div>
+      ` },
+      { id: 'circ-02', title: '戴维南/诺顿等效', desc: '等效电源定理、等效电阻', icon: '🔀', tags: ['高频'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">戴维南定理：化繁为简的利器</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">任何含源线性二端网络，对外电路而言都可等效为一个<strong>电压源串联电阻</strong>（戴维南）或<strong>电流源并联电阻</strong>（诺顿）。这是简化复杂电路、求最大功率传输的核心工具。</p>
+        <div class="formula-block">戴维南等效：$U = U_{oc} - R_{eq} \\cdot I$<br>$U_{oc}$：端口开路电压；$R_{eq}$：等效电阻（独立源置零后从端口看进去的电阻）</div>
+        <div class="step-list"><div class="step-item"><div><strong>求开路电压 $U_{oc}$</strong>：移去负载，求端口开路时的电压。</div></div><div class="step-item"><div><strong>求等效电阻 $R_{eq}$</strong>：①独立源置零（电压源短路、电流源开路），从端口求等效电阻；②含受控源时用"加压求流法"或"开路电压/短路电流法"。</div></div><div class="step-item"><div><strong>最大功率传输</strong>：当 $R_L = R_{eq}$ 时，负载获得最大功率 $P_{max} = U_{oc}^2/(4R_{eq})$。</div></div></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>受控源不能置零</strong>：求 $R_{eq}$ 时只有<strong>独立源</strong>置零，受控源必须保留（它受电路变量控制，不能人为消除）。含受控源的电路必须用开路电压/短路电流法或加压求流法。</div></div>
+      ` },
+      { id: 'circ-03', title: '叠加定理与齐次定理', desc: '线性电路叠加原理', icon: '➗', tags: ['基础'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">叠加定理：线性系统的分解艺术</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">线性电路中，多个激励共同作用产生的响应，等于每个激励<strong>单独作用</strong>产生响应的代数和。这让复杂多源电路可以拆解为单源电路逐个求解。</p>
+        <div class="formula-block">叠加定理：$U = U_1 + U_2 + \\cdots$（各电源单独作用时响应之和）<br>齐次定理：激励扩大 $k$ 倍，响应也扩大 $k$ 倍</div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>"单独作用"的含义</strong>：其他独立源置零——电压源短路（用导线替代）、电流源开路（断开）。受控源始终保留。叠加只适用于<strong>电压和电流</strong>，不适用于功率（功率是电压电流乘积，非线性）。</div></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>功率不能叠加</strong>：$P = UI = (U_1+U_2)(I_1+I_2) \\ne U_1I_1 + U_2I_2$。求功率必须先叠加求出总电压总电流，再相乘。</div></div>
+      ` },
+      { id: 'circ-04', title: '一阶电路暂态', desc: 'RC/RL、三要素法', icon: '📈', tags: ['核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">一阶电路暂态：三要素法秒杀</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">RC/RL 电路在换路（开关动作）后，电压电流按指数规律从初值过渡到稳态值。掌握"三要素法"，任何一阶暂态问题都能套公式秒解。</p>
+        <div class="formula-block"><strong>三要素法通用公式</strong>：<br>$f(t) = f(\\infty) + [f(0_+) - f(\\infty)]e^{-t/\\tau}$<div class="text-sm text-gray-500 mt-2">三要素：初值 $f(0_+)$、稳态值 $f(\\infty)$、时间常数 $\\tau$</div></div>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>电路</th><th>时间常数 $\\tau$</th><th>物理意义</th></tr></thead><tbody><tr><td class="font-medium">RC 电路</td><td>$\\tau = RC$</td><td>电容充电/放电快慢</td></tr><tr><td class="font-medium">RL 电路</td><td>$\\tau = L/R$</td><td>电感储能/释放快慢</td></tr></tbody></table></div>
+        <div class="step-list"><div class="step-item"><div><strong>求初值 $f(0_+)$</strong>：换路定律——电容电压不突变 $u_C(0_+)=u_C(0_-)$，电感电流不突变 $i_L(0_+)=i_L(0_-)$。其他量根据 $0_+$ 时刻等效电路求。</div></div><div class="step-item"><div><strong>求稳态值 $f(\\infty)$</strong>：$t\\to\\infty$ 时电容开路、电感短路，求直流稳态电路。</div></div><div class="step-item"><div><strong>求时间常数 $\\tau$</strong>：从储能元件看进去的等效电阻 $R_{eq}$，$\\tau=RC$ 或 $\\tau=L/R_{eq}$。</div></div></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>换路定律的本质</strong>：电容储能 $\\frac{1}{2}Cu_C^2$、电感储能 $\\frac{1}{2}Li_L^2$ 不能突变（否则功率无穷大）。所以 $u_C$ 和 $i_L$ 是"状态变量"，连续变化。但电容电流、电感电压可以突变。</div></div>
+      ` },
+      { id: 'circ-05', title: '二阶电路暂态', desc: 'RLC 过阻尼/临界/欠阻尼', icon: '〰', tags: ['难点'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">二阶电路：振荡的起源</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">RLC 串联/并联电路是二阶系统，其暂态响应由阻尼比决定——过阻尼单调衰减、临界阻尼最快无振荡收敛、欠阻尼衰减振荡。这与 <a href="#" onclick="navigateTo('act-05');return false;" style="color:var(--primary)">自动控制的二阶系统</a> 完全对应。</p>
+        <div class="formula-block">RLC 串联特征方程：$s^2 + 2\\alpha s + \\omega_0^2 = 0$<br>$\\alpha = R/(2L)$（衰减常数），$\\omega_0 = 1/\\sqrt{LC}$（谐振频率）<br>判别式 $\\alpha^2 - \\omega_0^2$ 决定响应类型</div>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>条件</th><th>类型</th><th>响应特征</th></tr></thead><tbody><tr><td class="font-medium">$\\alpha > \\omega_0$（R 大）</td><td>过阻尼</td><td>两个负实根，单调衰减无振荡</td></tr><tr><td class="font-medium">$\\alpha = \\omega_0$</td><td>临界阻尼</td><td>重根，最快无振荡收敛</td></tr><tr><td class="font-medium">$\\alpha < \\omega_0$（R 小）</td><td>欠阻尼</td><td>共轭复根，衰减振荡 $e^{-\\alpha t}\\sin(\\omega_d t)$</td></tr><tr><td class="font-medium">$\\alpha = 0$（R=0）</td><td>无阻尼</td><td>纯虚根，等幅振荡</td></tr></tbody></table></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>阻尼比 $\\zeta = \\alpha/\\omega_0 = \\frac{R}{2}\\sqrt{C/L}$</strong>：这正是控制理论中的阻尼比！电路与控制在这里完全统一。增大 R 增大阻尼（抑制振荡），减小 R 减小阻尼（增强振荡）。</div></div>
+      ` },
+      { id: 'circ-06', title: '正弦稳态分析', desc: '相量法、阻抗、导纳', icon: '〰️', tags: ['核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">相量法：把微积分变成代数</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">正弦稳态电路中，所有电压电流都是同频率正弦量。相量法用复数表示正弦量，把微分方程变成复数代数方程——电阻/电感/电容统一为"阻抗"，KCL/KVL 等所有直流方法都能直接搬用。</p>
+        <div class="formula-block">正弦量 $u(t)=U_m\\cos(\\omega t+\\varphi)$ ↔ 相量 $\\dot{U}=U_m\\angle\\varphi$<br><br>阻抗：$Z_R=R$，$Z_L=j\\omega L$，$Z_C=\\frac{1}{j\\omega C}$<br>导纳：$Y=1/Z=G+jB$（G 电导、B 电纳）</div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>相量法的本质</strong>：电感两端电压 = $L\\frac{di}{dt}$，相量域变成 $j\\omega L \\dot{I}$——微分变成了乘 $j\\omega$。电容同理变成除以 $j\\omega C$。所以相量法把动态电路变成了"电阻网络"，节点法/网孔法/戴维南全部适用。</div></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>功率三角形</strong>：有功功率 $P=UI\\cos\\varphi$（W）、无功功率 $Q=UI\\sin\\varphi$（var）、视在功率 $S=UI$（VA）。$\\cos\\varphi$ 是功率因数，提高功率因数能减少线路损耗（并联电容补偿无功）。</div></div>
+      ` },
+      { id: 'circ-07', title: '频率响应与滤波器', desc: 'RC 低通/高通、波特图入门', icon: '📶', tags: ['工程'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">滤波器：频率选择的艺术</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">滤波器让某些频率的信号通过、抑制另一些频率。RC 低通/高通是最基本的滤波器，理解它们的频率响应（波特图），是设计通信、音频、电源滤波的基础。</p>
+        <div class="formula-block">RC 低通：$H(j\\omega) = \\frac{1}{1+j\\omega RC} = \\frac{1}{1+j\\omega/\\omega_c}$<br>截止频率 $\\omega_c = 1/(RC)$，$|H|=1/\\sqrt{2}$（-3dB 点）<br>通带 $\\omega < \\omega_c$（增益≈1），阻带 $\\omega > \\omega_c$（增益 -20dB/dec 衰减）</div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>低通 vs 高通</strong>：RC 低通（输出取电容电压）让低频通过；RC 高通（输出取电阻电压）让高频通过。把 R 和 L 互换、或 C 和 L 互换可得其他类型。有源滤波器（含运放）可实现更陡的衰减，详见 <a href="#" onclick="navigateTo('ana-11');return false;" style="color:var(--primary)">有源滤波器</a>。</div></div>
+      ` },
+      { id: 'circ-08', title: '谐振电路', desc: '串联/并联谐振、品质因数', icon: '🎯', tags: ['高频'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">谐振：能量在 L 和 C 间振荡</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">当感抗和容抗相互抵消（$\\omega L = 1/\\omega C$），电路呈纯阻性，发生谐振。谐振时电路有选频特性，广泛应用于无线电调谐、滤波、振荡器。</p>
+        <div class="formula-block">谐振频率：$\\omega_0 = 1/\\sqrt{LC}$<br>品质因数 $Q = \\frac{\\omega_0 L}{R} = \\frac{1}{\\omega_0 CR}$（串联谐振）<br>Q 越大选频性越强、通频带越窄 $BW = \\omega_0/Q$</div>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>特性</th><th>串联谐振</th><th>并联谐振</th></tr></thead><tbody><tr><td class="font-medium">阻抗</td><td>最小 $Z=R$</td><td>最大 $Z\\approx Q^2 R$</td></tr><tr><td class="font-medium">电流/电压</td><td>电流最大，L/C 上电压为电源 Q 倍</td><td>电压最大，L/C 支路电流为总电流 Q 倍</td></tr><tr><td class="font-medium">别称</td><td>电压谐振</td><td>电流谐振</td></tr></tbody></table></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>串联谐振的过电压危险</strong>：谐振时电感和电容上的电压可达电源电压的 Q 倍（Q 可能几十到几百），可能击穿元件。电力系统中要避免串联谐振（如铁磁谐振过电压），但通信中利用它选频（收音机调谐电路）。</div></div>
+      ` },
+      { id: 'circ-09', title: '三相电路', desc: '星形/三角形、功率计算', icon: '⚙', tags: ['基础'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">三相电路：电力系统的基石</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">三相电路是交流输配电的标准。三个幅值相等、相位差 120° 的电源，可星形（Y）或三角形（△）连接。理解线电压/相电压、线电流/相电流的关系，以及功率计算，是电气工程师的必备知识。</p>
+        <div class="formula-block">星形连接：线电压 $U_L = \\sqrt{3} U_P$，线电流 $=$ 相电流<br>三角形连接：线电压 $=$ 相电压，线电流 $I_L = \\sqrt{3} I_P$<br><br>三相功率：$P = \\sqrt{3} U_L I_L \\cos\\varphi$（$\\varphi$ 是相电压相电流相位差）</div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>对称三相的优势</strong>：①三相对称时中性线电流为零（可省去中线，节约成本）；②瞬时功率恒定（不像单相有二倍频脉动），电机转矩平稳；③传输相同功率，三相比单相省导线材料。这就是为什么电力系统用三相。</div></div>
+      ` },
+      { id: 'circ-10', title: '二端口网络', desc: 'Z/Y/H 参数及其互换', icon: '⬛', tags: ['难点'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">二端口网络：黑箱分析方法</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">二端口网络把复杂电路看作有输入输出两个端口的"黑箱"，用参数矩阵描述端口电压电流关系。不必关心内部结构，只需知道参数即可分析级联、并联等连接。</p>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>参数</th><th>方程</th><th>适用</th></tr></thead><tbody><tr><td class="font-medium">Z（阻抗）</td><td>$\\dot{U}_1 = z_{11}\\dot{I}_1 + z_{12}\\dot{I}_2$</td><td>串联网络</td></tr><tr><td class="font-medium">Y（导纳）</td><td>$\\dot{I}_1 = y_{11}\\dot{U}_1 + y_{12}\\dot{U}_2$</td><td>并联网络</td></tr><tr><td class="font-medium">T/A（传输）</td><td>$\\dot{U}_1 = A\\dot{U}_2 + B(-\\dot{I}_2)$</td><td>级联网络（最常用）</td></tr><tr><td class="font-medium">H（混合）</td><td>$\\dot{U}_1 = h_{11}\\dot{I}_1 + h_{12}\\dot{U}_2$</td><td>晶体管小信号模型</td></tr></tbody></table></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>互易性与对称性</strong>：互易网络 $z_{12}=z_{21}$（无受控源的线性网络都互易）；对称网络 $z_{11}=z_{22}$（端口可互换）。H 参数在 <a href="#" onclick="navigateTo('ana-03');return false;" style="color:var(--primary)">三极管</a> 小信号模型中是标准描述方式。</div></div>
+      ` },
+      { id: 'circ-11', title: '含运放的电路分析', desc: '理想运放线性区模型', icon: '🔺', tags: ['工程'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">理想运放：两个黄金法则</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">运放（运算放大器）是模拟电路的核心元件。分析含运放的电路，只需牢记两条法则——"虚短"和"虚断"，就能快速求解反相/同相放大、加法、积分等各种运放电路。</p>
+        <div class="formula-block"><strong>理想运放两条法则</strong>（线性区）：<br>① 虚短：$u_+ = u_-$（两输入端电压相等）<br>② 虚断：$i_+ = i_- = 0$（输入端不取电流）</div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>经典结论</strong>：反相放大 $A_v=-R_f/R_1$，同相放大 $A_v=1+R_f/R_1$，电压跟随器 $A_v=1$。这些公式的推导只需用虚短虚断列节点方程。详见 <a href="#" onclick="navigateTo('ana-09');return false;" style="color:var(--primary)">运放线性应用</a>。</div></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>虚短的前提是负反馈</strong>：只有接成负反馈（输出反馈到反相端），运放才工作在线性区，虚短才成立。开环或正反馈时运放饱和（非线性区），不能用虚短虚断分析，那是比较器/振荡器场景。</div></div>
+      ` },
+      { id: 'circ-12', title: '受控源与电路定理扩展', desc: '受控源处理、定理适用性', icon: '🔌', tags: ['基础'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">受控源：晶体管的电路模型</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">受控源（CCVS/VCCS/VCVS/CCCS）的电压或电流受电路中其他变量控制，是晶体管、场效应管等有源器件的电路模型。掌握受控源在各种定理中的处理方式，是分析含晶体管电路的前提。</p>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>受控源类型</th><th>控制量</th><th>被控量</th><th>典型器件</th></tr></thead><tbody><tr><td class="font-medium">VCVS</td><td>电压</td><td>电压</td><td>运算放大器</td></tr><tr><td class="font-medium">VCCS</td><td>电压</td><td>电流</td><td>场效应管（MOSFET）</td></tr><tr><td class="font-medium">CCVS</td><td>电流</td><td>电压</td><td>—</td></tr><tr><td class="font-medium">CCCS</td><td>电流</td><td>电流</td><td>双极型晶体管（BJT）</td></tr></tbody></table></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>受控源在各定理中的处理</strong>：①节点法/网孔法——受控源当独立源处理，但要补充控制量方程；②叠加定理——受控源<strong>始终保留</strong>（不置零），只置零独立源；③戴维南求 $R_{eq}$——受控源不能置零，必须用加压求流法；④互易定理——含受控源的网络一般不互易。</div></div>
+      ` },
     ]
   },
 
@@ -428,20 +499,95 @@ const CourseData = {
     subtitle: '放大器、运放、反馈、电源，应试与工程并重',
     icon: '🟢',
     sections: [
-      { id: 'ana-01', title: '半导体二极管', desc: '伏安特性、模型、稳压管', icon: '➡', tags: ['基础'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'ana-02', title: '二极管整流与滤波', desc: '半波/全波整流、电容滤波', icon: '🌊', tags: ['工程'], goals: { eng: true }, content: '' },
-      { id: 'ana-03', title: '三极管(BJT)工作原理', desc: '放大区、特性曲线', icon: '🔺', tags: ['核心'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'ana-04', title: '基本放大电路', desc: '共射/共集/共基、交直流分析', icon: '🔊', tags: ['高频核心'], goals: { exam: true }, content: '' },
-      { id: 'ana-05', title: '静态工作点稳定', desc: '图解法、分压偏置', icon: '⚖', tags: [], goals: { exam: true }, content: '' },
-      { id: 'ana-06', title: '多级放大电路', desc: '耦合方式、级联分析', icon: '📊', tags: [], goals: { exam: true }, content: '' },
-      { id: 'ana-07', title: '集成运放基础', desc: '差动放大、电流源', icon: '(IC)', tags: ['核心'], goals: { exam: true }, content: '' },
-      { id: 'ana-08', title: '反馈放大电路', desc: '四种组态、判别、性能影响', icon: '↩', tags: ['难点核心'], goals: { exam: true }, content: '' },
-      { id: 'ana-09', title: '运放线性应用', desc: '比例/求和/积分/微分', icon: '∓', tags: ['工程高频'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'ana-10', title: '运放非线性应用', desc: '比较器、施密特、波形发生', icon: 'square', tags: ['工程'], goals: { eng: true }, content: '' },
-      { id: 'ana-11', title: '有源滤波器', desc: 'LPF/HPF/BPF/BEF、Sallen-Key', icon: '🎚', tags: ['工程'], goals: { eng: true }, content: '' },
-      { id: 'ana-12', title: '功率放大器', desc: '甲/乙/甲乙类、OTL/OCL', icon: '🔋', tags: ['高频'], goals: { exam: true }, content: '' },
-      { id: 'ana-13', title: '直流稳压电源', desc: '整流→滤波→稳压→LDO/开关电源', icon: '🔌', tags: ['工程'], goals: { eng: true }, content: '' },
-      { id: 'ana-14', title: '振荡电路', desc: 'RC 文氏桥、LC、晶体振荡器', icon: '📡', tags: ['高频'], goals: { exam: true, eng: true }, content: '' },
+      { id: 'ana-01', title: '半导体二极管', desc: '伏安特性、模型、稳压管', icon: '➡', tags: ['基础'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">二极管：单向导电的基础元件</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">二极管由 PN 结构成，核心特性是<strong>单向导电</strong>——正向导通、反向截止。理解伏安特性和等效模型，是分析整流、钳位、稳压等电路的基础。</p>
+        <div class="formula-block">伏安特性（肖克莱方程）：$I = I_S(e^{U/U_T} - 1)$，$U_T \\approx 26$mV（常温）<br>正向导通压降：硅管约 0.7V，锗管约 0.3V</div>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>工作区</th><th>电压</th><th>特性</th><th>等效模型</th></tr></thead><tbody><tr><td class="font-medium">正向导通区</td><td>$U > U_{on}$</td><td>电流随电压指数增长</td><td>0.7V 恒压源</td></tr><tr><td class="font-medium">反向截止区</td><td>$U_{BR} < U < 0$</td><td>仅微小反向饱和电流 $I_S$</td><td>断路</td></tr><tr><td class="font-medium">反向击穿区</td><td>$U < U_{BR}$</td><td>反向电流剧增（稳压管工作区）</td><td>稳压源</td></tr></tbody></table></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>稳压管利用击穿</strong>：普通二极管要避免反向击穿（会损坏），但稳压管（齐纳二极管）专门工作在反向击穿区——电压基本不随电流变化，实现稳压。详见 <a href="#" onclick="navigateTo('ana-13');return false;" style="color:var(--primary)">直流稳压电源</a>。</div></div>
+      ` },
+      { id: 'ana-02', title: '二极管整流与滤波', desc: '半波/全波整流、电容滤波', icon: '🌊', tags: ['工程'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">整流滤波：把交流变直流</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">整流电路利用二极管的单向导电性，把交流电转为脉动直流；滤波电路（电容/电感）平滑脉动，输出较平稳的直流。这是所有直流电源的第一级。</p>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>整流方式</th><th>二极管数</th><th>输出</th><th>效率</th></tr></thead><tbody><tr><td class="font-medium">半波整流</td><td>1 个</td><td>只有正半周，脉动大</td><td>低</td></tr><tr><td class="font-medium">全波整流（桥式）</td><td>4 个（桥堆）</td><td>正负半周都利用，脉动小</td><td>高</td></tr></tbody></table></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>电容滤波原理</strong>：并联大电容，二极管导通时电容充电（接近峰值），二极管截止时电容向负载放电，填平波谷。纹波大小取决于 $RC$ 时间常数与周期之比——$RC$ 越大纹波越小。详见 <a href="#" onclick="navigateTo('circ-04');return false;" style="color:var(--primary)">一阶电路暂态</a>。</div></div>
+      ` },
+      { id: 'ana-03', title: '三极管(BJT)工作原理', desc: '放大区、特性曲线', icon: '🔺', tags: ['核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">三极管：电流控制电流的放大器</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">双极型晶体管（BJT）有三个电极（基极 B、集电极 C、发射极 E），核心功能是<strong>用小基极电流控制大集电极电流</strong>（电流控制电流源 CCCS），实现信号放大。三个工作区对应不同应用。</p>
+        <div class="formula-block">电流关系：$I_C = \\beta I_B$，$I_E = I_B + I_C = (1+\\beta)I_B$<br>$\\beta$（共射电流放大系数）通常 50~300</div>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>工作区</th><th>结偏置</th><th>特性</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">放大区</td><td>发射结正偏、集电结反偏</td><td>$I_C=\\beta I_B$（线性放大）</td><td>模拟放大</td></tr><tr><td class="font-medium">饱和区</td><td>两结均正偏</td><td>$U_{CE}\\approx 0.3$V，$I_C$ 不受 $I_B$ 控制</td><td>开关导通（数字电路）</td></tr><tr><td class="font-medium">截止区</td><td>两结均反偏</td><td>$I_B=0$，$I_C\\approx 0$</td><td>开关断开（数字电路）</td></tr></tbody></table></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>放大与开关的统一</strong>：模拟电路用放大区（线性），数字电路用饱和/截止区（开关）。同一器件，工作区不同用途完全不同。详见 <a href="#" onclick="navigateTo('dig-14');return false;" style="color:var(--primary)">数字电路</a>。</div></div>
+      ` },
+      { id: 'ana-04', title: '基本放大电路', desc: '共射/共集/共基、交直流分析', icon: '🔊', tags: ['高频核心'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">三种基本组态：放大电路的基石</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">根据输入输出公共端不同，基本放大电路分三种组态：共射（CE）、共集（CC）、共基（CB）。三者各有特点，掌握其电压/电流增益、输入/输出电阻，是分析所有放大电路的基础。</p>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>组态</th><th>电压增益</th><th>电流增益</th><th>输入电阻</th><th>输出电阻</th><th>特点</th></tr></thead><tbody><tr><td class="font-medium">共射 (CE)</td><td>大（反相）</td><td>大</td><td>中</td><td>中</td><td>最常用，增益高</td></tr><tr><td class="font-medium">共集 (CC)</td><td>≈1（同相）</td><td>大</td><td>大</td><td>小</td><td>射极跟随器，阻抗变换</td></tr><tr><td class="font-medium">共基 (CB)</td><td>大（同相）</td><td>≈1</td><td>小</td><td>大</td><td>高频特性好</td></tr></tbody></table></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>交直流分离分析</strong>：放大电路既有直流偏置（设静态工作点）又有交流信号（被放大）。分析时先算直流（电容开路），再算交流（电容短路、直流源置零）。两者叠加就是实际工作状态。共射放大器的电压增益 $A_v = -g_m R_C$（负号表示反相）。</div></div>
+      ` },
+      { id: 'ana-05', title: '静态工作点稳定', desc: '图解法、分压偏置', icon: '⚖', tags: ['核心'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">工作点稳定：温度补偿的艺术</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">三极管参数（$\\beta$、$I_{CBO}$、$U_{BE}$）随温度变化大，导致静态工作点漂移，可能引起饱和失真或截止失真。分压偏置电路利用负反馈稳定工作点，是工程最常用的偏置方案。</p>
+        <div class="formula-block">分压偏置稳定原理：$I_C$ 受温度升高而增大 → $I_E R_E$ 增大 → $U_{BE}$ 减小 → $I_B$ 减小 → $I_C$ 回落<br>发射极电阻 $R_E$ 提供直流负反馈，抑制工作点漂移</div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>旁路电容的作用</strong>：$R_E$ 稳定了直流工作点，但也会降低交流增益。并联大电容 $C_E$（旁路电容）让交流信号短路 $R_E$，既稳定直流又不损失交流增益。这是"直流负反馈、交流无影响"的经典设计。</div></div>
+      ` },
+      { id: 'ana-06', title: '多级放大电路', desc: '耦合方式、级联分析', icon: '📊', tags: ['基础'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">多级放大：突破单级增益极限</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">单级放大器增益有限（共射约几十到几百），要获得更高增益需多级级联。级间耦合方式有三种：阻容耦合、直接耦合、变压器耦合，各有适用场景。</p>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>耦合方式</th><th>特点</th><th>频率响应</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">阻容耦合</td><td>电容连接，各级直流独立</td><td>低频差（电容阻碍低频）</td><td>交流放大（分立元件）</td></tr><tr><td class="font-medium">直接耦合</td><td>无电容，直流互通</td><td>低频好，但有零点漂移</td><td>集成运放（必用）</td></tr><tr><td class="font-medium">变压器耦合</td><td>变压器隔离+阻抗匹配</td><td>体积大、频带窄</td><td>功率放大、老式收音机</td></tr></tbody></table></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>级联增益 = 各级增益之积</strong>：但要注意<strong>后级输入电阻是前级负载</strong>。计算时必须把后级输入电阻作为前级负载考虑，不能简单相乘空载增益。直接耦合的零点漂移问题需用差动放大电路解决，详见 <a href="#" onclick="navigateTo('ana-07');return false;" style="color:var(--primary)">集成运放基础</a>。</div></div>
+      ` },
+      { id: 'ana-07', title: '集成运放基础', desc: '差动放大、电流源', icon: '🔬', tags: ['核心'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">集成运放的内部基石</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">集成运放是高增益直接耦合放大器，内部由差动输入级 + 中间放大级 + 输出级 + 偏置电流源组成。差动放大解决零点漂移，电流源提供稳定偏置和高增益负载。</p>
+        <div class="formula-block">差动放大：$u_o = A_d(u_+ - u_-) + A_c \\cdot \\frac{u_+ + u_-}{2}$<br>差模增益 $A_d$（放大有用信号），共模增益 $A_c$（应尽量小）<br>共模抑制比 $CMRR = 20\\log|A_d/A_c|$（越大越好）</div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>差动放大的价值</strong>：温度变化对两管影响相同（共模信号），被差动结构抵消；有用信号差分输入（差模信号），被放大。所以差动放大能<strong>放大差模、抑制共模</strong>，解决直接耦合的零点漂移。这是运放输入级必用差动的原因。</div></div>
+      ` },
+      { id: 'ana-08', title: '反馈放大电路', desc: '四种组态、判别、性能影响', icon: '↩', tags: ['难点核心'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">反馈：改善放大器性能的核心手段</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">反馈是把输出量的一部分送回输入端。负反馈虽降低增益，但能提高增益稳定性、展宽频带、改善输入输出阻抗、减小非线性失真——几乎所有实用放大器都引入负反馈。</p>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>反馈类型</th><th>输出取样</th><th>输入比较</th><th>对输入电阻</th><th>对输出电阻</th></tr></thead><tbody><tr><td class="font-medium">电压串联</td><td>电压</td><td>串联</td><td>增大</td><td>减小</td></tr><tr><td class="font-medium">电压并联</td><td>电压</td><td>并联</td><td>减小</td><td>减小</td></tr><tr><td class="font-medium">电流串联</td><td>电流</td><td>串联</td><td>增大</td><td>增大</td></tr><tr><td class="font-medium">电流并联</td><td>电流</td><td>并联</td><td>减小</td><td>增大</td></tr></tbody></table></div>
+        <div class="formula-block">闭环增益：$A_f = \\frac{A}{1+AF}$（$F$ 反馈系数，$1+AF$ 反馈深度）<br>增益降为 $1/(1+AF)$，但稳定性提高 $(1+AF)$ 倍</div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>反馈极性判别（瞬时极性法）</strong>：假设输入端瞬时升高，沿信号通路标各点极性变化，看反馈到输入端是增强（正反馈）还是削弱（负反馈）原信号。四种组态判别：输出短路法判电压/电流反馈（反馈消失则为电压反馈），输入端看串联/并联。</div></div>
+      ` },
+      { id: 'ana-09', title: '运放线性应用', desc: '比例/求和/积分/微分', icon: '∓', tags: ['工程高频'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">运放线性应用：模拟计算的实现</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">运放接成负反馈（线性区），配合不同外围元件可实现各种数学运算：比例（放大）、求和（加法）、积分、微分。这是模拟计算机的基础，也是信号处理的核心电路。分析只需 <a href="#" onclick="navigateTo('circ-11');return false;" style="color:var(--primary)">虚短虚断</a>。</p>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>电路</th><th>输入输出关系</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">反相比例</td><td>$u_o = -\\frac{R_f}{R_1}u_i$</td><td>反相放大</td></tr><tr><td class="font-medium">同相比例</td><td>$u_o = (1+\\frac{R_f}{R_1})u_i$</td><td>同相放大</td></tr><tr><td class="font-medium">电压跟随器</td><td>$u_o = u_i$</td><td>阻抗变换（缓冲）</td></tr><tr><td class="font-medium">反相求和</td><td>$u_o = -(\\frac{R_f}{R_1}u_1 + \\frac{R_f}{R_2}u_2)$</td><td>加权加法</td></tr><tr><td class="font-medium">积分器</td><td>$u_o = -\\frac{1}{RC}\\int u_i\\,dt$</td><td>波形变换（方波→三角波）</td></tr><tr><td class="font-medium">微分器</td><td>$u_o = -RC\\frac{du_i}{dt}$</td><td>边缘检测（少用，噪声大）</td></tr></tbody></table></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>反相放大的"虚地"</strong>：反相端经反馈电阻接输出，同相端接地，虚短使反相端也接近地电位（虚地）。这让分析极简——反相端节点 KCL 直接得到增益公式。这是工程中最常用的运放电路。</div></div>
+      ` },
+      { id: 'ana-10', title: '运放非线性应用', desc: '比较器、施密特、波形发生', icon: '🔲', tags: ['工程'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">运放非线性应用：开环与正反馈</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">运放开环（无反馈）或正反馈时工作在非线性区（饱和），输出只有高/低两个电平。这构成比较器、施密特触发器、方波/三角波发生器——这些是 ADC 输入、电平检测、波形产生的核心。</p>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>电路</th><th>原理</th><th>特点</th></tr></thead><tbody><tr><td class="font-medium">过零比较器</td><td>开环，输入与 0V 比较</td><td>输出方波，抗干扰差</td></tr><tr><td class="font-medium">施密特触发器</td><td>正反馈，有滞回</td><td>抗干扰强，有两个阈值</td></tr><tr><td class="font-medium">方波发生器</td><td>施密特 + RC 充放电</td><td>自激振荡产生方波</td></tr><tr><td class="font-medium">三角波发生器</td><td>方波经积分</td><td>方波→三角波变换</td></tr></tbody></table></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>施密特的滞回价值</strong>：普通比较器在阈值附近受噪声干扰会频繁翻转。施密特触发器用正反馈产生两个阈值（上升阈值 $U_{T+}$、下降阈值 $U_{T-}$），信号在两阈值之间时输出不翻转，有效抗干扰。这是 <a href="#" onclick="navigateTo('dig-11');return false;" style="color:var(--primary)">555 定时器</a> 施密特模式的基础。</div></div>
+      ` },
+      { id: 'ana-11', title: '有源滤波器', desc: 'LPF/HPF/BPF/BEF、Sallen-Key', icon: '🎚', tags: ['工程'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">有源滤波器：运放+RC 的高阶滤波</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">无源 RC 滤波器（<a href="#" onclick="navigateTo('circ-07');return false;" style="color:var(--primary)">频率响应</a>）衰减特性差（-20dB/dec）且带负载能力弱。有源滤波器用运放提供增益和隔离，可实现高阶（陡峭衰减）且不衰减通带信号。</p>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>通带</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">LPF 低通</td><td>低频通过</td><td>抗混叠、平滑滤波</td></tr><tr><td class="font-medium">HPF 高通</td><td>高频通过</td><td>去除直流偏移</td></tr><tr><td class="font-medium">BPF 带通</td><td>某频段通过</td><td>选频接收、无线通信</td></tr><tr><td class="font-medium">BEF 带阻（陷波）</td><td>某频段抑制</td><td>滤除 50Hz 工频干扰</td></tr></tbody></table></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>Sallen-Key 拓扑</strong>：最常用的二阶有源滤波器结构，用两个 RC 网络和一个运放（同相放大或跟随器）实现。两个 RC 节经正反馈形成 -40dB/dec 衰减。多级 Sallen-Key 级联可实现 4 阶、6 阶、8 阶高阶滤波。设计时可用巴特沃斯（最大平坦）、切比雪夫（等纹波）、椭圆等逼近类型。</div></div>
+      ` },
+      { id: 'ana-12', title: '功率放大器', desc: '甲/乙/甲乙类、OTL/OCL', icon: '🔋', tags: ['高频'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">功率放大器：效率与失真的权衡</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">功率放大器关注<strong>能量转换效率</strong>和<strong>最大输出功率</strong>，而非电压增益。根据晶体管导通角分为甲类、乙类、甲乙类——效率越高非线性失真越大，工程中用甲乙类（互补对称）平衡两者。</p>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>导通角</th><th>效率（最大）</th><th>失真</th></tr></thead><tbody><tr><td class="font-medium">甲类</td><td>360°（全周期）</td><td>25%（变压器耦合 50%）</td><td>小（线性好）</td></tr><tr><td class="font-medium">乙类</td><td>180°（半周期）</td><td>78.5%（$\\pi/4$）</td><td>大（交越失真）</td></tr><tr><td class="font-medium">甲乙类</td><td>>180°（略大于半周期）</td><td>接近乙类</td><td>小（消除交越失真）</td></tr></tbody></table></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>交越失真与甲乙类</strong>：乙类用两个互补管（NPN+PNP）轮流导通，但晶体管有 0.7V 导通阈值，信号过零时两管都未导通，产生交越失真。甲乙类给两管加微小偏置使其在过零时微微导通，消除交越失真。OCL（无输出电容）用双电源，OTL（无输出变压器）用单电源+大电容。</div></div>
+      ` },
+      { id: 'ana-13', title: '直流稳压电源', desc: '整流→滤波→稳压→LDO/开关电源', icon: '🔌', tags: ['工程'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">直流稳压电源：系统的能量来源</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">几乎所有电子系统都需要稳定的直流电源。线性稳压电源（LDO）简单低噪但效率低，开关电源（SMPS）效率高但有纹波。理解两者的原理和选型，是硬件设计的基础。</p>
+        <div class="step-list"><div class="step-item"><div><strong>① 变压</strong>：工频变压器把 220V 降到低压交流（或直接用开关电源高频变压器）。</div></div><div class="step-item"><div><strong>② 整流</strong>：桥式整流把交流变脉动直流（<a href="#" onclick="navigateTo('ana-02');return false;" style="color:var(--primary)">整流滤波</a>）。</div></div><div class="step-item"><div><strong>③ 滤波</strong>：大电容平滑脉动，得到带纹波的直流。</div></div><div class="step-item"><div><strong>④ 稳压</strong>：稳压管/线性稳压器（LDO）/开关电源（SMPS）输出稳定直流。</div></div></div>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>效率</th><th>纹波</th><th>体积</th><th>适用</th></tr></thead><tbody><tr><td class="font-medium">线性稳压（LDO）</td><td>低（30%~50%）</td><td>极小</td><td>小</td><td>低噪声模拟电路、小功率</td></tr><tr><td class="font-medium">开关电源（SMPS）</td><td>高（80%~95%）</td><td>较大（需滤波）</td><td>中</td><td>大功率、电池供电</td></tr></tbody></table></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>LDO 原理</strong>：本质是运放控制的串联调整管，反馈取样输出电压与基准比较，调整管压降使输出稳定。压差（dropout）= 输入-输出最小值，LDO 的"Low Dropout"指能工作在很小压差下（如 100mV），减少功耗。开关电源用 PWM 控制开关管高频通断，经电感储能/电容滤波输出，详见 <a href="#" onclick="navigateTo('act-14');return false;" style="color:var(--primary)">PID 整定</a> 中的 PID 代码。</div></div>
+      ` },
+      { id: 'ana-14', title: '振荡电路', desc: 'RC 文氏桥、LC、晶体振荡器', icon: '📡', tags: ['高频'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">振荡电路：自激产生周期信号</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">振荡器不需要外部输入，自激产生周期信号（正弦波、方波）。它是时钟、载波、信号源的核心。振荡的两个条件：相位平衡（正反馈）+ 幅度平衡（环路增益=1）。</p>
+        <div class="formula-block"><strong>巴克豪森判据（振荡条件）</strong>：<br>① 相位条件：环路相移 $\\angle A\\beta = 2n\\pi$（正反馈）<br>② 幅度条件：环路增益 $|A\\beta| \\ge 1$（起振时 &gt;1，稳态 =1）</div>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>选频网络</th><th>频率</th><th>特点</th></tr></thead><tbody><tr><td class="font-medium">RC 文氏桥</td><td>RC 串并联</td><td>低频（音频）</td><td>波形好，频率可调</td></tr><tr><td class="font-medium">LC 振荡（考毕兹/哈特莱）</td><td>LC 谐振</td><td>高频（MHz）</td><td>频率高，稳定性一般</td></tr><tr><td class="font-medium">晶体振荡器</td><td>石英晶体</td><td>固定（精确）</td><td>频率精度极高（时钟必用）</td></tr></tbody></table></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>石英晶体的压电效应</strong>：石英晶体在电场下产生机械形变（压电效应），等效为高 Q 值谐振回路（Q 可达 10⁴~10⁶）。所以晶体振荡器频率稳定性极高（10⁻⁶~10⁻⁹），是所有 MCU 时钟、通信系统载波的基准。MCU 的主时钟（如 8MHz/16MHz 晶振）就是晶体振荡器。</div></div>
+      ` },
     ]
   },
 
@@ -451,20 +597,88 @@ const CourseData = {
     subtitle: '逻辑代数、组合/时序电路、卡诺图、HDL，应试与工程并重',
     icon: '🟡',
     sections: [
-      { id: 'dig-01', title: '数制与编码', desc: '二进制/BCD/格雷码/原码补码', icon: '0️⃣', tags: ['基础'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'dig-02', title: '逻辑代数基础', desc: '公式法、卡诺图化简', icon: '∧∨', tags: ['核心'], goals: { exam: true }, content: '' },
-      { id: 'dig-03', title: '组合逻辑电路', desc: '分析步骤、设计方法', icon: '🔀', tags: ['核心'], goals: { exam: true }, content: '' },
-      { id: 'dig-04', title: '编码器/译码器/选择器', desc: '常用组合芯片及其应用', icon: '▦', tags: ['高频'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'dig-05', title: '加法器与比较器', desc: '半加/全加、数值比较', icon: '➕', tags: [], goals: { exam: true }, content: '' },
-      { id: 'dig-06', title: '竞争冒险', desc: '产生原因、消除方法', icon: '⚠', tags: [], goals: { exam: true }, content: '' },
-      { id: 'dig-07', title: '锁存器与触发器', desc: 'RS/D/JK/T 触发器', icon: '🔒', tags: ['核心'], goals: { exam: true }, content: '' },
-      { id: 'dig-08', title: '时序逻辑电路分析', desc: '状态方程/状态图/状态表', icon: '🔄', tags: ['核心难点'], goals: { exam: true }, content: '' },
-      { id: 'dig-09', title: '计数器', desc: '异步/同步、任意进制设计', icon: '🔢', tags: ['高频'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'dig-10', title: '移位寄存器', desc: '移位、环形/扭环形计数器', icon: '→→', tags: [], goals: { exam: true }, content: '' },
-      { id: 'dig-11', title: '555 定时器', desc: '多谐/单稳/施密特', icon: '⏱', tags: ['高频'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'dig-12', title: '半导体存储器', desc: 'RAM/ROM、存储扩展', icon: '💾', tags: [], goals: { exam: true }, content: '' },
-      { id: 'dig-13', title: 'A/D 与 D/A 转换器', desc: '转换原理、参数指标', icon: '🔤', tags: ['工程'], goals: { eng: true }, content: '' },
-      { id: 'dig-14', title: 'Verilog HDL 入门', desc: '可综合设计（工程方向）', icon: '{ }', tags: ['工程'], goals: { eng: true }, content: '' },
+      { id: 'dig-01', title: '数制与编码', desc: '二进制/BCD/格雷码/原码补码', icon: '0️⃣', tags: ['基础'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">数制与编码：数字世界的语言</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">数字电路用二进制处理信息。掌握各数制转换、有符号数表示（原码/反码/补码）、BCD 码和格雷码，是理解数字系统和计算机运算的基础。</p>
+        <div class="formula-block"><strong>常用数制</strong>：二进制（基 2）、八进制（基 8）、十进制（基 10）、十六进制（基 16）<br>转换核心：任意进制↔十进制按权展开，十进制↔二进制用除 2 取余/乘 2 取整</div>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>编码</th><th>规则</th><th>用途</th></tr></thead><tbody><tr><td class="font-medium">8421 BCD</td><td>每位十进制用 4 位二进制</td><td>显示（数码管）</td></tr><tr><td class="font-medium">格雷码</td><td>相邻数只有 1 位不同</td><td>防错（旋转编码器）</td></tr><tr><td class="font-medium">原码</td><td>最高位符号位</td><td>直观但运算复杂</td></tr><tr><td class="font-medium">补码</td><td>正数同原码，负数取反加 1</td><td>计算机运算（统一加减）</td></tr></tbody></table></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>补码的意义</strong>：用补码表示负数，减法可转成加法（A-B=A+B 补），运算器只需加法器。这就是计算机内部用补码的原因。n 位补码范围 $-2^{n-1}$ 到 $2^{n-1}-1$。</div></div>
+      ` },
+      { id: 'dig-02', title: '逻辑代数基础', desc: '公式法、卡诺图化简', icon: '∧∨', tags: ['核心'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">逻辑代数与卡诺图化简</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">逻辑代数是分析和设计数字电路的数学工具。卡诺图是化简逻辑函数最直观的方法，能把复杂的布尔表达式化为最简"与或式"，减少门电路数量。</p>
+        <div class="formula-block"><strong>基本定律</strong>：交换律、结合律、分配律、反演律（德摩根）$\\overline{AB}=\\bar{A}+\\bar{B}$<br><strong>常用恒等式</strong>：$A+AB=A$，$A+\\bar{A}B=A+B$，$AB+\\bar{A}C+BC=AB+\\bar{A}C$</div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>卡诺图画圈原则</strong>：①圈越大越好（消去变量越多）；②圈必须是 2 的幂（1/2/4/8）；③相邻包括左右边缘、上下边缘；④每个 1 至少被圈一次；⑤多余的圈不要。4 变量卡诺图最多 8 格一圈消 3 变量。</div></div>
+      ` },
+      { id: 'dig-03', title: '组合逻辑电路', desc: '分析步骤、设计方法', icon: '🔀', tags: ['核心'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">组合逻辑：无记忆的逻辑电路</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">组合逻辑电路的输出仅取决于当前输入（无记忆）。分析是"从电路到功能"，设计是"从功能到电路"。掌握这两套流程，就能处理任意组合逻辑问题。</p>
+        <div class="step-list"><div class="step-item"><div><strong>分析步骤</strong>：①逐级写逻辑表达式；②化简（公式法/卡诺图）；③列真值表；④描述功能。</div></div><div class="step-item"><div><strong>设计步骤</strong>：①逻辑抽象（确定输入输出）；②列真值表；③写表达式并化简；④画逻辑图。</div></div></div>
+      ` },
+      { id: 'dig-04', title: '编码器/译码器/选择器', desc: '常用组合芯片及其应用', icon: '▦', tags: ['高频'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">中规模组合逻辑芯片</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">编码器、译码器、数据选择器是集成化的组合逻辑器件，用少量芯片实现复杂功能。译码器实现地址译码，选择器实现多路复用，是数字系统的核心元件。</p>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>器件</th><th>功能</th><th>典型芯片</th></tr></thead><tbody><tr><td class="font-medium">编码器</td><td>多输入→二进制编码（优先编码器处理同时输入）</td><td>74LS148（8-3 线）</td></tr><tr><td class="font-medium">译码器</td><td>二进制→多输出（每路对应一个最小项）</td><td>74LS138（3-8 线）</td></tr><tr><td class="font-medium">数据选择器</td><td>多路输入→1 路输出（地址选择）</td><td>74LS153（双 4 选 1）、74LS151（8 选 1）</td></tr><tr><td class="font-medium">数据分配器</td><td>1 路输入→多路输出（地址选择）</td><td>（译码器反用）</td></tr></tbody></table></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>译码器实现任意组合逻辑</strong>：译码器输出是最小项，配合或门/与非门可实现任意逻辑函数（最小项之和形式）。3-8 译码器可实现任意 3 变量函数。同理数据选择器也可——n 选 1 选择器可实现 n-1 变量函数（地址线做变量，数据端做剩余变量的函数）。</div></div>
+      ` },
+      { id: 'dig-05', title: '加法器与比较器', desc: '半加/全加、数值比较', icon: '➕', tags: ['基础'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">算术运算电路</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">加法器是算术逻辑单元（ALU）的核心。半加器处理两个 1 位相加，全加器考虑低位进位，多位级联构成多位加法器。数值比较器比较两数大小。</p>
+        <div class="formula-block">半加器：$S=A\\oplus B$，$C=AB$<br>全加器：$S=A\\oplus B\\oplus C_{in}$，$C_{out}=AB+BC_{in}+AC_{in}$</div>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>加法器类型</th><th>特点</th><th>速度</th></tr></thead><tbody><tr><td class="font-medium">串行进位（行波）</td><td>进位逐级传递</td><td>慢（n 大时延迟大）</td></tr><tr><td class="font-medium">超前进位（先行进位）</td><td>进位并行计算</td><td>快（74LS283 用此）</td></tr></tbody></table></div>
+      ` },
+      { id: 'dig-06', title: '竞争冒险', desc: '产生原因、消除方法', icon: '⚠', tags: ['基础'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">竞争冒险：信号到达时间差导致的毛刺</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">信号经不同路径到达门电路输入端有时间差（竞争），可能导致输出瞬间出现不该有的脉冲（冒险/毛刺）。虽然组合逻辑最终输出正确，但毛刺可能误触发后续时序电路。</p>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>判别与消除</strong>：代数法判别——若表达式在某种取值下可化成 $A+\\bar{A}$ 或 $A\\cdot\\bar{A}$ 形式，则可能冒险。消除方法：①增加冗余项（卡诺图加冗余圈）；②引入选通脉冲（等信号稳定后采样）；③用 <a href="#" onclick="navigateTo('dig-07');return false;" style="color:var(--primary)">触发器</a> 同步（时钟边沿采样消除毛刺）。</div></div>
+      ` },
+      { id: 'dig-07', title: '锁存器与触发器', desc: 'RS/D/JK/T 触发器', icon: '🔒', tags: ['核心'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">触发器：数字系统的记忆单元</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">触发器是存储 1 位二进制信息的基本单元，是时序逻辑电路的基础。锁存器电平触发（透明），触发器边沿触发（更可靠）。掌握各类触发器的功能表和激励表是分析时序电路的前提。</p>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>触发器</th><th>功能</th><th>特性方程</th></tr></thead><tbody><tr><td class="font-medium">RS 触发器</td><td>置位/复位/保持（禁用 S=R=1）</td><td>$Q^{n+1}=S+\\bar{R}Q^n$</td></tr><tr><td class="font-medium">D 触发器</td><td>跟随 D（延迟）</td><td>$Q^{n+1}=D$</td></tr><tr><td class="font-medium">JK 触发器</td><td>功能最全（保持/置0/置1/翻转）</td><td>$Q^{n+1}=J\\bar{Q^n}+\\bar{K}Q^n$</td></tr><tr><td class="font-medium">T 触发器</td><td>翻转/保持</td><td>$Q^{n+1}=T\\oplus Q^n$</td></tr></tbody></table></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>边沿触发 vs 电平触发</strong>：锁存器（电平触发）在时钟高电平期间输出跟随输入变化（透明），可能"穿通"。触发器（边沿触发）只在时钟上升沿/下降沿瞬间采样输入，其余时间保持——更可靠，是同步时序设计的首选。JK 触发器是 D 触发器加反馈实现翻转功能。</div></div>
+      ` },
+      { id: 'dig-08', title: '时序逻辑电路分析', desc: '状态方程/状态图/状态表', icon: '🔄', tags: ['核心难点'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">时序逻辑：有记忆的电路</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">时序电路的输出不仅取决于当前输入，还取决于电路当前状态（历史）。分析时序电路的三要素：驱动方程（触发器输入）、状态方程（次态）、输出方程。用状态图/状态表直观描述状态转换。</p>
+        <div class="step-list"><div class="step-item"><div><strong>①写驱动方程</strong>：各触发器输入端的逻辑表达式。</div></div><div class="step-item"><div><strong>②代入特性方程得状态方程</strong>：求 $Q^{n+1}$ 与输入、现态的关系。</div></div><div class="step-item"><div><strong>③写输出方程</strong>：输出与输入、现态的关系。</div></div><div class="step-item"><div><strong>④列状态表/画状态图</strong>：穷举所有状态组合，描述状态转换关系。</div></div><div class="step-item"><div><strong>⑤描述功能</strong>：根据状态转换规律总结电路功能。</div></div></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>同步 vs 异步</strong>：同步时序电路所有触发器共享同一时钟（同时翻转），设计简单、速度快；异步时序电路各触发器时钟不同（输出互为时钟），省器件但分析复杂、易出毛刺。现代数字系统几乎都用同步设计。</div></div>
+      ` },
+      { id: 'dig-09', title: '计数器', desc: '异步/同步、任意进制设计', icon: '🔢', tags: ['高频'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">计数器：分频与定时的核心</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">计数器是统计时钟脉冲个数的时序电路，用于分频、定时、事件计数。用集成计数器（74LS161/160 等）加反馈可实现任意进制计数，是工程中最常用的时序器件。</p>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>特点</th></tr></thead><tbody><tr><td class="font-medium">异步计数器</td><td>逐级进位（行波），结构简单但速度慢、有毛刺</td></tr><tr><td class="font-medium">同步计数器</td><td>所有触发器同时钟，速度快、无毛刺（74LS161）</td></tr><tr><td class="font-medium">加法/减法/可逆</td><td>递增/递减/可控方向</td></tr></tbody></table></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>任意进制设计（反馈法）</strong>：用 N 进制集成计数器实现 M 进制（M&lt;N）。①清零法（同步/异步复位）：计到 M 时强制清零；②置数法：计到某值时置入初值。M&gt;N 时需级联（如用两片 74LS161 级联做 60 进制秒计数器）。详见 <a href="#" onclick="navigateTo('dig-11');return false;" style="color:var(--primary)">555 定时器</a> 中的应用。</div></div>
+      ` },
+      { id: 'dig-10', title: '移位寄存器', desc: '移位、环形/扭环形计数器', icon: '➡➡', tags: ['基础'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">移位寄存器：串并转换的利器</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">移位寄存器在时钟驱动下逐位移存数据，可实现串行↔并行转换、延时、构成特殊计数器。是通信接口（UART/SPI）和数字信号处理的基础。</p>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>功能</th></tr></thead><tbody><tr><td class="font-medium">串入串出 (SISO)</td><td>数据逐位移入移出（延时）</td></tr><tr><td class="font-medium">串入并出 (SIPO)</td><td>串行输入转并行输出（74LS164）</td></tr><tr><td class="font-medium">并入串出 (PISO)</td><td>并行输入转串行输出（74LS165）</td></tr><tr><td class="font-medium">环形计数器</td><td>首尾相接，n 个状态（移位寄存器反馈）</td></tr><tr><td class="font-medium">扭环形计数器</td><td>反相反馈，2n 个状态（约翰逊计数器）</td></tr></tbody></table></div>
+      ` },
+      { id: 'dig-11', title: '555 定时器', desc: '多谐/单稳/施密特', icon: '⏱', tags: ['高频'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">555 定时器：万能模拟-数字接口</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">555 定时器是经典的模拟-数字混合芯片，外接少量电阻电容可构成三种基本电路：多谐振荡器（方波）、单稳态触发器（定时脉冲）、施密特触发器（波形整形）。工程应用极广。</p>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>模式</th><th>输出</th><th>周期/脉宽</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">多谐振荡器</td><td>方波（自激）</td><td>$T=0.693(R_1+2R_2)C$</td><td>时钟、LED 闪烁</td></tr><tr><td class="font-medium">单稳态</td><td>定宽脉冲</td><td>$t_w=1.1RC$</td><td>延时、消抖</td></tr><tr><td class="font-medium">施密特</td><td>整形方波</td><td>取决于输入</td><td>波形整形、抗干扰</td></tr></tbody></table></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>555 多谐振荡器原理</strong>：内部两个比较器 + RS 触发器 + 放电管。电容经 $R_1+R_2$ 充电到 2/3Vcc（触发器置位），经 $R_2$ 放电到 1/3Vcc（触发器复位），循环产生方波。占空比由 $R_1,R_2$ 决定，频率由 RC 决定。</div></div>
+      ` },
+      { id: 'dig-12', title: '半导体存储器', desc: 'RAM/ROM、存储扩展', icon: '💾', tags: ['基础'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">半导体存储器</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">存储器是数字系统的"仓库"。RAM 临时存储（断电丢失），ROM 永久存储（断电保留）。理解存储器结构和字/位扩展方法，是计算机组成的基础。</p>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>特性</th><th>子类</th></tr></thead><tbody><tr><td class="font-medium">RAM（随机存取）</td><td>读写、易失</td><td>SRAM（静态，快）、DRAM（动态，需刷新，密度高）</td></tr><tr><td class="font-medium">ROM（只读）</td><td>读为主、非易失</td><td>PROM/EPROM/EEPROM/Flash</td></tr></tbody></table></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>容量扩展</strong>：①字扩展（地址不够）——多片并联，用高位地址做片选；②位扩展（数据位不够）——多片并联，地址/控制共用，数据位拼接。ROM 还可实现组合逻辑（地址做输入，数据做输出，存真值表），这是 FPGA 查找表（LUT）的原理。</div></div>
+      ` },
+      { id: 'dig-13', title: 'A/D 与 D/A 转换器', desc: '转换原理、参数指标', icon: '🔤', tags: ['工程'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">A/D 与 D/A：模拟与数字的桥梁</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">现实世界是模拟的，计算机是数字的。ADC（模数转换）把传感器模拟信号转数字，DAC（数模转换）把数字信号转模拟输出。这是所有嵌入式系统的关键接口。</p>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>指标</th><th>含义</th></tr></thead><tbody><tr><td class="font-medium">分辨率</td><td>位数 n，区分 $2^n$ 个等级</td></tr><tr><td class="font-medium">转换时间/速率</td><td>完成一次转换的时间（ADC 类型决定）</td></tr><tr><td class="font-medium">量化误差</td><td>$\\pm\\frac{1}{2}$LSB（分辨率导致）</td></tr><tr><td class="font-medium">精度</td><td>实际值与理想值偏差</td></tr></tbody></table></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>ADC 类型选型</strong>：①逐次逼近型（SAR）——中速中精度（100kSPS~1MSPS），最常用；②并行比较型（Flash）——超快但功耗大、引脚多；③Σ-Δ 型——高精度低速度（音频、仪表）；④双积分型——低速高抗干扰（万用表）。STM32 内置的多为 SAR ADC。</div></div>
+      ` },
+      { id: 'dig-14', title: 'Verilog HDL 入门', desc: '可综合设计（工程方向）', icon: '⌨', tags: ['工程'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">Verilog HDL：用代码描述硬件</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">Verilog 是硬件描述语言（HDL），用代码描述数字电路结构和行为，经综合工具转为实际电路（FPGA/ASIC）。这是数字 IC 设计和 FPGA 开发的必备技能。</p>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>建模方式</th><th>描述</th></tr></thead><tbody><tr><td class="font-medium">数据流</td><td>assign 连续赋值（组合逻辑）</td></tr><tr><td class="font-medium">行为</td><td>always 块（可描述时序/组合）</td></tr><tr><td class="font-medium">结构</td><td>例化底层模块（门级/模块级）</td></tr></tbody></table></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>HDL ≠ 软件编程</strong>：Verilog 描述的是<strong>并行</strong>的硬件，不是顺序执行的程序。所有 assign 和 always 块同时执行（对应并行的硬件单元）。关键原则：①时序逻辑用非阻塞赋值（&lt;=），组合逻辑用阻塞赋值（=）；②避免锁存器（组合逻辑 if/case 要写全所有分支）；③时钟要单一全局时钟。</div></div>
+      ` },
     ]
   },
 
@@ -1580,18 +1794,624 @@ const CourseData = {
           <div><strong>next 数组还有优化版 nextval</strong>：当 T[next[j]] == T[j] 时，next[j] 的跳转没意义（跳过去还是会失配），可以直接 nextval[j] = nextval[next[j]]。考试中可能要求写出 nextval 数组。实际工程中，KMP 因实现复杂且常数大，不如 Boyer-Moore 或 Sunday 算法常用，但思想价值极高。</div>
         </div>
       ` },
-      { id: 'ds-05', title: '数组与特殊矩阵', desc: '压缩存储、稀疏矩阵', icon: '▦', tags: ['基础'], goals: { exam: true }, content: '' },
-      { id: 'ds-06', title: '树与二叉树', desc: '性质、遍历、线索化', icon: '🌳', tags: ['核心'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'ds-07', title: 'BST 与 AVL 树', desc: '二叉搜索树、平衡二叉树', icon: '⚖', tags: ['高频'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'ds-08', title: '红黑树与 B 树', desc: '红黑树性质、B/B+ 树（数据库索引）', icon: '🔴', tags: ['工程'], goals: { eng: true }, content: '' },
-      { id: 'ds-09', title: '堆与优先队列', desc: '建堆、堆排序、Top-K', icon: '⛰', tags: ['高频'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'ds-10', title: '哈夫曼树与并查集', desc: '哈夫曼编码、Union-Find', icon: '🌲', tags: ['高频'], goals: { exam: true }, content: '' },
-      { id: 'ds-11', title: '图的存储与遍历', desc: '邻接矩阵/表、DFS/BFS', icon: '🕸', tags: ['核心'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'ds-12', title: '图的应用', desc: '最小生成树、最短路径、拓扑排序、关键路径', icon: '🗺', tags: ['高频核心'], goals: { exam: true }, content: '' },
-      { id: 'ds-13', title: '查找', desc: '折半、分块、B 树、散列表', icon: '🔍', tags: ['核心'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'ds-14', title: '排序', desc: '插入/交换/选择/归并/基数，全家桶', icon: '↕', tags: ['高频核心'], goals: { exam: true, eng: true }, content: '' },
-      { id: 'ds-15', title: '外排序与文件', desc: '败者树、多路归并（工程）', icon: '📂', tags: ['工程'], goals: { eng: true }, content: '' },
-      { id: 'ds-16', title: '工程进阶结构', desc: '跳表、布隆过滤器、LRU/LFU、Trie', icon: '🚀', tags: ['工程'], goals: { eng: true }, content: '' },
+      { id: 'ds-05', title: '数组与特殊矩阵', desc: '压缩存储、稀疏矩阵', icon: '▦', tags: ['基础'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">多维数组的存储与压缩</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          多维数组在内存中是线性存储的，需要"地址映射公式"建立多维下标与一维地址的对应。对于对称矩阵、三角矩阵、稀疏矩阵等特殊矩阵，可以利用其规律性<strong>压缩存储</strong>，大幅节省空间。这是空间效率优化的经典案例。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">多维数组的地址映射</h4>
+        <div class="formula-block">
+          <strong>行优先</strong>（C/Java 默认）：$\\text{LOC}(i,j) = \\text{LOC}(0,0) + (i \\times n + j) \\times L$<br><br>
+          <strong>列优先</strong>（Fortran 默认）：$\\text{LOC}(i,j) = \\text{LOC}(0,0) + (j \\times m + i) \\times L$
+          <div class="text-sm text-gray-500 mt-2">m×n 矩阵，L 是元素大小。行优先逐行存储，列优先逐列存储</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">对称矩阵的压缩存储</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          n 阶对称矩阵 $a_{ij}=a_{ji}$，只需存储下三角（含对角线），共 $\\frac{n(n+1)}{2}$ 个元素，存入一维数组 sa[k]：
+        </p>
+        <div class="formula-block">
+          $k = \\begin{cases} \\frac{i(i-1)}{2} + j - 1, & i \\ge j \\text{（下三角）} \\\\ \\frac{j(j-1)}{2} + i - 1, & i < j \\text{（上三角，用对称性）} \\end{cases}$
+          <div class="text-sm text-gray-500 mt-2">空间从 $n^2$ 降到 $\\frac{n(n+1)}{2}$，约节省一半</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">稀疏矩阵的三元组存储</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          非零元素很少（如 $\\ll 30\\%$）的矩阵，只存非零元素的<strong>(行, 列, 值)</strong>三元组：
+        </p>
+        <div class="code-block"><span class="code-comment">// 稀疏矩阵的三元组表示</span>
+<span class="code-keyword">typedef struct</span> {
+    <span class="code-keyword">int</span> row, col;   <span class="code-comment">// 非零元素的行列下标</span>
+    <span class="code-keyword">double</span> val;     <span class="code-comment">// 非零元素的值</span>
+} <span class="code-func">Triple</span>;
+
+<span class="code-keyword">typedef struct</span> {
+    <span class="code-func">Triple</span> data[MAX]; <span class="code-comment">// 非零元素三元组数组</span>
+    <span class="code-keyword">int</span> mu, nu, tu;      <span class="code-comment">// 行数、列数、非零元个数</span>
+} <span class="code-func">SMatrix</span>;</div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>稀疏矩阵的转置</strong>：三元组转置要把每个元素的行列互换，并按行优先重排。快速转置法（用两个辅助数组记录每列第一个非零元位置）可 $O(n+t)$ 完成，t 是非零元个数。工程中 SciPy 的 scipy.sparse 就是这种思路。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>压缩存储的代价</strong>：压缩后失去了随机访问能力——访问 $a_{ij}$ 不能 $O(1)$，需计算映射或遍历三元组。所以压缩适合"读多写少且整体处理"的场景（如矩阵乘法），不适合频繁随机访问。</div>
+        </div>
+      ` },
+      { id: 'ds-06', title: '树与二叉树', desc: '性质、遍历、线索化', icon: '🌳', tags: ['核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">树：层次化数据的组织方式</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          树是层次化的数据结构，二叉树是其最重要特例。从文件系统到数据库索引，从 HTML DOM 到编译器语法树，树无处不在。本节重点掌握二叉树的五大性质、四种遍历方式，以及线索化——这是理解后续 BST、堆、哈夫曼树的基础。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">二叉树的五大性质（必背）</h4>
+        <div class="formula-block">
+          ① 第 $i$ 层最多 $2^{i-1}$ 个节点（$i \\ge 1$）<br><br>
+          ② 深度为 $k$ 的二叉树最多 $2^k - 1$ 个节点<br><br>
+          ③ 对任意二叉树，$n_0 = n_2 + 1$（度为 0 的节点 = 度为 2 的节点 + 1）<br><br>
+          ④ 完全二叉树深度 $k = \\lfloor \\log_2 n \\rfloor + 1$<br><br>
+          ⑤ 有 $n$ 节点的完全二叉树，节点 $i$ 的父节点 $\\lfloor i/2 \\rfloor$，左孩子 $2i$，右孩子 $2i+1$
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>性质③最常考</strong>：$n_0 = n_2 + 1$。记忆法：每个度为2的节点"消耗"一个分支产生两个子节点，净增1个叶子。这个性质常用于"已知二叉树有 x 个度为2的节点，求叶子数"这类题。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">四种遍历方式</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>遍历方式</th><th>访问顺序</th><th>递归定义</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">前序 (PreOrder)</td><td>根→左→右</td><td>访问根，前序遍历左子树，前序遍历右子树</td></tr>
+            <tr><td class="font-medium">中序 (InOrder)</td><td>左→根→右</td><td>中序遍历左子树，访问根，中序遍历右子树</td></tr>
+            <tr><td class="font-medium">后序 (PostOrder)</td><td>左→右→根</td><td>后序遍历左子树，后序遍历右子树，访问根</td></tr>
+            <tr><td class="font-medium">层序 (LevelOrder)</td><td>逐层从左到右</td><td>用队列实现（BFS）</td></tr>
+          </tbody>
+        </table></div>
+        <div class="code-block"><span class="code-comment">// 前序遍历（递归）</span>
+<span class="code-keyword">void</span> <span class="code-func">preOrder</span>(<span class="code-func">Node</span> *t) {
+    <span class="code-keyword">if</span> (!t) <span class="code-keyword">return</span>;
+    <span class="code-func">visit</span>(t);        <span class="code-comment">// 根</span>
+    <span class="code-func">preOrder</span>(t-&gt;left);   <span class="code-comment">// 左</span>
+    <span class="code-func">preOrder</span>(t-&gt;right);  <span class="code-comment">// 右</span>
+}
+<span class="code-comment">// 层序遍历（用队列，非递归）</span>
+<span class="code-keyword">void</span> <span class="code-func">levelOrder</span>(<span class="code-func">Node</span> *root) {
+    <span class="code-func">Queue</span> q; <span class="code-func">enqueue</span>(&amp;q, root);
+    <span class="code-keyword">while</span> (!<span class="code-func">empty</span>(&amp;q)) {
+        <span class="code-func">Node</span> *t = <span class="code-func">dequeue</span>(&amp;q);
+        <span class="code-func">visit</span>(t);
+        <span class="code-keyword">if</span> (t-&gt;left) <span class="code-func">enqueue</span>(&amp;q, t-&gt;left);
+        <span class="code-keyword">if</span> (t-&gt;right) <span class="code-func">enqueue</span>(&amp;q, t-&gt;right);
+    }
+}</div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>前序+中序 → 唯一确定二叉树</strong>：前序第一个元素是根，在中序中定位根，左侧是左子树，右侧是右子树，递归构造。同理后序+中序也可唯一确定。但前序+后序不能唯一确定（无法区分左右子树）。这是高频考点。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">线索二叉树（利用空指针）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          含 n 个节点的二叉树有 $n+1$ 个空指针（每个节点 2 个指针，用了 $n-1$ 个连边，剩 $2n-(n-1)=n+1$ 个空）。线索化把这些空指针利用起来，指向遍历前驱/后继：
+        </p>
+        <div class="formula-block">
+          左空指针 → 指向前驱节点；右空指针 → 指向后继节点<br>
+          加 ltag/rtag 标志位区分：0=孩子指针，1=线索指针
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>线索化的意义</strong>：中序线索化后，可以 $O(1)$ 找到任意节点的前驱/后继，无需从根重新遍历。但线索化后插入删除变复杂（要维护线索）。实际工程中用得少，但考试常考"画出中序线索二叉树"。</div>
+        </div>
+      ` },
+      { id: 'ds-07', title: 'BST 与 AVL 树', desc: '二叉搜索树、平衡二叉树', icon: '⚖', tags: ['高频'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">BST 与 AVL：让查找高效的树</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          二叉搜索树（BST）通过"左小右大"的规则，把查找、插入、删除都做到 $O(h)$。但 BST 可能退化为链表（$h=n$），AVL 树通过<strong>自平衡</strong>把高度控制在 $O(\\log n)$，保证最坏情况也是 $O(\\log n)$。这是理解红黑树、B 树的基础。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">二叉搜索树（BST）的性质</h4>
+        <div class="formula-block">
+          对任意节点 X：左子树所有节点值 $&lt; X$ &lt; 右子树所有节点值<br><br>
+          <strong>重要推论</strong>：BST 的<strong>中序遍历是有序序列</strong>（升序）
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>操作</th><th>平均</th><th>最坏（退化为链表）</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">查找</td><td>$O(\\log n)$</td><td>$O(n)$</td></tr>
+            <tr><td class="font-medium">插入</td><td>$O(\\log n)$</td><td>$O(n)$</td></tr>
+            <tr><td class="font-medium">删除</td><td>$O(\\log n)$</td><td>$O(n)$</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">BST 的删除（三种情况）</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>叶子节点</strong>：直接删除。</div></div>
+          <div class="step-item"><div><strong>只有一个孩子</strong>：用孩子替代被删节点。</div></div>
+          <div class="step-item"><div><strong>有两个孩子</strong>：用<strong>左子树最大值</strong>或<strong>右子树最小值</strong>替代被删节点（保持 BST 性质），然后递归删除那个替代节点。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">AVL 树（自平衡 BST）</h4>
+        <div class="formula-block">
+          平衡因子 BF = 左子树高度 - 右子树高度<br>
+          AVL 要求所有节点的 $|BF| \\le 1$（即 -1, 0, 1）<br>
+          高度始终 $O(\\log n)$，所有操作保证 $O(\\log n)$
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>四种失衡情况与旋转</strong>：插入/删除后若 $|BF|>1$，需旋转恢复平衡。LL型→右旋，RR型→左旋，LR型→先左旋再右旋，RL型→先右旋再左旋。判断失衡类型的关键：从插入点向上找第一个失衡节点，看新节点在其左/右、左孩子的左/右。</div>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>AVL vs BST vs 红黑树</strong>：BST 最简单但可能退化；AVL 严格平衡（BF≤1），查找快但插入删除旋转多；红黑树弱平衡，查找稍慢但增删更快。所以 AVL 适合"查找密集"场景，红黑树适合"增删频繁"场景（如 C++ map、Linux 进程调度）。详见 <a href="#" onclick="navigateTo('ds-08');return false;" style="color:var(--primary)">红黑树与 B 树</a>。</div>
+        </div>
+      ` },
+      { id: 'ds-08', title: '红黑树与 B 树', desc: '红黑树性质、B/B+ 树（数据库索引）', icon: '🔴', tags: ['工程'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">工程级平衡树：红黑树与 B 树</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          AVL 树虽然严格平衡，但增删时旋转次数多。红黑树采用"弱平衡"策略，用颜色约束保证高度 $O(\\log n)$ 的同时大幅减少旋转。B 树/B+ 树则是为磁盘存储设计的多路平衡树，是所有关系型数据库索引的底层结构。这两个结构是工程面试的高频考点。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">红黑树的五大性质</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>① 每个节点非红即黑</strong></div></div>
+          <div class="step-item"><div><strong>② 根节点是黑色</strong></div></div>
+          <div class="step-item"><div><strong>③ 叶子节点（NIL 空节点）是黑色</strong></div></div>
+          <div class="step-item"><div><strong>④ 红节点的孩子必是黑色</strong>（不能有连续红节点）</div></div>
+          <div class="step-item"><div><strong>⑤ 任一节点到其叶子节点的所有路径，包含相同数目的黑节点</strong>（黑高相同）</div></div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>红黑树的高度保证</strong>：由性质④⑤可推出，n 个节点的红黑树高度至多 $2\\log(n+1)$。虽然是 AVL 的两倍，但增删只需 $O(1)$ 次旋转（AVL 可能 $O(\\log n)$ 次），综合性能更优。</div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>AVL 树</th><th>红黑树</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">平衡严格度</td><td>严格（BF≤1）</td><td>弱（高度≤2logn）</td></tr>
+            <tr><td class="font-medium">查找</td><td>快（树矮）</td><td>稍慢（树高些）</td></tr>
+            <tr><td class="font-medium">增删旋转次数</td><td>多（可能 O(logn)）</td><td>少（最多 3 次）</td></tr>
+            <tr><td class="font-medium">适用场景</td><td>查找密集（数据库内存索引）</td><td>增删频繁（C++ map、Linux 调度）</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">B 树（多路平衡查找树）</h4>
+        <div class="formula-block">
+          m 阶 B 树：每个节点最多 m 个孩子，最少 $\\lceil m/2 \\rceil$ 个孩子<br>
+          根节点至少 2 个孩子，所有叶子在同一层<br>
+          每个节点的关键字有序，关键字间是子树指针
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>B 树为什么适合磁盘</strong>：磁盘按"块"读取（4KB 一页），B 树每个节点存多个关键字，树更矮，磁盘 I/O 次数少。一棵 3 阶 B 树存百万数据只需 3 层（3 次 I/O），而二叉树需 20 层（20 次 I/O）。这是数据库用 B+ 树索引的根本原因。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">B+ 树（B 树的数据库优化版）</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>B 树</th><th>B+ 树</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">非叶子节点</td><td>存关键字 + 数据</td><td>只存关键字（索引）</td></tr>
+            <tr><td class="font-medium">数据存储</td><td>所有节点都存</td><td>只在叶子节点存</td></tr>
+            <tr><td class="font-medium">叶子节点</td><td>相互独立</td><td>用链表连接（范围查询高效）</td></tr>
+            <tr><td class="font-medium">范围查询</td><td>需中序遍历整棵树</td><td>定位起点后沿链表扫描</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>MySQL InnoDB 用 B+ 树</strong>而非 B 树，核心原因：① 非叶节点不存数据→单节点能存更多关键字→树更矮→I/O 更少；② 叶子链表让范围查询（WHERE id BETWEEN...）极快。面试常问"为什么数据库用 B+ 树不用红黑树"——答 I/O 次数和范围查询效率。</div>
+        </div>
+      ` },
+      { id: 'ds-09', title: '堆与优先队列', desc: '建堆、堆排序、Top-K', icon: '⛰', tags: ['高频'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">堆：高效的优先级管理</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          堆是完全二叉树 + 堆序性（父节点 ≥/≤ 所有孩子）。它用数组实现（利用完全二叉树下标规律），插入删除 $O(\\log n)$，取极值 $O(1)$，是优先队列的标准实现。堆排序、Top-K 问题、Dijkstra 算法都依赖堆。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">大顶堆与小顶堆</h4>
+        <div class="formula-block">
+          <strong>大顶堆</strong>（Max Heap）：父节点 ≥ 所有孩子，根是最大值<br>
+          <strong>小顶堆</strong>（Min Heap）：父节点 ≤ 所有孩子，根是最小值<br><br>
+          数组存储：节点 i 的父 $\\lfloor i/2 \\rfloor$，左孩子 $2i$，右孩子 $2i+1$（i 从 1 起）
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">建堆：自下而上调整 $O(n)$</h4>
+        <div class="code-block"><span class="code-comment">// 向下调整（以大顶堆为例），从节点 i 开始下沉</span>
+<span class="code-keyword">void</span> <span class="code-func">siftDown</span>(<span class="code-keyword">int</span> a[], <span class="code-keyword">int</span> i, <span class="code-keyword">int</span> n) {
+    <span class="code-keyword">while</span> (<span class="code-number">2</span>*i &lt;= n) {
+        <span class="code-keyword">int</span> child = <span class="code-number">2</span>*i;
+        <span class="code-keyword">if</span> (child+<span class="code-number">1</span> &lt;= n &amp;&amp; a[child+<span class="code-number">1</span>] &gt; a[child]) child++;  <span class="code-comment">// 选较大孩子</span>
+        <span class="code-keyword">if</span> (a[i] &gt;= a[child]) <span class="code-keyword">break</span>;  <span class="code-comment">// 已满足堆序</span>
+        <span class="code-func">swap</span>(&amp;a[i], &amp;a[child]);   <span class="code-comment">// 下沉</span>
+        i = child;
+    }
+}
+<span class="code-comment">// 建堆：从最后一个非叶子节点到根，逐个下沉调整</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = n/<span class="code-number">2</span>; i &gt;= <span class="code-number">1</span>; i--) <span class="code-func">siftDown</span>(a, i, n);</div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>建堆复杂度 $O(n)$</strong>（不是 $O(n\\log n)$！）。虽然看起来每个节点都下沉（最多 $O(\\log n)$），但大多数节点在底层，下沉距离很小。数学证明总比较次数 $\\sum \\frac{n}{2^h} \\cdot h = O(n)$。这是常考点。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">堆排序 $O(n\\log n)$ 原地</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>建大顶堆</strong>：$O(n)$。</div></div>
+          <div class="step-item"><div><strong>反复取堆顶</strong>：把堆顶（最大值）与末尾交换，堆大小减 1，再下沉调整。每次 $O(\\log n)$。</div></div>
+          <div class="step-item"><div><strong>重复 n-1 次</strong>：得到升序序列。总 $O(n\\log n)$，空间 $O(1)$（原地）。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">Top-K 问题（堆的经典应用）</h4>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>求前 K 大的元素</strong>：用<strong>小顶堆</strong>，大小 K。遍历数据：比堆顶大则替换堆顶并调整。最终堆中就是 Top-K。复杂度 $O(n\\log K)$，远优于排序后取前 K 的 $O(n\\log n)$。求前 K 小用大顶堆同理。</div>
+        </div>
+      ` },
+      { id: 'ds-10', title: '哈夫曼树与并查集', desc: '哈夫曼编码、Union-Find', icon: '🌲', tags: ['高频'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">哈夫曼树与并查集：两个高频考点</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          哈夫曼树是最优二叉树，用于数据压缩（哈夫曼编码）；并查集是管理"集合合并/查询"的高效结构，是图论算法（Kruskal、连通分量）的核心工具。两者都是笔试和面试的高频考点。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">哈夫曼树（最优二叉树）</h4>
+        <div class="formula-block">
+          带权路径长度 WPL = $\\sum w_i \\times l_i$（权值 × 路径长度）<br>
+          哈夫曼树 = WPL 最小的二叉树（给定一组权值）
+        </div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>构造算法</strong>：把每个权值看作独立树，每次选<strong>两棵根权值最小的树</strong>合并为一棵新树（新根权值=两者之和），重复直到只剩一棵树。</div></div>
+          <div class="step-item"><div><strong>性质</strong>：n 个叶子节点的哈夫曼树有 2n-1 个节点，没有度为 1 的节点。</div></div>
+          <div class="step-item"><div><strong>哈夫曼编码</strong>：左分支标 0、右分支标 1，从根到叶子的路径就是该字符的编码。频率高的字符编码短，频率低的编码长→压缩。</div></div>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>前缀码</strong>：哈夫曼编码是前缀码（任何编码都不是另一个的前缀），所以解码时无需分隔符，从左到右扫描即可唯一确定。这是哈夫曼编码能正确解码的根本保证。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">并查集（Union-Find）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          并查集管理若干不相交集合，支持两个操作：① Find(x) 查 x 所属集合；② Union(x,y) 合并两个集合。用<strong>树的双亲表示法</strong>实现，配合路径压缩和按秩合并，单次操作近似 $O(1)$。
+        </p>
+        <div class="code-block"><span class="code-keyword">int</span> parent[MAX];  <span class="code-comment">// parent[i] 是 i 的父节点，根的 parent 是自己</span>
+
+<span class="code-comment">// 查找（带路径压缩）</span>
+<span class="code-keyword">int</span> <span class="code-func">find</span>(<span class="code-keyword">int</span> x) {
+    <span class="code-keyword">if</span> (parent[x] != x)
+        parent[x] = <span class="code-func">find</span>(parent[x]);  <span class="code-comment">// 路径压缩：直接指向根</span>
+    <span class="code-keyword">return</span> parent[x];
+}
+
+<span class="code-comment">// 合并（按秩合并：矮树挂高树下）</span>
+<span class="code-keyword">void</span> <span class="code-func">unionSet</span>(<span class="code-keyword">int</span> x, <span class="code-keyword">int</span> y) {
+    <span class="code-keyword">int</span> rx = <span class="code-func">find</span>(x), ry = <span class="code-func">find</span>(y);
+    <span class="code-keyword">if</span> (rx != ry) parent[rx] = ry;  <span class="code-comment">// 把 x 的根挂到 y 的根下</span>
+}</div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>路径压缩是关键优化</strong>：Find 时把路径上所有节点直接指向根，下次查询 $O(1)$。配合按秩合并，单次操作均摊 $O(\\alpha(n)) \\approx O(1)$（α 是反阿克曼函数，n≤10⁸⁰ 时 α≤4）。并查集是 <a href="#" onclick="navigateTo('ds-12');return false;" style="color:var(--primary)">Kruskal 最小生成树</a> 和连通分量问题的标准工具。</div>
+        </div>
+      ` },
+      { id: 'ds-11', title: '图的存储与遍历', desc: '邻接矩阵/表、DFS/BFS', icon: '🕸', tags: ['核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">图：最通用的数据结构</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          树和链表都是图的特例。图能表示任意关系（社交网络、道路网、依赖关系）。本节掌握两种存储方式（邻接矩阵/邻接表）的取舍，以及两种遍历（DFS/BFS）的实现和应用——这是所有图算法的基础。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">邻接矩阵 vs 邻接表</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>邻接矩阵</th><th>邻接表</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">存储方式</td><td>$n \\times n$ 二维数组</td><td>每个顶点一个链表，存邻接顶点</td></tr>
+            <tr><td class="font-medium">空间</td><td>$O(n^2)$</td><td>$O(n+e)$（e 是边数）</td></tr>
+            <tr><td class="font-medium">查边 (i,j) 是否存在</td><td>$O(1)$</td><td>$O(\\text{度数})$</td></tr>
+            <tr><td class="font-medium">遍历邻接边</td><td>$O(n)$（要扫一行）</td><td>$O(\\text{度数})$</td></tr>
+            <tr><td class="font-medium">适合</td><td>稠密图（边多）</td><td>稀疏图（边少）</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>选型</strong>：实际中绝大多数图是稀疏的（如社交网络平均度数远小于 n），所以邻接表更常用。邻接矩阵适合顶点少且边稠密的图（如完全图），或需要快速判断两点是否相邻的场景。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">DFS（深度优先搜索）—— 用栈/递归</h4>
+        <div class="code-block"><span class="code-keyword">int</span> visited[MAX];
+<span class="code-keyword">void</span> <span class="code-func">dfs</span>(<span class="code-func">Graph</span> *G, <span class="code-keyword">int</span> v) {
+    visited[v] = <span class="code-number">1</span>;
+    <span class="code-func">visit</span>(v);
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> w = <span class="code-func">firstNeighbor</span>(G, v); w &gt;= <span class="code-number">0</span>; w = <span class="code-func">nextNeighbor</span>(G, v, w)) {
+        <span class="code-keyword">if</span> (!visited[w]) <span class="code-func">dfs</span>(G, w);  <span class="code-comment">// 递归深入</span>
+    }
+}
+<span class="code-comment">// 复杂度：邻接矩阵 O(n²)，邻接表 O(n+e)</span></div>
+
+        <h4 class="font-medium mt-6 mb-2">BFS（广度优先搜索）—— 用队列</h4>
+        <div class="code-block"><span class="code-keyword">void</span> <span class="code-func">bfs</span>(<span class="code-func">Graph</span> *G, <span class="code-keyword">int</span> v) {
+    <span class="code-func">Queue</span> q; <span class="code-keyword">int</span> visited[MAX] = {<span class="code-number">0</span>};
+    <span class="code-func">visit</span>(v); visited[v] = <span class="code-number">1</span>; <span class="code-func">enqueue</span>(&amp;q, v);
+    <span class="code-keyword">while</span> (!<span class="code-func">empty</span>(&amp;q)) {
+        <span class="code-keyword">int</span> u = <span class="code-func">dequeue</span>(&amp;q);
+        <span class="code-keyword">for</span> (<span class="code-keyword">int</span> w = <span class="code-func">firstNeighbor</span>(G, u); w &gt;= <span class="code-number">0</span>; w = <span class="code-func">nextNeighbor</span>(G, u, w)) {
+            <span class="code-keyword">if</span> (!visited[w]) {
+                <span class="code-func">visit</span>(w); visited[w] = <span class="code-number">1</span>; <span class="code-func">enqueue</span>(&amp;q, w);
+            }
+        }
+    }
+}</div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>DFS（深度优先）</th><th>BFS（广度优先）</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">数据结构</td><td>栈（递归）</td><td>队列</td></tr>
+            <tr><td class="font-medium">遍历方式</td><td>一条路走到底再回溯</td><td>逐层扩展</td></tr>
+            <tr><td class="font-medium">最短路径</td><td>❌ 不保证</td><td>✅ 无权图可找最短路径</td></tr>
+            <tr><td class="font-medium">空间</td><td>$O(h)$ 递归深度</td><td>$O(w)$ 队列最大宽度</td></tr>
+            <tr><td class="font-medium">典型应用</td><td>连通性、拓扑排序、环检测</td><td>最短路径、层序遍历、社交网络</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>连通分量</strong>：对每个未访问顶点调用 DFS/BFS，调用次数 = 连通分量个数。这是判断图连通性、统计岛屿数量（LeetCode 200）的标准做法。详见 <a href="#" onclick="navigateTo('ds-12');return false;" style="color:var(--primary)">图的应用</a>。</div>
+        </div>
+      ` },
+      { id: 'ds-12', title: '图的应用', desc: '最小生成树、最短路径、拓扑排序、关键路径', icon: '🗺', tags: ['高频核心'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">图算法四大应用</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          图的四大经典应用：最小生成树（网络布线）、最短路径（导航）、拓扑排序（任务依赖）、关键路径（项目管理）。它们是工程和笔试的高频考点，也是理解 <a href="#" onclick="navigateTo('ds-11');return false;" style="color:var(--primary)">图的遍历</a> 后的实际应用。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">一、最小生成树（MST）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          连通图的生成树是包含所有顶点的极小连通子图。最小生成树是边权之和最小的生成树。两个经典算法：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>算法</th><th>思想</th><th>数据结构</th><th>复杂度</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">Prim</td><td>从一个点出发，每次选连接已选集合与未选集合的最小边</td><td>优先队列（小顶堆）</td><td>$O(n^2)$ 或 $O(e\\log n)$</td></tr>
+            <tr><td class="font-medium">Kruskal</td><td>所有边按权排序，从小到大选不构成环的边</td><td>并查集（判环）</td><td>$O(e\\log e)$</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>选型</strong>：稠密图（边多）用 Prim（$O(n^2)$ 不依赖边数），稀疏图（边少）用 Kruskal（$O(e\\log e)$ 依赖边数）。Kruskal 用并查集判断加边是否成环——加边前 find 两端点，若同集合则成环跳过。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">二、最短路径</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>算法</th><th>适用</th><th>思想</th><th>复杂度</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">Dijkstra</td><td>单源最短路，<strong>无负权边</strong></td><td>贪心：每次选最近未确定点，松弛邻接边</td><td>$O(n^2)$ 或 $O((n+e)\\log n)$</td></tr>
+            <tr><td class="font-medium">Floyd</td><td>所有点对最短路，可有负权（无负环）</td><td>动态规划：$d[i][j]=\\min(d[i][j], d[i][k]+d[k][j])$</td><td>$O(n^3)$</td></tr>
+            <tr><td class="font-medium">Bellman-Ford</td><td>单源，可有负权，能检测负环</td><td>对所有边松弛 n-1 次</td><td>$O(ne)$</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>Dijkstra 不能有负权边</strong>：它的贪心假设"已确定的最短路不会再变"，负权边会破坏这个假设。有负权时用 Bellman-Ford。Floyd 求所有点对最短路，适合顶点数少（n≤200）的图。导航软件、路由协议用 Dijkstra 及其优化（A*）。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">三、拓扑排序（AOV 网）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          AOV 网（顶点表示活动，边表示先后关系）的拓扑排序：把所有顶点排成线性序列，使每条边 $(u,v)$ 中 u 在 v 前。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>算法</strong>：选一个入度为 0 的顶点输出，删除它及出边（邻接点入度-1），重复直到所有顶点输出。</div></div>
+          <div class="step-item"><div><strong>判环</strong>：若输出的顶点数 &lt; 总顶点数，说明有环（存在无法降到入度 0 的顶点）。DAG（有向无环图）才能拓扑排序。</div></div>
+          <div class="step-item"><div><strong>应用</strong>：编译依赖分析、课程先修关系、任务调度。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">四、关键路径（AOE 网）</h4>
+        <div class="formula-block">
+          AOE 网：顶点表示事件，边表示活动（带权=耗时）<br>
+          <strong>关键路径</strong>：从源点到汇点的最长路径，决定工程最短工期<br>
+          <strong>关键活动</strong>：关键路径上的活动，其时间余量为 0（$l(i) = e(i)$）
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>关键路径求法</strong>：①拓扑排序算每个事件的<strong>最早发生时间 ve</strong>（取前驱 ve+活动时间最大值）；②逆拓扑排序算<strong>最晚发生时间 vl</strong>（取后继 vl-活动时间最小值）；③对每个活动算最早开始 e 和最晚开始 l；④$e=l$ 的活动是关键活动，连起来就是关键路径。缩短关键活动才能缩短工期。</div>
+        </div>
+      ` },
+      { id: 'ds-13', title: '查找', desc: '折半、分块、B 树、散列表', icon: '🔍', tags: ['核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">查找：从线性到散列</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          查找是最高频的操作。从 $O(n)$ 的顺序查找，到 $O(\\log n)$ 的折半查找和 B 树，再到 $O(1)$ 均摊的散列表——查找效率的提升是数据结构演进的主线。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">折半查找（二分查找）</h4>
+        <div class="formula-block">
+          前提：序列<strong>有序</strong>（升序或降序）<br>
+          每次比较中间元素，缩小一半范围：$ASL \\approx \\log_2(n+1) - 1$，$O(\\log n)$
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>折半查找判定树是平衡二叉树</strong>：n 个元素的折半查找过程对应一棵判定树，深度 $\\lfloor\\log_2 n\\rfloor+1$。这正是折半查找 $O(\\log n)$ 的来源。注意折半查找只能用于<strong>顺序存储</strong>（数组），链表不行（无法 $O(1)$ 取中间元素）。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">分块查找（索引顺序查找）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          分块查找是顺序查找和折半查找的折中：把数据分成若干块，<strong>块间有序、块内无序</strong>。先折半/顺序查索引表定位块，再在块内顺序查找。ASL 介于两者之间。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">散列表（哈希表）—— $O(1)$ 查找</h4>
+        <div class="formula-block">
+          散列函数 $H(key)$：把关键字映射到存储地址<br>
+          理想情况：查找/插入/删除均 $O(1)$（平均），最坏 $O(n)$（冲突严重时）
+        </div>
+        <h4 class="font-medium mt-6 mb-2">散列函数构造</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>直接定址法</strong>：$H(key)=a \\cdot key + b$（关键字分布连续时）</li>
+          <li><strong>除留余数法</strong>（最常用）：$H(key)=key \\bmod p$，p 选不大于表长的最大素数</li>
+          <li><strong>数字分析法</strong>：取关键字中分布均匀的几位</li>
+          <li><strong>平方取中法</strong>：关键字平方后取中间几位</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">冲突解决方法</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>方法</th><th>原理</th><th>优点</th><th>缺点</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">开放定址法<br>（线性探测）</td><td>冲突时顺序找下一个空位</td><td>无需额外空间</td><td>易"聚集"（连续占用降低效率）</td></tr>
+            <tr><td class="font-medium">开放定址法<br>（二次探测）</td><td>冲突时按 $\\pm 1^2, \\pm 2^2...$ 探测</td><td>缓解聚集</td><td>可能找不到空位（表满时）</td></tr>
+            <tr><td class="font-medium">链地址法<br>（拉链法）</td><td>同地址元素用链表串联</td><td>无聚集、删除方便</td><td>需要额外指针空间</td></tr>
+            <tr><td class="font-medium">再散列法</td><td>冲突时换一个散列函数</td><td>冲突少</td><td>计算开销大</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>装填因子 $\\alpha = n/m$</strong>（n 元素数 / m 表长）是散列表性能的核心指标。$\\alpha$ 越小冲突越少但越浪费空间。工程中通常保持 $\\alpha \\in [0.5, 0.75]$，超过阈值就 rehash（扩容+重新散列）。Java HashMap 默认 $\\alpha=0.75$ 触发扩容。</div>
+        </div>
+      ` },
+      { id: 'ds-14', title: '排序', desc: '插入/交换/选择/归并/基数，全家桶', icon: '↕', tags: ['高频核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">排序全家桶：八大排序算法对比</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          排序是数据结构的核心考点。掌握八大排序算法的原理、复杂度、稳定性，以及各自的适用场景，是笔试和面试的必备知识。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">八大排序算法对比表（必背）</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>算法</th><th>平均</th><th>最坏</th><th>空间</th><th>稳定?</th><th>类型</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">直接插入</td><td>$O(n^2)$</td><td>$O(n^2)$</td><td>$O(1)$</td><td>✅</td><td>插入</td></tr>
+            <tr><td class="font-medium">折半插入</td><td>$O(n^2)$</td><td>$O(n^2)$</td><td>$O(1)$</td><td>✅</td><td>插入</td></tr>
+            <tr><td class="font-medium">希尔排序</td><td>$O(n^{1.3})$</td><td>$O(n^2)$</td><td>$O(1)$</td><td>❌</td><td>插入</td></tr>
+            <tr><td class="font-medium">冒泡排序</td><td>$O(n^2)$</td><td>$O(n^2)$</td><td>$O(1)$</td><td>✅</td><td>交换</td></tr>
+            <tr><td class="font-medium">快速排序</td><td>$O(n\\log n)$</td><td>$O(n^2)$</td><td>$O(\\log n)$</td><td>❌</td><td>交换</td></tr>
+            <tr><td class="font-medium">简单选择</td><td>$O(n^2)$</td><td>$O(n^2)$</td><td>$O(1)$</td><td>❌</td><td>选择</td></tr>
+            <tr><td class="font-medium">堆排序</td><td>$O(n\\log n)$</td><td>$O(n\\log n)$</td><td>$O(1)$</td><td>❌</td><td>选择</td></tr>
+            <tr><td class="font-medium">归并排序</td><td>$O(n\\log n)$</td><td>$O(n\\log n)$</td><td>$O(n)$</td><td>✅</td><td>归并</td></tr>
+            <tr><td class="font-medium">基数排序</td><td>$O(d(n+r))$</td><td>$O(d(n+r))$</td><td>$O(r)$</td><td>✅</td><td>基数</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>稳定性记忆</strong>：稳定的排序——"插冒归基"（插入、冒泡、归并、基数）。不稳定的——"快选希堆"（快排、选择、希尔、堆排序）。稳定性指相等元素排序后相对顺序不变，对多关键字排序很重要。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">快排（最常考）</h4>
+        <div class="code-block"><span class="code-comment">// 快速排序（分治：选基准 partition）</span>
+<span class="code-keyword">void</span> <span class="code-func">quickSort</span>(<span class="code-keyword">int</span> a[], <span class="code-keyword">int</span> low, <span class="code-keyword">int</span> high) {
+    <span class="code-keyword">if</span> (low &lt; high) {
+        <span class="code-keyword">int</span> pivot = <span class="code-func">partition</span>(a, low, high);  <span class="code-comment">// 分割，返回基准最终位置</span>
+        <span class="code-func">quickSort</span>(a, low, pivot - <span class="code-number">1</span>);
+        <span class="code-func">quickSort</span>(a, pivot + <span class="code-number">1</span>, high);
+    }
+}
+<span class="code-keyword">int</span> <span class="code-func">partition</span>(<span class="code-keyword">int</span> a[], <span class="code-keyword">int</span> low, <span class="code-keyword">int</span> high) {
+    <span class="code-keyword">int</span> pivot = a[low];  <span class="code-comment">// 选第一个做基准</span>
+    <span class="code-keyword">while</span> (low &lt; high) {
+        <span class="code-keyword">while</span> (low &lt; high &amp;&amp; a[high] &gt;= pivot) high--;
+        a[low] = a[high];
+        <span class="code-keyword">while</span> (low &lt; high &amp;&amp; a[low] &lt;= pivot) low++;
+        a[high] = a[low];
+    }
+    a[low] = pivot;
+    <span class="code-keyword">return</span> low;
+}</div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>快排最坏 $O(n^2)$</strong>：当序列已有序（正序或逆序）且每次选首/尾做基准时，partition 极不均衡，退化为 $O(n^2)$。优化：随机选基准、三数取中（首中尾的中位数）。快排平均最快且原地，是工程最常用排序（C qsort、多数库默认）。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">各排序适用场景</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>场景</th><th>推荐</th><th>原因</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">n 小（&lt;50）</td><td>插入排序</td><td>常数小，简单数据下比快排快</td></tr>
+            <tr><td class="font-medium">通用大数据</td><td>快排/快排+插入混合（TimSort）</td><td>平均 $O(n\\log n)$，原地，缓存友好</td></tr>
+            <tr><td class="font-medium">要求稳定</td><td>归并排序</td><td>稳定且最坏 $O(n\\log n)$，但需 $O(n)$ 空间</td></tr>
+            <tr><td class="font-medium">内存受限</td><td>堆排序</td><td>原地 $O(n\\log n)$，但常数大、缓存不友好</td></tr>
+            <tr><td class="font-medium">关键字范围小</td><td>基数排序/计数排序</td><td>线性 $O(n)$，但非比较排序有局限</td></tr>
+          </tbody>
+        </table></div>
+      ` },
+      { id: 'ds-15', title: '外排序与文件', desc: '败者树、多路归并（工程）', icon: '📂', tags: ['工程'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">外排序：数据超过内存怎么办</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          当数据量远超内存（如几十 GB 日志排序），无法全部载入内存，必须在<strong>内外存之间分批处理</strong>。外排序的核心是多路归并 + 败者树优化。这是大数据处理（MapReduce 的 shuffle 阶段）的基础思想。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">外排序基本流程</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>① 生成初始归并段</strong>：把大文件分批读入内存（每批能放下），用内排序（如快排）排好，写成有序的临时文件（归并段）。</div></div>
+          <div class="step-item"><div><strong>② 多路归并</strong>：同时打开 k 个归并段，每次从 k 个段的当前最小值中选全局最小输出，对应段指针前进。</div></div>
+          <div class="step-item"><div><strong>③ 重复直到合并成一个有序文件</strong>。</div></div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>I/O 次数是关键</strong>：外排序的时间主要花在磁盘读写上，而非比较。减少 I/O 的方法：①增大归并段（用置换-选择排序生成长归并段）；②增加归并路数 k（减少归并趟数）。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">败者树（优化多路归并的选最小）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          k 路归并每次选最小值，朴素方法是线性扫描 k 个元素 $O(k)$。败者树（锦标赛树的变种）把这个操作降到 $O(\\log k)$：
+        </p>
+        <div class="formula-block">
+          败者树：完全二叉树，叶节点是各路当前元素<br>
+          内部节点记录"本轮比较的败者（较大者）"，胜者（较小者）继续上浮<br>
+          根的额外位置记录总冠军（全局最小）<br>
+          输出最小后，对应路补入新元素，只需沿路径重新比较 $O(\\log k)$
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>败者树 vs 堆</strong>：两者都能 $O(\\log k)$ 选最小。败者树的优势是更新时只需比较 $\\log k$ 次（沿一条路径），而堆调整也需要 $\\log k$ 但常数略大。工程中堆更易实现，败者树理论更优。多路归并路数 k 很大时（如 k=64）败者树优势明显。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">置换-选择排序（生成长归并段）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          朴素方法生成的归并段长度 = 内存容量。置换-选择排序利用内存中的小顶堆，能生成<strong>平均长度 2 倍内存</strong>的归并段，减少归并段数量和趟数。
+        </p>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>最佳归并树</strong>：归并段长度不同时，用哈夫曼树思想——短段先合并（多用 I/O 少的短段参与多次归并）。这能最小化总 I/O 次数。这与 <a href="#" onclick="navigateTo('ds-10');return false;" style="color:var(--primary)">哈夫曼树</a> 的构造完全一致。</div>
+        </div>
+      ` },
+      { id: 'ds-16', title: '工程进阶结构', desc: '跳表、布隆过滤器、LRU/LFU、Trie', icon: '🚀', tags: ['工程'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">工程进阶数据结构</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          这些结构在实际工程中高频出现，是面试和系统设计的常客。它们各有特定场景的极致优化：跳表平衡了链表和树，布隆过滤器用概率换空间，LRU/LFU 是缓存淘汰核心，Trie 是字符串处理利器。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">跳表（Skip List）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          跳表是<strong>有序链表 + 多级索引</strong>，用空间换时间，实现 $O(\\log n)$ 的查找/插入/删除，性能媲美平衡树但实现简单得多。Redis 的有序集合（ZSet）就用跳表实现。
+        </p>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跳表 vs 红黑树</strong>：两者都 $O(\\log n)$。跳表优势：①实现简单（无需复杂的旋转和染色）；②并发友好（局部加锁即可）。红黑树优势：①最坏情况严格保证；②范围查询稍快。Redis 选跳表正是因为实现简单和并发优势。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">布隆过滤器（Bloom Filter）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          布隆过滤器是<strong>概率型数据结构</strong>，用极少的内存判断"元素是否可能在集合中"。用 k 个散列函数映射到位数组，全为 1 则"可能存在"（有假阳性），有 0 则"一定不存在"（无假阴性）。
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>操作</th><th>结果</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">查询返回"不存在"</td><td>✅ 一定不存在</td><td>无假阴性</td></tr>
+            <tr><td class="font-medium">查询返回"存在"</td><td>⚠️ 可能存在（假阳性）</td><td>多个元素散列冲突导致</td></tr>
+            <tr><td class="font-medium">删除</td><td>❌ 不支持</td><td>清零会影响其他元素</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>典型应用</strong>：缓存穿透防护（查 DB 前先过布隆过滤器）、垃圾邮件过滤、URL 去重（爬虫）。1 亿元素的集合，布隆过滤器只需约 100MB（对比 HashSet 需几 GB），假阳性率可控制在 1% 以下。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">LRU 与 LFU 缓存</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>策略</th><th>淘汰依据</th><th>实现</th><th>适用场景</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">LRU</td><td>最近最少使用</td><td>哈希表 + 双向链表，$O(1)$ get/put</td><td>时间局部性强（最近访问的还会访问）</td></tr>
+            <tr><td class="font-medium">LFU</td><td>最不经常使用</td><td>哈希表 + 频率桶，$O(1)$ get/put</td><td>频率局部性强（热点数据持续热）</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>LRU 的 $O(1)$ 诀窍</strong>：哈希表提供 $O(1)$ 查找节点，双向链表提供 $O(1)$ 移动到头部/删除尾部。访问某节点时，从链表中摘除并移到头部（最近使用）；容量满时删除尾部（最久未用）。C++ 的 std::list + unordered_map 或 LinkedHashMap 是经典实现。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">Trie 树（前缀树）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          Trie 是处理<strong>字符串前缀</strong>的利器。每个节点代表一个字符，从根到某节点的路径是一个字符串前缀。
+        </p>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>Trie 的优势</strong>：①前缀查询 $O(L)$（L 是字符串长度，与字典大小无关）；②共享公共前缀节省空间。应用：搜索引擎自动补全、拼写检查、IP 路由表（Longest Prefix Match）。变体：压缩 Trie（合并单分支）、AC 自动机（多模式串匹配）。</div>
+        </div>
+      ` },
     ]
   },
 };
