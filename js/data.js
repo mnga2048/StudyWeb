@@ -474,19 +474,351 @@ const CourseData = {
     subtitle: '经典控制理论：时域/频域/根轨迹/校正，工程应用侧重',
     icon: '🟣',
     sections: [
-      { id: 'act-01', title: '自动控制概论', desc: '开环/闭环、性能指标、典型输入', icon: '🎯', tags: ['基础'], goals: { eng: true }, content: '' },
-      { id: 'act-02', title: '数学模型', desc: '微分方程、非线性线性化', icon: '📝', tags: [], goals: { eng: true }, content: '' },
-      { id: 'act-03', title: '拉普拉斯变换与传递函数', desc: '拉氏变换查表、性质、传函', icon: 'ℒ', tags: ['核心工具'], goals: { eng: true }, content: '' },
-      { id: 'act-04', title: '结构图与信号流图', desc: '梅逊公式、等效变换', icon: 'loom', tags: ['高频'], goals: { eng: true }, content: '' },
-      { id: 'act-05', title: '时域分析', desc: '一阶/二阶系统、σ%/ts/tr', icon: '📈', tags: ['核心'], goals: { eng: true }, content: '' },
-      { id: 'act-06', title: '稳定性', desc: '劳斯-赫尔维茨判据', icon: '⚖', tags: ['高频核心'], goals: { eng: true }, content: '' },
+      { id: 'act-01', title: '自动控制概论', desc: '开环/闭环、性能指标、典型输入', icon: '🎯', tags: ['基础'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">什么是自动控制</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          自动控制的核心思想：让系统输出<strong>自动跟踪</strong>期望输入，即使有干扰也能保持稳定。本节建立开环/闭环控制的基本框架，理解反馈的本质，并掌握性能指标的定义——这是整个自控理论的基础语言。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">开环控制 vs 闭环控制</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>开环控制</th><th>闭环控制（反馈控制）</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">信号流</td><td>输入→控制器→执行器→输出（单向）</td><td>输出经传感器反馈到输入端，与参考值比较（闭环）</td></tr>
+            <tr><td class="font-medium">抗干扰</td><td>❌ 无法自动补偿干扰</td><td>✅ 反馈能自动检测偏差并修正</td></tr>
+            <tr><td class="font-medium">精度</td><td>依赖模型精度和元件精度</td><td>可通过高增益降低对模型的依赖</td></tr>
+            <tr><td class="font-medium">稳定性</td><td>一般不会振荡</td><td>⚠️ 反馈可能引入振荡甚至不稳定</td></tr>
+            <tr><td class="font-medium">典型例子</td><td>洗衣机定时、步进电机开环</td><td>空调恒温、汽车巡航、伺服闭环</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>反馈的本质</strong>：闭环控制用"偏差"驱动——输出偏高就减小控制量，偏低就增大。这正是 PID 控制器的工作原理（详见 <a href="#" onclick="navigateTo('act-14');return false;" style="color:var(--primary)">PID 整定</a>）。反馈带来精度的同时也带来稳定性风险，这是自控理论的核心矛盾。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">反馈控制系统的典型结构</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>参考输入 r(t)</strong>：期望值（如设定温度 25°C）</li>
+          <li><strong>控制器 Gc(s)</strong>：根据偏差计算控制量（如 PID 算法）</li>
+          <li><strong>被控对象 Gp(s)</strong>：被控制的物理系统（如电机、加热器）</li>
+          <li><strong>传感器 H(s)</strong>：测量输出并反馈（如温度传感器、编码器）</li>
+        </ul>
+        <div class="formula-block">
+          闭环传递函数：$T(s) = \\frac{G_c(s) G_p(s)}{1 + G_c(s) G_p(s) H(s)}$<br>
+          开环传递函数：$L(s) = G_c(s) G_p(s) H(s)$（环路一圈的传递函数）
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">典型输入信号（测试信号）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          用标准输入信号测试系统响应，便于横向对比不同系统：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>信号</th><th>时域表达</th><th>拉氏变换</th><th>工程场景</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">阶跃信号</td><td>$r(t)=A\\cdot 1(t)$</td><td>$R(s)=\\frac{A}{s}$</td><td>突加负载、开关启动</td></tr>
+            <tr><td class="font-medium">斜坡信号</td><td>$r(t)=At$</td><td>$R(s)=\\frac{A}{s^2}$</td><td>匀速跟踪、电机恒速</td></tr>
+            <tr><td class="font-medium">抛物线信号</td><td>$r(t)=\\frac{A}{2}t^2$</td><td>$R(s)=\\frac{A}{s^3}$</td><td>匀加速跟踪</td></tr>
+            <tr><td class="font-medium">脉冲信号</td><td>$r(t)=A\\delta(t)$</td><td>$R(s)=A$</td><td>冲击扰动、系统辨识</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>阶跃响应最重要</strong>：绝大多数系统的性能指标都基于阶跃响应定义。阶跃信号相当于"突然加一个恒定输入"，最能暴露系统的动态特性（超调、振荡、稳态误差）。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">时域性能指标（基于阶跃响应）</h4>
+        <div class="formula-block">
+          <strong>快速性</strong>：$t_r$（上升时间）、$t_p$（峰值时间）、$t_s$（调节时间，进入终值±2%范围的时间）<br><br>
+          <strong>平稳性</strong>：$\\sigma\\% = \\frac{y(t_p) - y(\\infty)}{y(\\infty)} \\times 100\\%$（超调量）
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>快速性和平稳性是矛盾的</strong>：提高增益让响应更快，但超调增大甚至不稳定。工程设计中必须在两者之间权衡——这就是为什么需要自控理论，而不是简单地"加大增益"。</div>
+        </div>
+      ` },
+      { id: 'act-02', title: '数学模型', desc: '微分方程、非线性线性化', icon: '📝', tags: ['基础'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">用数学描述物理系统</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          自动控制的第一步是建立系统的<strong>数学模型</strong>——用微分方程或传递函数描述输入与输出的关系。本节从物理定律出发建立微分方程，并介绍工程中最重要的近似方法：小偏差线性化。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">建立微分方程的步骤</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>确定输入输出</strong>：明确系统的输入量（如外力、电压）和输出量（如位移、转速）。</div></div>
+          <div class="step-item"><div><strong>列写物理方程</strong>：根据物理定律（牛顿定律、基尔霍夫定律、能量守恒等）列出各环节的方程。</div></div>
+          <div class="step-item"><div><strong>消去中间变量</strong>：联立方程，消去中间变量，只保留输入和输出。</div></div>
+          <div class="step-item"><div><strong>标准化</strong>：将方程整理为标准形式，输出最高阶导数系数为 1。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：弹簧-阻尼-质量系统</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          质量为 m 的物体通过弹簧（刚度 k）和阻尼器（阻尼系数 b）连接到墙上，外力 f(t) 作用于物体，求位移 x(t) 的方程：
+        </p>
+        <div class="formula-block">
+          牛顿第二定律：$m\\ddot{x} + b\\dot{x} + kx = f(t)$
+          <div class="text-sm text-gray-500 mt-2">这是一个二阶常系数线性微分方程，m、b、k 分别是惯性、阻尼、弹性参数</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>类比</strong>：RLC 电路 $L\\ddot{q}+R\\dot{q}+\\frac{1}{C}q=u(t)$，形式完全相同——m↔L，b↔R，k↔1/C。这种"力-电压类比"在工程中很常用，一个领域的解法可以直接搬到另一个领域。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">小偏差线性化（工程中最重要的近似）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          实际系统大多是非线性的（如阀门流量 vs 开度、电机力矩 vs 电流），但在<strong>工作点附近</strong>小范围内，可以用泰勒展开线性化：
+        </p>
+        <div class="formula-block">
+          $f(x) \\approx f(x_0) + f'(x_0)(x - x_0)$，令 $\\Delta x = x - x_0$，$\\Delta f = f - f(x_0)$<br>
+          则 $\\Delta f \\approx f'(x_0) \\cdot \\Delta x$，即在工作点附近，非线性关系近似为<strong>线性比例关系</strong>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>线性化的意义</strong>：线性系统可以用拉氏变换、传递函数、叠加原理等强大工具分析。非线性系统则很难有通用解法。工程中"先在工作点线性化，再用线性理论分析"是最常用的方法论——但要注意线性化只在工作点附近有效，大幅偏离时结果不可靠。</div>
+        </div>
+      ` },
+      { id: 'act-03', title: '拉普拉斯变换与传递函数', desc: '拉氏变换查表、性质、传函', icon: 'ℒ', tags: ['核心工具'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">拉氏变换：把微分方程变成代数方程</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          拉普拉斯变换是自控理论的数学基础——它把时域微分方程转化为 s 域代数方程，使求解大幅简化。传递函数则是系统在 s 域的"身份证"。本节配合 <a href="#" onclick="navigateTo('hm-03');return false;" style="color:var(--primary)">泰勒公式</a> 的展开思想理解拉氏变换的物理含义。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">拉氏变换的定义与常用变换对</h4>
+        <div class="formula-block">
+          $F(s) = \\mathcal{L}[f(t)] = \\int_0^{\\infty} f(t) e^{-st} dt$
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>$f(t)$（时域）</th><th>$F(s)$（s 域）</th><th>条件</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">$\\delta(t)$（单位脉冲）</td><td>1</td><td></td></tr>
+            <tr><td class="font-medium">$1(t)$（单位阶跃）</td><td>$\\frac{1}{s}$</td><td></td></tr>
+            <tr><td class="font-medium">$t$</td><td>$\\frac{1}{s^2}$</td><td></td></tr>
+            <tr><td class="font-medium">$t^n$</td><td>$\\frac{n!}{s^{n+1}}$</td><td></td></tr>
+            <tr><td class="font-medium">$e^{at}$</td><td>$\\frac{1}{s-a}$</td><td></td></tr>
+            <tr><td class="font-medium">$\\sin(\\omega t)$</td><td>$\\frac{\\omega}{s^2+\\omega^2}$</td><td></td></tr>
+            <tr><td class="font-medium">$\\cos(\\omega t)$</td><td>$\\frac{s}{s^2+\\omega^2}$</td><td></td></tr>
+            <tr><td class="font-medium">$e^{at}\\sin(\\omega t)$</td><td>$\\frac{\\omega}{(s-a)^2+\\omega^2}$</td><td></td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>必须背</strong>：上表是整个自控的工具箱。记忆技巧：阶跃→1/s，指数→1/(s-a)，三角函数→分母是 $s^2+\\omega^2$。配合 <a href="#" onclick="navigateTo('hm-08');return false;" style="color:var(--primary)">常微分方程</a> 中的拉氏变换解法一起用。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">三大性质（线性、微分、积分）</h4>
+        <div class="formula-block">
+          <strong>线性</strong>：$\\mathcal{L}[af+bg] = aF(s) + bG(s)$<br><br>
+          <strong>微分性质</strong>：$\\mathcal{L}[f'(t)] = sF(s) - f(0)$<br>
+          $\\mathcal{L}[f''(t)] = s^2 F(s) - sf(0) - f'(0)$<br><br>
+          <strong>积分性质</strong>：$\\mathcal{L}\\left[\\int_0^t f(\\tau)d\\tau\\right] = \\frac{F(s)}{s}$
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>微分性质的妙用</strong>：零初始条件下 $\\mathcal{L}[f'(t)]=sF(s)$，$\\mathcal{L}[f''(t)]=s^2F(s)$——微分变成了乘 s！这正是传递函数定义的前提条件。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">传递函数的定义与性质</h4>
+        <div class="formula-block">
+          $G(s) = \\frac{Y(s)}{R(s)} = \\frac{b_m s^m + b_{m-1}s^{m-1} + \\cdots + b_0}{a_n s^n + a_{n-1}s^{n-1} + \\cdots + a_0}$
+          <div class="text-sm text-gray-500 mt-2">零初始条件下，输出拉氏变换与输入拉氏变换之比</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>零初始条件</strong>：传递函数只描述系统本身的动态特性，与初始状态无关</li>
+          <li><strong>只与系统结构参数有关</strong>：同一个物理系统，无论什么输入，传递函数不变</li>
+          <li><strong>零点与极点</strong>：分子零点使 $G(s)=0$，分母极点使 $G(s)=\\infty$，它们决定系统动态特性</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">实例：RC 电路的传递函数</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>列微分方程</strong>：$RC\\frac{du_o}{dt} + u_o = u_i$</div></div>
+          <div class="step-item"><div><strong>零初始条件拉氏变换</strong>：$RCsU_o(s) + U_o(s) = U_i(s)$</div></div>
+          <div class="step-item"><div><strong>求传递函数</strong>：$G(s) = \\frac{U_o(s)}{U_i(s)} = \\frac{1}{RCs + 1} = \\frac{1}{Ts + 1}$，其中 $T=RC$</div></div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>$\\frac{1}{Ts+1}$ 是最基本的一阶惯性环节</strong>，T 越大响应越慢。RC 电路、热容系统、液位系统的一阶模型都是这个形式。详见 <a href="#" onclick="navigateTo('act-05');return false;" style="color:var(--primary)">时域分析</a>。</div>
+        </div>
+      ` },
+      { id: 'act-04', title: '结构图与信号流图', desc: '梅逊公式、等效变换', icon: '🔀', tags: ['高频'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">用图形描述系统的信号流</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          结构图（方框图）和信号流图是描述复杂控制系统的图形化工具。当系统包含多个子系统串联、并联或反馈连接时，用图形化方法求传递函数比列方程更直观高效。本节重点掌握结构图等效变换和梅逊公式。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">三种基本连接方式</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>连接方式</th><th>等效传递函数</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">串联</td><td>$G_1(s) \\cdot G_2(s)$</td><td>前一个的输出是后一个的输入</td></tr>
+            <tr><td class="font-medium">并联</td><td>$G_1(s) + G_2(s)$</td><td>同一输入分别通过两个子系统再相加</td></tr>
+            <tr><td class="font-medium">反馈连接</td><td>$\\frac{G(s)}{1 \\pm G(s)H(s)}$</td><td>负反馈取+，正反馈取-</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>负反馈等效公式</strong> $\\frac{G}{1+GH}$ 是自控最核心的公式——几乎所有闭环系统分析都从这里出发。记住：分母 $1+GH$ 中的 GH 是开环传递函数。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">结构图等效变换法则</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>引出点前移/后移</strong>：引出点穿过方框时，方框的传递函数要相应调整（前移乘 G，后移除以 G）。</div></div>
+          <div class="step-item"><div><strong>比较点前移/后移</strong>：比较点穿过方框时也要调整。</div></div>
+          <div class="step-item"><div><strong>关键原则</strong>：变换前后，所有输入输出关系不能变。逐步化简，先消内环再消外环。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">梅逊公式（一步到位求传递函数）</h4>
+        <div class="formula-block">
+          $T(s) = \\frac{\\sum_k P_k \\Delta_k}{\\Delta}$
+          <div class="text-sm text-gray-500 mt-2">
+            $\\Delta = 1 - \\sum L_i + \\sum L_i L_j - \\cdots$（特征式：1 - 所有单独回路之和 + 所有不接触回路两两乘积之和 - …）<br>
+            $P_k$：第 k 条前向通路的增益<br>
+            $\\Delta_k$：去掉第 k 条前向通路接触的所有回路后的特征式
+          </div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>梅逊公式的关键</strong>：①准确找出所有回路（符号容易错，负反馈回路增益带负号）；②准确判断哪些回路"不接触"（没有公共节点）。建议先画出信号流图再套公式，比直接在结构图上数更不容易遗漏。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：双闭环系统</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          一个典型的电机速度-电流双闭环系统：外环速度控制器 $G_1$，内环电流控制器 $G_2$，电机 $G_3$，电流反馈 $H_1$，速度反馈 $H_2$。用等效变换：
+        </p>
+        <div class="formula-block">
+          先化简内环：$G_{inner} = \\frac{G_2 G_3}{1 + G_2 G_3 H_1}$<br>
+          再化简外环：$T(s) = \\frac{G_1 G_{inner}}{1 + G_1 G_{inner} H_2} = \\frac{G_1 G_2 G_3}{1 + G_2 G_3 H_1 + G_1 G_2 G_3 H_2}$
+        </div>
+      ` },
+      { id: 'act-05', title: '时域分析', desc: '一阶/二阶系统、σ%/ts/tr', icon: '📈', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">时域响应：系统动态特性的直接体现</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          时域分析是自控理论最直观的方法——直接看系统对阶跃输入的响应曲线。本节重点分析一阶系统和二阶系统的阶跃响应，建立参数与性能指标之间的精确关系，这是后续频域分析和校正设计的基础。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">一阶系统（惯性环节）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          传递函数 $G(s)=\\frac{1}{Ts+1}$，其中 T 是时间常数。阶跃响应：
+        </p>
+        <div class="formula-block">
+          $y(t) = 1 - e^{-t/T}$，$t \\ge 0$
+          <div class="text-sm text-gray-500 mt-2">t=T 时 y=0.632（63.2%），t=3T 时 y=0.95（95%），t=5T 时 y=0.993（≈100%）</div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>性能指标</th><th>一阶系统</th><th>物理意义</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">调节时间 $t_s$</td><td>$3T$（5%误差带）或 $4T$（2%误差带）</td><td>T 越大响应越慢</td></tr>
+            <tr><td class="font-medium">上升时间 $t_r$</td><td>$2.20T$（从 0 到 90%）</td><td>无超调，单调上升</td></tr>
+            <tr><td class="font-medium">超调量 $\\sigma\\%$</td><td>0%（无超调）</td><td>一阶系统永远不会超调</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>工程记忆法</strong>：一阶系统的调节时间约等于 $3T$~$4T$。RC 电路中 T=RC，热系统中 T=热容/热阻。测量 T 的最简单方法：给系统一个阶跃，看输出达到 63.2% 的时间。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">二阶系统（振荡环节）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          标准形式 $G(s)=\\frac{\\omega_n^2}{s^2+2\\zeta\\omega_n s+\\omega_n^2}$，两个关键参数：
+        </p>
+        <div class="formula-block">
+          $\\zeta$：阻尼比（决定振荡程度），$\\omega_n$：自然频率（决定响应速度）
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>$\\zeta$ 范围</th><th>系统类型</th><th>阶跃响应特征</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">$\\zeta=0$</td><td>无阻尼</td><td>等幅振荡，永不收敛</td></tr>
+            <tr><td class="font-medium">$0<\\zeta<1$</td><td>欠阻尼</td><td>衰减振荡（最常见，工程最有价值）</td></tr>
+            <tr><td class="font-medium">$\\zeta=1$</td><td>临界阻尼</td><td>无超调，最快收敛（临界状态）</td></tr>
+            <tr><td class="font-medium">$\\zeta>1$</td><td>过阻尼</td><td>无超调，缓慢收敛（两个不同实极点）</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">欠阻尼二阶系统的性能指标公式</h4>
+        <div class="formula-block">
+          <strong>超调量</strong>：$\\sigma\\% = e^{-\\frac{\\pi\\zeta}{\\sqrt{1-\\zeta^2}}} \\times 100\\%$<br><br>
+          <strong>峰值时间</strong>：$t_p = \\frac{\\pi}{\\omega_n\\sqrt{1-\\zeta^2}} = \\frac{\\pi}{\\omega_d}$<br><br>
+          <strong>调节时间</strong>（2%误差带）：$t_s \\approx \\frac{4}{\\zeta\\omega_n}$
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>公式必须背</strong>：超调量只与 $\\zeta$ 有关（与 $\\omega_n$ 无关），调节时间与 $\\zeta\\omega_n$ 乘积成反比。工程最佳阻尼比通常取 $\\zeta=0.4\\sim0.8$（超调 1.5%~25%），典型取 $\\zeta=0.707$（超调约 4.3%）。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">主导极点法（高阶系统的工程近似）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          实际系统往往高于二阶，但工程中可以用<strong>主导极点</strong>近似为二阶系统：
+        </p>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>规则</strong>：如果某对共轭复极点比其他极点更靠近虚轴（实部绝对值最小），且距离其他极点 5 倍以上，则这对极点是主导极点，系统响应主要由它们决定，可近似为二阶系统分析。</div>
+        </div>
+      ` },
+      { id: 'act-06', title: '稳定性', desc: '劳斯-赫尔维茨判据', icon: '⚖', tags: ['高频核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">稳定性：控制系统的底线</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          稳定性是控制系统最基本的要求——一个不稳定的系统，响应再快、精度再高都没有意义。本节从 BIBO 稳定性的定义出发，推导出稳定的充要条件（极点判据），并重点掌握劳斯判据——它是工程中最常用的稳定性判断工具。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">BIBO 稳定性定义</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          <strong>有界输入有界输出</strong>（BIBO）：对于任何有界的输入，系统的输出也是有界的，则系统是 BIBO 稳定的。
+        </p>
+        <div class="formula-block">
+          <strong>稳定性的充要条件</strong>（极点判据）：闭环传递函数的所有极点（即特征方程的根）都必须位于 s 平面的<strong>左半平面</strong>（实部为负）。
+          <div class="text-sm text-gray-500 mt-2">即所有极点的实部 $\\text{Re}(p_i) < 0$</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>物理意义</strong>：左半平面极点对应衰减的指数/振荡（$e^{-at}$，$a>0$），右半平面对应发散的指数/振荡（$e^{at}$，$a>0$），虚轴上对临界状态（等幅振荡）。只有左半平面的极点才能保证响应最终收敛。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">劳斯判据（Routh Criterion）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          劳斯判据不需要解出特征方程的根，只需检查<strong>劳斯表第一列的符号变化次数</strong>即可判断右半平面极点的个数：
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>列出特征方程</strong>：$a_n s^n + a_{n-1}s^{n-1} + \\cdots + a_1 s + a_0 = 0$（所有系数必须同号，否则必不稳定）</div></div>
+          <div class="step-item"><div><strong>构建劳斯表</strong>：前两行直接填系数，后续行用交叉相乘公式计算。</div></div>
+          <div class="step-item"><div><strong>判断</strong>：第一列符号变化次数 = 右半平面极点个数。无变化则系统稳定。</div></div>
+        </div>
+        <div class="formula-block">
+          以三阶系统 $a_3 s^3 + a_2 s^2 + a_1 s + a_0 = 0$ 为例：<br><br>
+          $s^3$：$a_3$，$a_1$<br>
+          $s^2$：$a_2$，$a_0$<br>
+          $s^1$：$\\frac{a_2 a_1 - a_3 a_0}{a_2}$<br>
+          $s^0$：$a_0$<br><br>
+          <strong>稳定条件</strong>：$a_3, a_2, a_1, a_0$ 同号，且 $a_2 a_1 > a_3 a_0$
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">特殊情况处理</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特殊情况</th><th>处理方法</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">某行首元素为 0，其余不为 0</td><td>用一个小正数 $\\varepsilon$ 替代 0，继续计算，最后令 $\\varepsilon \\to 0^+$</td></tr>
+            <tr><td class="font-medium">整行为 0</td><td>用上一行的系数构造辅助方程，对辅助方程求导，用导数系数替代全零行继续</td></tr>
+            <tr><td class="font-medium">辅助方程的根</td><td>辅助方程的根就是特征方程的根，可能在虚轴上（临界稳定）</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>劳斯判据的前提</strong>：特征方程的系数必须全非零且同号。如果有缺失项（某次幂系数为 0），则系统<strong>一定不稳定</strong>（必有右半平面或虚轴上的极点）。这是快速判断的第一步——先检查系数是否齐全。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">赫尔维茨判据（与劳斯等价）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          赫尔维茨判据用<strong>行列式</strong>判断：构造赫尔维茨矩阵，检查各阶主子式是否全为正。与劳斯判据完全等价（可互相推导），但行列式计算在高阶时比劳斯表更繁琐，工程中更常用劳斯表。
+        </p>
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点总结</strong>：①先检查系数是否齐全同号（快速排除明显不稳定）；②三阶以下直接用系数不等式（如三阶 $a_2 a_1 > a_3 a_0$）；③四阶以上用劳斯表；④整行为零的处理是难点，必考。</div>
+        </div>
+      ` },
       { id: 'act-07', title: '稳态误差', desc: '误差系数法、系统型别', icon: '📏', tags: ['高频'], goals: { eng: true }, content: '' },
       { id: 'act-08', title: '根轨迹法', desc: '180°/0° 根轨迹绘制法则', icon: '🌿', tags: ['核心难点'], goals: { eng: true }, content: '' },
-      { id: 'act-09', title: '频域分析', desc: '奈奎斯特图、伯德图', icon: ' sinusoid', tags: ['核心'], goals: { eng: true }, content: '' },
+      { id: 'act-09', title: '频域分析', desc: '奈奎斯特图、伯德图', icon: '〰️', tags: ['核心'], goals: { eng: true }, content: '' },
       { id: 'act-10', title: '奈奎斯特稳定判据', desc: '稳定裕度、相位/幅值裕度', icon: '🌀', tags: ['难点核心'], goals: { eng: true }, content: '' },
-      { id: 'act-11', title: '闭环频域与时域指标', desc: '指标换算、闭环频率特性', icon: '🔁', tags: [], goals: { eng: true }, content: '' },
+      { id: 'act-11', title: '闭环频域与时域指标', desc: '指标换算、闭环频率特性', icon: '🔁', tags: ['工程'], goals: { eng: true }, content: '' },
       { id: 'act-12', title: '系统校正', desc: '超前/滞后/滞后-超前/PID', icon: '🔧', tags: ['工程核心'], goals: { eng: true }, content: '' },
-      { id: 'act-13', title: '离散系统基础', desc: 'z 变换、脉冲传函、稳定性', icon: '⏱', tags: [], goals: { eng: true }, content: '' },
+      { id: 'act-13', title: '离散系统基础', desc: 'z 变换、脉冲传函、稳定性', icon: '⏱', tags: ['进阶'], goals: { eng: true }, content: '' },
       { id: 'act-14', title: '工程实战：PID 整定', desc: 'Ziegler-Nichols、Cohen-Coon + STM32', icon: '💻', tags: ['工程'], goals: { eng: true }, content: '' },
     ]
   },
@@ -697,5 +1029,247 @@ const QuizData = {
       explanation: '$f\\\'(x)=3x^2$，$f\\\'(0)=0$ 但 $f\\\'$ 在 0 左右都为正（不变号），故不是极值。而 $f\\\'\'(x)=6x$ 在 $x=0$ 左右由负变正（凹凸改变），故 $(0,0)$ 是拐点。这题警示：$f\\\'(x_0)=0$ 不一定是极值，要看变号。'
     },
   ],
+
+  // ========== 自动控制 act-01~act-06 ==========
+  'act-01': [
+    {
+      question: '闭环控制相比开环控制的核心优势是？',
+      options: ['结构更简单', '能自动补偿干扰', '不会振荡', '成本更低'],
+      answer: 1,
+      explanation: '闭环控制通过反馈检测偏差并自动修正，能有效抑制干扰和模型不确定性带来的误差。代价是可能引入振荡甚至不稳定，这是自控理论要解决的核心矛盾。'
+    },
+    {
+      question: '单位阶跃信号 $1(t)$ 的拉氏变换是？',
+      options: ['$1$', '$\\frac{1}{s}$', '$\\frac{1}{s^2}$', '$s$'],
+      answer: 1,
+      explanation: '$\\mathcal{L}[1(t)] = \\int_0^{\\infty} e^{-st} dt = \\frac{1}{s}$。阶跃信号是最常用的测试信号，其拉氏变换 $1/s$ 会在后续传递函数分析中反复出现。'
+    },
+    {
+      question: '调节时间 $t_s$ 的定义是？',
+      options: ['响应首次达到终值的时间', '响应达到第一个峰值的时间', '响应进入并保持在终值±2%（或±5%）范围内的时间', '响应从10%到90%的时间'],
+      answer: 2,
+      explanation: '$t_s$ 是衡量系统快速性的关键指标——它定义的是响应"稳定下来"的时间，而非"到达"的时间。工程中常用2%或5%误差带，对应不同公式（$4/\\zeta\\omega_n$ 或 $3/\\zeta\\omega_n$）。'
+    },
+    {
+      question: '快速性和平稳性的关系是？',
+      options: ['互不影响', '快速性越好平稳性也越好', '二者是矛盾的，需要权衡', '只有二阶系统才有此矛盾'],
+      answer: 2,
+      explanation: '提高增益可加快响应（更小的 $t_s$），但超调量 $\\sigma\\%$ 也会增大，甚至可能导致不稳定。工程设计必须在两者之间寻找平衡点，这就是PID参数整定要解决的问题。'
+    },
+    {
+      question: '以下哪个是典型的闭环控制系统？',
+      options: ['洗衣机定时程序', '步进电机开环驱动', '空调恒温控制', '交通灯定时切换'],
+      answer: 2,
+      explanation: '空调恒温通过温度传感器反馈实际温度，与设定温度比较后调整压缩机功率，是典型的负反馈闭环控制。洗衣机定时和交通灯是开环（定时器驱动），步进电机开环不带反馈。'
+    },
+    {
+      question: '闭环传递函数 $T(s)=\\frac{G}{1+GH}$ 中，分母 $1+GH$ 的物理意义是？',
+      options: ['输入信号', '开环传递函数+1', '误差信号的拉氏变换', '干扰信号'],
+      answer: 1,
+      explanation: '$GH$ 是开环传递函数（环路一圈），$1+GH$ 是闭环系统的特征多项式。$1+GH=0$ 的根就是闭环极点，决定系统稳定性。后续的奈奎斯特判据、根轨迹都是围绕 $1+GH$ 展开的。'
+    },
+  ],
+
+  'act-02': [
+    {
+      question: '建立控制系统数学模型的一般步骤是？',
+      options: ['先画结构图再列方程', '先列物理方程再消去中间变量', '先求传递函数再列方程', '先做实验再拟合'],
+      answer: 1,
+      explanation: '标准步骤：①确定输入输出→②根据物理定律列方程→③消去中间变量→④标准化。结构图是在得到传递函数之后才画的，实验拟合是系统辨识方法而非建模方法。'
+    },
+    {
+      question: '小偏差线性化的本质是？',
+      options: ['忽略所有非线性项', '在工作点附近用泰勒一阶展开近似', '把非线性方程直接变成线性方程', '用数值方法求解'],
+      answer: 1,
+      explanation: '小偏差线性化就是泰勒展开取一阶项：$f(x) \\approx f(x_0) + f\'(x_0)(x-x_0)$。在工作点 $x_0$ 附近，非线性关系近似为线性比例关系。局限是只在小范围内有效，大幅偏离时结果不可靠。'
+    },
+    {
+      question: '弹簧-阻尼-质量系统 $m\\ddot{x}+b\\dot{x}+kx=f(t)$ 中，哪一项代表惯性？',
+      options: ['$m\\ddot{x}$', '$b\\dot{x}$', '$kx$', '$f(t)$'],
+      answer: 0,
+      explanation: '$m\\ddot{x}$ 是惯性力（质量×加速度），$b\\dot{x}$ 是阻尼力（阻尼×速度），$kx$ 是弹性力（刚度×位移）。这三项分别对应系统的惯性、阻尼、弹性，是二阶系统的三个基本参数。'
+    },
+    {
+      question: 'RC 电路与弹簧-阻尼系统的类比关系是？',
+      options: ['m↔R, b↔L, k↔C', 'm↔L, b↔R, k↔1/C', 'm↔C, b↔R, k↔L', '无类比关系'],
+      answer: 1,
+      explanation: '力-电压类比：质量m↔电感L（储能元件），阻尼b↔电阻R（耗能元件），弹簧刚度k↔电容倒数1/C（储能元件）。这种类比使得一个领域的解法可以直接搬到另一个领域。'
+    },
+    {
+      question: '传递函数的定义前提是？',
+      options: ['系统必须是非线性的', '必须是零初始条件', '输入必须是阶跃信号', '系统必须是一阶的'],
+      answer: 1,
+      explanation: '传递函数定义为零初始条件下输出与输入的拉氏变换之比。非零初始条件时，拉氏变换会出现初始条件项（如 $sf(0)$），传递函数就不能完整描述系统行为。这也是为什么传递函数只描述系统本身的动态特性。'
+    },
+    {
+      question: '传递函数 $G(s)=\\frac{s+2}{(s+1)(s+3)}$ 的零点和极点分别是？',
+      options: ['零点：-1, -3；极点：-2', '零点：-2；极点：-1, -3', '零点：1, 3；极点：2', '零点：2；极点：1, 3'],
+      answer: 1,
+      explanation: '零点是使分子为零的s值：$s+2=0 \\Rightarrow s=-2$。极点是使分母为零的s值：$(s+1)(s+3)=0 \\Rightarrow s=-1, s=-3$。所有极点都在左半平面，系统稳定。零点和极点的位置决定了系统的动态特性。'
+    },
+  ],
+
+  'act-03': [
+    {
+      question: '拉氏变换的微分性质 $\\mathcal{L}[f\'(t)]$ 在零初始条件下等于？',
+      options: ['$F(s)$', '$sF(s)$', '$\\frac{F(s)}{s}$', '$s^2F(s)$'],
+      answer: 1,
+      explanation: '零初始条件下 $\\mathcal{L}[f\'(t)] = sF(s) - f(0) = sF(s)$。微分变成了乘s，这就是传递函数能把微分方程变成代数方程的关键——$s$ 就是拉氏域的"微分算子"。'
+    },
+    {
+      question: '$e^{-2t}$ 的拉氏变换是？',
+      options: ['$\\frac{1}{s+2}$', '$\\frac{1}{s-2}$', '$\\frac{2}{s}$', '$\\frac{1}{s^2+4}$'],
+      answer: 0,
+      explanation: '利用变换对 $\\mathcal{L}[e^{at}] = \\frac{1}{s-a}$，令 $a=-2$：$\\mathcal{L}[e^{-2t}] = \\frac{1}{s-(-2)} = \\frac{1}{s+2}$。极点在 $s=-2$（左半平面），对应衰减的指数响应。'
+    },
+    {
+      question: '传递函数 $G(s)=\\frac{K}{Ts+1}$ 中，K 和 T 的物理意义分别是？',
+      options: ['K是时间常数，T是增益', 'K是增益（静态放大倍数），T是时间常数', 'K和T都是增益', 'K是频率，T是阻尼'],
+      answer: 1,
+      explanation: 'K是增益：$G(0)=K$，即稳态时输出/输入的比值。T是时间常数：决定响应速度，T越大响应越慢。对RC电路：K=1，T=RC。对电机：K=1/Kv（速度常数），T=机械时间常数。'
+    },
+    {
+      question: '传递函数的极点位于右半平面时，系统响应会？',
+      options: ['收敛到稳态值', '等幅振荡', '发散（不稳定）', '收敛到零'],
+      answer: 2,
+      explanation: '右半平面极点对应 $e^{at}$（$a>0$）的响应分量，随时间指数增长，系统发散。左半平面对应衰减（稳定），虚轴上对应等幅振荡（临界稳定）。稳定性判别的本质就是看极点位置。'
+    },
+    {
+      question: 'RC 低通滤波器的传递函数 $G(s)=\\frac{1}{RCs+1}$，若 R=1kΩ，C=1μF，则时间常数 T 和截止频率分别是？',
+      options: ['T=1s, 截止频率=1Hz', 'T=1ms, 截止频率≈159Hz', 'T=0.001s, 截止频率=1000Hz', 'T=1μs, 截止频率=1MHz'],
+      answer: 1,
+      explanation: 'T=RC=1000×10⁻⁶=0.001s=1ms。截止频率 $f_c=\\frac{1}{2\\pi T}=\\frac{1}{2\\pi \\times 0.001} \\approx 159$ Hz。T 越大截止频率越低，滤波效果越强但响应越慢。'
+    },
+    {
+      question: '以下哪个拉氏变换对是错误的？',
+      options: ['$\\mathcal{L}[\\delta(t)]=1$', '$\\mathcal{L}[t]=\\frac{1}{s^2}$', '$\\mathcal{L}[\\sin(\\omega t)]=\\frac{s}{s^2+\\omega^2}$', '$\\mathcal{L}[e^{at}]=\\frac{1}{s-a}$'],
+      answer: 2,
+      explanation: '错误项应为 $\\mathcal{L}[\\sin(\\omega t)]=\\frac{\\omega}{s^2+\\omega^2}$（分子是 $\\omega$ 不是 $s$）。$\\frac{s}{s^2+\\omega^2}$ 是 $\\cos(\\omega t)$ 的变换。这是最常见的记忆混淆点。'
+    },
+  ],
+
+  'act-04': [
+    {
+      question: '两个子系统 $G_1$ 和 $G_2$ 串联后的等效传递函数是？',
+      options: ['$G_1+G_2$', '$G_1 \\cdot G_2$', '$\\frac{G_1}{1+G_1G_2}$', '$\\frac{G_1G_2}{G_1+G_2}$'],
+      answer: 1,
+      explanation: '串联：前一个的输出是后一个的输入，$Y=G_2(G_1 R)=G_1G_2 R$，所以等效传函为 $G_1G_2$。并联才是 $G_1+G_2$，反馈才是 $\\frac{G}{1+GH}$。'
+    },
+    {
+      question: '负反馈闭环传递函数 $\\frac{G}{1+GH}$ 中，若 H=1（单位反馈），则传递函数为？',
+      options: ['$\\frac{G}{1+G}$', '$G$', '$\\frac{1}{1+G}$', '$\\frac{G}{G-1}$'],
+      answer: 0,
+      explanation: '单位反馈时 H=1，$T=\\frac{G}{1+G}$。这是最常见的反馈形式——传感器增益为1（直接反馈输出量）。$1+G$ 的根就是闭环极点。'
+    },
+    {
+      question: '梅逊公式中，特征式 $\\Delta$ 的表达式是？',
+      options: ['$\\Delta = 1 + \\sum L_i$', '$\\Delta = 1 - \\sum L_i + \\sum L_iL_j - \\cdots$', '$\\Delta = \\prod L_i$', '$\\Delta = \\sum P_k$'],
+      answer: 1,
+      explanation: '$\\Delta = 1 - \\sum L_i + \\sum L_iL_j - \\cdots$，其中 $L_i$ 是各回路增益，$L_iL_j$ 是不接触回路两两乘积。注意符号交替：减单独回路，加不接触回路乘积，减三三乘积……'
+    },
+    {
+      question: '在梅逊公式中，"不接触回路"指的是？',
+      options: ['增益符号相反的回路', '没有公共节点的回路', '增益大小不同的回路', '位于不同前向通路上的回路'],
+      answer: 1,
+      explanation: '不接触回路是指两个回路在信号流图上没有公共节点（互不经过）。只有不接触回路的乘积才出现在 $\\Delta$ 中。如果两个回路有公共节点，它们是"接触"的，不计入乘积项。'
+    },
+    {
+      question: '结构图等效变换的基本原则是？',
+      options: ['变换前后开环传递函数不变', '变换前后所有输入输出关系不变', '变换前后闭环极点不变', '变换前后增益不变'],
+      answer: 1,
+      explanation: '等效变换的核心原则：变换前后，系统中任意两点之间的输入输出关系不能改变。只要满足这个条件，任何合法的变换都是允许的。这保证了化简过程不改变系统的本质特性。'
+    },
+    {
+      question: '对于内环反馈 $G_2$ 和外环反馈 $G_1$ 的双闭环系统，化简顺序应该是？',
+      options: ['先化简外环再化简内环', '先化简内环再化简外环', '内外环同时化简', '顺序无所谓'],
+      answer: 1,
+      explanation: '双闭环系统应先化简内环（得到内环等效传函），再将结果代入外环化简。这是因为内环的等效传函是外环分析的基础——外环看到的是内环化简后的等效系统，而非内环内部的细节。'
+    },
+  ],
+
+  'act-05': [
+    {
+      question: '一阶系统 $G(s)=\\frac{1}{Ts+1}$ 的阶跃响应是？',
+      options: ['$e^{-t/T}$', '$1-e^{-t/T}$', '$Te^{-t/T}$', '$\\frac{1}{T}(1-e^{-t/T})$'],
+      answer: 1,
+      explanation: '阶跃输入 $R(s)=1/s$，$Y(s)=\\frac{1}{s(Ts+1)}$，部分分式展开后反拉氏变换得 $y(t)=1-e^{-t/T}$。t=T 时 y=0.632，t=3T 时 y=0.95，t=5T 时 y≈1。'
+    },
+    {
+      question: '二阶欠阻尼系统的超调量 $\\sigma\\%$ 只与哪个参数有关？',
+      options: ['$\\omega_n$（自然频率）', '$\\zeta$（阻尼比）', '$\\zeta$ 和 $\\omega_n$ 的乘积', '增益 K'],
+      answer: 1,
+      explanation: '$\\sigma\\% = e^{-\\pi\\zeta/\\sqrt{1-\\zeta^2}} \\times 100\\%$，只与 $\\zeta$ 有关。$\\zeta$ 越大超调越小：$\\zeta=0.4$ 时超调25%，$\\zeta=0.707$ 时超调4.3%，$\\zeta=1$ 时无超调。$\\omega_n$ 影响的是响应速度而非超调。'
+    },
+    {
+      question: '工程中常用的"最佳阻尼比" $\\zeta=0.707$ 对应的超调量约为？',
+      options: ['0%', '4.3%', '16.3%', '25%'],
+      answer: 1,
+      explanation: '代入公式：$\\sigma\\% = e^{-\\pi \\times 0.707 / \\sqrt{1-0.5}} = e^{-\\pi} \\approx 4.3\\%$。$\\zeta=0.707$（即 $\\frac{\\sqrt{2}}{2}$）是工程中"二阶最佳"的典型取值，超调小且响应较快。很多PID整定方法默认以此为目标。'
+    },
+    {
+      question: '调节时间 $t_s \\approx \\frac{4}{\\zeta\\omega_n}$（2%误差带）说明什么？',
+      options: ['$\\zeta$ 越大 $t_s$ 越小', '$\\omega_n$ 越大 $t_s$ 越小', '$\\zeta\\omega_n$ 乘积越大 $t_s$ 越小', '$t_s$ 与参数无关'],
+      answer: 2,
+      explanation: '$t_s$ 与 $\\zeta\\omega_n$ 成反比——$\\zeta\\omega_n$ 越大，系统收敛越快。但不能只追求大的 $\\zeta\\omega_n$：增大 $\\omega_n$ 需要更大增益（可能饱和），增大 $\\zeta$ 会让响应变慢（过阻尼）。工程设计是在约束条件下找最优的 $\\zeta\\omega_n$ 组合。'
+    },
+    {
+      question: '一阶系统 $G(s)=\\frac{1}{2s+1}$ 的调节时间（2%误差带）约为？',
+      options: ['2s', '4s', '6s', '8s'],
+      answer: 3,
+      explanation: 'T=2s，$t_s \\approx 4T = 8$s。一阶系统的调节时间公式：5%误差带 $t_s=3T$，2%误差带 $t_s=4T$。记住"3T/4T"口诀即可。'
+    },
+    {
+      question: '高阶系统可以用"主导极点"近似为二阶系统的条件是？',
+      options: ['所有极点都在左半平面', '有一对共轭复极点比其他极点更靠近虚轴且距离5倍以上', '系统是稳定的', '系统没有零点'],
+      answer: 1,
+      explanation: '主导极点法的核心：如果某对共轭复极点的实部绝对值最小（最靠近虚轴），且与其他极点的距离超过5倍，则这对极点主导系统响应，可近似为二阶系统。5倍是工程经验值——更远的极点影响衰减很快。'
+    },
+  ],
+
+  'act-06': [
+    {
+      question: '系统稳定的充要条件（极点判据）是？',
+      options: ['所有极点在右半平面', '所有极点在左半平面', '所有极点在虚轴上', '没有极点'],
+      answer: 1,
+      explanation: '所有闭环极点必须位于s平面左半平面（实部为负）。左半平面极点对应衰减响应（$e^{-at}$），右半平面对应发散响应（$e^{at}$），虚轴上对应临界状态（等幅振荡，一般视为不稳定）。'
+    },
+    {
+      question: '特征方程 $s^3+2s^2+3s+4=0$ 中，系数检查的结果是？',
+      options: ['系数齐全同号，可能稳定', '缺少某次幂项，一定不稳定', '系数异号，一定不稳定', '无法判断'],
+      answer: 0,
+      explanation: '系数 1, 2, 3, 4 全为正且同号，无缺失项——通过了第一关检查。但这只是必要条件，还需用劳斯表进一步确认。如果系数有负数或缺失项，则直接判定不稳定。'
+    },
+    {
+      question: '劳斯表第一列符号变化2次说明什么？',
+      options: ['系统稳定', '有2个右半平面极点', '有2个虚轴极点', '有2个左半平面极点'],
+      answer: 1,
+      explanation: '劳斯判据的核心结论：第一列符号变化次数 = 右半平面极点个数。变化2次说明有2个右半平面极点，系统不稳定。0次变化则所有极点都在左半平面，系统稳定。'
+    },
+    {
+      question: '三阶系统 $a_3s^3+a_2s^2+a_1s+a_0=0$ 稳定的充要条件是？',
+      options: ['所有系数同号', '所有系数同号且 $a_2a_1 > a_3a_0$', '所有系数同号且 $a_2a_1 < a_3a_0$', '$a_3 > 0$'],
+      answer: 1,
+      explanation: '三阶系统的劳斯表：$s^3$: $a_3, a_1$；$s^2$: $a_2, a_0$；$s^1$: $(a_2a_1-a_3a_0)/a_2$；$s^0$: $a_0$。第一列无符号变化的条件是：所有系数同号（$a_3a_2a_1a_0>0$）且 $a_2a_1>a_3a_0$。'
+    },
+    {
+      question: '劳斯表某行首元素为0、其余不为0时，应如何处理？',
+      options: ['直接判定不稳定', '用小正数 $\\varepsilon$ 替代0继续计算', '删掉该行继续', '重新列方程'],
+      answer: 1,
+      explanation: '用一个小正数 $\\varepsilon$ 替代0，继续计算后续行。最后令 $\\varepsilon \\to 0^+$，观察第一列符号变化。如果 $\\varepsilon$ 上下符号相反，则有一次符号变化（一个右半平面极点）。'
+    },
+    {
+      question: '劳斯表出现整行为0时，说明什么？',
+      options: ['计算错误', '特征方程有对称分布的根（如纯虚根或对称实根）', '系统一定不稳定', '系统一定稳定'],
+      answer: 1,
+      explanation: '整行为0说明特征方程有特殊的对称结构——可能存在纯虚根（在虚轴上）或关于原点对称的实根。处理方法：用上一行系数构造辅助方程，求导后用导数系数替代全零行。辅助方程的根就是特征方程的一部分根。'
+    },
+    {
+      question: '赫尔维茨判据与劳斯判据的关系是？',
+      options: ['完全不同的方法', '完全等价（可互相推导）', '赫尔维茨更准确', '劳斯只适用于低阶系统'],
+      answer: 1,
+      explanation: '两种判据数学上完全等价——都可以从特征方程系数推导出稳定性条件。劳斯用表格形式，赫尔维茨用行列式形式。工程中劳斯表更常用，因为表格计算比行列式展开更直观、更不容易出错。'
+    },
+  ],
 };
+
 
