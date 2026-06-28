@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>专业课学习平台 - StudyWeb</title>
+  <meta name="description" content="面向电子、自动化、电气专业与考研党的专业课一站式学习网站，覆盖高等数学、线性代数、电路、模电、数电、自动控制原理、数据结构，应试与工程双线并重">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16/dist/contrib/auto-render.min.js"></script>
+  <style>
+    /* 学术蓝主题 CSS 变量 */
+    :root {
+      --bg: #f5f7fa;
+      --bg-card: #ffffff;
+      --bg-header: rgba(245,247,250,0.88);
+      --bg-sidebar: #fafbfd;
+      --bg-code: #1e293b;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-secondary: #64748b;
+      --primary: #2563eb;
+      --primary-light: #3b82f6;
+      --primary-dark: #1d4ed8;
+      --accent: #0891b2;
+      --success: #059669;
+      --warning: #d97706;
+      --danger: #dc2626;
+      --hero-glow: radial-gradient(ellipse at 80% 20%, rgba(37,99,235,0.10) 0%, transparent 60%);
+    }
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --bg-card: #1e293b;
+      --bg-header: rgba(15,23,42,0.90);
+      --bg-sidebar: #1a2333;
+      --bg-code: #0f172a;
+      --border: #334155;
+      --text: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --primary: #3b82f6;
+      --primary-light: #60a5fa;
+      --primary-dark: #2563eb;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --hero-glow: radial-gradient(ellipse at 80% 20%, rgba(59,130,246,0.08) 0%, transparent 60%);
+    }
+    body { background: var(--bg); color: var(--text); }
+  </style>
+</head>
+<body>
+  <!-- 阅读进度条 -->
+  <div id="reading-bar" class="fixed top-16 left-0 right-0 h-[3px] z-50 pointer-events-none">
+    <div id="reading-bar-inner" class="h-full rounded-r-full transition-[width] duration-100" style="width:0%;background:linear-gradient(90deg,var(--primary),var(--accent))"></div>
+  </div>
+
+  <!-- 顶部导航栏 -->
+  <header id="topbar" class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b transition-all duration-300" style="background:var(--bg-header);border-color:var(--border)">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <button id="menu-toggle" class="lg:hidden p-2 rounded-lg transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <!-- 移动端搜索按钮 -->
+        <button id="mobile-search-btn" class="lg:hidden p-2 rounded-lg transition-colors" onclick="var w=document.getElementById('search-wrap');if(w.classList.contains('hidden')){w.classList.remove('hidden');w.classList.add('block');w.querySelector('input').style.width='100%';w.querySelector('input').focus();}else{w.classList.add('hidden');w.classList.remove('block');}">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </button>
+        <a href="#" class="flex items-center gap-2 text-xl font-bold" style="color:var(--primary)" onclick="navigateTo('home')">
+          <svg class="w-8 h-8" viewBox="0 0 32 32" fill="none">
+            <rect x="4" y="6" width="24" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
+            <path d="M9 12h14M9 16h14M9 20h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="25" cy="22" r="3" fill="currentColor"/>
+          </svg>
+          <span class="hidden xs:inline sm:inline">StudyWeb</span>
+        </a>
+      </div>
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- 搜索（桌面端显示，移动端由顶部按钮触发展开）-->
+        <div id="search-wrap" class="relative hidden sm:block">
+          <input id="search-input" type="text" placeholder="搜索知识点... (Ctrl+K)" class="w-40 sm:w-56 pl-9 pr-3 py-1.5 text-sm rounded-lg border focus:outline-none focus:ring-2 focus:border-transparent transition-all" style="border-color:var(--border);background:var(--bg);--tw-ring-color:var(--primary)">
+          <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2" style="color:var(--text-secondary)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <div id="search-results" class="absolute top-full mt-1 w-full rounded-lg shadow-lg border hidden z-50 max-h-80 overflow-y-auto" style="background:var(--bg-card);border-color:var(--border)"></div>
+        </div>
+        <!-- 主题切换 -->
+        <button id="theme-toggle" class="p-2 rounded-lg transition-colors" title="切换主题 (T)">
+          <svg id="theme-icon-light" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <svg id="theme-icon-dark" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
+        <!-- 帮助 -->
+        <button id="help-btn" class="p-2 rounded-lg transition-colors hidden sm:block" title="快捷键帮助 (?)">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+        <!-- 学习进度 -->
+        <div class="flex items-center gap-1.5 text-sm">
+          <div class="w-24 h-2 rounded-full overflow-hidden" style="background:var(--border)">
+            <div id="global-progress-bar" class="h-full rounded-full transition-all duration-500" style="width:0%;background:linear-gradient(90deg,var(--primary),var(--accent))"></div>
+          </div>
+          <span id="global-progress-text" class="min-w-[2.5rem]" style="color:var(--text-secondary)">0%</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex pt-16">
+    <!-- 侧边栏 -->
+    <aside id="sidebar" class="fixed left-0 top-16 bottom-0 w-64 border-r overflow-y-auto transition-all duration-300 lg:translate-x-0 -translate-x-full z-40" style="background:var(--bg-sidebar);border-color:var(--border)">
+      <nav class="p-4 space-y-1" id="sidebar-nav"></nav>
+    </aside>
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden" onclick="closeSidebar()"></div>
+
+    <!-- 侧边栏折叠按钮 -->
+    <button id="sidebar-toggle" class="hidden lg:flex fixed left-64 top-20 z-50 w-5 h-10 items-center justify-center rounded-r-md border border-l-0 cursor-pointer transition-all duration-300" style="background:var(--bg-sidebar);border-color:var(--border);color:var(--text-secondary)" title="折叠侧边栏">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+
+    <!-- 主内容区 -->
+    <main id="main-content" class="flex-1 lg:ml-64 min-h-screen transition-[margin] duration-300">
+      <div id="page-container" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8" style="transition:opacity 0.2s,transform 0.2s"></div>
+    </main>
+  </div>
+
+  <!-- 回到顶部 -->
+  <button id="back-to-top" class="fixed bottom-6 right-6 p-3 rounded-full text-white shadow-lg transition-all opacity-0 pointer-events-none z-50" style="background:var(--primary)">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+  </button>
+
+  <!-- 快捷键帮助面板 -->
+  <div id="help-panel" class="fixed inset-0 z-[60] hidden items-center justify-center" style="background:rgba(0,0,0,0.4);backdrop-filter:blur(4px)">
+    <div class="rounded-xl shadow-2xl p-6 max-w-sm w-full mx-4" style="background:var(--bg-card)">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-bold">键盘快捷键</h3>
+        <button onclick="document.getElementById('help-panel').classList.add('hidden');document.getElementById('help-panel').classList.remove('flex')" class="p-1 rounded-lg transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="space-y-2 text-sm">
+        <div class="flex justify-between"><span style="color:var(--text-secondary)">聚焦搜索</span><kbd class="px-2 py-0.5 rounded text-xs font-mono" style="background:var(--border)">Ctrl+K</kbd></div>
+        <div class="flex justify-between"><span style="color:var(--text-secondary)">切换主题</span><kbd class="px-2 py-0.5 rounded text-xs font-mono" style="background:var(--border)">T</kbd></div>
+        <div class="flex justify-between"><span style="color:var(--text-secondary)">帮助面板</span><kbd class="px-2 py-0.5 rounded text-xs font-mono" style="background:var(--border)">?</kbd></div>
+        <div class="flex justify-between"><span style="color:var(--text-secondary)">关闭面板</span><kbd class="px-2 py-0.5 rounded text-xs font-mono" style="background:var(--border)">Esc</kbd></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 脚本加载顺序：数据 → 功能模块 → 图表/工具 → 测验 → 主控制器 -->
+  <script src="js/data.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/favorites.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/calculator.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
