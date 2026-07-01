@@ -4255,7 +4255,7 @@ const CourseData = {
       { id: 'ds-07', title: 'BST 与 AVL 树', desc: '二叉搜索树、平衡二叉树', icon: '⚖', tags: ['高频'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">BST 与 AVL：让查找高效的树</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          二叉搜索树（BST）通过"左小右大"的规则，把查找、插入、删除都做到 $O(h)$。但 BST 可能退化为链表（$h=n$），AVL 树通过<strong>自平衡</strong>把高度控制在 $O(\\log n)$，保证最坏情况也是 $O(\\log n)$。这是理解红黑树、B 树的基础。
+          二叉搜索树（BST）通过"左小右大"的规则，把查找、插入、删除都做到 $O(h)$。但 BST 可能退化为链表（$h=n$），AVL 树通过<strong>自平衡</strong>把高度控制在 $O(\\log n)$，保证最坏情况也是 $O(\\log n)$。BST/AVL 是<a href="#" onclick="navigateTo('ds-06');return false;" style="color:var(--primary)">二叉树</a>的有序形式，也是理解<a href="#" onclick="navigateTo('ds-08');return false;" style="color:var(--primary)">红黑树、B 树</a>的基础。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">二叉搜索树（BST）的性质</h4>
@@ -4285,6 +4285,27 @@ const CourseData = {
           AVL 要求所有节点的 $|BF| \\le 1$（即 -1, 0, 1）<br>
           高度始终 $O(\\log n)$，所有操作保证 $O(\\log n)$
         </div>
+
+        <h4 class="font-medium mt-6 mb-2">四种旋转操作</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>失衡类型</th><th>插入位置</th><th>旋转方式</th><th>旋转后</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">LL 型</td><td>左子树的左子树</td><td>右旋</td><td>原左孩子成为新根</td></tr>
+            <tr><td class="font-medium">RR 型</td><td>右子树的右子树</td><td>左旋</td><td>原右孩子成为新根</td></tr>
+            <tr><td class="font-medium">LR 型</td><td>左子树的右子树</td><td>先左旋再右旋</td><td>原左孩子的右孩子成为新根</td></tr>
+            <tr><td class="font-medium">RL 型</td><td>右子树的左子树</td><td>先右旋再左旋</td><td>原右孩子的左孩子成为新根</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：AVL 树插入与旋转</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">依次插入 10, 20, 30，触发 RR 型失衡，需左旋。</p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>插入 10</strong>。根节点，BF=0。</div></div>
+          <div class="step-item"><div><strong>插入 20</strong>。10 的右孩子，BF(10)=-1（右子树高）。</div></div>
+          <div class="step-item"><div><strong>插入 30</strong>。20 的右孩子，BF(10)=-2（RR 型失衡）。</div></div>
+          <div class="step-item"><div><strong>左旋</strong>。以 10 为轴左旋，20 成为新根，10 为左孩子，30 为右孩子。BF 恢复平衡。</div></div>
+        </div>
+
         <div class="info-box warning">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
           <div><strong>四种失衡情况与旋转</strong>：插入/删除后若 $|BF|>1$，需旋转恢复平衡。LL型→右旋，RR型→左旋，LR型→先左旋再右旋，RL型→先右旋再左旋。判断失衡类型的关键：从插入点向上找第一个失衡节点，看新节点在其左/右、左孩子的左/右。</div>
@@ -4292,6 +4313,10 @@ const CourseData = {
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <div><strong>AVL vs BST vs 红黑树</strong>：BST 最简单但可能退化；AVL 严格平衡（BF≤1），查找快但插入删除旋转多；红黑树弱平衡，查找稍慢但增删更快。所以 AVL 适合"查找密集"场景，红黑树适合"增删频繁"场景（如 C++ map、Linux 进程调度）。详见 <a href="#" onclick="navigateTo('ds-08');return false;" style="color:var(--primary)">红黑树与 B 树</a>。</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>与<a href="#" onclick="navigateTo('ds-09');return false;" style="color:var(--primary)">堆</a>的对比</strong>：BST 支持有序遍历和范围查询，堆只支持最大/最小值。BST 查找 $O(\\log n)$，堆查找 $O(n)$。但堆的插入和删除最值都是 $O(\\log n)$，且可用数组实现（更紧凑）。</div>
         </div>
       ` },
       { id: 'ds-08', title: '红黑树与 B 树', desc: '红黑树性质、B/B+ 树（数据库索引）', icon: '🔴', tags: ['工程'], goals: { eng: true }, content: `
