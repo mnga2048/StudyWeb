@@ -2307,29 +2307,105 @@ const CourseData = {
     sections: [
       { id: 'ana-01', title: '半导体二极管', desc: '伏安特性、模型、稳压管', icon: '➡', tags: ['基础'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">二极管：单向导电的基础元件</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">二极管由 PN 结构成，核心特性是<strong>单向导电</strong>——正向导通、反向截止。理解伏安特性和等效模型，是分析整流、钳位、稳压等电路的基础。</p>
-        <div class="formula-block">伏安特性（肖克莱方程）：$I = I_S(e^{U/U_T} - 1)$，$U_T \\approx 26$mV（常温）<br>正向导通压降：硅管约 0.7V，锗管约 0.3V</div>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>工作区</th><th>电压</th><th>特性</th><th>等效模型</th></tr></thead><tbody><tr><td class="font-medium">正向导通区</td><td>$U > U_{on}$</td><td>电流随电压指数增长</td><td>0.7V 恒压源</td></tr><tr><td class="font-medium">反向截止区</td><td>$U_{BR} < U < 0$</td><td>仅微小反向饱和电流 $I_S$</td><td>断路</td></tr><tr><td class="font-medium">反向击穿区</td><td>$U < U_{BR}$</td><td>反向电流剧增（稳压管工作区）</td><td>稳压源</td></tr></tbody></table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">二极管由 PN 结构成，核心特性是<strong>单向导电</strong>——正向导通、反向截止。理解伏安特性和等效模型，是分析<a href="#" onclick="navigateTo('ana-02');return false;" style="color:var(--primary)">整流</a>、钳位、<a href="#" onclick="navigateTo('ana-13');return false;" style="color:var(--primary)">稳压</a>等电路的基础。二极管是最简单的半导体器件，也是理解<a href="#" onclick="navigateTo('ana-03');return false;" style="color:var(--primary)">三极管</a>和<a href="#" onclick="navigateTo('ana-01');return false;" style="color:var(--primary)">场效应管</a>的基础。</p>
+
+        <h4 class="font-medium mt-6 mb-2">PN 结的形成</h4>
+        <div class="formula-block">PN 结形成过程：<br>P 型半导体（多子为空穴）+ N 型半导体（多子为电子）<br>→ 交界面扩散形成空间电荷区（耗尽层）<br>→ 内建电场阻止进一步扩散，达到动态平衡<div class="text-sm text-gray-500 mt-2">PN 结是二极管、三极管、集成电路的基础结构</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">伏安特性（肖克莱方程）</h4>
+        <div class="formula-block">二极管电流方程：$I = I_S(e^{U/U_T} - 1)$<br>其中：$I_S$ 为反向饱和电流（极小，nA 级）<br>$U_T = \\frac{kT}{q} \\approx 26mV$（室温热电压）<div class="text-sm text-gray-500 mt-2">正向电压每增加 60mV，电流增大 10 倍（指数关系）</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">三个工作区</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>工作区</th><th>电压条件</th><th>电流特性</th><th>等效模型</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">正向导通区</td><td>$U > U_{on}$（硅 0.7V）</td><td>指数增长</td><td>0.7V 恒压源</td><td>整流、钳位</td></tr><tr><td class="font-medium">反向截止区</td><td>$U_{BR} < U < 0$</td><td>微小 $I_S$</td><td>断路</td><td>隔离、检波</td></tr><tr><td class="font-medium">反向击穿区</td><td>$U < U_{BR}$</td><td>剧增（可控）</td><td>稳压源</td><td>稳压管</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">等效电路模型</h4>
+        <div class="step-list"><div class="step-item"><div><strong>理想模型</strong>：正向导通视为短路，反向截止视为断路。用于粗略分析。</div></div><div class="step-item"><div><strong>恒压降模型</strong>：正向导通视为 0.7V 恒压源（硅管），反向截止视为断路。最常用。</div></div><div class="step-item"><div><strong>小信号模型</strong>：在静态工作点附近，二极管等效为动态电阻 $r_d=\\frac{U_T}{I_Q}$。用于交流分析。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">稳压管（齐纳二极管）</h4>
+        <div class="formula-block">稳压管工作在反向击穿区：<br>稳压值 $U_Z$（标称值，如 5.1V、12V）<br>工作电流 $I_Z$ 范围：$I_{Zmin} < I_Z < I_{Zmax}$<div class="text-sm text-gray-500 mt-2">$I_{Zmin}$ 保证稳压，$I_{Zmax}$ 防止过热损坏</div></div>
+
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>稳压管利用击穿</strong>：普通二极管要避免反向击穿（会损坏），但稳压管（齐纳二极管）专门工作在反向击穿区——电压基本不随电流变化，实现稳压。详见 <a href="#" onclick="navigateTo('ana-13');return false;" style="color:var(--primary)">直流稳压电源</a>。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>温度影响</strong>：温度升高时，$U_T$ 增大，$I_S$ 急剧增大（每升 10°C 翻倍）。正向压降约 -2mV/°C（负温度系数），这是热不稳定的根源。大电流二极管需考虑散热。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>特殊二极管</strong>：除普通二极管和稳压管外，还有发光二极管 LED（正向发光）、光电二极管（反向光照产生电流）、变容二极管（反向偏压改变结电容）等。它们都基于 PN 结，但利用不同特性。</div></div>
       ` },
       { id: 'ana-02', title: '二极管整流与滤波', desc: '半波/全波整流、电容滤波', icon: '🌊', tags: ['工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">整流滤波：把交流变直流</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">整流电路利用二极管的单向导电性，把交流电转为脉动直流；滤波电路（电容/电感）平滑脉动，输出较平稳的直流。这是所有直流电源的第一级。</p>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>整流方式</th><th>二极管数</th><th>输出</th><th>效率</th></tr></thead><tbody><tr><td class="font-medium">半波整流</td><td>1 个</td><td>只有正半周，脉动大</td><td>低</td></tr><tr><td class="font-medium">全波整流（桥式）</td><td>4 个（桥堆）</td><td>正负半周都利用，脉动小</td><td>高</td></tr></tbody></table></div>
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>电容滤波原理</strong>：并联大电容，二极管导通时电容充电（接近峰值），二极管截止时电容向负载放电，填平波谷。纹波大小取决于 $RC$ 时间常数与周期之比——$RC$ 越大纹波越小。详见 <a href="#" onclick="navigateTo('circ-04');return false;" style="color:var(--primary)">一阶电路暂态</a>。</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">整流电路利用<a href="#" onclick="navigateTo('ana-01');return false;" style="color:var(--primary)">二极管</a>的单向导电性，把交流电转为脉动直流；滤波电路（电容/电感）平滑脉动，输出较平稳的直流。这是所有直流电源的第一级，也是<a href="#" onclick="navigateTo('ana-13');return false;" style="color:var(--primary)">直流稳压电源</a>的基础。</p>
+
+        <h4 class="font-medium mt-6 mb-2">半波整流</h4>
+        <div class="formula-block">半波整流电路：1 个二极管 + 负载电阻<br>输出电压平均值：$U_o = \\frac{U_m}{\\pi} \\approx 0.318 U_m$<br>输出电压有效值：$U_{rms} = \\frac{U_m}{2}$<div class="text-sm text-gray-500 mt-2">只利用正半周，负半周被截掉，效率低、脉动大</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">全波整流（桥式）</h4>
+        <div class="formula-block">桥式整流电路：4 个二极管（桥堆）<br>输出电压平均值：$U_o = \\frac{2U_m}{\\pi} \\approx 0.636 U_m$<br>输出电压有效值：$U_{rms} = \\frac{U_m}{\\sqrt{2}}$<div class="text-sm text-gray-500 mt-2">正负半周都利用，效率高、脉动小，是最常用整流方式</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">半波 vs 全波对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>特性</th><th>半波整流</th><th>全波桥式整流</th></tr></thead><tbody><tr><td class="font-medium">二极管数</td><td>1 个</td><td>4 个（桥堆）</td></tr><tr><td class="font-medium">输出平均值</td><td>$0.318 U_m$</td><td>$0.636 U_m$</td></tr><tr><td class="font-medium">脉动频率</td><td>$f$（与输入同频）</td><td>$2f$（输入频率的两倍）</td></tr><tr><td class="font-medium">纹波系数</td><td>大（1.21）</td><td>小（0.48）</td></tr><tr><td class="font-medium">应用</td><td>简单、低成本场合</td><td>大多数直流电源</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">电容滤波原理</h4>
+        <div class="formula-block">滤波后输出电压（桥式 + 电容）：<br>$U_o \\approx U_m - \\frac{I_o}{4fC}$（纹波电压）<br>纹波电压：$\\Delta U = \\frac{I_o}{fC}$（半波）或 $\\frac{I_o}{2fC}$（全波）<div class="text-sm text-gray-500 mt-2">$C$ 越大、$f$ 越高、$I_o$ 越小，纹波越小</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：桥式整流滤波</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">已知：输入 $u_2=10\\sqrt{2}\\sin(100\\pi t)V$（有效值 10V），桥式整流 + 电容滤波，$C=1000\\mu F$，$R_L=100\\Omega$。求输出电压和纹波。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：求峰值</strong>。$U_m=10\\sqrt{2}=14.14V$</div></div><div class="step-item"><div><strong>第二步：求负载电流</strong>。$I_o=\\frac{U_o}{R_L} \\approx \\frac{14}{100}=140mA$</div></div><div class="step-item"><div><strong>第三步：求纹波</strong>。$\\Delta U=\\frac{I_o}{2fC}=\\frac{0.14}{2 \\times 50 \\times 0.001}=1.4V$</div></div><div class="step-item"><div><strong>第四步：求输出电压</strong>。$U_o=U_m-\\frac{\\Delta U}{2}=14.14-0.7=13.44V$</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>滤波电容选型</strong>：工程上常用 $C \\geq \\frac{3\\sim5}{2fR_L}$ 来选择滤波电容，保证纹波足够小。电容耐压需大于 $U_m$（留 20% 余量）。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>浪涌电流</strong>：上电瞬间，电容相当于短路，二极管承受很大浪涌电流。需在电路中串联小电阻或 NTC 热敏电阻限流，保护二极管。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与一阶暂态的联系</strong>：电容滤波本质是<a href="#" onclick="navigateTo('circ-04');return false;" style="color:var(--primary)">RC 一阶电路</a>的充放电过程——二极管导通时电容充电（时间常数小），截止时电容放电（时间常数大）。理解一阶暂态有助于分析纹波特性。</div></div>
       ` },
       { id: 'ana-03', title: '三极管(BJT)工作原理', desc: '放大区、特性曲线', icon: '🔺', tags: ['核心'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">三极管：电流控制电流的放大器</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">双极型晶体管（BJT）有三个电极（基极 B、集电极 C、发射极 E），核心功能是<strong>用小基极电流控制大集电极电流</strong>（电流控制电流源 CCCS），实现信号放大。三个工作区对应不同应用。</p>
-        <div class="formula-block">电流关系：$I_C = \\beta I_B$，$I_E = I_B + I_C = (1+\\beta)I_B$<br>$\\beta$（共射电流放大系数）通常 50~300</div>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>工作区</th><th>结偏置</th><th>特性</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">放大区</td><td>发射结正偏、集电结反偏</td><td>$I_C=\\beta I_B$（线性放大）</td><td>模拟放大</td></tr><tr><td class="font-medium">饱和区</td><td>两结均正偏</td><td>$U_{CE}\\approx 0.3$V，$I_C$ 不受 $I_B$ 控制</td><td>开关导通（数字电路）</td></tr><tr><td class="font-medium">截止区</td><td>两结均反偏</td><td>$I_B=0$，$I_C\\approx 0$</td><td>开关断开（数字电路）</td></tr></tbody></table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">双极型晶体管（BJT）有三个电极（基极 B、集电极 C、发射极 E），核心功能是<strong>用小基极电流控制大集电极电流</strong>（电流控制电流源 CCCS），实现信号放大。三个工作区对应不同应用——模拟放大和数字开关。BJT 是<a href="#" onclick="navigateTo('ana-04');return false;" style="color:var(--primary)">基本放大电路</a>的核心器件。</p>
+
+        <h4 class="font-medium mt-6 mb-2">BJT 的结构与符号</h4>
+        <div class="formula-block">BJT 由两个 PN 结组成（NPN 或 PNP）：<br>NPN：基极 P 型，集电极和发射极 N 型<br>PNP：基极 N 型，集电极和发射极 P 型<div class="text-sm text-gray-500 mt-2">箭头方向表示发射结正向偏置方向（NPN 箭头向外，PNP 箭头向内）</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">电流关系</h4>
+        <div class="formula-block">三种电流关系：<br>$I_C = \\beta I_B$（集电极电流 = 放大系数 × 基极电流）<br>$I_E = I_B + I_C = (1+\\beta)I_B$<br>$\\alpha = \\frac{\\beta}{1+\\beta}$（共基电流放大系数，接近 1）<div class="text-sm text-gray-500 mt-2">$\\beta$（共射电流放大系数）通常 50~300，是 BJT 最重要的参数</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">三个工作区</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>工作区</th><th>结偏置</th><th>电流特性</th><th>$U_{CE}$</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">放大区</td><td>发射结正偏、集电结反偏</td><td>$I_C=\\beta I_B$（线性）</td><td>较大（>0.3V）</td><td>模拟放大</td></tr><tr><td class="font-medium">饱和区</td><td>两结均正偏</td><td>$I_C$ 不受 $I_B$ 控制</td><td>$\\approx 0.3V$</td><td>开关导通</td></tr><tr><td class="font-medium">截止区</td><td>两结均反偏</td><td>$I_B=0$，$I_C\\approx 0$</td><td>$\\approx V_{CC}$</td><td>开关断开</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">特性曲线</h4>
+        <div class="step-list"><div class="step-item"><div><strong>输入特性</strong>：$i_B=f(u_{BE})|_{u_{CE}=const}$，类似二极管正向特性，$U_{BE}\\approx 0.7V$（硅管）。</div></div><div class="step-item"><div><strong>输出特性</strong>：$i_C=f(u_{CE})|_{i_B=const}$，放大区近似水平线（恒流源），饱和区快速上升。</div></div><div class="step-item"><div><strong>转移特性</strong>：$i_C=f(u_{BE})$，指数关系（类似二极管），用于跨导分析。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">小信号模型</h4>
+        <div class="formula-block">混合 $\\pi$ 模型（低频简化）：<br>输入电阻：$r_{be} = r_{bb'} + (1+\\beta)\\frac{U_T}{I_{CQ}} \\approx \\beta \\frac{U_T}{I_{CQ}}$<br>跨导：$g_m = \\frac{I_{CQ}}{U_T} = \\frac{\\beta}{r_{be}}$<br>受控源：$i_c = g_m u_{be} = \\beta i_b$<div class="text-sm text-gray-500 mt-2">$U_T \\approx 26mV$（室温），$I_{CQ}$ 为静态工作点电流</div></div>
+
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>放大与开关的统一</strong>：模拟电路用放大区（线性），数字电路用饱和/截止区（开关）。同一器件，工作区不同用途完全不同。详见 <a href="#" onclick="navigateTo('dig-14');return false;" style="color:var(--primary)">数字电路</a>。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>温度影响</strong>：$U_{BE}$ 温度系数约 -2mV/°C，$\\beta$ 随温度升高而增大。这导致静态工作点漂移，需要<a href="#" onclick="navigateTo('ana-05');return false;" style="color:var(--primary)">稳定偏置电路</a>来补偿。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('circ-12');return false;" style="color:var(--primary)">受控源</a>的联系</strong>：BJT 本质是 CCCS（电流控制电流源），$i_c=\\beta i_b$。在电路分析中，BJT 用受控源模型代替，这是<a href="#" onclick="navigateTo('ana-04');return false;" style="color:var(--primary)">小信号等效电路</a>的基础。</div></div>
       ` },
       { id: 'ana-04', title: '基本放大电路', desc: '共射/共集/共基、交直流分析', icon: '🔊', tags: ['高频核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">三种基本组态：放大电路的基石</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">根据输入输出公共端不同，基本放大电路分三种组态：共射（CE）、共集（CC）、共基（CB）。三者各有特点，掌握其电压/电流增益、输入/输出电阻，是分析所有放大电路的基础。</p>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>组态</th><th>电压增益</th><th>电流增益</th><th>输入电阻</th><th>输出电阻</th><th>特点</th></tr></thead><tbody><tr><td class="font-medium">共射 (CE)</td><td>大（反相）</td><td>大</td><td>中</td><td>中</td><td>最常用，增益高</td></tr><tr><td class="font-medium">共集 (CC)</td><td>≈1（同相）</td><td>大</td><td>大</td><td>小</td><td>射极跟随器，阻抗变换</td></tr><tr><td class="font-medium">共基 (CB)</td><td>大（同相）</td><td>≈1</td><td>小</td><td>大</td><td>高频特性好</td></tr></tbody></table></div>
-        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>交直流分离分析</strong>：放大电路既有直流偏置（设静态工作点）又有交流信号（被放大）。分析时先算直流（电容开路），再算交流（电容短路、直流源置零）。两者叠加就是实际工作状态。共射放大器的电压增益 $A_v = -g_m R_C$（负号表示反相）。</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">根据输入输出公共端不同，基本放大电路分三种组态：共射（CE）、共集（CC）、共基（CB）。三者各有特点，掌握其电压/电流增益、输入/输出电阻，是分析所有放大电路的基础。基本放大电路建立在<a href="#" onclick="navigateTo('ana-03');return false;" style="color:var(--primary)">BJT 工作原理</a>基础上，是<a href="#" onclick="navigateTo('ana-06');return false;" style="color:var(--primary)">多级放大电路</a>和<a href="#" onclick="navigateTo('ana-08');return false;" style="color:var(--primary)">反馈电路</a>的基石。</p>
+
+        <h4 class="font-medium mt-6 mb-2">三种组态对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>组态</th><th>电压增益</th><th>电流增益</th><th>输入电阻</th><th>输出电阻</th><th>特点</th></tr></thead><tbody><tr><td class="font-medium">共射 (CE)</td><td>大（反相）</td><td>大（$\\beta$）</td><td>中（$r_{be}$）</td><td>中（$R_C$）</td><td>最常用，增益高</td></tr><tr><td class="font-medium">共集 (CC)</td><td>$\\approx 1$（同相）</td><td>大（$1+\\beta$）</td><td>大</td><td>小</td><td>射极跟随器，阻抗变换</td></tr><tr><td class="font-medium">共基 (CB)</td><td>大（同相）</td><td>$\\approx 1$（$\\alpha$）</td><td>小</td><td>大</td><td>高频特性好</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">共射放大器</h4>
+        <div class="formula-block">共射放大器小信号分析：<br>电压增益：$A_v = -g_m (R_C \\parallel R_L) = -\\frac{\\beta (R_C \\parallel R_L)}{r_{be}}$<br>输入电阻：$R_i = R_B \\parallel r_{be}$<br>输出电阻：$R_o = R_C$<div class="text-sm text-gray-500 mt-2">负号表示输出与输入反相，$g_m$ 为跨导，$r_{be}$ 为输入电阻</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">共集放大器（射极跟随器）</h4>
+        <div class="formula-block">共集放大器小信号分析：<br>电压增益：$A_v = \\frac{(1+\\beta)(R_E \\parallel R_L)}{r_{be} + (1+\\beta)(R_E \\parallel R_L)} \\approx 1$<br>输入电阻：$R_i = R_B \\parallel [r_{be} + (1+\\beta)(R_E \\parallel R_L)]$（很大）<br>输出电阻：$R_o = R_E \\parallel \\frac{r_{be} + R_S}{1+\\beta}$（很小）<div class="text-sm text-gray-500 mt-2">电压增益接近 1，但电流增益大，实现阻抗变换</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">共基放大器</h4>
+        <div class="formula-block">共基放大器小信号分析：<br>电压增益：$A_v = g_m (R_C \\parallel R_L) = \\frac{\\beta (R_C \\parallel R_L)}{r_{be}}$<br>输入电阻：$R_i = R_E \\parallel \\frac{r_{be}}{1+\\beta}$（很小）<br>输出电阻：$R_o = R_C$（大）<div class="text-sm text-gray-500 mt-2">电压增益与共射相同但同相，高频特性好（无密勒效应）</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：共射放大器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">已知：$V_{CC}=12V$，$R_B=300k\\Omega$，$R_C=3k\\Omega$，$R_L=3k\\Omega$，$\\beta=100$。求电压增益和输入电阻。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：求静态工作点</strong>。$I_{BQ}=\\frac{V_{CC}-0.7}{R_B}=\\frac{11.3}{300k}=37.7\\mu A$，$I_{CQ}=\\beta I_{BQ}=3.77mA$</div></div><div class="step-item"><div><strong>第二步：求 $r_{be}$</strong>。$r_{be}=\\beta \\frac{U_T}{I_{CQ}}=100 \\times \\frac{26mV}{3.77mA}=690\\Omega$</div></div><div class="step-item"><div><strong>第三步：求增益</strong>。$A_v=-\\frac{\\beta (R_C \\parallel R_L)}{r_{be}}=-\\frac{100 \\times 1.5k}{690}=-217$</div></div><div class="step-item"><div><strong>第四步：求输入电阻</strong>。$R_i=R_B \\parallel r_{be}=300k \\parallel 690=688\\Omega$</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>组态选择口诀</strong>：电压放大选共射，阻抗变换选共集，高频放大选共基。实际电路常组合使用（如共射-共集级联，兼顾增益和带负载能力）。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>交直流分离分析</strong>：放大电路既有直流偏置（设静态工作点）又有交流信号（被放大）。分析时先算直流（电容开路），再算交流（电容短路、直流源置零）。两者叠加就是实际工作状态。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('circ-12');return false;" style="color:var(--primary)">受控源</a>的联系</strong>：BJT 小信号模型是 CCCS（电流控制电流源），$i_c=\\beta i_b$。在电路分析中，用受控源模型代替 BJT，简化计算。</div></div>
       ` },
       { id: 'ana-05', title: '静态工作点稳定', desc: '图解法、分压偏置', icon: '⚖', tags: ['核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">工作点稳定：温度补偿的艺术</h3>
