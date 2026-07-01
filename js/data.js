@@ -2675,16 +2675,58 @@ const CourseData = {
     sections: [
       { id: 'dig-01', title: '数制与编码', desc: '二进制/BCD/格雷码/原码补码', icon: '0️⃣', tags: ['基础'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">数制与编码：数字世界的语言</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">数字电路用二进制处理信息。掌握各数制转换、有符号数表示（原码/反码/补码）、BCD 码和格雷码，是理解数字系统和计算机运算的基础。</p>
-        <div class="formula-block"><strong>常用数制</strong>：二进制（基 2）、八进制（基 8）、十进制（基 10）、十六进制（基 16）<br>转换核心：任意进制↔十进制按权展开，十进制↔二进制用除 2 取余/乘 2 取整</div>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>编码</th><th>规则</th><th>用途</th></tr></thead><tbody><tr><td class="font-medium">8421 BCD</td><td>每位十进制用 4 位二进制</td><td>显示（数码管）</td></tr><tr><td class="font-medium">格雷码</td><td>相邻数只有 1 位不同</td><td>防错（旋转编码器）</td></tr><tr><td class="font-medium">原码</td><td>最高位符号位</td><td>直观但运算复杂</td></tr><tr><td class="font-medium">补码</td><td>正数同原码，负数取反加 1</td><td>计算机运算（统一加减）</td></tr></tbody></table></div>
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>补码的意义</strong>：用补码表示负数，减法可转成加法（A-B=A+B 补），运算器只需加法器。这就是计算机内部用补码的原因。n 位补码范围 $-2^{n-1}$ 到 $2^{n-1}-1$。</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">数字电路用二进制处理信息。掌握各数制转换、有符号数表示（原码/反码/补码）、BCD 码和格雷码，是理解数字系统和计算机运算的基础。数制编码是<a href="#" onclick="navigateTo('dig-02');return false;" style="color:var(--primary)">逻辑代数</a>和<a href="#" onclick="navigateTo('dig-03');return false;" style="color:var(--primary)">组合逻辑电路</a>的基础。</p>
+
+        <h4 class="font-medium mt-6 mb-2">常用数制</h4>
+        <div class="formula-block">四种常用数制：<br>二进制（基 2）：0, 1（数字电路的基础）<br>八进制（基 8）：0~7（3 位二进制一组）<br>十进制（基 10）：0~9（人类习惯）<br>十六进制（基 16）：0~9, A~F（4 位二进制一组）<div class="text-sm text-gray-500 mt-2">数字电路内部用二进制，但显示和编程常用十六进制</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">数制转换方法</h4>
+        <div class="step-list"><div class="step-item"><div><strong>任意进制→十进制</strong>：按权展开求和。$(1011)_2 = 1\\times2^3+0\\times2^2+1\\times2^1+1\\times2^0 = (11)_{10}$</div></div><div class="step-item"><div><strong>十进制→二进制</strong>：整数部分除 2 取余（从下往上），小数部分乘 2 取整（从上往下）。</div></div><div class="step-item"><div><strong>二进制↔八进制</strong>：每 3 位二进制对应 1 位八进制。</div></div><div class="step-item"><div><strong>二进制↔十六进制</strong>：每 4 位二进制对应 1 位十六进制。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">有符号数表示</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>表示法</th><th>正数</th><th>负数</th><th>范围（8 位）</th><th>特点</th></tr></thead><tbody><tr><td class="font-medium">原码</td><td>符号位 0 + 绝对值</td><td>符号位 1 + 绝对值</td><td>-127 ~ +127</td><td>直观，但运算复杂</td></tr><tr><td class="font-medium">反码</td><td>同原码</td><td>符号位不变，其余取反</td><td>-127 ~ +127</td><td>过渡表示</td></tr><tr><td class="font-medium">补码</td><td>同原码</td><td>反码 + 1</td><td>-128 ~ +127</td><td>统一加减法（计算机必用）</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">常用编码</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>编码</th><th>规则</th><th>用途</th><th>示例（十进制 9）</th></tr></thead><tbody><tr><td class="font-medium">8421 BCD</td><td>每位十进制用 4 位二进制</td><td>显示（数码管）</td><td>1001</td></tr><tr><td class="font-medium">格雷码</td><td>相邻数只有 1 位不同</td><td>防错（旋转编码器）</td><td>1101</td></tr><tr><td class="font-medium">余 3 码</td><td>8421 BCD + 3</td><td>运算方便</td><td>1100</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：补码运算</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">用 8 位补码计算 $15 - 27 = ?$</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：转补码</strong>。$+15 = 00001111$，$+27 = 00011011$</div></div><div class="step-item"><div><strong>第二步：求 -27 的补码</strong>。$27$ 的原码 $= 00011011$，取反 $= 11100100$，加 1 $= 11100101$</div></div><div class="step-item"><div><strong>第三步：补码相加</strong>。$00001111 + 11100101 = 11110100$</div></div><div class="step-item"><div><strong>第四步：判断结果</strong>。最高位为 1（负数），取反加 1 得原码 $= 00001100 = -12$。验证：$15-27=-12$ ✓</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>补码的意义</strong>：用补码表示负数，减法可转成加法（$A-B=A+(-B)_{补}$），运算器只需加法器。这就是计算机内部用补码的原因。n 位补码范围 $-2^{n-1}$ 到 $2^{n-1}-1$。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>溢出判断</strong>：两个正数相加结果为负，或两个负数相加结果为正，说明溢出。判断方法：最高位进位 $\\oplus$ 次高位进位 $= 1$ 则溢出。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-05');return false;" style="color:var(--primary)">加法器</a>的联系</strong>：补码运算的硬件实现就是<a href="#" onclick="navigateTo('dig-05');return false;" style="color:var(--primary)">加法器</a>——减法通过求补后相加实现。理解数制编码有助于理解计算机运算原理。</div></div>
       ` },
       { id: 'dig-02', title: '逻辑代数基础', desc: '公式法、卡诺图化简', icon: '∧∨', tags: ['核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">逻辑代数与卡诺图化简</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">逻辑代数是分析和设计数字电路的数学工具。卡诺图是化简逻辑函数最直观的方法，能把复杂的布尔表达式化为最简"与或式"，减少门电路数量。</p>
-        <div class="formula-block"><strong>基本定律</strong>：交换律、结合律、分配律、反演律（德摩根）$\\overline{AB}=\\bar{A}+\\bar{B}$<br><strong>常用恒等式</strong>：$A+AB=A$，$A+\\bar{A}B=A+B$，$AB+\\bar{A}C+BC=AB+\\bar{A}C$</div>
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>卡诺图画圈原则</strong>：①圈越大越好（消去变量越多）；②圈必须是 2 的幂（1/2/4/8）；③相邻包括左右边缘、上下边缘；④每个 1 至少被圈一次；⑤多余的圈不要。4 变量卡诺图最多 8 格一圈消 3 变量。</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">逻辑代数是分析和设计数字电路的数学工具。卡诺图是化简逻辑函数最直观的方法，能把复杂的布尔表达式化为最简"与或式"，减少门电路数量。逻辑代数是<a href="#" onclick="navigateTo('dig-03');return false;" style="color:var(--primary)">组合逻辑电路</a>设计的基础。</p>
+
+        <h4 class="font-medium mt-6 mb-2">基本逻辑运算</h4>
+        <div class="formula-block">三种基本运算：<br>与（AND）：$Y = A \\cdot B$（全 1 出 1）<br>或（OR）：$Y = A + B$（有 1 出 1）<br>非（NOT）：$Y = \\bar{A}$（取反）<div class="text-sm text-gray-500 mt-2">任何逻辑函数都可用这三种运算组合实现</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">基本定律与公式</h4>
+        <div class="formula-block">重要定律：<br>交换律：$A+B=B+A$，$AB=BA$<br>结合律：$(A+B)+C=A+(B+C)$<br>分配律：$A(B+C)=AB+AC$<br>德摩根定律：$\\overline{AB}=\\bar{A}+\\bar{B}$，$\\overline{A+B}=\\bar{A}\\bar{B}$<div class="text-sm text-gray-500 mt-2">德摩根定律是化简的关键——可将与或式和或与式互换</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">常用恒等式</h4>
+        <div class="formula-block">化简常用：<br>$A+AB=A$（吸收律）<br>$A+\\bar{A}B=A+B$（冗余律）<br>$AB+\\bar{A}C+BC=AB+\\bar{A}C$（消去冗余项）<br>$A \\oplus B = \\bar{A}B + A\\bar{B}$（异或）</div>
+
+        <h4 class="font-medium mt-6 mb-2">卡诺图化简步骤</h4>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：填卡诺图</strong>。根据真值表或表达式，在对应格填 1（或 0、X）。</div></div><div class="step-item"><div><strong>第二步：画圈</strong>。圈 2 的幂次个相邻 1（1/2/4/8），圈越大越好。</div></div><div class="step-item"><div><strong>第三步：写乘积项</strong>。每个圈对应一个与项，圈内不变的变量保留（1 为原变量，0 为反变量）。</div></div><div class="step-item"><div><strong>第四步：求和</strong>。所有乘积项相或，得到最简与或式。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">卡诺图画圈原则</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>原则</th><th>说明</th><th>示例</th></tr></thead><tbody><tr><td class="font-medium">圈尽量大</td><td>2 的幂次（1/2/4/8）</td><td>8 格圈消 3 变量</td></tr><tr><td class="font-medium">圈尽量少</td><td>覆盖所有 1 的最少圈数</td><td>最简表达式</td></tr><tr><td class="font-medium">可重叠</td><td>同一个 1 可被多个圈覆盖</td><td>不违反规则</td></tr><tr><td class="font-medium">必须包含</td><td>每个 1 至少被圈一次</td><td>保证覆盖</td></tr><tr><td class="font-medium">边缘相邻</td><td>左右边缘、上下边缘相邻</td><td>卡诺图是环形结构</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例化简：4 变量卡诺图</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">化简 $F(A,B,C,D) = \\sum m(0,1,2,4,5,6,8,9,12,13,14)$</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：填图</strong>。在 4×4 卡诺图中，对应最小项格填 1。</div></div><div class="step-item"><div><strong>第二步：画圈</strong>。圈 1：$m(0,1,4,5)$（消 AB）；圈 2：$m(0,2,4,6)$（消 AD）；圈 3：$m(8,12)$（消 BD）；圈 4：$m(0,8)$（消 CD）。</div></div><div class="step-item"><div><strong>第三步：写表达式</strong>。$F = \\bar{A}\\bar{C} + \\bar{A}\\bar{D} + B\\bar{D} + \\bar{B}\\bar{C}\\bar{D}$</div></div><div class="step-item"><div><strong>第四步：验证</strong>。检查所有最小项都被覆盖，没有多余圈。</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>无关项（X）的利用</strong>：无关项可当 0 或 1，灵活使用可使圈更大、表达式更简。在真值表中用 X 表示不会出现的输入组合。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>最简的标准</strong>：最简与或式 = 乘积项最少 + 每个乘积项变量最少。卡诺图保证得到最简结果，但变量超过 5 个时卡诺图变复杂，宜用公式法或计算机辅助。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-04');return false;" style="color:var(--primary)">译码器</a>的联系</strong>：卡诺图化简的结果直接对应门电路实现。最小项可用<a href="#" onclick="navigateTo('dig-04');return false;" style="color:var(--primary)">译码器</a>+或门实现，这是组合逻辑设计的两种方法之一。</div></div>
       ` },
       { id: 'dig-03', title: '组合逻辑电路', desc: '分析步骤、设计方法', icon: '🔀', tags: ['核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">组合逻辑：无记忆的逻辑电路</h3>
