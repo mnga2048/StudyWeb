@@ -2730,31 +2730,123 @@ const CourseData = {
       ` },
       { id: 'dig-03', title: '组合逻辑电路', desc: '分析步骤、设计方法', icon: '🔀', tags: ['核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">组合逻辑：无记忆的逻辑电路</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">组合逻辑电路的输出仅取决于当前输入（无记忆）。分析是"从电路到功能"，设计是"从功能到电路"。掌握这两套流程，就能处理任意组合逻辑问题。</p>
-        <div class="step-list"><div class="step-item"><div><strong>分析步骤</strong>：①逐级写逻辑表达式；②化简（公式法/卡诺图）；③列真值表；④描述功能。</div></div><div class="step-item"><div><strong>设计步骤</strong>：①逻辑抽象（确定输入输出）；②列真值表；③写表达式并化简；④画逻辑图。</div></div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">组合逻辑电路的输出仅取决于当前输入（无记忆）。分析是"从电路到功能"，设计是"从功能到电路"。掌握这两套流程，就能处理任意组合逻辑问题。组合逻辑建立在<a href="#" onclick="navigateTo('dig-02');return false;" style="color:var(--primary)">逻辑代数</a>基础上，是<a href="#" onclick="navigateTo('dig-04');return false;" style="color:var(--primary)">编码器/译码器/选择器</a>等中规模芯片的理论基础。</p>
+
+        <h4 class="font-medium mt-6 mb-2">组合逻辑的定义</h4>
+        <div class="formula-block">组合逻辑电路特征：<br>输出 $Y_i = f(X_1, X_2, \\cdots, X_n)$（仅取决于当前输入）<br>无记忆（无反馈、无存储元件）<br>任意时刻输出可由输入唯一确定<div class="text-sm text-gray-500 mt-2">与时序逻辑的区别：时序逻辑有记忆，输出还取决于之前的状态</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">分析步骤（从电路到功能）</h4>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：写表达式</strong>。从输入到输出，逐级写各门电路的逻辑表达式。</div></div><div class="step-item"><div><strong>第二步：化简</strong>。用<a href="#" onclick="navigateTo('dig-02');return false;" style="color:var(--primary)">公式法或卡诺图</a>化简表达式。</div></div><div class="step-item"><div><strong>第三步：列真值表</strong>。根据化简后的表达式，列出所有输入组合对应的输出。</div></div><div class="step-item"><div><strong>第四步：描述功能</strong>。用文字描述电路的功能（如"判奇电路"、"多数表决器"）。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">设计步骤（从功能到电路）</h4>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：逻辑抽象</strong>。确定输入变量和输出函数，明确功能要求。</div></div><div class="step-item"><div><strong>第二步：列真值表</strong>。列出所有输入组合对应的输出值。</div></div><div class="step-item"><div><strong>第三步：写表达式</strong>。从真值表写最小项表达式，用卡诺图化简。</div></div><div class="step-item"><div><strong>第四步：画逻辑图</strong>。根据化简后的表达式，用门电路实现。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">常见组合逻辑电路</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>电路</th><th>功能</th><th>输入</th><th>输出</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">加法器</td><td>二进制加法</td><td>A, B, $C_{in}$</td><td>S, $C_{out}$</td><td>算术运算</td></tr><tr><td class="font-medium">比较器</td><td>比较大小</td><td>A, B</td><td>A>B, A=B, A<B</td><td>判断</td></tr><tr><td class="font-medium">编码器</td><td>输入优先编码</td><td>$I_0$~$I_7$</td><td>$Y_2Y_1Y_0$</td><td>键盘</td></tr><tr><td class="font-medium">译码器</td><td>地址译码</td><td>$A_2A_1A_0$</td><td>$Y_0$~$Y_7$</td><td>存储器选址</td></tr><tr><td class="font-medium">选择器</td><td>多路选择</td><td>$D_0$~$D_7$, S</td><td>Y</td><td>数据切换</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例设计：三人表决器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">设计三人表决器：3 人投票，多数同意（≥2 票）则通过。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：逻辑抽象</strong>。输入 A、B、C（1=同意），输出 Y（1=通过）。</div></div><div class="step-item"><div><strong>第二步：列真值表</strong>。$Y=1$ 当 ABC=011,101,110,111（4 个最小项）。</div></div><div class="step-item"><div><strong>第三步：写表达式</strong>。$Y=\\bar{A}BC+A\\bar{B}C+AB\\bar{C}+ABC=AB+AC+BC$（卡诺图化简）。</div></div><div class="step-item"><div><strong>第四步：画逻辑图</strong>。3 个与门 + 1 个或门，或用与非门实现（$Y=\\overline{\\overline{AB} \\cdot \\overline{AC} \\cdot \\overline{BC}}$）。</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与非门万能</strong>：任何组合逻辑都可用与非门实现——先写与或式，再用德摩根定律转为与非-与非形式。实际芯片（如 74LS00 四 2 输入与非门）就是基于这个原理。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>竞争冒险</strong>：组合逻辑中，由于门电路延迟，输入变化时输出可能出现短暂毛刺。消除方法：①加冗余项；②加滤波电容；③用<a href="#" onclick="navigateTo('dig-06');return false;" style="color:var(--primary)">选通脉冲</a>。详见<a href="#" onclick="navigateTo('dig-06');return false;" style="color:var(--primary)">竞争冒险</a>。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-07');return false;" style="color:var(--primary)">时序逻辑</a>的区别</strong>：组合逻辑无记忆，输出仅取决于当前输入；时序逻辑有记忆（触发器），输出还取决于之前的状态。组合逻辑是时序逻辑的子模块。</div></div>
       ` },
       { id: 'dig-04', title: '编码器/译码器/选择器', desc: '常用组合芯片及其应用', icon: '▦', tags: ['高频'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">中规模组合逻辑芯片</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">编码器、译码器、数据选择器是集成化的组合逻辑器件，用少量芯片实现复杂功能。译码器实现地址译码，选择器实现多路复用，是数字系统的核心元件。</p>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>器件</th><th>功能</th><th>典型芯片</th></tr></thead><tbody><tr><td class="font-medium">编码器</td><td>多输入→二进制编码（优先编码器处理同时输入）</td><td>74LS148（8-3 线）</td></tr><tr><td class="font-medium">译码器</td><td>二进制→多输出（每路对应一个最小项）</td><td>74LS138（3-8 线）</td></tr><tr><td class="font-medium">数据选择器</td><td>多路输入→1 路输出（地址选择）</td><td>74LS153（双 4 选 1）、74LS151（8 选 1）</td></tr><tr><td class="font-medium">数据分配器</td><td>1 路输入→多路输出（地址选择）</td><td>（译码器反用）</td></tr></tbody></table></div>
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>译码器实现任意组合逻辑</strong>：译码器输出是最小项，配合或门/与非门可实现任意逻辑函数（最小项之和形式）。3-8 译码器可实现任意 3 变量函数。同理数据选择器也可——n 选 1 选择器可实现 n-1 变量函数（地址线做变量，数据端做剩余变量的函数）。</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">编码器、译码器、数据选择器是集成化的<a href="#" onclick="navigateTo('dig-03');return false;" style="color:var(--primary)">组合逻辑</a>器件，用少量芯片实现复杂功能。译码器实现地址译码，选择器实现多路复用，是数字系统的核心元件。</p>
+
+        <h4 class="font-medium mt-6 mb-2">四种常用芯片</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>器件</th><th>功能</th><th>典型芯片</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">编码器</td><td>多输入→二进制编码</td><td>74LS148（8-3 线优先）</td><td>键盘、中断请求</td></tr><tr><td class="font-medium">译码器</td><td>二进制→多输出（最小项）</td><td>74LS138（3-8 线）</td><td>地址译码、实现逻辑函数</td></tr><tr><td class="font-medium">数据选择器</td><td>多路输入→1 路输出</td><td>74LS151（8 选 1）</td><td>数据切换、实现逻辑函数</td></tr><tr><td class="font-medium">数据分配器</td><td>1 路输入→多路输出</td><td>译码器反用</td><td>数据分发</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">译码器实现逻辑函数</h4>
+        <div class="formula-block">译码器 + 或门 = 任意组合逻辑：<br>$F = \\sum m(i)$（最小项之和）<br>3-8 译码器（74LS138）可实现任意 3 变量函数<div class="text-sm text-gray-500 mt-2">译码器输出 $Y_i = \\bar{m_i}$（低有效），配合与非门实现</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">数据选择器实现逻辑函数</h4>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：确定地址变量</strong>。n 选 1 选择器有 $\\log_2 n$ 个地址线，选作函数变量。</div></div><div class="step-item"><div><strong>第二步：确定数据端</strong>。数据端 $D_i$ 接 0、1、剩余变量或其反。</div></div><div class="step-item"><div><strong>第三步：列真值表</strong>。根据函数值确定每个 $D_i$ 的接法。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：用译码器实现全加器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">用 74LS138（3-8 译码器）实现全加器：$S=\\sum m(1,2,4,7)$，$C_{out}=\\sum m(3,5,6,7)$。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：接线</strong>。A、B、$C_{in}$ 接译码器地址 $A_2$、$A_1$、$A_0$。</div></div><div class="step-item"><div><strong>第二步：求和输出</strong>。$S = \\overline{Y_1 \\cdot Y_2 \\cdot Y_4 \\cdot Y_7}$（与非门）</div></div><div class="step-item"><div><strong>第三步：进位输出</strong>。$C_{out} = \\overline{Y_3 \\cdot Y_5 \\cdot Y_6 \\cdot Y_7}$（与非门）</div></div><div class="step-item"><div><strong>第四步：验证</strong>。检查所有 8 种输入组合，输出与真值表一致。</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>译码器实现任意组合逻辑</strong>：译码器输出是最小项，配合或门/与非门可实现任意逻辑函数。3-8 译码器可实现任意 3 变量函数，4-16 译码器可实现任意 4 变量函数。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>低有效输出</strong>：74LS138 输出低有效（$Y_i = \\bar{m_i}$），所以用与非门（不是或门）来实现最小项之和。这是初学者常犯的错误。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-09');return false;" style="color:var(--primary)">计数器</a>的联系</strong>：译码器常与计数器配合——计数器产生地址，译码器产生时序控制信号（如 LED 扫描、数码管动态显示）。</div></div>
       ` },
       { id: 'dig-05', title: '加法器与比较器', desc: '半加/全加、数值比较', icon: '➕', tags: ['基础'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">算术运算电路</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">加法器是算术逻辑单元（ALU）的核心。半加器处理两个 1 位相加，全加器考虑低位进位，多位级联构成多位加法器。数值比较器比较两数大小。</p>
-        <div class="formula-block">半加器：$S=A\\oplus B$，$C=AB$<br>全加器：$S=A\\oplus B\\oplus C_{in}$，$C_{out}=AB+BC_{in}+AC_{in}$</div>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>加法器类型</th><th>特点</th><th>速度</th></tr></thead><tbody><tr><td class="font-medium">串行进位（行波）</td><td>进位逐级传递</td><td>慢（n 大时延迟大）</td></tr><tr><td class="font-medium">超前进位（先行进位）</td><td>进位并行计算</td><td>快（74LS283 用此）</td></tr></tbody></table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">加法器是算术逻辑单元（ALU）的核心，是<a href="#" onclick="navigateTo('dig-01');return false;" style="color:var(--primary)">补码运算</a>的硬件实现。半加器处理两个 1 位相加，全加器考虑低位进位，多位级联构成多位加法器。数值比较器比较两数大小。</p>
+
+        <h4 class="font-medium mt-6 mb-2">半加器与全加器</h4>
+        <div class="formula-block">半加器（不考虑进位输入）：<br>$S = A \\oplus B$（和）<br>$C_{out} = AB$（进位）<br><br>全加器（考虑进位输入）：<br>$S = A \\oplus B \\oplus C_{in}$（和）<br>$C_{out} = AB + BC_{in} + AC_{in}$（进位）<div class="text-sm text-gray-500 mt-2">全加器 = 两个半加器 + 一个或门</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">多位加法器</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>进位方式</th><th>速度</th><th>硬件复杂度</th><th>典型芯片</th></tr></thead><tbody><tr><td class="font-medium">串行进位</td><td>逐级传递</td><td>慢（$O(n)$）</td><td>简单</td><td>74LS83</td></tr><tr><td class="font-medium">超前进位</td><td>并行计算</td><td>快（$O(\\log n)$）</td><td>复杂</td><td>74LS283</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">超前进位原理</h4>
+        <div class="formula-block">超前进位生成信号：<br>生成 $G_i = A_i B_i$（当 $A_i=B_i=1$ 时必产生进位）<br>传递 $P_i = A_i \\oplus B_i$（当 $A_i \\ne B_i$ 时传递进位）<br>$C_{i+1} = G_i + P_i C_i$（递推公式）<div class="text-sm text-gray-500 mt-2">所有进位可同时计算，无需等待逐级传递</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">数值比较器</h4>
+        <div class="formula-block">1 位比较器：<br>$A>B$：$Y_1 = A\\bar{B}$<br>$A=B$：$Y_2 = \\overline{A \\oplus B}$（同或）<br>$A<B$：$Y_3 = \\bar{A}B$<div class="text-sm text-gray-500 mt-2">多位比较器从高位开始比较，高位相等时才比较低位</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例设计：4 位加法器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">用 74LS283（4 位超前进位加法器）计算 $1011 + 0110 = ?$</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：接线</strong>。$A_3A_2A_1A_0 = 1011$，$B_3B_2B_1B_0 = 0110$，$C_0 = 0$</div></div><div class="step-item"><div><strong>第二步：逐位计算</strong>。$S_0=1\\oplus0\\oplus0=1$，$S_1=1\\oplus1\\oplus0=0$，$C_1=1$；$S_2=0\\oplus1\\oplus1=0$，$C_2=1$；$S_3=1\\oplus0\\oplus1=0$，$C_3=1$</div></div><div class="step-item"><div><strong>第三步：结果</strong>。$C_3S_3S_2S_1S_0 = 10001 = (17)_{10}$</div></div><div class="step-item"><div><strong>第四步：验证</strong>。$(1011)_2 = 11$，$(0110)_2 = 6$，$11+6=17$ ✓</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>加法器实现减法</strong>：减法通过补码加法实现——$A-B = A + \\bar{B} + 1$。硬件上，将 B 取反（异或门），进位置 1，用加法器求和。这就是<a href="#" onclick="navigateTo('dig-01');return false;" style="color:var(--primary)">补码</a>的工程实现。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>溢出检测</strong>：有符号加法中，两个正数相加得负数（或反之）表示溢出。检测方法：$V = C_{n-1} \\oplus C_{n-2}$（最高位进位与次高位进位异或）。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与 ALU 的联系</strong>：加法器是 ALU（算术逻辑单元）的核心——ALU 可执行加、减、与、或、异或、比较等运算，是 CPU 的基础部件。理解加法器有助于理解计算机运算原理。</div></div>
       ` },
       { id: 'dig-06', title: '竞争冒险', desc: '产生原因、消除方法', icon: '⚠', tags: ['基础'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">竞争冒险：信号到达时间差导致的毛刺</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">信号经不同路径到达门电路输入端有时间差（竞争），可能导致输出瞬间出现不该有的脉冲（冒险/毛刺）。虽然组合逻辑最终输出正确，但毛刺可能误触发后续时序电路。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">信号经不同路径到达门电路输入端有时间差（竞争），可能导致输出瞬间出现不该有的脉冲（冒险/毛刺）。虽然<a href="#" onclick="navigateTo('dig-03');return false;" style="color:var(--primary)">组合逻辑</a>最终输出正确，但毛刺可能误触发后续<a href="#" onclick="navigateTo('dig-07');return false;" style="color:var(--primary)">时序电路</a>。</p>
+
+        <h4 class="font-medium mt-6 mb-2">竞争与冒险的定义</h4>
+        <div class="formula-block">竞争：信号经不同路径到达同一门电路输入端有时间差<br>冒险：竞争导致输出出现不该有的毛刺脉冲<br>静态冒险：输入变化一次，输出应不变但出现毛刺<br>动态冒险：输入变化一次，输出应变化一次但出现多次<div class="text-sm text-gray-500 mt-2">冒险是组合逻辑电路的固有问题，必须妥善处理</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">冒险的判别</h4>
+        <div class="step-list"><div class="step-item"><div><strong>代数法</strong>：若表达式在某种输入取值下可化成 $Y = A + \\bar{A}$（或门）或 $Y = A \\cdot \\bar{A}$（与门）形式，则可能存在冒险。</div></div><div class="step-item"><div><strong>卡诺图法</strong>：若两个质蕴含项圈相邻但不重叠（有缝隙），则可能存在冒险。加冗余圈覆盖缝隙可消除。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">消除冒险的方法</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>方法</th><th>原理</th><th>优缺点</th></tr></thead><tbody><tr><td class="font-medium">加冗余项</td><td>卡诺图加冗余圈覆盖缝隙</td><td>简单，但增加门电路</td></tr><tr><td class="font-medium">选通脉冲</td><td>等信号稳定后才采样输出</td><td>有效，但增加延迟</td></tr><tr><td class="font-medium">触发器同步</td><td>时钟边沿采样，毛刺被滤除</td><td>最可靠，现代设计首选</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例分析：$F = AB + \\bar{A}C$</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">当 $B=C=1$ 时，$F = A + \\bar{A}$，存在冒险。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：识别冒险</strong>。$B=C=1$ 时，$F = A + \\bar{A}$，A 变化时可能出现毛刺。</div></div><div class="step-item"><div><strong>第二步：加冗余项</strong>。增加冗余项 $BC$，$F = AB + \\bar{A}C + BC$。</div></div><div class="step-item"><div><strong>第三步：验证</strong>。$B=C=1$ 时，$F = A + \\bar{A} + 1 = 1$（恒为 1），无冒险。</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>同步设计消除冒险</strong>：现代数字系统几乎都用同步设计——所有触发器共用时钟，只在时钟边沿采样输入。毛刺在时钟边沿之间出现，被触发器自动滤除。这是消除冒险最可靠的方法。</div></div>
+
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>判别与消除</strong>：代数法判别——若表达式在某种取值下可化成 $A+\\bar{A}$ 或 $A\\cdot\\bar{A}$ 形式，则可能冒险。消除方法：①增加冗余项（卡诺图加冗余圈）；②引入选通脉冲（等信号稳定后采样）；③用 <a href="#" onclick="navigateTo('dig-07');return false;" style="color:var(--primary)">触发器</a> 同步（时钟边沿采样消除毛刺）。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-07');return false;" style="color:var(--primary)">时序电路</a>的联系</strong>：冒险问题促使我们使用同步时序设计——用触发器在时钟边沿采样，自动滤除毛刺。这是现代数字系统设计的基本原则。</div></div>
       ` },
       { id: 'dig-07', title: '锁存器与触发器', desc: 'RS/D/JK/T 触发器', icon: '🔒', tags: ['核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">触发器：数字系统的记忆单元</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">触发器是存储 1 位二进制信息的基本单元，是时序逻辑电路的基础。锁存器电平触发（透明），触发器边沿触发（更可靠）。掌握各类触发器的功能表和激励表是分析时序电路的前提。</p>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>触发器</th><th>功能</th><th>特性方程</th></tr></thead><tbody><tr><td class="font-medium">RS 触发器</td><td>置位/复位/保持（禁用 S=R=1）</td><td>$Q^{n+1}=S+\\bar{R}Q^n$</td></tr><tr><td class="font-medium">D 触发器</td><td>跟随 D（延迟）</td><td>$Q^{n+1}=D$</td></tr><tr><td class="font-medium">JK 触发器</td><td>功能最全（保持/置0/置1/翻转）</td><td>$Q^{n+1}=J\\bar{Q^n}+\\bar{K}Q^n$</td></tr><tr><td class="font-medium">T 触发器</td><td>翻转/保持</td><td>$Q^{n+1}=T\\oplus Q^n$</td></tr></tbody></table></div>
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>边沿触发 vs 电平触发</strong>：锁存器（电平触发）在时钟高电平期间输出跟随输入变化（透明），可能"穿通"。触发器（边沿触发）只在时钟上升沿/下降沿瞬间采样输入，其余时间保持——更可靠，是同步时序设计的首选。JK 触发器是 D 触发器加反馈实现翻转功能。</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">触发器是存储 1 位二进制信息的基本单元，是<a href="#" onclick="navigateTo('dig-08');return false;" style="color:var(--primary)">时序逻辑电路</a>的基础。锁存器电平触发（透明），触发器边沿触发（更可靠）。掌握各类触发器的功能表和激励表是分析时序电路的前提。触发器解决了<a href="#" onclick="navigateTo('dig-06');return false;" style="color:var(--primary)">竞争冒险</a>中的毛刺问题。</p>
+
+        <h4 class="font-medium mt-6 mb-2">锁存器 vs 触发器</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>触发方式</th><th>特点</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">锁存器</td><td>电平触发</td><td>CLK 有效期间输出跟随输入（透明）</td><td>数据暂存</td></tr><tr><td class="font-medium">触发器</td><td>边沿触发</td><td>只在 CLK 边沿采样，其余保持</td><td>同步时序设计（首选）</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">四种触发器对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>触发器</th><th>功能</th><th>特性方程</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">RS 触发器</td><td>置位/复位/保持</td><td>$Q^{n+1}=S+\\bar{R}Q^n$</td><td>基本存储（有禁用态）</td></tr><tr><td class="font-medium">D 触发器</td><td>跟随 D（延迟）</td><td>$Q^{n+1}=D$</td><td>寄存器、移位寄存器</td></tr><tr><td class="font-medium">JK 触发器</td><td>保持/置0/置1/翻转</td><td>$Q^{n+1}=J\\bar{Q^n}+\\bar{K}Q^n$</td><td>计数器（功能最全）</td></tr><tr><td class="font-medium">T 触发器</td><td>翻转/保持</td><td>$Q^{n+1}=T\\oplus Q^n$</td><td>分频器、计数器</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">触发器的功能表</h4>
+        <div class="formula-block">JK 触发器功能表（上升沿触发）：<br>J=0, K=0 → 保持（$Q^{n+1}=Q^n$）<br>J=0, K=1 → 置 0（$Q^{n+1}=0$）<br>J=1, K=0 → 置 1（$Q^{n+1}=1$）<br>J=1, K=1 → 翻转（$Q^{n+1}=\\bar{Q^n}$）<div class="text-sm text-gray-500 mt-2">JK 触发器是功能最全的触发器，没有禁用态</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">触发器之间的转换</h4>
+        <div class="step-list"><div class="step-item"><div><strong>JK→D</strong>。接法：$J=D$，$K=\\bar{D}$。验证：$Q^{n+1}=D\\bar{Q^n}+DQ^n=D$ ✓</div></div><div class="step-item"><div><strong>JK→T</strong>。接法：$J=T$，$K=T$。验证：$Q^{n+1}=T\\bar{Q^n}+\\bar{T}Q^n=T\\oplus Q^n$ ✓</div></div><div class="step-item"><div><strong>D→JK</strong>。接法：$D=J\\bar{Q^n}+\\bar{K}Q^n$（需组合逻辑）</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>边沿触发 vs 电平触发</strong>：锁存器（电平触发）在时钟高电平期间输出跟随输入变化（透明），可能"穿通"。触发器（边沿触发）只在时钟上升沿/下降沿瞬间采样输入，其余时间保持——更可靠，是同步时序设计的首选。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>建立时间和保持时间</strong>：触发器要求输入信号在时钟边沿前后保持稳定——建立时间 $t_{su}$（边沿前）和保持时间 $t_h$（边沿后）。违反会导致亚稳态（输出不确定）。这是高速数字设计的关键参数。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-09');return false;" style="color:var(--primary)">计数器</a>的联系</strong>：T 触发器（翻转/保持）是计数器的基本单元——每来一个时钟翻转一次，实现二分频。n 个 T 触发器级联构成 $2^n$ 进制计数器。</div></div>
       ` },
       { id: 'dig-08', title: '时序逻辑电路分析', desc: '状态方程/状态图/状态表', icon: '🔄', tags: ['核心难点'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">时序逻辑：有记忆的电路</h3>
