@@ -2611,17 +2611,58 @@ const CourseData = {
       ` },
       { id: 'ana-13', title: '直流稳压电源', desc: '整流→滤波→稳压→LDO/开关电源', icon: '🔌', tags: ['工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">直流稳压电源：系统的能量来源</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">几乎所有电子系统都需要稳定的直流电源。线性稳压电源（LDO）简单低噪但效率低，开关电源（SMPS）效率高但有纹波。理解两者的原理和选型，是硬件设计的基础。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">几乎所有电子系统都需要稳定的直流电源。直流稳压电源由<a href="#" onclick="navigateTo('ana-02');return false;" style="color:var(--primary)">整流滤波</a>和稳压两部分组成。线性稳压电源（LDO）简单低噪但效率低，开关电源（SMPS）效率高但有纹波。理解两者的原理和选型，是硬件设计的基础。</p>
+
+        <h4 class="font-medium mt-6 mb-2">直流电源的组成</h4>
         <div class="step-list"><div class="step-item"><div><strong>① 变压</strong>：工频变压器把 220V 降到低压交流（或直接用开关电源高频变压器）。</div></div><div class="step-item"><div><strong>② 整流</strong>：桥式整流把交流变脉动直流（<a href="#" onclick="navigateTo('ana-02');return false;" style="color:var(--primary)">整流滤波</a>）。</div></div><div class="step-item"><div><strong>③ 滤波</strong>：大电容平滑脉动，得到带纹波的直流。</div></div><div class="step-item"><div><strong>④ 稳压</strong>：稳压管/线性稳压器（LDO）/开关电源（SMPS）输出稳定直流。</div></div></div>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>效率</th><th>纹波</th><th>体积</th><th>适用</th></tr></thead><tbody><tr><td class="font-medium">线性稳压（LDO）</td><td>低（30%~50%）</td><td>极小</td><td>小</td><td>低噪声模拟电路、小功率</td></tr><tr><td class="font-medium">开关电源（SMPS）</td><td>高（80%~95%）</td><td>较大（需滤波）</td><td>中</td><td>大功率、电池供电</td></tr></tbody></table></div>
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>LDO 原理</strong>：本质是运放控制的串联调整管，反馈取样输出电压与基准比较，调整管压降使输出稳定。压差（dropout）= 输入-输出最小值，LDO 的"Low Dropout"指能工作在很小压差下（如 100mV），减少功耗。开关电源用 PWM 控制开关管高频通断，经电感储能/电容滤波输出，详见 <a href="#" onclick="navigateTo('act-14');return false;" style="color:var(--primary)">PID 整定</a> 中的 PID 代码。</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">线性稳压器（LDO）</h4>
+        <div class="formula-block">LDO 工作原理：调整管工作在线性区，通过负反馈稳定输出<br>输出电压：$V_o = V_{ref} \\cdot (1 + \\frac{R_1}{R_2})$<br>效率：$\\eta = \\frac{V_o}{V_i} \\times 100\\%$（压差越大效率越低）<div class="text-sm text-gray-500 mt-2">压差 $V_i - V_o$ 必须大于最小压差 $V_{DO}$（典型 0.3~1V）</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">开关电源（SMPS）</h4>
+        <div class="formula-block">开关电源工作原理：调整管工作在开关状态，通过 PWM 控制占空比<br>降压型（Buck）：$V_o = D \\cdot V_i$（$D$ 为占空比）<br>升压型（Boost）：$V_o = \\frac{V_i}{1-D}$<div class="text-sm text-gray-500 mt-2">效率可达 85~95%，但有开关纹波（需 LC 滤波）</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">LDO vs SMPS 对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>特性</th><th>LDO 线性稳压</th><th>SMPS 开关电源</th></tr></thead><tbody><tr><td class="font-medium">效率</td><td>低（30~70%）</td><td>高（85~95%）</td></tr><tr><td class="font-medium">纹波</td><td>极低（μV 级）</td><td>较高（mV 级）</td></tr><tr><td class="font-medium">噪声</td><td>低</td><td>高（开关噪声）</td></tr><tr><td class="font-medium">复杂度</td><td>简单</td><td>复杂（需电感）</td></tr><tr><td class="font-medium">成本</td><td>低</td><td>中</td></tr><tr><td class="font-medium">应用</td><td>模拟电路、射频</td><td>数字电路、大功率</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：LDO 散热</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">已知 LDO：$V_i=12V$，$V_o=5V$，$I_L=500mA$。求功耗和是否需要散热器。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：求功耗</strong>。$P_{diss} = (V_i - V_o) \\cdot I_L = (12-5) \\times 0.5 = 3.5W$</div></div><div class="step-item"><div><strong>第二步：求温升</strong>。$\\Delta T = P_{diss} \\times R_{\\theta JA}$，TO-220 封装 $R_{\\theta JA} \\approx 50°C/W$，$\\Delta T = 3.5 \\times 50 = 175°C$</div></div><div class="step-item"><div><strong>第三步：判断</strong>。环境温度 $T_A=25°C$，结温 $T_J=25+175=200°C$，超过典型限制 125°C。</div></div><div class="step-item"><div><strong>第四步：解决</strong>。需加散热器（$R_{\\theta SA} < 20°C/W$），或降低输入电压、减小负载电流。</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>电源选型口诀</strong>：小电流、低噪声选 LDO；大电流、高效率选开关电源；射频/模拟电路必须用 LDO（避免开关噪声干扰）。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>LDO 的散热问题</strong>：LDO 效率低，多余功率以热量形式耗散。$P_{diss} = (V_i - V_o) \\cdot I_L$。大电流时必须加散热片。例如：$V_i=12V$，$V_o=5V$，$I_L=1A$，$P_{diss}=7W$，需要散热器。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>常用稳压芯片</strong>：LDO（78xx 系列、LM1117、AMS1117）、开关电源（LM2596、MP1584）。选型时注意：输出电压、最大电流、压差、效率、纹波、封装。</div></div>
       ` },
       { id: 'ana-14', title: '振荡电路', desc: 'RC 文氏桥、LC、晶体振荡器', icon: '📡', tags: ['高频'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">振荡电路：自激产生周期信号</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">振荡器不需要外部输入，自激产生周期信号（正弦波、方波）。它是时钟、载波、信号源的核心。振荡的两个条件：相位平衡（正反馈）+ 幅度平衡（环路增益=1）。</p>
-        <div class="formula-block"><strong>巴克豪森判据（振荡条件）</strong>：<br>① 相位条件：环路相移 $\\angle A\\beta = 2n\\pi$（正反馈）<br>② 幅度条件：环路增益 $|A\\beta| \\ge 1$（起振时 &gt;1，稳态 =1）</div>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>选频网络</th><th>频率</th><th>特点</th></tr></thead><tbody><tr><td class="font-medium">RC 文氏桥</td><td>RC 串并联</td><td>低频（音频）</td><td>波形好，频率可调</td></tr><tr><td class="font-medium">LC 振荡（考毕兹/哈特莱）</td><td>LC 谐振</td><td>高频（MHz）</td><td>频率高，稳定性一般</td></tr><tr><td class="font-medium">晶体振荡器</td><td>石英晶体</td><td>固定（精确）</td><td>频率精度极高（时钟必用）</td></tr></tbody></table></div>
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>石英晶体的压电效应</strong>：石英晶体在电场下产生机械形变（压电效应），等效为高 Q 值谐振回路（Q 可达 10⁴~10⁶）。所以晶体振荡器频率稳定性极高（10⁻⁶~10⁻⁹），是所有 MCU 时钟、通信系统载波的基准。MCU 的主时钟（如 8MHz/16MHz 晶振）就是晶体振荡器。</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">振荡器不需要外部输入，自激产生周期信号（正弦波、方波）。它是时钟、载波、信号源的核心。振荡电路建立在<a href="#" onclick="navigateTo('circ-08');return false;" style="color:var(--primary)">谐振电路</a>和<a href="#" onclick="navigateTo('ana-08');return false;" style="color:var(--primary)">正反馈</a>基础上。</p>
+
+        <h4 class="font-medium mt-6 mb-2">巴克豪森判据（振荡条件）</h4>
+        <div class="formula-block"><strong>振荡的两个必要条件</strong>：<br>① 相位条件：环路相移 $\\angle A\\beta = 2n\\pi$（正反馈，$n$ 为整数）<br>② 幅度条件：环路增益 $|A\\beta| \\ge 1$（起振时 >1，稳态 =1）<div class="text-sm text-gray-500 mt-2">$A$ 为放大器增益，$\\beta$ 为反馈系数，必须同时满足两个条件才能振荡</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">三种振荡器对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>选频网络</th><th>频率范围</th><th>频率稳定性</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">RC 文氏桥</td><td>RC 串并联</td><td>1Hz ~ 1MHz</td><td>一般</td><td>音频信号源</td></tr><tr><td class="font-medium">LC 振荡器</td><td>LC 谐振回路</td><td>100kHz ~ 1GHz</td><td>中等</td><td>射频载波</td></tr><tr><td class="font-medium">晶体振荡器</td><td>石英晶体</td><td>固定频率</td><td>极高</td><td>MCU 时钟、通信基准</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">RC 文氏桥振荡器</h4>
+        <div class="formula-block">RC 串并联选频网络：<br>谐振频率：$f_0 = \\frac{1}{2\\pi RC}$<br>谐振时反馈系数：$\\beta = \\frac{1}{3}$（相移为零）<br>起振条件：$A \\ge 3$（放大器增益至少 3 倍）<div class="text-sm text-gray-500 mt-2">文氏桥振荡器波形好、频率可调，是低频信号发生器的首选</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">LC 振荡器</h4>
+        <div class="formula-block">考毕兹振荡器（电容三点式）：<br>振荡频率：$f_0 = \\frac{1}{2\\pi\\sqrt{L \\cdot \\frac{C_1 C_2}{C_1+C_2}}}$<br>反馈系数：$\\beta = \\frac{C_1}{C_2}$<div class="text-sm text-gray-500 mt-2">LC 振荡器频率高（MHz 级），但稳定性一般，需选频网络抑制谐波</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">晶体振荡器</h4>
+        <div class="formula-block">石英晶体等效电路：<br>串联谐振频率：$f_s = \\frac{1}{2\\pi\\sqrt{L_q C_q}}$<br>并联谐振频率：$f_p = f_s\\sqrt{1+\\frac{C_q}{C_0}}$<br>Q 值可达 $10^4 \\sim 10^6$（远高于 LC 振荡器）<div class="text-sm text-gray-500 mt-2">晶体振荡器频率稳定性极高（$10^{-6}$~$10^{-9}$），是所有数字系统的时钟基准</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：文氏桥振荡器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">设计一个 1kHz 的文氏桥振荡器，选 $R=10k\\Omega$。求电容 C 和放大器增益要求。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：求电容</strong>。$C=\\frac{1}{2\\pi f_0 R}=\\frac{1}{2\\pi \\times 10^3 \\times 10^4}=15.9nF$（选 16nF 标准值）</div></div><div class="step-item"><div><strong>第二步：求起振条件</strong>。$A \\ge 3$，选 $A=3.1$（略大于 3 保证起振）</div></div><div class="step-item"><div><strong>第三步：设计放大器</strong>。同相放大器 $A=1+\\frac{R_f}{R_g}=3.1$，选 $R_g=10k\\Omega$，$R_f=21k\\Omega$</div></div><div class="step-item"><div><strong>第四步：稳幅措施</strong>。实际电路需加非线性稳幅（如二极管限幅），防止增益过大导致波形失真。</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>石英晶体的压电效应</strong>：石英晶体在电场下产生机械形变（压电效应），等效为高 Q 值谐振回路（Q 可达 10⁴~10⁶）。所以晶体振荡器频率稳定性极高（10⁻⁶~10⁻⁹），是所有 MCU 时钟、通信系统载波的基准。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>起振与稳幅</strong>：起振时 $|A\\beta|>1$，振幅逐渐增大；稳态时 $|A\\beta|=1$，振幅恒定。实际电路需加稳幅措施（如热敏电阻、二极管限幅、AGC），防止增益过大导致波形失真。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('ana-10');return false;" style="color:var(--primary)">运放非线性应用</a>的联系</strong>：方波/三角波发生器也是振荡器，但输出非正弦。正弦波振荡器需要选频网络（RC/LC/晶体）来保证单一频率振荡。</div></div>
       ` },
     ]
   },
