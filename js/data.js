@@ -1925,90 +1925,376 @@ const CourseData = {
     sections: [
       { id: 'circ-01', title: '基尔霍夫定律', desc: 'KCL/KVL、节点法、网孔法', icon: '⚡', tags: ['基础必学'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">基尔霍夫定律：电路分析的地基</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">基尔霍夫定律（KCL/KVL）是所有电路分析的出发点，无论电路多复杂，归根结底都基于这两条定律。掌握节点电压法和网孔电流法，就能系统化求解任何线性电路。</p>
-        <h4 class="font-medium mt-6 mb-2">KCL 与 KVL</h4>
-        <div class="formula-block">KCL（电流定律）：$\\sum i_{in} = \\sum i_{out}$（节点电流代数和为零）<br><br>KVL（电压定律）：$\\sum u = 0$（回路电压代数和为零）<div class="text-sm text-gray-500 mt-2">KCL 本质是电荷守恒，KVL 本质是能量守恒</div></div>
-        <h4 class="font-medium mt-6 mb-2">节点电压法 vs 网孔电流法</h4>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>方法</th><th>变量</th><th>适用</th><th>方程数</th></tr></thead><tbody><tr><td class="font-medium">节点电压法</td><td>各节点对参考点电压</td><td>节点少并联多</td><td>n-1（n 为节点数）</td></tr><tr><td class="font-medium">网孔电流法</td><td>各独立网孔的假想电流</td><td>网孔少串联多</td><td>b-n+1（b 为支路数）</td></tr></tbody></table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">基尔霍夫定律（KCL/KVL）是所有电路分析的出发点，无论电路多复杂，归根结底都基于这两条定律。掌握节点电压法和网孔电流法，就能系统化求解任何线性电路。本节是整个<a href="#" onclick="navigateTo('circuit-basics');return false;" style="color:var(--primary)">电路基础</a>板块的基石，后续的<a href="#" onclick="navigateTo('circ-02');return false;" style="color:var(--primary)">戴维南定理</a>、<a href="#" onclick="navigateTo('circ-03');return false;" style="color:var(--primary)">叠加定理</a>都建立在此基础上。</p>
+
+        <h4 class="font-medium mt-6 mb-2">KCL：电流连续性原理</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">基尔霍夫电流定律（KCL）指出：任意时刻，流入任一节点的电流代数和为零。其物理本质是<strong>电荷守恒</strong>——电荷不会在节点处积累或消失。</p>
+        <div class="formula-block">KCL 数学表达：$\\sum_{k=1}^{n} i_k = 0$<br>或等价形式：$\\sum i_{in} = \\sum i_{out}$（流入 = 流出）<div class="text-sm text-gray-500 mt-2">n 为连接该节点的支路数，电流方向可任意假定（若为负值则实际方向与假定相反）</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">KVL：电压环路原理</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">基尔霍夫电压定律（KVL）指出：任意时刻，沿任一闭合回路各段电压的代数和为零。其物理本质是<strong>能量守恒</strong>——单位电荷绕行一周回到原点，电场力做功为零。</p>
+        <div class="formula-block">KVL 数学表达：$\\sum_{k=1}^{m} u_k = 0$<br>或等价形式：$\\sum u_{rise} = \\sum u_{drop}$（升压 = 降压）<div class="text-sm text-gray-500 mt-2">m 为回路中的支路数，绕行方向可顺时针或逆时针（结果一致）</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">节点电压法：系统化求解利器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">节点电压法以各节点对参考点（地）的电压为未知量，对每个非参考节点列写 KCL 方程。设电路有 n 个节点，则需列写 n-1 个方程。对于含理想电压源的支路，可直接利用电压源值简化方程。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：选参考节点</strong>。通常选择连接支路最多的节点为参考点（地），记为 GND。</div></div><div class="step-item"><div><strong>第二步：设节点电压</strong>。令其余 n-1 个节点对地的电压为未知量 $V_1, V_2, \\cdots, V_{n-1}$。</div></div><div class="step-item"><div><strong>第三步：列 KCL 方程</strong>。对每个非参考节点，用节点电压表示各支路电流，令流入电流之和为零。</div></div><div class="step-item"><div><strong>第四步：解方程组</strong>。用消元法或矩阵法求解节点电压，进而求各支路电流和功率。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">网孔电流法：平面电路的捷径</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">网孔电流法以各独立网孔的假想环流为未知量，对每个网孔列写 KVL 方程。仅适用于<strong>平面电路</strong>（可画在平面上且支路不交叉）。设电路有 m 个独立网孔，则需列写 m 个方程。</p>
+        <div class="formula-block">网孔电流法标准形式（两网孔）：<br>$$(R_{11}+R_{12})I_1 - R_{12}I_2 = V_{s1}$$$$-R_{12}I_1 + (R_{22}+R_{12})I_2 = V_{s2}$$<div class="text-sm text-gray-500 mt-2">$R_{kk}$：第 k 个网孔的自阻（网孔内所有电阻之和）；$R_{jk}$：网孔 j 和 k 的互阻（公共支路电阻）；$V_{sk}$：第 k 个网孔的等效电压源</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">节点法 vs 网孔法：如何选择</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>对比维度</th><th>节点电压法</th><th>网孔电流法</th></tr></thead><tbody><tr><td class="font-medium">未知量</td><td>节点对地电压 $V_k$</td><td>网孔环流 $I_k$</td></tr><tr><td class="font-medium">方程数</td><td>n-1（n 为节点数）</td><td>m（m 为独立网孔数）</td></tr><tr><td class="font-medium">适用场景</td><td>节点少、并联多、含电流源</td><td>网孔少、串联多、含电压源</td></tr><tr><td class="font-medium">方程类型</td><td>KCL 方程（电流求和）</td><td>KVL 方程（电压求和）</td></tr><tr><td class="font-medium">优势</td><td>处理并联电路方便</td><td>处理串联电路方便</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：节点法求解电路</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">已知电路：$V_s=12V$，$R_1=2k\\Omega$，$R_2=4k\\Omega$，$R_3=4k\\Omega$。求各支路电流。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：选参考点</strong>。选下方节点为地，上方节点电压为 $V_1$。</div></div><div class="step-item"><div><strong>第二步：列 KCL</strong>。流入节点 1 的电流之和为零：$\\frac{V_s-V_1}{R_1} = \\frac{V_1}{R_2} + \\frac{V_1}{R_3}$</div></div><div class="step-item"><div><strong>第三步：代入数值</strong>。$\\frac{12-V_1}{2k} = \\frac{V_1}{4k} + \\frac{V_1}{4k}$，化简得 $12-V_1 = V_1$，解得 $V_1=6V$。</div></div><div class="step-item"><div><strong>第四步：求支路电流</strong>。$I_1=\\frac{12-6}{2k}=3mA$，$I_2=I_3=\\frac{6}{4k}=1.5mA$。验证：$I_1=I_2+I_3$ ✓</div></div></div>
+
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>选型口诀</strong>：节点少用节点法，网孔少用网孔法。含理想电压源优先节点法（电压源接参考点则该节点电压已知），含理想电流源优先网孔法（电流源所在网孔电流已知）。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>常见错误</strong>：①网孔电流法中，互阻 $R_{12}$ 前的负号容易遗漏（两网孔电流方向相反时取负）；②节点法中，受控源的控制量必须用节点电压表示后才能求解；③KCL/KVL 只适用于集总参数电路（电路尺寸远小于信号波长）。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>工程应用</strong>：在实际电路仿真软件（如 SPICE）中，节点法是核心算法——将电路转化为节点导纳矩阵 $YV=I$，用高斯消元法求解。理解节点法有助于理解仿真原理和调试收敛问题。</div></div>
       ` },
       { id: 'circ-02', title: '戴维南/诺顿等效', desc: '等效电源定理、等效电阻', icon: '🔀', tags: ['高频'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">戴维南定理：化繁为简的利器</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">任何含源线性二端网络，对外电路而言都可等效为一个<strong>电压源串联电阻</strong>（戴维南）或<strong>电流源并联电阻</strong>（诺顿）。这是简化复杂电路、求最大功率传输的核心工具。</p>
-        <div class="formula-block">戴维南等效：$U = U_{oc} - R_{eq} \\cdot I$<br>$U_{oc}$：端口开路电压；$R_{eq}$：等效电阻（独立源置零后从端口看进去的电阻）</div>
-        <div class="step-list"><div class="step-item"><div><strong>求开路电压 $U_{oc}$</strong>：移去负载，求端口开路时的电压。</div></div><div class="step-item"><div><strong>求等效电阻 $R_{eq}$</strong>：①独立源置零（电压源短路、电流源开路），从端口求等效电阻；②含受控源时用"加压求流法"或"开路电压/短路电流法"。</div></div><div class="step-item"><div><strong>最大功率传输</strong>：当 $R_L = R_{eq}$ 时，负载获得最大功率 $P_{max} = U_{oc}^2/(4R_{eq})$。</div></div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">任何含源线性二端网络，对外电路而言都可等效为一个<strong>电压源串联电阻</strong>（戴维南）或<strong>电流源并联电阻</strong>（诺顿）。这是简化复杂电路、求最大功率传输的核心工具。戴维南定理建立在<a href="#" onclick="navigateTo('circ-01');return false;" style="color:var(--primary)">基尔霍夫定律</a>基础上，是线性电路叠加性的直接推论。</p>
+
+        <h4 class="font-medium mt-6 mb-2">戴维南定理的数学表述</h4>
+        <div class="formula-block">戴维南等效电路：$U = U_{oc} - R_{eq} \\cdot I$<br>其中：$U_{oc}$ 为端口开路电压（$I=0$ 时的端口电压）；$R_{eq}$ 为等效电阻<div class="text-sm text-gray-500 mt-2">对外电路而言，任何线性二端网络都可等效为电压源 $U_{oc}$ 串联电阻 $R_{eq}$</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">诺顿定理：对偶形式</h4>
+        <div class="formula-block">诺顿等效电路：$I = I_{sc} - \\frac{U}{R_{eq}}$<br>其中：$I_{sc}$ 为端口短路电压（$U=0$ 时的端口电流）；$R_{eq}$ 为等效电阻（与戴维南相同）<div class="text-sm text-gray-500 mt-2">戴维南与诺顿互为对偶：$U_{oc} = I_{sc} \\cdot R_{eq}$</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">求解步骤：三步法</h4>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：求开路电压 $U_{oc}$</strong>。移去负载，求端口开路时的电压。可用节点法、网孔法或叠加定理。</div></div><div class="step-item"><div><strong>第二步：求等效电阻 $R_{eq}$</strong>。①独立源置零（电压源短路、电流源开路），从端口求等效电阻；②含受控源时用"加压求流法"或"$R_{eq}=U_{oc}/I_{sc}$"。</div></div><div class="step-item"><div><strong>第三步：画等效电路</strong>。用戴维南等效（电压源串联电阻）或诺顿等效（电流源并联电阻）替代原二端网络，接上负载求解。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">戴维南 vs 诺顿：对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>对比维度</th><th>戴维南等效</th><th>诺顿等效</th></tr></thead><tbody><tr><td class="font-medium">等效形式</td><td>电压源 $U_{oc}$ 串联 $R_{eq}$</td><td>电流源 $I_{sc}$ 并联 $R_{eq}$</td></tr><tr><td class="font-medium">参数关系</td><td>$U_{oc} = I_{sc} \\cdot R_{eq}$</td><td>$I_{sc} = U_{oc} / R_{eq}$</td></tr><tr><td class="font-medium">适用场景</td><td>负载变化但内部不变</td><td>负载变化但内部不变</td></tr><tr><td class="font-medium">优势</td><td>直观（电压源更常见）</td><td>并联电路分析方便</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：戴维南等效求解</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">已知电路：$V_s=10V$，$R_1=2k\\Omega$，$R_2=3k\\Omega$，$R_3=6k\\Omega$。求 a、b 端口的戴维南等效电路。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：求 $U_{oc}$</strong>。断开 a、b 端口，$R_3$ 无电流流过。$U_{oc}=V_s \\cdot \\frac{R_2}{R_1+R_2}=10 \\cdot \\frac{3}{5}=6V$</div></div><div class="step-item"><div><strong>第二步：求 $R_{eq}$</strong>。独立源 $V_s$ 置零（短路），从 a、b 看进去：$R_{eq}=R_3+R_1 \\parallel R_2=6k+1.2k=7.2k\\Omega$</div></div><div class="step-item"><div><strong>第三步：画等效电路</strong>。戴维南等效为 $U_{oc}=6V$ 串联 $R_{eq}=7.2k\\Omega$。接上负载 $R_L$ 后，$I=\\frac{6}{7.2k+R_L}$</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">最大功率传输条件</h4>
+        <div class="formula-block">当 $R_L = R_{eq}$ 时，负载获得最大功率：<br>$$P_{max} = \\frac{U_{oc}^2}{4R_{eq}}$$<div class="text-sm text-gray-500 mt-2">此时效率 $\\eta=50\\%$（一半功率消耗在内阻上）</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>工程应用</strong>：戴维南定理在电路调试中极为实用——只需测量开路电压和短路电流（$R_{eq}=U_{oc}/I_{sc}$），即可建立等效模型，无需知道内部电路细节。</div></div>
+
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>受控源不能置零</strong>：求 $R_{eq}$ 时只有<strong>独立源</strong>置零，受控源必须保留（它受电路变量控制，不能人为消除）。含受控源的电路必须用开路电压/短路电流法或加压求流法。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与叠加定理的关系</strong>：戴维南定理是<a href="#" onclick="navigateTo('circ-03');return false;" style="color:var(--primary)">叠加定理</a>的直接推论——将复杂电路等效为单一激励源，简化分析。在<a href="#" onclick="navigateTo('act-01');return false;" style="color:var(--primary)">自动控制</a>中，传递函数的推导也用到类似思想。</div></div>
       ` },
       { id: 'circ-03', title: '叠加定理与齐次定理', desc: '线性电路叠加原理', icon: '➗', tags: ['基础'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">叠加定理：线性系统的分解艺术</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">线性电路中，多个激励共同作用产生的响应，等于每个激励<strong>单独作用</strong>产生响应的代数和。这让复杂多源电路可以拆解为单源电路逐个求解。</p>
-        <div class="formula-block">叠加定理：$U = U_1 + U_2 + \\cdots$（各电源单独作用时响应之和）<br>齐次定理：激励扩大 $k$ 倍，响应也扩大 $k$ 倍</div>
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>"单独作用"的含义</strong>：其他独立源置零——电压源短路（用导线替代）、电流源开路（断开）。受控源始终保留。叠加只适用于<strong>电压和电流</strong>，不适用于功率（功率是电压电流乘积，非线性）。</div></div>
-        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>功率不能叠加</strong>：$P = UI = (U_1+U_2)(I_1+I_2) \\ne U_1I_1 + U_2I_2$。求功率必须先叠加求出总电压总电流，再相乘。</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">线性电路中，多个激励共同作用产生的响应，等于每个激励<strong>单独作用</strong>产生响应的代数和。这让复杂多源电路可以拆解为单源电路逐个求解。叠加定理是<a href="#" onclick="navigateTo('circ-01');return false;" style="color:var(--primary)">基尔霍夫定律</a>的直接推论，也是<a href="#" onclick="navigateTo('circ-02');return false;" style="color:var(--primary)">戴维南定理</a>的理论基础。</p>
+
+        <h4 class="font-medium mt-6 mb-2">叠加定理的数学表述</h4>
+        <div class="formula-block">对于线性电路，多个独立源共同作用时的响应：<br>$$U = U_1 + U_2 + \\cdots + U_n$$$$I = I_1 + I_2 + \\cdots + I_n$$<div class="text-sm text-gray-500 mt-2">下标 1,2,...,n 表示各独立源单独作用时的响应分量</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">齐次定理（比例性）</h4>
+        <div class="formula-block">齐次定理：若激励扩大 $k$ 倍，则响应也扩大 $k$ 倍<br>$$f(k \\cdot x) = k \\cdot f(x)$$<div class="text-sm text-gray-500 mt-2">齐次性是线性系统的必要条件，与叠加性共同构成"线性"的完整定义</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">叠加法求解步骤</h4>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：画分电路</strong>。每次只保留一个独立源，其余独立源置零（电压源短路、电流源开路），受控源始终保留。</div></div><div class="step-item"><div><strong>第二步：求分响应</strong>。对每个分电路，用<a href="#" onclick="navigateTo('circ-01');return false;" style="color:var(--primary)">节点法或网孔法</a>求解目标支路的电压或电流分量。</div></div><div class="step-item"><div><strong>第三步：代数叠加</strong>。将各分响应按参考方向代数相加（同向取正、反向取负），得到总响应。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">"单独作用"的正确理解</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>电压源单独作用</strong>：其他电压源短路（用导线替代）、其他电流源开路（断开）</li>
+          <li><strong>电流源单独作用</strong>：其他电流源开路、其他电压源短路</li>
+          <li><strong>受控源</strong>：始终保留（它受电路变量控制，不能人为消除）</li>
+          <li><strong>响应类型</strong>：叠加只适用于<strong>电压和电流</strong>，不适用于功率（功率是非线性的）</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：双源电路叠加</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">已知电路：$V_s=10V$，$I_s=2mA$，$R_1=R_2=R_3=2k\\Omega$。求 $R_3$ 两端电压 $U_3$。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：$V_s$ 单独作用</strong>。$I_s$ 开路，$R_2$ 和 $R_3$ 串联后与 $R_1$ 并联。$U_3'=V_s \\cdot \\frac{R_3}{R_1+R_2+R_3}=10 \\cdot \\frac{2}{6}=3.33V$</div></div><div class="step-item"><div><strong>第二步：$I_s$ 单独作用</strong>。$V_s$ 短路，$R_1$ 被短路。$I_s$ 在 $R_2$ 和 $R_3$ 间分流：$U_3''=I_s \\cdot \\frac{R_2 \\cdot R_3}{R_2+R_3}=2mA \\cdot 1k=2V$</div></div><div class="step-item"><div><strong>第三步：叠加</strong>。$U_3=U_3'+U_3''=3.33+2=5.33V$。注意极性：两个分量方向相同，取正值。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">叠加定理 vs 戴维南定理</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>对比维度</th><th>叠加定理</th><th>戴维南定理</th></tr></thead><tbody><tr><td class="font-medium">核心思想</td><td>多源分解为单源</td><td>复杂网络等效为简单源</td></tr><tr><td class="font-medium">适用范围</td><td>线性电路的电压/电流</td><td>线性二端网络</td></tr><tr><td class="font-medium">优势</td><td>物理概念清晰</td><td>简化外部电路分析</td></tr><tr><td class="font-medium">局限</td><td>不能直接求功率</td><td>只能求端口特性</td></tr></tbody></table></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>叠加法优势</strong>：当电路含有多个不同频率的交流源时，叠加法是唯一有效的方法——因为<a href="#" onclick="navigateTo('circ-06');return false;" style="color:var(--primary)">相量法</a>只能处理单一频率，不同频率的响应必须分别用相量法求解后在时域叠加。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>功率不能叠加</strong>：$P = UI = (U_1+U_2)(I_1+I_2) \\ne U_1I_1 + U_2I_2$。求功率必须先叠加求出总电压总电流，再相乘。这是初学者最常犯的错误之一。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>线性系统的本质</strong>：叠加性和齐次性共同定义了"线性"。在<a href="#" onclick="navigateTo('act-01');return false;" style="color:var(--primary)">自动控制</a>中，传递函数描述的也是线性系统——满足叠加原理，才能用拉普拉斯变换分析。</div></div>
       ` },
       { id: 'circ-04', title: '一阶电路暂态', desc: 'RC/RL、三要素法', icon: '📈', tags: ['核心'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">一阶电路暂态：三要素法秒杀</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">RC/RL 电路在换路（开关动作）后，电压电流按指数规律从初值过渡到稳态值。掌握"三要素法"，任何一阶暂态问题都能套公式秒解。</p>
-        <div class="formula-block"><strong>三要素法通用公式</strong>：<br>$f(t) = f(\\infty) + [f(0_+) - f(\\infty)]e^{-t/\\tau}$<div class="text-sm text-gray-500 mt-2">三要素：初值 $f(0_+)$、稳态值 $f(\\infty)$、时间常数 $\\tau$</div></div>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>电路</th><th>时间常数 $\\tau$</th><th>物理意义</th></tr></thead><tbody><tr><td class="font-medium">RC 电路</td><td>$\\tau = RC$</td><td>电容充电/放电快慢</td></tr><tr><td class="font-medium">RL 电路</td><td>$\\tau = L/R$</td><td>电感储能/释放快慢</td></tr></tbody></table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">RC/RL 电路在换路（开关动作）后，电压电流按指数规律从初值过渡到稳态值。掌握"三要素法"，任何一阶暂态问题都能套公式秒解。一阶暂态是<a href="#" onclick="navigateTo('circ-05');return false;" style="color:var(--primary)">二阶暂态</a>的基础，也是<a href="#" onclick="navigateTo('act-05');return false;" style="color:var(--primary)">自动控制时域分析</a>的物理原型。</p>
+
+        <h4 class="font-medium mt-6 mb-2">三要素法通用公式</h4>
+        <div class="formula-block"><strong>三要素法</strong>：一阶电路暂态响应的通用表达式<br>$$f(t) = f(\\infty) + [f(0_+) - f(\\infty)]e^{-t/\\tau}$$<div class="text-sm text-gray-500 mt-2">三个要素：初值 $f(0_+)$、稳态值 $f(\\infty)$、时间常数 $\\tau$</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">时间常数的物理意义</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>电路类型</th><th>时间常数 $\\tau$</th><th>物理意义</th><th>典型值</th></tr></thead><tbody><tr><td class="font-medium">RC 电路</td><td>$\\tau = RC$</td><td>电容充放电快慢</td><td>μs ~ s</td></tr><tr><td class="font-medium">RL 电路</td><td>$\\tau = L/R$</td><td>电感储能释放快慢</td><td>μs ~ ms</td></tr></tbody></table></div>
+        <div class="formula-block">时间常数的工程意义：<br>$t=\\tau$ 时，响应完成 63.2%<br>$t=3\\tau$ 时，响应完成 95%<br>$t=5\\tau$ 时，响应完成 99.3%（工程上认为暂态结束）<div class="text-sm text-gray-500 mt-2">$\\tau$ 越大暂态越慢，$\\tau$ 越小暂态越快</div></div>
 
         <div class="chart-container" data-chart="rc-waveform" data-resistance="1000" data-capacitance="1e-6" data-voltage="5" data-title="RC 一阶电路充放电"></div>
         <div class="text-xs text-center mt-1 mb-4" style="color:var(--text-secondary)">蓝色=充电，红色=放电，τ=1ms</div>
 
-        <div class="step-list"><div class="step-item"><div><strong>求初值 $f(0_+)$</strong>：换路定律——电容电压不突变 $u_C(0_+)=u_C(0_-)$，电感电流不突变 $i_L(0_+)=i_L(0_-)$。其他量根据 $0_+$ 时刻等效电路求。</div></div><div class="step-item"><div><strong>求稳态值 $f(\\infty)$</strong>：$t\\to\\infty$ 时电容开路、电感短路，求直流稳态电路。</div></div><div class="step-item"><div><strong>求时间常数 $\\tau$</strong>：从储能元件看进去的等效电阻 $R_{eq}$，$\\tau=RC$ 或 $\\tau=L/R_{eq}$。</div></div></div>
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>换路定律的本质</strong>：电容储能 $\\frac{1}{2}Cu_C^2$、电感储能 $\\frac{1}{2}Li_L^2$ 不能突变（否则功率无穷大）。所以 $u_C$ 和 $i_L$ 是"状态变量"，连续变化。但电容电流、电感电压可以突变。</div></div>
+        <h4 class="font-medium mt-6 mb-2">换路定律：状态连续性</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>电容电压不突变</strong>：$u_C(0_+)=u_C(0_-)$（电容储能 $\\frac{1}{2}Cu_C^2$ 不能突变）</li>
+          <li><strong>电感电流不突变</strong>：$i_L(0_+)=i_L(0_-)$（电感储能 $\\frac{1}{2}Li_L^2$ 不能突变）</li>
+          <li><strong>可突变量</strong>：电容电流 $i_C$、电感电压 $u_L$、电阻电压电流均可突变</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">三要素求解步骤</h4>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：求初值 $f(0_+)$</strong>。先求 $t=0_-$ 时的 $u_C(0_-)$ 或 $i_L(0_-)$，利用换路定律得 $0_+$ 值，再根据 $0_+$ 等效电路求其他量。</div></div><div class="step-item"><div><strong>第二步：求稳态值 $f(\\infty)$</strong>。$t\\to\\infty$ 时电容开路、电感短路，画出直流稳态电路求解。</div></div><div class="step-item"><div><strong>第三步：求时间常数 $\\tau$</strong>。从储能元件（C 或 L）两端看进去的等效电阻 $R_{eq}$，$\\tau=RC$ 或 $\\tau=L/R_{eq}$。</div></div><div class="step-item"><div><strong>第四步：代入公式</strong>。将三要素代入通用公式，写出完整响应表达式。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：RC 充电电路</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">已知：$V_s=10V$，$R=1k\\Omega$，$C=1\\mu F$，开关闭合前电容电压为零。求开关闭合后的 $u_C(t)$ 和 $i_C(t)$。</p>
+        <div class="step-list"><div class="step-item"><div><strong>求 $u_C(0_+)$</strong>：$u_C(0_-)=0$，由换路定律 $u_C(0_+)=0V$</div></div><div class="step-item"><div><strong>求 $u_C(\\infty)$</strong>：稳态时电容开路，$u_C(\\infty)=V_s=10V$</div></div><div class="step-item"><div><strong>求 $\\tau$</strong>：$\\tau=RC=1k \\times 1\\mu=1ms$</div></div><div class="step-item"><div><strong>代入公式</strong>：$u_C(t)=10+(0-10)e^{-t/1ms}=10(1-e^{-1000t})V$<br>$i_C(t)=C\\frac{du_C}{dt}=10mA \\cdot e^{-1000t}$</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>三要素法的普适性</strong>：无论电路多复杂，只要是一阶系统（只有一个储能元件），都能用三要素法。关键是正确求出三个要素——初值、稳态值、时间常数。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>常见错误</strong>：①求 $R_{eq}$ 时忘记将独立源置零；②混淆 $0_+$ 和 $0_-$ 时刻的电路；③时间常数公式记反（RC 是 τ，L/R 也是 τ，不是 R/L）。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与控制理论的联系</strong>：一阶 RC 电路的传递函数为 $H(s)=\\frac{1}{1+sRC}$，正是<a href="#" onclick="navigateTo('act-05');return false;" style="color:var(--primary)">一阶系统</a>的典型形式。时间常数 $\\tau=RC$ 决定了系统的响应速度。</div></div>
       ` },
       { id: 'circ-05', title: '二阶电路暂态', desc: 'RLC 过阻尼/临界/欠阻尼', icon: '〰', tags: ['难点'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">二阶电路：振荡的起源</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">RLC 串联/并联电路是二阶系统，其暂态响应由阻尼比决定——过阻尼单调衰减、临界阻尼最快无振荡收敛、欠阻尼衰减振荡。这与 <a href="#" onclick="navigateTo('act-05');return false;" style="color:var(--primary)">自动控制的二阶系统</a> 完全对应。</p>
-        <div class="formula-block">RLC 串联特征方程：$s^2 + 2\\alpha s + \\omega_0^2 = 0$<br>$\\alpha = R/(2L)$（衰减常数），$\\omega_0 = 1/\\sqrt{LC}$（谐振频率）<br>判别式 $\\alpha^2 - \\omega_0^2$ 决定响应类型</div>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>条件</th><th>类型</th><th>响应特征</th></tr></thead><tbody><tr><td class="font-medium">$\\alpha > \\omega_0$（R 大）</td><td>过阻尼</td><td>两个负实根，单调衰减无振荡</td></tr><tr><td class="font-medium">$\\alpha = \\omega_0$</td><td>临界阻尼</td><td>重根，最快无振荡收敛</td></tr><tr><td class="font-medium">$\\alpha < \\omega_0$（R 小）</td><td>欠阻尼</td><td>共轭复根，衰减振荡 $e^{-\\alpha t}\\sin(\\omega_d t)$</td></tr><tr><td class="font-medium">$\\alpha = 0$（R=0）</td><td>无阻尼</td><td>纯虚根，等幅振荡</td></tr></tbody></table></div>
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>阻尼比 $\\zeta = \\alpha/\\omega_0 = \\frac{R}{2}\\sqrt{C/L}$</strong>：这正是控制理论中的阻尼比！电路与控制在这里完全统一。增大 R 增大阻尼（抑制振荡），减小 R 减小阻尼（增强振荡）。</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">RLC 串联/并联电路是二阶系统，其暂态响应由阻尼比决定——过阻尼单调衰减、临界阻尼最快无振荡收敛、欠阻尼衰减振荡。这与 <a href="#" onclick="navigateTo('act-05');return false;" style="color:var(--primary)">自动控制的二阶系统</a> 完全对应。二阶暂态建立在<a href="#" onclick="navigateTo('circ-04');return false;" style="color:var(--primary)">一阶暂态</a>基础上，增加了振荡的可能性。</p>
+
+        <h4 class="font-medium mt-6 mb-2">RLC 串联电路的特征方程</h4>
+        <div class="formula-block">RLC 串联电路特征方程：$s^2 + 2\\alpha s + \\omega_0^2 = 0$<br>其中：$\\alpha = \\frac{R}{2L}$（衰减常数），$\\omega_0 = \\frac{1}{\\sqrt{LC}}$（无阻尼自然振荡频率）<div class="text-sm text-gray-500 mt-2">特征根 $s_{1,2} = -\\alpha \\pm \\sqrt{\\alpha^2 - \\omega_0^2}$，根的性质决定响应类型</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">阻尼比与响应类型</h4>
+        <div class="formula-block">阻尼比定义：$\\zeta = \\frac{\\alpha}{\\omega_0} = \\frac{R}{2}\\sqrt{\\frac{C}{L}}$<br>阻尼振荡频率：$\\omega_d = \\omega_0\\sqrt{1-\\zeta^2}$（$\\zeta<1$ 时存在）</div>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>条件</th><th>类型</th><th>特征根</th><th>响应特征</th></tr></thead><tbody><tr><td class="font-medium">$\\zeta > 1$（R 大）</td><td>过阻尼</td><td>两个不等负实根</td><td>单调衰减，无振荡，响应慢</td></tr><tr><td class="font-medium">$\\zeta = 1$</td><td>临界阻尼</td><td>二重负实根</td><td>最快无振荡收敛</td></tr><tr><td class="font-medium">$0<\\zeta<1$（R 小）</td><td>欠阻尼</td><td>共轭复根</td><td>衰减振荡 $e^{-\\alpha t}\\sin(\\omega_d t+\\varphi)$</td></tr><tr><td class="font-medium">$\\zeta = 0$（R=0）</td><td>无阻尼</td><td>纯虚根</td><td>等幅振荡，频率 $\\omega_0$</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">四种阻尼响应的物理图像</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>过阻尼</strong>：电阻很大，能量迅速耗散，电容电压单调趋近稳态，无振荡。类似"在糖浆中摆动的钟摆"。</li>
+          <li><strong>临界阻尼</strong>：刚好不振荡的最快收敛，是工程设计的理想目标（如汽车减震器）。</li>
+          <li><strong>欠阻尼</strong>：电阻较小，电容和电感间能量交换产生振荡，振幅按 $e^{-\\alpha t}$ 衰减。</li>
+          <li><strong>无阻尼</strong>：理想情况（R=0），能量无损耗，等幅振荡永不停止。</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：判断阻尼类型</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">已知 RLC 串联电路：$R=100\\Omega$，$L=10mH$，$C=1\\mu F$。求阻尼比和响应类型。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：求 $\\omega_0$</strong>。$\\omega_0=\\frac{1}{\\sqrt{LC}}=\\frac{1}{\\sqrt{10^{-2}\\times 10^{-6}}}=10^4 rad/s$</div></div><div class="step-item"><div><strong>第二步：求 $\\alpha$</strong>。$\\alpha=\\frac{R}{2L}=\\frac{100}{2\\times 10^{-2}}=5000 s^{-1}$</div></div><div class="step-item"><div><strong>第三步：求 $\\zeta$</strong>。$\\zeta=\\frac{\\alpha}{\\omega_0}=\\frac{5000}{10^4}=0.5$</div></div><div class="step-item"><div><strong>第四步：判断类型</strong>。$0<\\zeta=0.5<1$，为欠阻尼响应。$\\omega_d=\\omega_0\\sqrt{1-\\zeta^2}=10^4\\times 0.866=8660 rad/s$</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">与控制理论的统一</h4>
+        <div class="formula-block">二阶系统传递函数：$H(s)=\\frac{\\omega_0^2}{s^2+2\\zeta\\omega_0 s+\\omega_0^2}$<br>电路中 $\\zeta=\\frac{R}{2}\\sqrt{\\frac{C}{L}}$，控制中 $\\zeta$ 由系统结构决定<div class="text-sm text-gray-500 mt-2">电路与控制在二阶系统层面完全统一——同一套数学描述</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>阻尼比的调节</strong>：在电路中，调节 R 可以改变阻尼比。增大 R 增大阻尼（抑制振荡），减小 R 减小阻尼（增强振荡）。这在<a href="#" onclick="navigateTo('act-05');return false;" style="color:var(--primary)">控制系统设计</a>中对应调节阻尼系数。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>临界阻尼的工程意义</strong>：临界阻尼（$\\zeta=1$）是"刚好不振荡"的最快响应，但实际元件参数有误差，工程中常设计为轻微欠阻尼（$\\zeta=0.7\\sim 0.8$）以获得快速且几乎无超调的响应。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>工程应用</strong>：RLC 电路的阻尼特性广泛用于滤波器设计（<a href="#" onclick="navigateTo('circ-07');return false;" style="color:var(--primary)">频率响应</a>）、振荡器设计（<a href="#" onclick="navigateTo('circ-08');return false;" style="color:var(--primary)">谐振电路</a>）、以及<a href="#" onclick="navigateTo('act-09');return false;" style="color:var(--primary)">控制系统校正</a>。</div></div>
       ` },
       { id: 'circ-06', title: '正弦稳态分析', desc: '相量法、阻抗、导纳', icon: '〰️', tags: ['核心'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">相量法：把微积分变成代数</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">正弦稳态电路中，所有电压电流都是同频率正弦量。相量法用复数表示正弦量，把微分方程变成复数代数方程——电阻/电感/电容统一为"阻抗"，KCL/KVL 等所有直流方法都能直接搬用。</p>
-        <div class="formula-block">正弦量 $u(t)=U_m\\cos(\\omega t+\\varphi)$ ↔ 相量 $\\dot{U}=U_m\\angle\\varphi$<br><br>阻抗：$Z_R=R$，$Z_L=j\\omega L$，$Z_C=\\frac{1}{j\\omega C}$<br>导纳：$Y=1/Z=G+jB$（G 电导、B 电纳）</div>
-        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>相量法的本质</strong>：电感两端电压 = $L\\frac{di}{dt}$，相量域变成 $j\\omega L \\dot{I}$——微分变成了乘 $j\\omega$。电容同理变成除以 $j\\omega C$。所以相量法把动态电路变成了"电阻网络"，节点法/网孔法/戴维南全部适用。</div></div>
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>功率三角形</strong>：有功功率 $P=UI\\cos\\varphi$（W）、无功功率 $Q=UI\\sin\\varphi$（var）、视在功率 $S=UI$（VA）。$\\cos\\varphi$ 是功率因数，提高功率因数能减少线路损耗（并联电容补偿无功）。</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">正弦稳态电路中，所有电压电流都是同频率正弦量。相量法用复数表示正弦量，把微分方程变成复数代数方程——电阻/电感/电容统一为"阻抗"，<a href="#" onclick="navigateTo('circ-01');return false;" style="color:var(--primary)">KCL/KVL</a> 等所有直流方法都能直接搬用。相量法是<a href="#" onclick="navigateTo('circ-07');return false;" style="color:var(--primary)">频率响应分析</a>和<a href="#" onclick="navigateTo('circ-08');return false;" style="color:var(--primary)">谐振电路</a>的基础。</p>
+
+        <h4 class="font-medium mt-6 mb-2">正弦量与相量的对应</h4>
+        <div class="formula-block">正弦量 → 相量的转换：<br>时域：$u(t)=U_m\\cos(\\omega t+\\varphi)$<br>相量域：$\\dot{U}=U_m\\angle\\varphi = U_m(\\cos\\varphi+j\\sin\\varphi)$<div class="text-sm text-gray-500 mt-2">相量只包含幅值和初相信息，频率 $\\omega$ 由电源决定（全电路统一）</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">阻抗：统一 R、L、C</h4>
+        <div class="formula-block">三种基本元件的阻抗：<br>$Z_R=R$（纯电阻，电压电流同相）<br>$Z_L=j\\omega L$（纯电感，电压超前电流 90°）<br>$Z_C=\\frac{1}{j\\omega C}=-j\\frac{1}{\\omega C}$（纯电容，电压滞后电流 90°）<div class="text-sm text-gray-500 mt-2">阻抗统一了电阻和电抗，串联 $Z=Z_1+Z_2$，并联 $\\frac{1}{Z}=\\frac{1}{Z_1}+\\frac{1}{Z_2}$</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">导纳：阻抗的对偶</h4>
+        <div class="formula-block">导纳定义：$Y=\\frac{1}{Z}=G+jB$<br>其中：$G$ 为电导（实部），$B$ 为电纳（虚部）<br>并联电路用导纳更方便：$Y=Y_1+Y_2+\\cdots$</div>
+
+        <h4 class="font-medium mt-6 mb-2">相量法求解步骤</h4>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：画相量模型</strong>。将时域电路转换为相量域——电压源 $v(t)\\to\\dot{V}$，电阻 $R\\to R$，电感 $L\\to j\\omega L$，电容 $C\\to 1/(j\\omega C)$。</div></div><div class="step-item"><div><strong>第二步：列相量方程</strong>。用<a href="#" onclick="navigateTo('circ-01');return false;" style="color:var(--primary)">节点法或网孔法</a>列写 KCL/KVL 方程（现在是复数代数方程）。</div></div><div class="step-item"><div><strong>第三步：解复数方程</strong>。用复数运算求解各支路电流/电压相量。</div></div><div class="step-item"><div><strong>第四步：转回时域</strong>。$\\dot{I}=I_m\\angle\\varphi \\to i(t)=I_m\\cos(\\omega t+\\varphi)$</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">功率分析</h4>
+        <div class="formula-block">三种功率的关系：<br>有功功率 $P=UI\\cos\\varphi$（单位：W，实际做功）<br>无功功率 $Q=UI\\sin\\varphi$（单位：var，能量交换）<br>视在功率 $S=UI=\\sqrt{P^2+Q^2}$（单位：VA，设备容量）<div class="text-sm text-gray-500 mt-2">$\\cos\\varphi$ 为功率因数，$\\varphi$ 为电压与电流的相位差</div></div>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>元件</th><th>有功 P</th><th>无功 Q</th><th>功率因数</th></tr></thead><tbody><tr><td class="font-medium">纯电阻 R</td><td>$UI$</td><td>0</td><td>$\\cos\\varphi=1$</td></tr><tr><td class="font-medium">纯电感 L</td><td>0</td><td>$UI$（正）</td><td>$\\cos\\varphi=0$（滞后）</td></tr><tr><td class="font-medium">纯电容 C</td><td>0</td><td>$-UI$（负）</td><td>$\\cos\\varphi=0$（超前）</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：RLC 串联电路</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">已知：$v(t)=100\\cos(1000t)V$，$R=30\\Omega$，$L=40mH$，$C=25\\mu F$。求电流 $i(t)$ 和各元件电压。</p>
+        <div class="step-list"><div class="step-item"><div><strong>求总阻抗</strong>。$Z=R+j(\\omega L-\\frac{1}{\\omega C})=30+j(40-40)=30\\Omega$（谐振状态！）</div></div><div class="step-item"><div><strong>求电流相量</strong>。$\\dot{I}=\\frac{\\dot{V}}{Z}=\\frac{100\\angle 0°}{30}=3.33\\angle 0°A$</div></div><div class="step-item"><div><strong>求各电压</strong>。$\\dot{V}_R=3.33\\times 30=100\\angle 0°V$，$\\dot{V}_L=3.33\\times j40=133.3\\angle 90°V$，$\\dot{V}_C=3.33\\times(-j40)=133.3\\angle-90°V$</div></div><div class="step-item"><div><strong>转时域</strong>。$i(t)=3.33\\cos(1000t)A$。注意：$V_L$ 和 $V_C$ 幅值大于电源电压（串联谐振现象）。</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>功率因数补偿</strong>：工业负载多为感性（电机），功率因数低，并联电容可补偿无功，提高 $\\cos\\varphi$ 到 0.9 以上，减少线路损耗和电费。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>相量法的限制</strong>：相量法只能处理<strong>单一频率</strong>的正弦稳态。若电路中有多个不同频率的电源，必须用<a href="#" onclick="navigateTo('circ-03');return false;" style="color:var(--primary)">叠加定理</a>分别求解后在时域叠加。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与傅里叶分析的联系</strong>：任意周期信号可用<a href="#" onclick="navigateTo('hm-12');return false;" style="color:var(--primary)">傅里叶级数</a>分解为不同频率正弦量之和。对每个频率分量用相量法求解，再叠加——这就是频域分析的完整思想。</div></div>
       ` },
       { id: 'circ-07', title: '频率响应与滤波器', desc: 'RC 低通/高通、波特图入门', icon: '📶', tags: ['工程'], goals: { eng: true }, content: `
-        <h3 class="text-lg font-semibold mb-3">滤波器：频率选择的艺术</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">滤波器让某些频率的信号通过、抑制另一些频率。RC 低通/高通是最基本的滤波器，理解它们的频率响应（波特图），是设计通信、音频、电源滤波的基础。</p>
-        <div class="formula-block">RC 低通：$H(j\\omega) = \\frac{1}{1+j\\omega RC} = \\frac{1}{1+j\\omega/\\omega_c}$<br>截止频率 $\\omega_c = 1/(RC)$，$|H|=1/\\sqrt{2}$（-3dB 点）<br>通带 $\\omega < \\omega_c$（增益≈1），阻带 $\\omega > \\omega_c$（增益 -20dB/dec 衰减）</div>
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>低通 vs 高通</strong>：RC 低通（输出取电容电压）让低频通过；RC 高通（输出取电阻电压）让高频通过。把 R 和 L 互换、或 C 和 L 互换可得其他类型。有源滤波器（含运放）可实现更陡的衰减，详见 <a href="#" onclick="navigateTo('ana-11');return false;" style="color:var(--primary)">有源滤波器</a>。</div></div>
+        <h3 class="text-lg font-semibold mb-3">频率响应：电路的频率特性</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">电路对不同频率正弦输入的响应能力称为频率响应。滤波器利用频率响应特性，选择性地通过或抑制特定频率信号。频率响应分析建立在<a href="#" onclick="navigateTo('circ-06');return false;" style="color:var(--primary)">相量法</a>基础上，是<a href="#" onclick="navigateTo('circ-08');return false;" style="color:var(--primary)">谐振电路</a>和<a href="#" onclick="navigateTo('act-08');return false;" style="color:var(--primary)">自动控制频域分析</a>的核心。</p>
+
+        <h4 class="font-medium mt-6 mb-2">传递函数与频率响应</h4>
+        <div class="formula-block">网络函数（传递函数）：$H(j\\omega)=\\frac{\\dot{Y}}{\\dot{X}}=|H(j\\omega)|\\angle\\varphi(\\omega)$<br>幅频特性：$|H(j\\omega)|$ 表示增益随频率的变化<br>相频特性：$\\varphi(\\omega)$ 表示相移随频率的变化<div class="text-sm text-gray-500 mt-2">频率响应 = 幅频特性 + 相频特性</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">RC 低通滤波器</h4>
+        <div class="formula-block">RC 低通传递函数：$H(j\\omega)=\\frac{1}{1+j\\omega RC}$<br>截止频率：$\\omega_c=\\frac{1}{RC}$，即 $f_c=\\frac{1}{2\\pi RC}$<br>在 $\\omega=\\omega_c$ 处，增益下降到 $\\frac{1}{\\sqrt{2}}$（-3dB）</div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>通带</strong>：$\\omega < \\omega_c$，信号几乎无衰减通过</li>
+          <li><strong>阻带</strong>：$\\omega > \\omega_c$，信号被衰减（每十倍频 -20dB）</li>
+          <li><strong>相位</strong>：输出滞后输入，最大滞后 90°（高频极限）</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">RC 高通滤波器</h4>
+        <div class="formula-block">RC 高通传递函数：$H(j\\omega)=\\frac{j\\omega RC}{1+j\\omega RC}$<br>截止频率：$\\omega_c=\\frac{1}{RC}$（与低通相同）<br>在 $\\omega=\\omega_c$ 处，增益下降到 $\\frac{1}{\\sqrt{2}}$（-3dB）</div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>通带</strong>：$\\omega > \\omega_c$，高频信号通过</li>
+          <li><strong>阻带</strong>：$\\omega < \\omega_c$，低频信号被衰减</li>
+          <li><strong>相位</strong>：输出超前输入，最大超前 90°（低频极限）</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">波特图：频率响应的图形化</h4>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：画幅频特性</strong>。横轴为 $\\lg f$（对数刻度），纵轴为 $20\\lg|H|$（dB）。低通在 $f_c$ 后以 -20dB/dec 下降。</div></div><div class="step-item"><div><strong>第二步：画相频特性</strong>。横轴同上，纵轴为相位角。低通从 0° 渐变到 -90°，在 $f_c$ 处为 -45°。</div></div><div class="step-item"><div><strong>第三步：标注关键点</strong>。截止频率 $f_c$（-3dB 点）、0dB 线（增益=1）、-90° 线（相位极限）。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">四种基本滤波器</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>功能</th><th>典型电路</th><th>应用场景</th></tr></thead><tbody><tr><td class="font-medium">低通 LPF</td><td>通过低频，抑制高频</td><td>RC 串联（C 输出）</td><td>滤除噪声、平滑信号</td></tr><tr><td class="font-medium">高通 HPF</td><td>通过高频，抑制低频</td><td>RC 串联（R 输出）</td><td>隔直、提取交流分量</td></tr><tr><td class="font-medium">带通 BPF</td><td>通过某频段</td><td>RLC 串联谐振</td><td>选频、收音机调谐</td></tr><tr><td class="font-medium">带阻 BEF</td><td>抑制某频段</td><td>双 T 网络</td><td>陷波、消除干扰</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：RC 低通设计</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">设计一个截止频率 $f_c=1kHz$ 的 RC 低通滤波器，求 R 和 C 的值。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：选电容</strong>。选 $C=100nF$（常用值，避免 R 太小或太大）。</div></div><div class="step-item"><div><strong>第二步：求电阻</strong>。$R=\\frac{1}{2\\pi f_c C}=\\frac{1}{2\\pi \\times 10^3 \\times 10^{-7}}=1.59k\\Omega$</div></div><div class="step-item"><div><strong>第三步：验证</strong>。选标准电阻 $R=1.6k\\Omega$，实际 $f_c=\\frac{1}{2\\pi \\times 1600 \\times 10^{-7}}=995Hz$，误差 <1%。</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>-3dB 的含义</strong>：-3dB 对应功率降为一半（$10^{-3/10}=0.5$），是工程上"有效"与"衰减"的分界线。截止频率也称"-3dB 频率"或"半功率点"。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>一阶滤波器的局限</strong>：RC 滤波器的过渡带斜率只有 -20dB/dec（一阶），选择性差。需要更陡峭的过渡带时，用<a href="#" onclick="navigateTo('circ-08');return false;" style="color:var(--primary)">RLC 谐振电路</a>（二阶，-40dB/dec）或<a href="#" onclick="navigateTo('ana-11');return false;" style="color:var(--primary)">有源滤波器</a>（高阶）。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与自动控制的联系</strong>：RC 低通的传递函数 $H(s)=\\frac{1}{1+sRC}$ 正是<a href="#" onclick="navigateTo('act-05');return false;" style="color:var(--primary)">一阶系统</a>的典型形式。<a href="#" onclick="navigateTo('act-08');return false;" style="color:var(--primary)">伯德图</a>是频率响应的标准图形化工具，在控制系统设计中广泛应用。</div></div>
       ` },
       { id: 'circ-08', title: '谐振电路', desc: '串联/并联谐振、品质因数', icon: '🎯', tags: ['高频'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">谐振：能量在 L 和 C 间振荡</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">当感抗和容抗相互抵消（$\\omega L = 1/\\omega C$），电路呈纯阻性，发生谐振。谐振时电路有选频特性，广泛应用于无线电调谐、滤波、振荡器。</p>
-        <div class="formula-block">谐振频率：$\\omega_0 = 1/\\sqrt{LC}$<br>品质因数 $Q = \\frac{\\omega_0 L}{R} = \\frac{1}{\\omega_0 CR}$（串联谐振）<br>Q 越大选频性越强、通频带越窄 $BW = \\omega_0/Q$</div>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>特性</th><th>串联谐振</th><th>并联谐振</th></tr></thead><tbody><tr><td class="font-medium">阻抗</td><td>最小 $Z=R$</td><td>最大 $Z\\approx Q^2 R$</td></tr><tr><td class="font-medium">电流/电压</td><td>电流最大，L/C 上电压为电源 Q 倍</td><td>电压最大，L/C 支路电流为总电流 Q 倍</td></tr><tr><td class="font-medium">别称</td><td>电压谐振</td><td>电流谐振</td></tr></tbody></table></div>
-        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>串联谐振的过电压危险</strong>：谐振时电感和电容上的电压可达电源电压的 Q 倍（Q 可能几十到几百），可能击穿元件。电力系统中要避免串联谐振（如铁磁谐振过电压），但通信中利用它选频（收音机调谐电路）。</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">当感抗和容抗相互抵消（$\\omega L = 1/\\omega C$），电路呈纯阻性，发生谐振。谐振时电路有选频特性，广泛应用于无线电调谐、<a href="#" onclick="navigateTo('circ-07');return false;" style="color:var(--primary)">滤波器</a>、振荡器。谐振电路是<a href="#" onclick="navigateTo('circ-06');return false;" style="color:var(--primary)">正弦稳态分析</a>的特例。</p>
+
+        <h4 class="font-medium mt-6 mb-2">谐振条件与谐振频率</h4>
+        <div class="formula-block">谐振条件：感抗等于容抗，$\\omega L = \\frac{1}{\\omega C}$<br>谐振频率：$\\omega_0 = \\frac{1}{\\sqrt{LC}}$，即 $f_0 = \\frac{1}{2\\pi\\sqrt{LC}}$<div class="text-sm text-gray-500 mt-2">谐振时电路呈纯阻性，电压与电流同相</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">串联谐振特性</h4>
+        <div class="formula-block">串联谐振时：<br>阻抗最小 $Z=R$（感抗容抗抵消）<br>电流最大 $I_0=V_s/R$<br>电感电压 $V_L=QV_s$，电容电压 $V_C=QV_s$（Q 倍放大）<div class="text-sm text-gray-500 mt-2">串联谐振又称"电压谐振"——L 和 C 上的电压可能远大于电源电压</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">并联谐振特性</h4>
+        <div class="formula-block">并联谐振时：<br>阻抗最大 $Z=Q^2R$（理想情况下趋于无穷）<br>总电流最小 $I_0=V_s/(Q^2R)$<br>支路电流 $I_L=I_C=QI_0$（Q 倍放大）<div class="text-sm text-gray-500 mt-2">并联谐振又称"电流谐振"——L 和 C 支路的电流可能远大于总电流</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">品质因数 Q</h4>
+        <div class="formula-block">品质因数定义：$Q = \\frac{\\omega_0 L}{R} = \\frac{1}{\\omega_0 CR} = \\frac{1}{R}\\sqrt{\\frac{L}{C}}$<br>物理意义：$Q=2\\pi \\times \\frac{\\text{谐振时储存能量}}{\\text{每周期消耗能量}}$<div class="text-sm text-gray-500 mt-2">Q 值越高，谐振曲线越尖锐，频率选择性越好</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">串联 vs 并联谐振对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>特性</th><th>串联谐振</th><th>并联谐振</th></tr></thead><tbody><tr><td class="font-medium">阻抗</td><td>最小（=R）</td><td>最大（=Q²R）</td></tr><tr><td class="font-medium">电流</td><td>最大</td><td>最小</td></tr><tr><td class="font-medium">电压/电流放大</td><td>L/C 电压放大 Q 倍</td><td>L/C 电流放大 Q 倍</td></tr><tr><td class="font-medium">又称</td><td>电压谐振</td><td>电流谐振</td></tr><tr><td class="font-medium">应用</td><td>选频、陷波</td><td>振荡器、选频</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">通频带与选择性</h4>
+        <div class="formula-block">通频带（-3dB 带宽）：$BW = \\frac{f_0}{Q}$<br>下限频率：$f_L = f_0 - \\frac{BW}{2}$<br>上限频率：$f_H = f_0 + \\frac{BW}{2}$<div class="text-sm text-gray-500 mt-2">Q 值越高，BW 越窄，选择性越好（但信号保真度下降）</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：收音机调谐</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">设计一个收音机调谐电路，谐振频率 $f_0=1MHz$，带宽 $BW=10kHz$，$L=200\\mu H$。求 C 和 R。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：求 Q 值</strong>。$Q=\\frac{f_0}{BW}=\\frac{10^6}{10^4}=100$</div></div><div class="step-item"><div><strong>第二步：求电容</strong>。$C=\\frac{1}{(2\\pi f_0)^2 L}=\\frac{1}{(2\\pi \\times 10^6)^2 \\times 200\\times 10^{-6}}=126pF$</div></div><div class="step-item"><div><strong>第三步：求电阻</strong>。$R=\\frac{\\omega_0 L}{Q}=\\frac{2\\pi \\times 10^6 \\times 200\\times 10^{-6}}{100}=12.6\\Omega$</div></div><div class="step-item"><div><strong>第四步：验证</strong>。$BW=\\frac{f_0}{Q}=10kHz$ ✓，可分辨频率相差 10kHz 以上的电台。</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>Q 值的工程意义</strong>：高 Q 值（>10）用于选频（如收音机调谐），低 Q 值（<1）用于宽带滤波。Q 值也决定了<a href="#" onclick="navigateTo('circ-05');return false;" style="color:var(--primary)">二阶电路的阻尼比</a>：$\\zeta=\\frac{1}{2Q}$。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>电压谐振的危险</strong>：串联谐振时，电感和电容上的电压可达电源电压的 Q 倍！高 Q 电路中，这可能导致元件击穿。电力系统中需避免串联谐振（铁磁谐振过电压）。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>工程应用</strong>：谐振电路广泛用于无线充电（磁耦合谐振）、金属探测（涡流改变 Q 值）、<a href="#" onclick="navigateTo('ana-14');return false;" style="color:var(--primary)">正弦波振荡器</a>（LC 谐振选频）。</div></div>
       ` },
       { id: 'circ-09', title: '三相电路', desc: '星形/三角形、功率计算', icon: '⚙', tags: ['基础'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">三相电路：电力系统的基石</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">三相电路是交流输配电的标准。三个幅值相等、相位差 120° 的电源，可星形（Y）或三角形（△）连接。理解线电压/相电压、线电流/相电流的关系，以及功率计算，是电气工程师的必备知识。</p>
-        <div class="formula-block">星形连接：线电压 $U_L = \\sqrt{3} U_P$，线电流 $=$ 相电流<br>三角形连接：线电压 $=$ 相电压，线电流 $I_L = \\sqrt{3} I_P$<br><br>三相功率：$P = \\sqrt{3} U_L I_L \\cos\\varphi$（$\\varphi$ 是相电压相电流相位差）</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">三相电路是交流输配电的标准。三个幅值相等、相位差 120° 的电源，可星形（Y）或三角形（△）连接。理解线电压/相电压、线电流/相电流的关系，以及功率计算，是电气工程师的必备知识。三相电路是<a href="#" onclick="navigateTo('circ-06');return false;" style="color:var(--primary)">正弦稳态分析</a>在电力系统中的典型应用。</p>
+
+        <h4 class="font-medium mt-6 mb-2">三相电源的基本概念</h4>
+        <div class="formula-block">三相对称电源：<br>$u_A = U_m\\cos(\\omega t)$<br>$u_B = U_m\\cos(\\omega t - 120°)$<br>$u_C = U_m\\cos(\\omega t + 120°)$<div class="text-sm text-gray-500 mt-2">三相电压幅值相等、频率相同、相位依次差 120°</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">星形（Y）连接</h4>
+        <div class="formula-block">星形连接的电压电流关系：<br>线电压 $U_L = \\sqrt{3} U_P$（线电压是相电压的 $\\sqrt{3}$ 倍）<br>线电流 $I_L = I_P$（线电流等于相电流）<br>中性线电流 $I_N = 0$（对称负载时）<div class="text-sm text-gray-500 mt-2">$U_P$ 为相电压（火线到中性线），$U_L$ 为线电压（火线到火线）</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">三角形（△）连接</h4>
+        <div class="formula-block">三角形连接的电压电流关系：<br>线电压 $U_L = U_P$（线电压等于相电压）<br>线电流 $I_L = \\sqrt{3} I_P$（线电流是相电流的 $\\sqrt{3}$ 倍）<div class="text-sm text-gray-500 mt-2">三角形连接无中性点，只能用于三线制</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">Y 连接 vs △ 连接对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>特性</th><th>星形（Y）连接</th><th>三角形（△）连接</th></tr></thead><tbody><tr><td class="font-medium">线电压与相电压</td><td>$U_L = \\sqrt{3} U_P$</td><td>$U_L = U_P$</td></tr><tr><td class="font-medium">线电流与相电流</td><td>$I_L = I_P$</td><td>$I_L = \\sqrt{3} I_P$</td></tr><tr><td class="font-medium">中性线</td><td>有（三相四线制）</td><td>无（三相三线制）</td></tr><tr><td class="font-medium">应用</td><td>低压配电（220V/380V）</td><td>高压输电、电机绕组</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">三相功率计算</h4>
+        <div class="formula-block">三相总有功功率：$P = \\sqrt{3} U_L I_L \\cos\\varphi$<br>三相总无功功率：$Q = \\sqrt{3} U_L I_L \\sin\\varphi$<br>三相总视在功率：$S = \\sqrt{3} U_L I_L$<div class="text-sm text-gray-500 mt-2">$\\varphi$ 为相电压与相电流的相位差（不是线电压与线电流的相位差）</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：三相功率</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">三相对称负载，星形连接，线电压 380V，每相阻抗 $Z=10+j10\\Omega$。求线电流和三相总功率。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：求相电压</strong>。$U_P=\\frac{U_L}{\\sqrt{3}}=\\frac{380}{\\sqrt{3}}=220V$</div></div><div class="step-item"><div><strong>第二步：求阻抗模</strong>。$|Z|=\\sqrt{10^2+10^2}=14.14\\Omega$，$\\cos\\varphi=\\frac{10}{14.14}=0.707$</div></div><div class="step-item"><div><strong>第三步：求相电流</strong>。$I_P=\\frac{U_P}{|Z|}=\\frac{220}{14.14}=15.56A$，星形连接 $I_L=I_P=15.56A$</div></div><div class="step-item"><div><strong>第四步：求功率</strong>。$P=\\sqrt{3} \\times 380 \\times 15.56 \\times 0.707=7.26kW$</div></div></div>
+
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>对称三相的优势</strong>：①三相对称时中性线电流为零（可省去中线，节约成本）；②瞬时功率恒定（不像单相有二倍频脉动），电机转矩平稳；③传输相同功率，三相比单相省导线材料。这就是为什么电力系统用三相。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>中性线的重要性</strong>：不对称负载时，中性线电流不为零。若中性线断开（三相四线制），各相电压将严重不对称（中性点偏移），导致某些相电压过高烧毁设备。因此中性线上不能装熔断器或开关。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>实际应用</strong>：家庭用电为三相四线制中的单相（220V），工厂动力用电为三相（380V）。大型电机通常采用三角形连接（高压小电流），照明负载采用星形连接（低压大电流）。</div></div>
       ` },
       { id: 'circ-10', title: '二端口网络', desc: 'Z/Y/H 参数及其互换', icon: '⬛', tags: ['难点'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">二端口网络：黑箱分析方法</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">二端口网络把复杂电路看作有输入输出两个端口的"黑箱"，用参数矩阵描述端口电压电流关系。不必关心内部结构，只需知道参数即可分析级联、并联等连接。</p>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>参数</th><th>方程</th><th>适用</th></tr></thead><tbody><tr><td class="font-medium">Z（阻抗）</td><td>$\\dot{U}_1 = z_{11}\\dot{I}_1 + z_{12}\\dot{I}_2$</td><td>串联网络</td></tr><tr><td class="font-medium">Y（导纳）</td><td>$\\dot{I}_1 = y_{11}\\dot{U}_1 + y_{12}\\dot{U}_2$</td><td>并联网络</td></tr><tr><td class="font-medium">T/A（传输）</td><td>$\\dot{U}_1 = A\\dot{U}_2 + B(-\\dot{I}_2)$</td><td>级联网络（最常用）</td></tr><tr><td class="font-medium">H（混合）</td><td>$\\dot{U}_1 = h_{11}\\dot{I}_1 + h_{12}\\dot{U}_2$</td><td>晶体管小信号模型</td></tr></tbody></table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">二端口网络把复杂电路看作有输入输出两个端口的"黑箱"，用参数矩阵描述端口电压电流关系。不必关心内部结构，只需知道参数即可分析级联、并联等连接。二端口网络是<a href="#" onclick="navigateTo('circ-02');return false;" style="color:var(--primary)">戴维南定理</a>的推广——从单端口扩展到双端口。</p>
+
+        <h4 class="font-medium mt-6 mb-2">四种参数矩阵</h4>
+        <div class="formula-block">Z 参数（阻抗参数）：<br>$$\\begin{bmatrix} \\dot{U}_1 \\\\ \\dot{U}_2 \\end{bmatrix} = \\begin{bmatrix} z_{11} & z_{12} \\\\ z_{21} & z_{22} \\end{bmatrix} \\begin{bmatrix} \\dot{I}_1 \\\\ \\dot{I}_2 \\end{bmatrix}$$<div class="text-sm text-gray-500 mt-2">Z 参数物理意义：$z_{11}=\\frac{U_1}{I_1}|_{I_2=0}$（端口2开路时的输入阻抗）</div></div>
+
+        <div class="formula-block">Y 参数（导纳参数）：<br>$$\\begin{bmatrix} \\dot{I}_1 \\\\ \\dot{I}_2 \\end{bmatrix} = \\begin{bmatrix} y_{11} & y_{12} \\\\ y_{21} & y_{22} \\end{bmatrix} \\begin{bmatrix} \\dot{U}_1 \\\\ \\dot{U}_2 \\end{bmatrix}$$<div class="text-sm text-gray-500 mt-2">Y 参数物理意义：$y_{11}=\\frac{I_1}{U_1}|_{U_2=0}$（端口2短路时的输入导纳）</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">T 参数与 H 参数</h4>
+        <div class="formula-block">T 参数（传输参数）——用于级联：<br>$$\\begin{bmatrix} \\dot{U}_1 \\\\ \\dot{I}_1 \\end{bmatrix} = \\begin{bmatrix} A & B \\\\ C & D \\end{bmatrix} \\begin{bmatrix} \\dot{U}_2 \\\\ -\\dot{I}_2 \\end{bmatrix}$$</div>
+        <div class="formula-block">H 参数（混合参数）——用于晶体管：<br>$$\\begin{bmatrix} \\dot{U}_1 \\\\ \\dot{I}_2 \\end{bmatrix} = \\begin{bmatrix} h_{11} & h_{12} \\\\ h_{21} & h_{22} \\end{bmatrix} \\begin{bmatrix} \\dot{I}_1 \\\\ \\dot{U}_2 \\end{bmatrix}$$<div class="text-sm text-gray-500 mt-2">$h_{11}$：输入阻抗；$h_{12}$：反向电压传输比；$h_{21}$：电流增益；$h_{22}$：输出导纳</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">四种参数对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>参数</th><th>自变量</th><th>因变量</th><th>适用场景</th></tr></thead><tbody><tr><td class="font-medium">Z（阻抗）</td><td>$I_1, I_2$</td><td>$U_1, U_2$</td><td>串联网络</td></tr><tr><td class="font-medium">Y（导纳）</td><td>$U_1, U_2$</td><td>$I_1, I_2$</td><td>并联网络</td></tr><tr><td class="font-medium">T（传输）</td><td>$U_2, -I_2$</td><td>$U_1, I_1$</td><td>级联网络（最常用）</td></tr><tr><td class="font-medium">H（混合）</td><td>$I_1, U_2$</td><td>$U_1, I_2$</td><td><a href="#" onclick="navigateTo('ana-03');return false;" style="color:var(--primary)">晶体管</a>小信号模型</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">参数互换公式</h4>
+        <div class="formula-block">常用互换关系：<br>$Y = Z^{-1}$（Y 是 Z 的逆矩阵）<br>$\\det(Z) = z_{11}z_{22} - z_{12}z_{21}$<br>互易网络：$z_{12}=z_{21}$，$y_{12}=y_{21}$，$AD-BC=1$<div class="text-sm text-gray-500 mt-2">互易网络只有3个独立参数，对称网络只有2个独立参数</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：求 Z 参数</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">已知 T 型网络：$Z_1=2\\Omega$，$Z_2=3\\Omega$，$Z_3=4\\Omega$。求 Z 参数矩阵。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：求 $z_{11}$</strong>。端口2开路（$I_2=0$），$z_{11}=\\frac{U_1}{I_1}=Z_1+Z_3=2+4=6\\Omega$</div></div><div class="step-item"><div><strong>第二步：求 $z_{22}$</strong>。端口1开路（$I_1=0$），$z_{22}=\\frac{U_2}{I_2}=Z_2+Z_3=3+4=7\\Omega$</div></div><div class="step-item"><div><strong>第三步：求 $z_{12}=z_{21}$</strong>。互易网络，$z_{12}=z_{21}=Z_3=4\\Omega$</div></div><div class="step-item"><div><strong>第四步：写矩阵</strong>。$Z=\\begin{bmatrix} 6 & 4 \\\\ 4 & 7 \\end{bmatrix}\\Omega$</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>级联的便利</strong>：T 参数（传输参数）的最大优势是级联计算简单——两个网络级联后的 T 参数等于各网络 T 参数的乘积：$T=T_1 \\cdot T_2$。这在分析多级放大器时非常方便。</div></div>
+
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>互易性与对称性</strong>：互易网络 $z_{12}=z_{21}$（无受控源的线性网络都互易）；对称网络 $z_{11}=z_{22}$（端口可互换）。H 参数在 <a href="#" onclick="navigateTo('ana-03');return false;" style="color:var(--primary)">三极管</a> 小信号模型中是标准描述方式。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>工程应用</strong>：二端口网络模型广泛用于<a href="#" onclick="navigateTo('ana-06');return false;" style="color:var(--primary)">多级放大器分析</a>（级联）、滤波器设计、传输线分析。在射频工程中，散射参数（S 参数）是二端口网络在高频下的标准描述方式。</div></div>
       ` },
       { id: 'circ-11', title: '含运放的电路分析', desc: '理想运放线性区模型', icon: '🔺', tags: ['工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">理想运放：两个黄金法则</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">运放（运算放大器）是模拟电路的核心元件。分析含运放的电路，只需牢记两条法则——"虚短"和"虚断"，就能快速求解反相/同相放大、加法、积分等各种运放电路。</p>
-        <div class="formula-block"><strong>理想运放两条法则</strong>（线性区）：<br>① 虚短：$u_+ = u_-$（两输入端电压相等）<br>② 虚断：$i_+ = i_- = 0$（输入端不取电流）</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">运放（运算放大器）是模拟电路的核心元件。分析含运放的电路，只需牢记两条法则——"虚短"和"虚断"，就能快速求解反相/同相放大、加法、积分等各种运放电路。运放电路是<a href="#" onclick="navigateTo('ana-09');return false;" style="color:var(--primary)">运放线性应用</a>和<a href="#" onclick="navigateTo('ana-10');return false;" style="color:var(--primary)">运放非线性应用</a>的基础。</p>
+
+        <h4 class="font-medium mt-6 mb-2">理想运放的两条法则</h4>
+        <div class="formula-block"><strong>理想运放两条法则</strong>（线性区，负反馈）：<br>① 虚短：$u_+ = u_-$（两输入端电压相等，如同短路）<br>② 虚断：$i_+ = i_- = 0$（输入端不取电流，如同断路）<div class="text-sm text-gray-500 mt-2">虚短虚断是分析运放电路的万能工具，适用于所有线性运放电路</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">反相放大器</h4>
+        <div class="formula-block">反相放大器电路：输入信号接 $R_1$ 到反相端，反馈电阻 $R_f$ 从输出到反相端<br>电压增益：$A_v = \\frac{u_o}{u_i} = -\\frac{R_f}{R_1}$<br>输入电阻：$R_{in} = R_1$（反相端虚地）<div class="text-sm text-gray-500 mt-2">负号表示输出与输入反相，增益由电阻比值决定</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">同相放大器</h4>
+        <div class="formula-block">同相放大器电路：输入信号接同相端，$R_1$ 接反相端到地，$R_f$ 从输出到反相端<br>电压增益：$A_v = \\frac{u_o}{u_i} = 1 + \\frac{R_f}{R_1}$<br>输入电阻：$R_{in} \\to \\infty$（理想运放输入阻抗无穷大）<div class="text-sm text-gray-500 mt-2">输出与输入同相，增益 ≥ 1，电压跟随器是 $R_f=0$ 的特例</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">常用运放电路</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>电路</th><th>功能</th><th>传递函数</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">反相放大</td><td>信号放大（反相）</td><td>$A_v=-R_f/R_1$</td><td>信号调理</td></tr><tr><td class="font-medium">同相放大</td><td>信号放大（同相）</td><td>$A_v=1+R_f/R_1$</td><td>阻抗变换</td></tr><tr><td class="font-medium">电压跟随</td><td>阻抗变换</td><td>$A_v=1$</td><td>缓冲隔离</td></tr><tr><td class="font-medium">加法器</td><td>多路信号求和</td><td>$u_o=-\\sum \\frac{R_f}{R_i}u_i$</td><td>音频混合</td></tr><tr><td class="font-medium">积分器</td><td>信号积分</td><td>$u_o=-\\frac{1}{RC}\\int u_i dt$</td><td>波形变换</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：反相放大器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">设计一个增益 $A_v=-10$ 的反相放大器，输入电阻 $R_{in}=10k\\Omega$。求 $R_1$ 和 $R_f$。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：确定 $R_1$</strong>。反相放大器输入电阻 $R_{in}=R_1$，所以 $R_1=10k\\Omega$</div></div><div class="step-item"><div><strong>第二步：求 $R_f$</strong>。$|A_v|=\\frac{R_f}{R_1}=10$，所以 $R_f=10 \\times 10k=100k\\Omega$</div></div><div class="step-item"><div><strong>第三步：验证</strong>。$A_v=-\\frac{100k}{10k}=-10$ ✓，输入电阻 $10k\\Omega$ ✓</div></div></div>
+
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>经典结论</strong>：反相放大 $A_v=-R_f/R_1$，同相放大 $A_v=1+R_f/R_1$，电压跟随器 $A_v=1$。这些公式的推导只需用虚短虚断列节点方程。详见 <a href="#" onclick="navigateTo('ana-09');return false;" style="color:var(--primary)">运放线性应用</a>。</div></div>
-        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>虚短的前提是负反馈</strong>：只有接成负反馈（输出反馈到反相端），运放才工作在线性区，虚短才成立。开环或正反馈时运放饱和（非线性区），不能用虚短虚断分析，那是比较器/振荡器场景。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>虚短的前提是负反馈</strong>：只有接成负反馈（输出反馈到反相端），运放才工作在线性区，虚短才成立。开环或正反馈时运放饱和（非线性区），不能用虚短虚断分析，那是<a href="#" onclick="navigateTo('ana-10');return false;" style="color:var(--primary)">比较器</a>/<a href="#" onclick="navigateTo('ana-14');return false;" style="color:var(--primary)">振荡器</a>场景。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>实际运放的局限</strong>：理想运放增益无穷大、带宽无穷大、输出阻抗为零。实际运放（如 LM741）开环增益约 10⁵，带宽约 1MHz，输出阻抗约 75Ω。设计时需考虑<a href="#" onclick="navigateTo('circ-07');return false;" style="color:var(--primary)">频率响应</a>和<a href="#" onclick="navigateTo('ana-08');return false;" style="color:var(--primary)">反馈对性能的影响</a>。</div></div>
       ` },
       { id: 'circ-12', title: '受控源与电路定理扩展', desc: '受控源处理、定理适用性', icon: '🔌', tags: ['基础'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">受控源：晶体管的电路模型</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">受控源（CCVS/VCCS/VCVS/CCCS）的电压或电流受电路中其他变量控制，是晶体管、场效应管等有源器件的电路模型。掌握受控源在各种定理中的处理方式，是分析含晶体管电路的前提。</p>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>受控源类型</th><th>控制量</th><th>被控量</th><th>典型器件</th></tr></thead><tbody><tr><td class="font-medium">VCVS</td><td>电压</td><td>电压</td><td>运算放大器</td></tr><tr><td class="font-medium">VCCS</td><td>电压</td><td>电流</td><td>场效应管（MOSFET）</td></tr><tr><td class="font-medium">CCVS</td><td>电流</td><td>电压</td><td>—</td></tr><tr><td class="font-medium">CCCS</td><td>电流</td><td>电流</td><td>双极型晶体管（BJT）</td></tr></tbody></table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">受控源（CCVS/VCCS/VCVS/CCCS）的电压或电流受电路中其他变量控制，是<a href="#" onclick="navigateTo('ana-03');return false;" style="color:var(--primary)">晶体管</a>、<a href="#" onclick="navigateTo('ana-01');return false;" style="color:var(--primary)">场效应管</a>等有源器件的电路模型。掌握受控源在各种定理中的处理方式，是分析含晶体管电路的前提。</p>
+
+        <h4 class="font-medium mt-6 mb-2">四种受控源类型</h4>
+        <div class="formula-block">受控源的一般形式：<br>VCVS（电压控制电压源）：$u_2 = \\mu u_1$<br>VCCS（电压控制电流源）：$i_2 = g_m u_1$<br>CCVS（电流控制电压源）：$u_2 = r_m i_1$<br>CCCS（电流控制电流源）：$i_2 = \\beta i_1$<div class="text-sm text-gray-500 mt-2">$\\mu$、$g_m$、$r_m$、$\\beta$ 为控制系数，$u_1$、$i_1$ 为控制量</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">四种受控源对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>受控源类型</th><th>控制量</th><th>被控量</th><th>控制系数</th><th>典型器件</th></tr></thead><tbody><tr><td class="font-medium">VCVS</td><td>电压 $u_1$</td><td>电压 $u_2$</td><td>$\\mu$（无量纲）</td><td>运算放大器</td></tr><tr><td class="font-medium">VCCS</td><td>电压 $u_1$</td><td>电流 $i_2$</td><td>$g_m$（跨导，S）</td><td>MOSFET</td></tr><tr><td class="font-medium">CCVS</td><td>电流 $i_1$</td><td>电压 $u_2$</td><td>$r_m$（互阻，Ω）</td><td>—</td></tr><tr><td class="font-medium">CCCS</td><td>电流 $i_1$</td><td>电流 $i_2$</td><td>$\\beta$（无量纲）</td><td>BJT</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">含受控源电路的分析方法</h4>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：识别受控源</strong>。找出控制量（$u_x$ 或 $i_x$）和被控量（受控源的输出）。</div></div><div class="step-item"><div><strong>第二步：列方程</strong>。用<a href="#" onclick="navigateTo('circ-01');return false;" style="color:var(--primary)">节点法或网孔法</a>列写 KCL/KVL 方程，受控源当独立源处理。</div></div><div class="step-item"><div><strong>第三步：补充控制量方程</strong>。用节点电压或网孔电流表示控制量，得到额外方程。</div></div><div class="step-item"><div><strong>第四步：联立求解</strong>。解方程组求出所有未知量。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">受控源在各定理中的处理</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>定理/方法</th><th>受控源处理方式</th><th>注意事项</th></tr></thead><tbody><tr><td class="font-medium">节点法/网孔法</td><td>当独立源处理，补充控制量方程</td><td>方程数 = 独立方程数 + 控制量方程数</td></tr><tr><td class="font-medium">叠加定理</td><td><strong>始终保留</strong>，只置零独立源</td><td>受控源不能置零（它受电路变量控制）</td></tr><tr><td class="font-medium">戴维南求 $R_{eq}$</td><td>不能置零，用加压求流法</td><td>$R_{eq}=U_{test}/I_{test}$（加测试电压/电流）</td></tr><tr><td class="font-medium">诺顿求 $R_{eq}$</td><td>不能置零，用开路/短路法</td><td>$R_{eq}=U_{oc}/I_{sc}$</td></tr><tr><td class="font-medium">互易定理</td><td>含受控源一般<strong>不互易</strong></td><td>互易定理只适用于无源线性网络</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：含 CCCS 的电路</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">已知：$V_s=10V$，$R_1=2k\\Omega$，$R_2=4k\\Omega$，CCCS $i_2=50i_1$（$\\beta=50$）。求输出电压 $u_o$。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：列 KVL</strong>。输入回路：$V_s = i_1 R_1 + u_{BE}$，$u_{BE}\\approx 0.7V$，$i_1=\\frac{10-0.7}{2k}=4.65mA$</div></div><div class="step-item"><div><strong>第二步：求受控源</strong>。$i_2=\\beta i_1=50 \\times 4.65mA=232.5mA$</div></div><div class="step-item"><div><strong>第三步：求输出</strong>。$u_o = V_s - i_2 R_2 = 10 - 0.2325 \\times 4 = -8.3V$（负值表示电流方向与假设相反）</div></div><div class="step-item"><div><strong>第四步：验证</strong>。检查功率平衡：$P_{Vs}=10 \\times 4.65mA=46.5mW$，$P_{R1}=43.1mW$，$P_{R2}=216.2mW$（受控源提供功率）。</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>受控源的物理意义</strong>：受控源不是真正的电源，它不独立产生能量，而是将控制支路的能量"转换"到被控支路。BJT 的电流放大（$i_c=\\beta i_b$）就是典型的 CCCS 模型。</div></div>
+
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>受控源在各定理中的处理</strong>：①节点法/网孔法——受控源当独立源处理，但要补充控制量方程；②叠加定理——受控源<strong>始终保留</strong>（不置零），只置零独立源；③戴维南求 $R_{eq}$——受控源不能置零，必须用加压求流法；④互易定理——含受控源的网络一般不互易。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>小信号模型</strong>：在<a href="#" onclick="navigateTo('ana-04');return false;" style="color:var(--primary)">放大电路分析</a>中，BJT 和 MOSFET 用小信号受控源模型代替。理解受控源的处理方法，是分析<a href="#" onclick="navigateTo('ana-06');return false;" style="color:var(--primary)">多级放大器</a>和<a href="#" onclick="navigateTo('ana-08');return false;" style="color:var(--primary)">反馈电路</a>的基础。</div></div>
       ` },
     ]
   },
