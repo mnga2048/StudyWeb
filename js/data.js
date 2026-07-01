@@ -2409,40 +2409,156 @@ const CourseData = {
       ` },
       { id: 'ana-05', title: '静态工作点稳定', desc: '图解法、分压偏置', icon: '⚖', tags: ['核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">工作点稳定：温度补偿的艺术</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">三极管参数（$\\beta$、$I_{CBO}$、$U_{BE}$）随温度变化大，导致静态工作点漂移，可能引起饱和失真或截止失真。分压偏置电路利用负反馈稳定工作点，是工程最常用的偏置方案。</p>
-        <div class="formula-block">分压偏置稳定原理：$I_C$ 受温度升高而增大 → $I_E R_E$ 增大 → $U_{BE}$ 减小 → $I_B$ 减小 → $I_C$ 回落<br>发射极电阻 $R_E$ 提供直流负反馈，抑制工作点漂移</div>
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>旁路电容的作用</strong>：$R_E$ 稳定了直流工作点，但也会降低交流增益。并联大电容 $C_E$（旁路电容）让交流信号短路 $R_E$，既稳定直流又不损失交流增益。这是"直流负反馈、交流无影响"的经典设计。</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4"><a href="#" onclick="navigateTo('ana-03');return false;" style="color:var(--primary)">三极管</a>参数（$\\beta$、$I_{CBO}$、$U_{BE}$）随温度变化大，导致静态工作点漂移，可能引起饱和失真或截止失真。分压偏置电路利用负反馈稳定工作点，是工程最常用的偏置方案。工作点稳定是<a href="#" onclick="navigateTo('ana-04');return false;" style="color:var(--primary)">基本放大电路</a>可靠工作的前提。</p>
+
+        <h4 class="font-medium mt-6 mb-2">温度对工作点的影响</h4>
+        <div class="formula-block">温度升高时：<br>$U_{BE}$ 下降（约 -2mV/°C）→ $I_B$ 增大 → $I_C$ 增大<br>$\\beta$ 增大 → $I_C$ 增大<br>$I_{CBO}$ 翻倍（每升 10°C）→ $I_C$ 增大<div class="text-sm text-gray-500 mt-2">三种效应都使 $I_C$ 随温度升高而增大，导致工作点漂移</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">分压偏置电路</h4>
+        <div class="formula-block">分压偏置电路结构：<br>$R_{B1}$ 和 $R_{B2}$ 对 $V_{CC}$ 分压，提供固定基极电压 $V_B$<br>$R_E$ 提供直流负反馈，稳定工作点<br>设计条件：$I_1 \\gg I_B$（通常 $I_1 \\geq 10 I_B$）<div class="text-sm text-gray-500 mt-2">满足设计条件时，$V_B \\approx V_{CC} \\cdot \\frac{R_{B2}}{R_{B1}+R_{B2}}$（与 $\\beta$ 无关）</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">稳定原理分析</h4>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：温度升高</strong>。$I_C$ 增大 → $I_E$ 增大 → $V_E = I_E R_E$ 增大。</div></div><div class="step-item"><div><strong>第二步：负反馈</strong>。$V_B$ 固定（分压决定），$V_E$ 增大 → $U_{BE} = V_B - V_E$ 减小。</div></div><div class="step-item"><div><strong>第三步：自动调节</strong>。$U_{BE}$ 减小 → $I_B$ 减小 → $I_C$ 减小，抵消温度影响。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">静态工作点计算</h4>
+        <div class="formula-block">分压偏置电路的静态工作点：<br>$V_B = V_{CC} \\cdot \\frac{R_{B2}}{R_{B1}+R_{B2}}$<br>$I_{CQ} \\approx I_{EQ} = \\frac{V_B - U_{BE}}{R_E}$<br>$V_{CEQ} = V_{CC} - I_{CQ}(R_C + R_E)$<div class="text-sm text-gray-500 mt-2">$I_{CQ}$ 与 $\\beta$ 无关（只要满足 $I_1 \\gg I_B$），实现工作点稳定</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：分压偏置设计</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">设计一个分压偏置电路：$V_{CC}=12V$，$I_{CQ}=2mA$，$V_{CEQ}=6V$，$\\beta=100$。求各电阻值。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：选 $R_E$</strong>。$V_E=I_{CQ} R_E$，选 $V_E=2V$，则 $R_E=\\frac{2}{2mA}=1k\\Omega$</div></div><div class="step-item"><div><strong>第二步：求 $R_C$</strong>。$V_{CEQ}=V_{CC}-I_{CQ}(R_C+R_E)$，$6=12-2(R_C+1)$，$R_C=2k\\Omega$</div></div><div class="step-item"><div><strong>第三步：求 $V_B$</strong>。$V_B=V_E+U_{BE}=2+0.7=2.7V$</div></div><div class="step-item"><div><strong>第四步：求 $R_{B1}$、$R_{B2}$</strong>。选 $I_1=10I_B=0.2mA$，$R_{B1}=\\frac{12-2.7}{0.2}=46.5k\\Omega$，$R_{B2}=\\frac{2.7}{0.2}=13.5k\\Omega$（选标准值 47k 和 13k）</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>旁路电容的作用</strong>：$R_E$ 稳定了直流工作点，但也会降低交流增益（交流负反馈）。并联大电容 $C_E$（旁路电容，通常 10~100μF）让交流信号短路 $R_E$，既稳定直流又不损失交流增益。这是"直流负反馈、交流无影响"的经典设计。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>设计条件的重要性</strong>：$I_1 \\gg I_B$ 是工作点稳定的前提。若 $I_1$ 不够大，$V_B$ 会受 $I_B$ 影响而变化，稳定效果变差。工程上通常取 $I_1 \\geq (5\\sim10) I_B$。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('ana-08');return false;" style="color:var(--primary)">反馈</a>的联系</strong>：分压偏置是直流负反馈的应用——$R_E$ 将输出电流变化反馈到输入端，自动调节 $U_{BE}$，稳定工作点。理解负反馈原理有助于分析更复杂的<a href="#" onclick="navigateTo('ana-08');return false;" style="color:var(--primary)">反馈放大电路</a>。</div></div>
       ` },
       { id: 'ana-06', title: '多级放大电路', desc: '耦合方式、级联分析', icon: '📊', tags: ['基础'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">多级放大：突破单级增益极限</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">单级放大器增益有限（共射约几十到几百），要获得更高增益需多级级联。级间耦合方式有三种：阻容耦合、直接耦合、变压器耦合，各有适用场景。</p>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>耦合方式</th><th>特点</th><th>频率响应</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">阻容耦合</td><td>电容连接，各级直流独立</td><td>低频差（电容阻碍低频）</td><td>交流放大（分立元件）</td></tr><tr><td class="font-medium">直接耦合</td><td>无电容，直流互通</td><td>低频好，但有零点漂移</td><td>集成运放（必用）</td></tr><tr><td class="font-medium">变压器耦合</td><td>变压器隔离+阻抗匹配</td><td>体积大、频带窄</td><td>功率放大、老式收音机</td></tr></tbody></table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">单级放大器增益有限（共射约几十到几百），要获得更高增益需多级级联。级间耦合方式有三种：阻容耦合、直接耦合、变压器耦合，各有适用场景。多级放大是<a href="#" onclick="navigateTo('ana-04');return false;" style="color:var(--primary)">基本放大电路</a>的扩展，也是<a href="#" onclick="navigateTo('ana-07');return false;" style="color:var(--primary)">集成运放</a>的内部结构基础。</p>
+
+        <h4 class="font-medium mt-6 mb-2">三种耦合方式</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>耦合方式</th><th>连接方式</th><th>频率响应</th><th>优点</th><th>缺点</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">阻容耦合</td><td>电容连接</td><td>低频差</td><td>各级直流独立，设计简单</td><td>不能放大直流</td><td>分立元件交流放大</td></tr><tr><td class="font-medium">直接耦合</td><td>导线直接</td><td>低频好</td><td>可放大直流，集成化</td><td>有零点漂移</td><td>集成运放（必用）</td></tr><tr><td class="font-medium">变压器耦合</td><td>变压器</td><td>频带窄</td><td>阻抗匹配，隔离直流</td><td>体积大、笨重</td><td>功率放大、射频</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">级联增益计算</h4>
+        <div class="formula-block">多级放大器总增益：<br>$A_v = A_{v1} \\cdot A_{v2} \\cdot A_{v3} \\cdots$<br>关键：<strong>后级输入电阻是前级负载</strong><br>$A_{v1}$ 必须用 $R_{i2}$（后级输入电阻）作为负载计算<div class="text-sm text-gray-500 mt-2">不能简单相乘空载增益！必须考虑级间负载效应</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：两级放大器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">两级共射放大器级联：第一级 $R_{C1}=3k\\Omega$，$r_{be1}=1k\\Omega$，$\\beta_1=100$；第二级 $R_{C2}=2k\\Omega$，$r_{be2}=800\\Omega$，$\\beta_2=80$。求总电压增益。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：求第二级输入电阻</strong>。$R_{i2}=r_{be2}=800\\Omega$（忽略偏置电阻）</div></div><div class="step-item"><div><strong>第二步：求第一级增益（带载）</strong>。$A_{v1}=-\\frac{\\beta_1 (R_{C1} \\parallel R_{i2})}{r_{be1}}=-\\frac{100 \\times 632}{1k}=-63.2$</div></div><div class="step-item"><div><strong>第三步：求第二级增益</strong>。$A_{v2}=-\\frac{\\beta_2 R_{C2}}{r_{be2}}=-\\frac{80 \\times 2k}{800}=-200$</div></div><div class="step-item"><div><strong>第四步：求总增益</strong>。$A_v=A_{v1} \\times A_{v2}=(-63.2) \\times (-200)=12640$（同相）</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">频率响应特性</h4>
+        <div class="formula-block">多级放大器的带宽：<br>总带宽 $BW < BW_1$（各级带宽的交集）<br>级数越多，增益越高，但带宽越窄<div class="text-sm text-gray-500 mt-2">增益带宽积 $GBW$ 近似恒定：$A_v \\cdot BW \\approx const$</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>组合组态</strong>：实际电路常组合使用不同组态——共射-共集级联（兼顾增益和带负载能力）、共射-共基级联（提高高频特性）。理解各组态特点，才能合理选择级联方式。</div></div>
+
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>级联增益 = 各级增益之积</strong>：但要注意<strong>后级输入电阻是前级负载</strong>。计算时必须把后级输入电阻作为前级负载考虑，不能简单相乘空载增益。直接耦合的零点漂移问题需用差动放大电路解决，详见 <a href="#" onclick="navigateTo('ana-07');return false;" style="color:var(--primary)">集成运放基础</a>。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>集成运放的内部结构</strong>：<a href="#" onclick="navigateTo('ana-07');return false;" style="color:var(--primary)">集成运放</a>就是多级直接耦合放大器——差动输入级（抑制零漂）+ 中间放大级（高增益）+ 输出级（低阻抗）。理解多级放大有助于理解运放内部工作原理。</div></div>
       ` },
       { id: 'ana-07', title: '集成运放基础', desc: '差动放大、电流源', icon: '🔬', tags: ['核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">集成运放的内部基石</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">集成运放是高增益直接耦合放大器，内部由差动输入级 + 中间放大级 + 输出级 + 偏置电流源组成。差动放大解决零点漂移，电流源提供稳定偏置和高增益负载。</p>
-        <div class="formula-block">差动放大：$u_o = A_d(u_+ - u_-) + A_c \\cdot \\frac{u_+ + u_-}{2}$<br>差模增益 $A_d$（放大有用信号），共模增益 $A_c$（应尽量小）<br>共模抑制比 $CMRR = 20\\log|A_d/A_c|$（越大越好）</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">集成运放是高增益<a href="#" onclick="navigateTo('ana-06');return false;" style="color:var(--primary)">直接耦合多级放大器</a>，内部由差动输入级 + 中间放大级 + 输出级 + 偏置电流源组成。差动放大解决零点漂移，电流源提供稳定偏置和高增益负载。集成运放是<a href="#" onclick="navigateTo('circ-11');return false;" style="color:var(--primary)">运放电路分析</a>和<a href="#" onclick="navigateTo('ana-09');return false;" style="color:var(--primary)">运放线性应用</a>的硬件基础。</p>
+
+        <h4 class="font-medium mt-6 mb-2">集成运放内部结构</h4>
+        <div class="formula-block">集成运放四级结构：<br>① 差动输入级（抑制零漂，高输入阻抗）<br>② 中间放大级（提供主要电压增益）<br>③ 输出级（低输出阻抗，带负载能力）<br>④ 偏置电流源（提供稳定工作电流）<div class="text-sm text-gray-500 mt-2">典型运放（如 LM741）：开环增益 $A_{od} \\approx 2 \\times 10^5$，输入阻抗 $R_{id} \\approx 2M\\Omega$，输出阻抗 $R_o \\approx 75\\Omega$</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">差动放大电路</h4>
+        <div class="formula-block">差动放大器输出：<br>$u_o = A_d(u_+ - u_-) + A_c \\cdot \\frac{u_+ + u_-}{2}$<br>$A_d$：差模增益（放大有用信号）<br>$A_c$：共模增益（应尽量小）<div class="text-sm text-gray-500 mt-2">理想运放 $A_d \\to \\infty$，$A_c = 0$</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">共模抑制比 CMRR</h4>
+        <div class="formula-block">共模抑制比定义：$CMRR = \\left|\\frac{A_d}{A_c}\\right|$<br>对数表示：$CMRR(dB) = 20\\log\\left|\\frac{A_d}{A_c}\\right|$<br>典型值：80~120 dB（$10^4$~$10^6$）<div class="text-sm text-gray-500 mt-2">CMRR 越大，抑制共模干扰（如温度漂移、电源噪声）的能力越强</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">差模与共模信号</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>信号类型</th><th>定义</th><th>来源</th><th>处理</th></tr></thead><tbody><tr><td class="font-medium">差模信号</td><td>$u_d = u_+ - u_-$</td><td>有用输入信号</td><td>放大（$A_d$ 大）</td></tr><tr><td class="font-medium">共模信号</td><td>$u_c = \\frac{u_+ + u_-}{2}$</td><td>温度漂移、电源噪声</td><td>抑制（$A_c$ 小）</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">电流源偏置</h4>
+        <div class="formula-block">电流源的作用：<br>① 为各级提供稳定的工作电流（不受温度影响）<br>② 作为差动放大器的尾电流源（提高 CMRR）<br>③ 作为放大级的有源负载（提高增益）<div class="text-sm text-gray-500 mt-2">电流源输出阻抗极高（理想无穷大），用作负载可大幅提高增益</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：差动放大器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">已知差动放大器：$R_C=10k\\Omega$，$r_{be}=2k\\Omega$，$\\beta=100$，$u_+=10mV$，$u_-=8mV$。求输出电压。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：分解信号</strong>。差模 $u_d=10-8=2mV$，共模 $u_c=\\frac{10+8}{2}=9mV$</div></div><div class="step-item"><div><strong>第二步：求差模增益</strong>。$A_d=\\frac{\\beta R_C}{2r_{be}}=\\frac{100 \\times 10k}{2 \\times 2k}=250$</div></div><div class="step-item"><div><strong>第三步：求输出</strong>。$u_o = A_d \\cdot u_d = 250 \\times 2mV = 0.5V$（共模分量被抑制）</div></div></div>
+
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>差动放大的价值</strong>：温度变化对两管影响相同（共模信号），被差动结构抵消；有用信号差分输入（差模信号），被放大。所以差动放大能<strong>放大差模、抑制共模</strong>，解决直接耦合的零点漂移。这是运放输入级必用差动的原因。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>实际运放的非理想特性</strong>：①输入失调电压 $V_{IO}$（典型 1~5mV）；②输入偏置电流 $I_B$（典型 nA~μA）；③有限开环增益；④有限带宽（增益带宽积恒定）。设计高精度电路时需考虑这些非理想因素。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('circ-11');return false;" style="color:var(--primary)">运放电路</a>的联系</strong>：理解运放内部结构，有助于理解"虚短虚断"的来源——差动输入级的高增益使两输入端电压差趋近于零（虚短），高输入阻抗使输入电流趋近于零（虚断）。</div></div>
       ` },
       { id: 'ana-08', title: '反馈放大电路', desc: '四种组态、判别、性能影响', icon: '↩', tags: ['难点核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">反馈：改善放大器性能的核心手段</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">反馈是把输出量的一部分送回输入端。负反馈虽降低增益，但能提高增益稳定性、展宽频带、改善输入输出阻抗、减小非线性失真——几乎所有实用放大器都引入负反馈。</p>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>反馈类型</th><th>输出取样</th><th>输入比较</th><th>对输入电阻</th><th>对输出电阻</th></tr></thead><tbody><tr><td class="font-medium">电压串联</td><td>电压</td><td>串联</td><td>增大</td><td>减小</td></tr><tr><td class="font-medium">电压并联</td><td>电压</td><td>并联</td><td>减小</td><td>减小</td></tr><tr><td class="font-medium">电流串联</td><td>电流</td><td>串联</td><td>增大</td><td>增大</td></tr><tr><td class="font-medium">电流并联</td><td>电流</td><td>并联</td><td>减小</td><td>增大</td></tr></tbody></table></div>
-        <div class="formula-block">闭环增益：$A_f = \\frac{A}{1+AF}$（$F$ 反馈系数，$1+AF$ 反馈深度）<br>增益降为 $1/(1+AF)$，但稳定性提高 $(1+AF)$ 倍</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">反馈是把输出量的一部分送回输入端。负反馈虽降低增益，但能提高增益稳定性、展宽频带、改善输入输出阻抗、减小非线性失真——几乎所有实用放大器都引入负反馈。反馈是<a href="#" onclick="navigateTo('ana-05');return false;" style="color:var(--primary)">工作点稳定</a>的推广，也是<a href="#" onclick="navigateTo('ana-09');return false;" style="color:var(--primary)">运放线性应用</a>的理论基础。</p>
+
+        <h4 class="font-medium mt-6 mb-2">反馈的基本概念</h4>
+        <div class="formula-block">反馈放大器的基本关系：<br>开环增益 $A = \\frac{X_o}{X_i'}$（无反馈时的增益）<br>反馈系数 $F = \\frac{X_f}{X_o}$（反馈网络的传递函数）<br>闭环增益 $A_f = \\frac{A}{1+AF}$（有反馈时的增益）<div class="text-sm text-gray-500 mt-2">$1+AF$ 称为"反馈深度"，是负反馈的核心参数</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">四种反馈组态</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>反馈类型</th><th>输出取样</th><th>输入比较</th><th>对输入电阻</th><th>对输出电阻</th><th>稳定量</th></tr></thead><tbody><tr><td class="font-medium">电压串联</td><td>电压</td><td>串联</td><td>增大</td><td>减小</td><td>输出电压</td></tr><tr><td class="font-medium">电压并联</td><td>电压</td><td>并联</td><td>减小</td><td>减小</td><td>输出电压</td></tr><tr><td class="font-medium">电流串联</td><td>电流</td><td>串联</td><td>增大</td><td>增大</td><td>输出电流</td></tr><tr><td class="font-medium">电流并联</td><td>电流</td><td>并联</td><td>减小</td><td>增大</td><td>输出电流</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">负反馈的四大好处</h4>
+        <div class="formula-block">负反馈改善性能（$1+AF$ 倍）：<br>① 提高增益稳定性：$\\frac{dA_f}{A_f} = \\frac{1}{1+AF} \\cdot \\frac{dA}{A}$<br>② 展宽频带：$BW_f = (1+AF) \\cdot BW$<br>③ 减小非线性失真<br>④ 改善输入/输出阻抗<div class="text-sm text-gray-500 mt-2">代价：增益降低为原来的 $1/(1+AF)$</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">反馈极性判别</h4>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：瞬时极性法</strong>。假设输入端瞬时升高（+），沿信号通路标各点极性变化。</div></div><div class="step-item"><div><strong>第二步：判断反馈极性</strong>。看反馈到输入端的信号是增强（+，正反馈）还是削弱（-，负反馈）原信号。</div></div><div class="step-item"><div><strong>第三步：判断取样方式</strong>。输出短路（$u_o=0$），若反馈消失则为电压反馈，否则为电流反馈。</div></div><div class="step-item"><div><strong>第四步：判断比较方式</strong>。输入端看，反馈信号与输入信号在同一节点为并联，不在同一节点为串联。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例分析：电压串联负反馈</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">共集放大器（射极跟随器）是典型的电压串联负反馈：$R_E$ 既是输出负载又是反馈网络。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：识别反馈</strong>。$R_E$ 上的电压 $u_f = u_o$（输出电压全部反馈）。</div></div><div class="step-item"><div><strong>第二步：判断极性</strong>。$u_i$ 增大 → $u_b$ 增大 → $u_e$ 增大 → $u_{be} = u_b - u_e$ 减小（负反馈）。</div></div><div class="step-item"><div><strong>第三步：判断组态</strong>。输出短路 $u_o=0$，$u_f=0$（反馈消失）→ 电压反馈。输入端 $u_{be}=u_i-u_f$ → 串联比较。</div></div><div class="step-item"><div><strong>第四步：结论</strong>。共集放大器是电压串联负反馈，所以输入电阻大、输出电阻小、电压增益接近 1。</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>反馈类型选择口诀</strong>：要稳定输出电压选电压反馈，要稳定输出电流选电流反馈；要提高输入电阻选串联反馈，要降低输入电阻选并联反馈。</div></div>
+
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>反馈极性判别（瞬时极性法）</strong>：假设输入端瞬时升高，沿信号通路标各点极性变化，看反馈到输入端是增强（正反馈）还是削弱（负反馈）原信号。四种组态判别：输出短路法判电压/电流反馈（反馈消失则为电压反馈），输入端看串联/并联。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('circ-11');return false;" style="color:var(--primary)">运放电路</a>的联系</strong>：运放的"虚短虚断"本质上是深度负反馈的结果——开环增益 $A \\to \\infty$ 时，$1+AF \\to \\infty$，$u_{be} \\to 0$（虚短）。理解反馈有助于理解运放电路的本质。</div></div>
       ` },
       { id: 'ana-09', title: '运放线性应用', desc: '比例/求和/积分/微分', icon: '∓', tags: ['工程高频'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">运放线性应用：模拟计算的实现</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">运放接成负反馈（线性区），配合不同外围元件可实现各种数学运算：比例（放大）、求和（加法）、积分、微分。这是模拟计算机的基础，也是信号处理的核心电路。分析只需 <a href="#" onclick="navigateTo('circ-11');return false;" style="color:var(--primary)">虚短虚断</a>。</p>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>电路</th><th>输入输出关系</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">反相比例</td><td>$u_o = -\\frac{R_f}{R_1}u_i$</td><td>反相放大</td></tr><tr><td class="font-medium">同相比例</td><td>$u_o = (1+\\frac{R_f}{R_1})u_i$</td><td>同相放大</td></tr><tr><td class="font-medium">电压跟随器</td><td>$u_o = u_i$</td><td>阻抗变换（缓冲）</td></tr><tr><td class="font-medium">反相求和</td><td>$u_o = -(\\frac{R_f}{R_1}u_1 + \\frac{R_f}{R_2}u_2)$</td><td>加权加法</td></tr><tr><td class="font-medium">积分器</td><td>$u_o = -\\frac{1}{RC}\\int u_i\\,dt$</td><td>波形变换（方波→三角波）</td></tr><tr><td class="font-medium">微分器</td><td>$u_o = -RC\\frac{du_i}{dt}$</td><td>边缘检测（少用，噪声大）</td></tr></tbody></table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">运放接成<a href="#" onclick="navigateTo('ana-08');return false;" style="color:var(--primary)">负反馈</a>（线性区），配合不同外围元件可实现各种数学运算：比例（放大）、求和（加法）、积分、微分。这是模拟计算机的基础，也是信号处理的核心电路。分析只需 <a href="#" onclick="navigateTo('circ-11');return false;" style="color:var(--primary)">虚短虚断</a>。运放线性应用是<a href="#" onclick="navigateTo('ana-10');return false;" style="color:var(--primary)">运放非线性应用</a>和<a href="#" onclick="navigateTo('ana-11');return false;" style="color:var(--primary)">有源滤波器</a>的基础。</p>
+
+        <h4 class="font-medium mt-6 mb-2">反相比例放大器</h4>
+        <div class="formula-block">反相比例放大器：<br>输入信号经 $R_1$ 接反相端，$R_f$ 从输出到反相端，同相端接地<br>电压增益：$A_v = -\\frac{R_f}{R_1}$<br>输入电阻：$R_{in} = R_1$（反相端虚地）<div class="text-sm text-gray-500 mt-2">负号表示反相，增益由电阻比值决定，与运放参数无关</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">同相比例放大器</h4>
+        <div class="formula-block">同相比例放大器：<br>输入信号接同相端，$R_1$ 接反相端到地，$R_f$ 从输出到反相端<br>电压增益：$A_v = 1 + \\frac{R_f}{R_1}$<br>输入电阻：$R_{in} \\to \\infty$（理想运放）<div class="text-sm text-gray-500 mt-2">输出与输入同相，增益 ≥ 1，电压跟随器是 $R_f=0$ 的特例</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">常用运放电路汇总</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>电路</th><th>输入输出关系</th><th>输入电阻</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">反相比例</td><td>$u_o = -\\frac{R_f}{R_1}u_i$</td><td>$R_1$</td><td>反相放大</td></tr><tr><td class="font-medium">同相比例</td><td>$u_o = (1+\\frac{R_f}{R_1})u_i$</td><td>$\\infty$</td><td>同相放大</td></tr><tr><td class="font-medium">电压跟随器</td><td>$u_o = u_i$</td><td>$\\infty$</td><td>阻抗变换（缓冲）</td></tr><tr><td class="font-medium">反相求和</td><td>$u_o = -(\\frac{R_f}{R_1}u_1 + \\frac{R_f}{R_2}u_2)$</td><td>各支路独立</td><td>加权加法</td></tr><tr><td class="font-medium">积分器</td><td>$u_o = -\\frac{1}{RC}\\int u_i\\,dt$</td><td>$R$</td><td>波形变换</td></tr><tr><td class="font-medium">微分器</td><td>$u_o = -RC\\frac{du_i}{dt}$</td><td>$R$</td><td>边缘检测</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：反相求和放大器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">设计一个反相求和放大器：$u_o = -(2u_1 + 3u_2)$，选 $R_f=60k\\Omega$。求 $R_1$ 和 $R_2$。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：列方程</strong>。$u_o = -(\\frac{R_f}{R_1}u_1 + \\frac{R_f}{R_2}u_2) = -(2u_1 + 3u_2)$</div></div><div class="step-item"><div><strong>第二步：求 $R_1$</strong>。$\\frac{R_f}{R_1}=2$，$R_1=\\frac{60k}{2}=30k\\Omega$</div></div><div class="step-item"><div><strong>第三步：求 $R_2$</strong>。$\\frac{R_f}{R_2}=3$，$R_2=\\frac{60k}{3}=20k\\Omega$</div></div><div class="step-item"><div><strong>第四步：验证</strong>。$u_o = -(\\frac{60k}{30k}u_1 + \\frac{60k}{20k}u_2) = -(2u_1 + 3u_2)$ ✓</div></div></div>
+
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>反相放大的"虚地"</strong>：反相端经反馈电阻接输出，同相端接地，虚短使反相端也接近地电位（虚地）。这让分析极简——反相端节点 KCL 直接得到增益公式。这是工程中最常用的运放电路。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>实际运放的限制</strong>：①输出电压不超过电源电压（通常 $\\pm 13V$，$\\pm 15V$ 供电）；②输出电流有限（典型 20mA）；③带宽有限（增益带宽积恒定）。设计时需考虑这些实际限制。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('ana-11');return false;" style="color:var(--primary)">有源滤波器</a>的联系</strong>：运放 + RC 网络可构成有源滤波器（低通、高通、带通、带阻），比无源 RC 滤波器性能更好。积分器是开关电容滤波器和 sigma-delta ADC 的基础。</div></div>
       ` },
       { id: 'ana-10', title: '运放非线性应用', desc: '比较器、施密特、波形发生', icon: '🔲', tags: ['工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">运放非线性应用：开环与正反馈</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">运放开环（无反馈）或正反馈时工作在非线性区（饱和），输出只有高/低两个电平。这构成比较器、施密特触发器、方波/三角波发生器——这些是 ADC 输入、电平检测、波形产生的核心。</p>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>电路</th><th>原理</th><th>特点</th></tr></thead><tbody><tr><td class="font-medium">过零比较器</td><td>开环，输入与 0V 比较</td><td>输出方波，抗干扰差</td></tr><tr><td class="font-medium">施密特触发器</td><td>正反馈，有滞回</td><td>抗干扰强，有两个阈值</td></tr><tr><td class="font-medium">方波发生器</td><td>施密特 + RC 充放电</td><td>自激振荡产生方波</td></tr><tr><td class="font-medium">三角波发生器</td><td>方波经积分</td><td>方波→三角波变换</td></tr></tbody></table></div>
-        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>施密特的滞回价值</strong>：普通比较器在阈值附近受噪声干扰会频繁翻转。施密特触发器用正反馈产生两个阈值（上升阈值 $U_{T+}$、下降阈值 $U_{T-}$），信号在两阈值之间时输出不翻转，有效抗干扰。这是 <a href="#" onclick="navigateTo('dig-11');return false;" style="color:var(--primary)">555 定时器</a> 施密特模式的基础。</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">运放开环（无反馈）或正反馈时工作在非线性区（饱和），输出只有高/低两个电平。这构成比较器、施密特触发器、方波/三角波发生器——这些是 ADC 输入、电平检测、波形产生的核心。运放非线性应用与<a href="#" onclick="navigateTo('ana-09');return false;" style="color:var(--primary)">运放线性应用</a>形成对比——线性用负反馈，非线性用开环或正反馈。</p>
+
+        <h4 class="font-medium mt-6 mb-2">比较器：电平判决</h4>
+        <div class="formula-block">过零比较器（开环）：<br>$u_i > 0$ → $u_o = +V_{sat}$（正饱和，约 $+V_{CC}-1V$）<br>$u_i < 0$ → $u_o = -V_{sat}$（负饱和，约 $-V_{EE}+1V$）<div class="text-sm text-gray-500 mt-2">输入电压与参考电压比较，输出高/低电平</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">施密特触发器：滞回比较</h4>
+        <div class="formula-block">施密特触发器（正反馈）：<br>上升阈值：$U_{T+} = \\frac{R_2}{R_1+R_2} V_{sat}$<br>下降阈值：$U_{T-} = -\\frac{R_2}{R_1+R_2} V_{sat}$<br>滞回电压：$\\Delta U = U_{T+} - U_{T-}$<div class="text-sm text-gray-500 mt-2">正反馈产生两个阈值，信号在阈值间输出不翻转，有效抗干扰</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">波形发生器</h4>
+        <div class="step-list"><div class="step-item"><div><strong>方波发生器</strong>：施密特触发器 + RC 充放电。电容电压在 $U_{T+}$ 和 $U_{T-}$ 间充放电，输出方波。</div></div><div class="step-item"><div><strong>三角波发生器</strong>：方波发生器 + 积分器。方波经积分得三角波，再反馈到施密特输入形成闭环。</div></div><div class="step-item"><div><strong>频率计算</strong>：方波频率 $f = \\frac{1}{2RC\\ln(1+2R_2/R_1)}$（由 RC 时间常数和阈值决定）。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">比较器 vs 施密特触发器</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>特性</th><th>过零比较器</th><th>施密特触发器</th></tr></thead><tbody><tr><td class="font-medium">反馈</td><td>无（开环）</td><td>正反馈</td></tr><tr><td class="font-medium">阈值</td><td>1 个（0V 或参考电压）</td><td>2 个（$U_{T+}$ 和 $U_{T-}$）</td></tr><tr><td class="font-medium">抗干扰</td><td>差（阈值附近抖动）</td><td>强（滞回区间不翻转）</td></tr><tr><td class="font-medium">应用</td><td>简单电平检测</td><td>噪声环境、波形整形</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：施密特触发器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">设计施密特触发器：$V_{sat}=13V$，要求 $U_{T+}=3V$，$U_{T-}=-3V$。求 $R_1$ 和 $R_2$。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：列方程</strong>。$U_{T+}=\\frac{R_2}{R_1+R_2} V_{sat}=3V$</div></div><div class="step-item"><div><strong>第二步：求比值</strong>。$\\frac{R_2}{R_1+R_2}=\\frac{3}{13}$，$R_1:R_2=10:3$</div></div><div class="step-item"><div><strong>第三步：选电阻</strong>。选 $R_2=3k\\Omega$，$R_1=10k\\Omega$</div></div><div class="step-item"><div><strong>第四步：验证</strong>。$U_{T+}=\\frac{3k}{13k} \\times 13=3V$ ✓，$U_{T-}=-3V$ ✓，滞回电压 $\\Delta U=6V$</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>施密特的滞回价值</strong>：普通比较器在阈值附近受噪声干扰会频繁翻转。施密特触发器用正反馈产生两个阈值（上升阈值 $U_{T+}$、下降阈值 $U_{T-}$），信号在两阈值之间时输出不翻转，有效抗干扰。这是 <a href="#" onclick="navigateTo('dig-11');return false;" style="color:var(--primary)">555 定时器</a> 施密特模式的基础。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>比较器 vs 运放</strong>：专用比较器（如 LM311）响应速度快（ns 级），输出电平与数字电路兼容。运放作比较器时响应慢（μs 级），但成本低。高速应用应选专用比较器。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-06');return false;" style="color:var(--primary)">数字电路</a>的联系</strong>：施密特触发器是模拟到数字的桥梁——将缓慢变化的模拟信号整形为边沿陡峭的数字信号。在<a href="#" onclick="navigateTo('dig-11');return false;" style="color:var(--primary)">555 定时器</a>和 ADC 输入电路中广泛应用。</div></div>
       ` },
       { id: 'ana-11', title: '有源滤波器', desc: 'LPF/HPF/BPF/BEF、Sallen-Key', icon: '🎚', tags: ['工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">有源滤波器：运放+RC 的高阶滤波</h3>
