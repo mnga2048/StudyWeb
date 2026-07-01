@@ -2850,15 +2850,52 @@ const CourseData = {
       ` },
       { id: 'dig-08', title: '时序逻辑电路分析', desc: '状态方程/状态图/状态表', icon: '🔄', tags: ['核心难点'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">时序逻辑：有记忆的电路</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">时序电路的输出不仅取决于当前输入，还取决于电路当前状态（历史）。分析时序电路的三要素：驱动方程（触发器输入）、状态方程（次态）、输出方程。用状态图/状态表直观描述状态转换。</p>
-        <div class="step-list"><div class="step-item"><div><strong>①写驱动方程</strong>：各触发器输入端的逻辑表达式。</div></div><div class="step-item"><div><strong>②代入特性方程得状态方程</strong>：求 $Q^{n+1}$ 与输入、现态的关系。</div></div><div class="step-item"><div><strong>③写输出方程</strong>：输出与输入、现态的关系。</div></div><div class="step-item"><div><strong>④列状态表/画状态图</strong>：穷举所有状态组合，描述状态转换关系。</div></div><div class="step-item"><div><strong>⑤描述功能</strong>：根据状态转换规律总结电路功能。</div></div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">时序电路的输出不仅取决于当前输入，还取决于电路当前状态（历史）。分析时序电路的三要素：驱动方程（<a href="#" onclick="navigateTo('dig-07');return false;" style="color:var(--primary)">触发器</a>输入）、状态方程（次态）、输出方程。用状态图/状态表直观描述状态转换。时序电路是<a href="#" onclick="navigateTo('dig-09');return false;" style="color:var(--primary)">计数器</a>和<a href="#" onclick="navigateTo('dig-10');return false;" style="color:var(--primary)">移位寄存器</a>的理论基础。</p>
+
+        <h4 class="font-medium mt-6 mb-2">时序电路的组成</h4>
+        <div class="formula-block">时序电路 = 组合逻辑 + 存储元件（触发器）<br>输入 $X$ → 组合逻辑 → 输出 $Z$<br>         ↑                    ↓<br>      状态 $Q$ ← 触发器 ← 次态 $Q^{n+1}$<div class="text-sm text-gray-500 mt-2">输出取决于输入和当前状态，状态在时钟边沿更新</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">同步 vs 异步</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>时钟</th><th>特点</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">同步时序</td><td>所有触发器共用时钟</td><td>设计简单、速度快、无毛刺</td><td>现代数字系统（首选）</td></tr><tr><td class="font-medium">异步时序</td><td>各触发器时钟不同</td><td>省器件、但分析复杂</td><td>简单低速电路</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">分析步骤（五步法）</h4>
+        <div class="step-list"><div class="step-item"><div><strong>①写驱动方程</strong>：各触发器输入端的逻辑表达式（$J$、$K$、$D$ 等）。</div></div><div class="step-item"><div><strong>②代入特性方程</strong>：将驱动方程代入触发器特性方程，得状态方程 $Q^{n+1}$。</div></div><div class="step-item"><div><strong>③写输出方程</strong>：输出与输入、现态的关系。</div></div><div class="step-item"><div><strong>④列状态表/画状态图</strong>：穷举所有状态组合，描述状态转换关系。</div></div><div class="step-item"><div><strong>⑤描述功能</strong>：根据状态转换规律总结电路功能（如几进制计数器）。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">状态图与状态表</h4>
+        <div class="formula-block">状态图：圆圈表示状态，箭头表示转换（标注输入/输出）<br>状态表：表格形式，行=现态，列=输入，内容=次态/输出<div class="text-sm text-gray-500 mt-2">状态图直观，状态表便于列写，两者等价</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例分析：同步计数器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">分析电路：两个 JK 触发器，$J_1=K_1=1$，$J_2=K_2=Q_1$，时钟共用。求状态转换表和功能。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：驱动方程</strong>。$J_1=K_1=1$，$J_2=K_2=Q_1$</div></div><div class="step-item"><div><strong>第二步：状态方程</strong>。$Q_1^{n+1}=\\bar{Q_1}$（翻转），$Q_2^{n+1}=Q_1\\bar{Q_2}+\\bar{Q_1}Q_2=Q_1\\oplus Q_2$</div></div><div class="step-item"><div><strong>第三步：列状态表</strong>。$00\\to01\\to10\\to11\\to00$（循环）</div></div><div class="step-item"><div><strong>第四步：结论</strong>。这是同步 4 进制（模 4）加法计数器，$Q_2Q_1$ 从 00→01→10→11→00 循环。</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>分析技巧</strong>：先写出驱动方程，再代入特性方程得状态方程，最后穷举状态。对于 JK 触发器，记住 $J=K=1$ 时翻转，$J=K=0$ 时保持，可快速分析。</div></div>
+
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>同步 vs 异步</strong>：同步时序电路所有触发器共享同一时钟（同时翻转），设计简单、速度快；异步时序电路各触发器时钟不同（输出互为时钟），省器件但分析复杂、易出毛刺。现代数字系统几乎都用同步设计。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-03');return false;" style="color:var(--primary)">组合逻辑</a>的区别</strong>：组合逻辑无记忆，输出仅取决于当前输入；时序逻辑有记忆（触发器），输出还取决于之前的状态。组合逻辑是时序逻辑的子模块。</div></div>
       ` },
       { id: 'dig-09', title: '计数器', desc: '异步/同步、任意进制设计', icon: '🔢', tags: ['高频'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">计数器：分频与定时的核心</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">计数器是统计时钟脉冲个数的时序电路，用于分频、定时、事件计数。用集成计数器（74LS161/160 等）加反馈可实现任意进制计数，是工程中最常用的时序器件。</p>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>特点</th></tr></thead><tbody><tr><td class="font-medium">异步计数器</td><td>逐级进位（行波），结构简单但速度慢、有毛刺</td></tr><tr><td class="font-medium">同步计数器</td><td>所有触发器同时钟，速度快、无毛刺（74LS161）</td></tr><tr><td class="font-medium">加法/减法/可逆</td><td>递增/递减/可控方向</td></tr></tbody></table></div>
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>任意进制设计（反馈法）</strong>：用 N 进制集成计数器实现 M 进制（M&lt;N）。①清零法（同步/异步复位）：计到 M 时强制清零；②置数法：计到某值时置入初值。M&gt;N 时需级联（如用两片 74LS161 级联做 60 进制秒计数器）。详见 <a href="#" onclick="navigateTo('dig-11');return false;" style="color:var(--primary)">555 定时器</a> 中的应用。</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">计数器是统计时钟脉冲个数的<a href="#" onclick="navigateTo('dig-08');return false;" style="color:var(--primary)">时序电路</a>，用于分频、定时、事件计数。用集成计数器（74LS161/160 等）加反馈可实现任意进制计数，是工程中最常用的时序器件。计数器是<a href="#" onclick="navigateTo('dig-11');return false;" style="color:var(--primary)">555 定时器</a>应用的基础。</p>
+
+        <h4 class="font-medium mt-6 mb-2">计数器分类</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>特点</th><th>典型芯片</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">异步计数器</td><td>逐级进位（行波），简单但慢</td><td>74LS90（十进制）</td><td>低速分频</td></tr><tr><td class="font-medium">同步计数器</td><td>所有触发器同时钟，快且无毛刺</td><td>74LS161（4 位二进制）</td><td>高速计数</td></tr><tr><td class="font-medium">十进制计数器</td><td>BCD 码输出（0~9 循环）</td><td>74LS160</td><td>数码管显示</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">集成计数器 74LS161</h4>
+        <div class="formula-block">74LS161 功能：<br>4 位同步二进制加法计数器（0000~1111）<br>控制端：$\\overline{CR}$（清零）、$\\overline{LD}$（置数）、$CT_P$、$CT_T$（计数使能）<br>输出：$Q_3Q_2Q_1Q_0$（4 位二进制）、$CO$（进位输出）<div class="text-sm text-gray-500 mt-2">$CO = Q_3 Q_2 Q_1 Q_0 \\cdot CT_T$（所有位为 1 时输出进位）</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">任意进制设计（反馈法）</h4>
+        <div class="step-list"><div class="step-item"><div><strong>清零法</strong>：计到 M 时，反馈产生清零信号（$\\overline{CR}=0$）。缺点：清零信号短暂，可能不稳定。</div></div><div class="step-item"><div><strong>同步置数法</strong>：计到 M-1 时，反馈产生置数信号（$\\overline{LD}=0$），置入初值 0。更可靠。</div></div><div class="step-item"><div><strong>级联法</strong>：M > 16 时，多片级联。如两片 74LS161 级联实现 256 进制，加反馈实现任意进制。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例设计：模 12 计数器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">用 74LS161 实现模 12 计数器（0000~1011 循环）。</p>
+        <div class="step-list"><div class="step-item"><div><strong>方法一：清零法</strong>。计到 1100（12）时清零。$\\overline{CR} = \\overline{Q_3 Q_2}$（与非门）。</div></div><div class="step-item"><div><strong>方法二：置数法</strong>。计到 1011（11）时置入 0000。$\\overline{LD} = \\overline{Q_3 Q_1 Q_0}$（与非门）。</div></div><div class="step-item"><div><strong>验证</strong>。状态序列：0→1→2→...→11→0，共 12 个状态。</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>分频器</strong>：n 位二进制计数器可实现 $2^n$ 分频——每 $2^n$ 个时钟输出一个脉冲。级联多片可实现任意分频比。这是时钟系统设计的基础。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>清零法的毛刺</strong>：异步清零法中，清零信号持续时间极短（几个门延迟），可能产生毛刺。工程中推荐用同步置数法，或在清零信号后加锁存器。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-04');return false;" style="color:var(--primary)">译码器</a>的配合</strong>：计数器产生地址，译码器产生时序控制信号——如 LED 扫描显示、数码管动态显示、波形发生器等。这是数字系统中常见的组合。</div></div>
       ` },
       { id: 'dig-10', title: '移位寄存器', desc: '移位、环形/扭环形计数器', icon: '➡➡', tags: ['基础'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">移位寄存器：串并转换的利器</h3>
