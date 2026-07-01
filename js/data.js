@@ -2899,32 +2899,125 @@ const CourseData = {
       ` },
       { id: 'dig-10', title: '移位寄存器', desc: '移位、环形/扭环形计数器', icon: '➡➡', tags: ['基础'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">移位寄存器：串并转换的利器</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">移位寄存器在时钟驱动下逐位移存数据，可实现串行↔并行转换、延时、构成特殊计数器。是通信接口（UART/SPI）和数字信号处理的基础。</p>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>功能</th></tr></thead><tbody><tr><td class="font-medium">串入串出 (SISO)</td><td>数据逐位移入移出（延时）</td></tr><tr><td class="font-medium">串入并出 (SIPO)</td><td>串行输入转并行输出（74LS164）</td></tr><tr><td class="font-medium">并入串出 (PISO)</td><td>并行输入转串行输出（74LS165）</td></tr><tr><td class="font-medium">环形计数器</td><td>首尾相接，n 个状态（移位寄存器反馈）</td></tr><tr><td class="font-medium">扭环形计数器</td><td>反相反馈，2n 个状态（约翰逊计数器）</td></tr></tbody></table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">移位寄存器由多个<a href="#" onclick="navigateTo('dig-07');return false;" style="color:var(--primary)">D 触发器</a>级联组成，在时钟驱动下逐位移存数据。可实现串行↔并行转换、延时、构成特殊<a href="#" onclick="navigateTo('dig-09');return false;" style="color:var(--primary)">计数器</a>。是通信接口（UART/SPI）和数字信号处理的基础。</p>
+
+        <h4 class="font-medium mt-6 mb-2">四种基本类型</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>功能</th><th>典型芯片</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">串入串出 (SISO)</td><td>数据逐位移入移出</td><td>—</td><td>延时线</td></tr><tr><td class="font-medium">串入并出 (SIPO)</td><td>串行→并行</td><td>74LS164</td><td>扩展输出端口</td></tr><tr><td class="font-medium">并入串出 (PISO)</td><td>并行→串行</td><td>74LS165</td><td>扩展输入端口</td></tr><tr><td class="font-medium">并入并出 (PIPO)</td><td>并行→并行</td><td>74LS175</td><td>数据暂存</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">移位寄存器构成计数器</h4>
+        <div class="formula-block">环形计数器：末级输出反馈到首级输入<br>$n$ 个触发器 → $n$ 个状态（独热码）<br><br>扭环形计数器（约翰逊计数器）：末级取反反馈到首级<br>$n$ 个触发器 → $2n$ 个状态<div class="text-sm text-gray-500 mt-2">环形计数器无需译码，但状态利用率低；扭环形计数器状态利用率翻倍</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：串入并出移位寄存器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">4 位 SIPO 移位寄存器，串行输入 1011（先入 1），求各时钟周期的并行输出。</p>
+        <div class="step-list"><div class="step-item"><div><strong>初始</strong>。$Q_3Q_2Q_1Q_0 = 0000$</div></div><div class="step-item"><div><strong>第 1 个时钟</strong>。移入 1，$Q_3Q_2Q_1Q_0 = 0001$</div></div><div class="step-item"><div><strong>第 2 个时钟</strong>。移入 0，$Q_3Q_2Q_1Q_0 = 0010$</div></div><div class="step-item"><div><strong>第 3 个时钟</strong>。移入 1，$Q_3Q_2Q_1Q_0 = 0101$</div></div><div class="step-item"><div><strong>第 4 个时钟</strong>。移入 1，$Q_3Q_2Q_1Q_0 = 1011$（并行输出 = 串行输入）</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>串并转换的工程价值</strong>：串行通信（如 UART）用 1 根数据线传输，节省线缆；并行处理（如 CPU 内部）速度快。移位寄存器是两者之间的桥梁——发送时并→串，接收时串→并。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>环形计数器的自启动</strong>：环形计数器可能进入无效状态（如 0000）。需加反馈逻辑保证自启动——上电后能自动进入有效循环。扭环形计数器无此问题。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-14');return false;" style="color:var(--primary)">Verilog</a>的联系</strong>：在 Verilog 中，移位寄存器用 always @(posedge clk) q &lt;= {q[N-2:0], serial_in} 实现。理解硬件结构有助于写出正确的 HDL 代码。</div></div>
       ` },
       { id: 'dig-11', title: '555 定时器', desc: '多谐/单稳/施密特', icon: '⏱', tags: ['高频'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">555 定时器：万能模拟-数字接口</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">555 定时器是经典的模拟-数字混合芯片，外接少量电阻电容可构成三种基本电路：多谐振荡器（方波）、单稳态触发器（定时脉冲）、施密特触发器（波形整形）。工程应用极广。</p>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>模式</th><th>输出</th><th>周期/脉宽</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">多谐振荡器</td><td>方波（自激）</td><td>$T=0.693(R_1+2R_2)C$</td><td>时钟、LED 闪烁</td></tr><tr><td class="font-medium">单稳态</td><td>定宽脉冲</td><td>$t_w=1.1RC$</td><td>延时、消抖</td></tr><tr><td class="font-medium">施密特</td><td>整形方波</td><td>取决于输入</td><td>波形整形、抗干扰</td></tr></tbody></table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">555 定时器是经典的模拟-数字混合芯片，外接少量电阻电容可构成三种基本电路：多谐振荡器（方波）、单稳态触发器（定时脉冲）、<a href="#" onclick="navigateTo('ana-10');return false;" style="color:var(--primary)">施密特触发器</a>（波形整形）。工程应用极广，是<a href="#" onclick="navigateTo('ana-14');return false;" style="color:var(--primary)">振荡电路</a>的实用形式。</p>
+
+        <h4 class="font-medium mt-6 mb-2">555 内部结构</h4>
+        <div class="formula-block">555 定时器内部组成：<br>① 两个比较器（阈值 2/3Vcc 和触发 1/3Vcc）<br>② RS 触发器（输出高低电平）<br>③ 放电管（控制外部电容充放电）<br>④ 输出缓冲器（驱动能力强）<div class="text-sm text-gray-500 mt-2">8 引脚：GND、TRI、OUT、RES、CON、THR、DIS、VCC</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">三种工作模式</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>模式</th><th>输出</th><th>周期/脉宽</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">多谐振荡器</td><td>方波（自激）</td><td>$T=0.693(R_1+2R_2)C$</td><td>时钟、LED 闪烁、蜂鸣器</td></tr><tr><td class="font-medium">单稳态</td><td>定宽脉冲</td><td>$t_w=1.1RC$</td><td>延时、消抖、定时</td></tr><tr><td class="font-medium">施密特</td><td>整形方波</td><td>取决于输入</td><td>波形整形、抗干扰</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">多谐振荡器原理</h4>
+        <div class="step-list"><div class="step-item"><div><strong>充电阶段</strong>。电容经 $R_1+R_2$ 充电，电压从 1/3Vcc 上升到 2/3Vcc，输出高电平。</div></div><div class="step-item"><div><strong>放电阶段</strong>。电压达到 2/3Vcc 时，放电管导通，电容经 $R_2$ 放电到 1/3Vcc，输出低电平。</div></div><div class="step-item"><div><strong>循环</strong>。电压降到 1/3Vcc 时，放电管截止，重新充电。如此循环产生方波。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：LED 闪烁电路</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">设计 1Hz LED 闪烁电路：$R_1=1k\\Omega$，$R_2=1M\\Omega$，求电容 C。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：列公式</strong>。$T = 0.693(R_1+2R_2)C = 1s$</div></div><div class="step-item"><div><strong>第二步：求 C</strong>。$C = \\frac{1}{0.693 \\times (1k+2M)} \\approx 0.72\\mu F$</div></div><div class="step-item"><div><strong>第三步：选标准值</strong>。选 $C=1\\mu F$，实际频率约 0.7Hz。</div></div><div class="step-item"><div><strong>第四步：占空比</strong>。占空比 $= \\frac{R_1+R_2}{R_1+2R_2} \\approx 50\\%$（接近方波）。</div></div></div>
+
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>555 多谐振荡器原理</strong>：内部两个比较器 + RS 触发器 + 放电管。电容经 $R_1+R_2$ 充电到 2/3Vcc（触发器置位），经 $R_2$ 放电到 1/3Vcc（触发器复位），循环产生方波。占空比由 $R_1,R_2$ 决定，频率由 RC 决定。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>占空比调节</strong>：标准多谐振荡器占空比 >50%（$R_1+R_2$ 充电，$R_2$ 放电）。要实现 50% 占空比，可在 $R_2$ 两端并联二极管，使充电和放电路径不同。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-09');return false;" style="color:var(--primary)">计数器</a>的配合</strong>：555 产生时钟脉冲，计数器统计脉冲个数——如电子表（555 产生 1Hz，60 进制计数器计秒）、频率计等。555 是最简单的时钟源。</div></div>
       ` },
       { id: 'dig-12', title: '半导体存储器', desc: 'RAM/ROM、存储扩展', icon: '💾', tags: ['基础'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">半导体存储器</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">存储器是数字系统的"仓库"。RAM 临时存储（断电丢失），ROM 永久存储（断电保留）。理解存储器结构和字/位扩展方法，是计算机组成的基础。</p>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>特性</th><th>子类</th></tr></thead><tbody><tr><td class="font-medium">RAM（随机存取）</td><td>读写、易失</td><td>SRAM（静态，快）、DRAM（动态，需刷新，密度高）</td></tr><tr><td class="font-medium">ROM（只读）</td><td>读为主、非易失</td><td>PROM/EPROM/EEPROM/Flash</td></tr></tbody></table></div>
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>容量扩展</strong>：①字扩展（地址不够）——多片并联，用高位地址做片选；②位扩展（数据位不够）——多片并联，地址/控制共用，数据位拼接。ROM 还可实现组合逻辑（地址做输入，数据做输出，存真值表），这是 FPGA 查找表（LUT）的原理。</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">存储器是数字系统的"仓库"。RAM 临时存储（断电丢失），ROM 永久存储（断电保留）。理解存储器结构和字/位扩展方法，是计算机组成的基础。存储器是<a href="#" onclick="navigateTo('dig-04');return false;" style="color:var(--primary)">译码器</a>的典型应用。</p>
+
+        <h4 class="font-medium mt-6 mb-2">RAM vs ROM</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>特性</th><th>子类</th><th>速度</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">RAM</td><td>读写、易失</td><td>SRAM（静态）、DRAM（动态）</td><td>快（ns 级）</td><td>内存、缓存</td></tr><tr><td class="font-medium">ROM</td><td>读为主、非易失</td><td>PROM/EPROM/Flash</td><td>中</td><td>固件、BIOS</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">SRAM vs DRAM</h4>
+        <div class="formula-block">SRAM（静态 RAM）：<br>用 6 个晶体管锁存 1 位，无需刷新<br>速度快、密度低、成本高<br>用于 Cache（L1/L2/L3）<br><br>DRAM（动态 RAM）：<br>用电容存储电荷，需定期刷新（典型 64ms）<br>速度慢、密度高、成本低<br>用于主内存（DDR4/DDR5）<div class="text-sm text-gray-500 mt-2">DRAM 集成度高（Gb 级），SRAM 速度快但面积大</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">存储器容量计算</h4>
+        <div class="formula-block">存储器容量 = 字数 × 字长<br>地址线数 $n$ → 字数 $2^n$<br>数据线数 $m$ → 字长 $m$ 位<div class="text-sm text-gray-500 mt-2">例如：10 根地址线 + 8 根数据线 = $2^{10} \\times 8 = 1K \\times 8 = 8Kb$</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">容量扩展方法</h4>
+        <div class="step-list"><div class="step-item"><div><strong>字扩展（地址不够）</strong>。多片并联，数据线/控制线共用，用高位地址做片选。如 4 片 1K×8 扩展为 4K×8。</div></div><div class="step-item"><div><strong>位扩展（数据位不够）</strong>。多片并联，地址/控制共用，数据位拼接。如 2 片 1K×8 扩展为 1K×16。</div></div><div class="step-item"><div><strong>字位同时扩展</strong>。先位扩展再字扩展，或反之。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">ROM 实现组合逻辑</h4>
+        <div class="formula-block">ROM 实现逻辑函数：<br>地址线 = 输入变量<br>数据线 = 输出函数<br>存储内容 = 真值表<div class="text-sm text-gray-500 mt-2">n 个输入、m 个输出的任意组合逻辑，可用 $2^n \\times m$ 的 ROM 实现</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>FPGA 的 LUT</strong>：FPGA 中的查找表（LUT）本质就是小 ROM——输入地址，输出预存的函数值。6 输入 LUT 可实现任意 6 变量逻辑函数。理解 ROM 有助于理解 FPGA 原理。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>DRAM 刷新</strong>：DRAM 用电容存储，电荷会泄漏，必须定期刷新（读出再写入）。刷新期间不能访问，影响性能。刷新策略（行刷新、列刷新）是 DRAM 控制器的关键设计。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-04');return false;" style="color:var(--primary)">译码器</a>的联系</strong>：存储器内部用译码器选择地址——地址线经译码器选中特定字线，连接到对应存储单元。理解译码器有助于理解存储器寻址原理。</div></div>
       ` },
       { id: 'dig-13', title: 'A/D 与 D/A 转换器', desc: '转换原理、参数指标', icon: '🔤', tags: ['工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">A/D 与 D/A：模拟与数字的桥梁</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">现实世界是模拟的，计算机是数字的。ADC（模数转换）把传感器模拟信号转数字，DAC（数模转换）把数字信号转模拟输出。这是所有嵌入式系统的关键接口。</p>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>指标</th><th>含义</th></tr></thead><tbody><tr><td class="font-medium">分辨率</td><td>位数 n，区分 $2^n$ 个等级</td></tr><tr><td class="font-medium">转换时间/速率</td><td>完成一次转换的时间（ADC 类型决定）</td></tr><tr><td class="font-medium">量化误差</td><td>$\\pm\\frac{1}{2}$LSB（分辨率导致）</td></tr><tr><td class="font-medium">精度</td><td>实际值与理想值偏差</td></tr></tbody></table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">现实世界是模拟的，计算机是数字的。ADC（模数转换）把传感器模拟信号转数字，DAC（数模转换）把数字信号转模拟输出。这是所有嵌入式系统的关键接口，也是<a href="#" onclick="navigateTo('dig-01');return false;" style="color:var(--primary)">数制编码</a>的工程应用。</p>
+
+        <h4 class="font-medium mt-6 mb-2">DAC 原理</h4>
+        <div class="formula-block">R-2R 梯形电阻网络 DAC：<br>输出电压：$V_o = -V_{ref} \\cdot \\frac{D}{2^n}$<br>$D$ 为数字输入（$0$~$2^n-1$），$n$ 为位数<br>分辨率：$\\Delta = \\frac{V_{ref}}{2^n}$（最小输出变化量）<div class="text-sm text-gray-500 mt-2">R-2R 网络只需两种阻值的电阻，易于集成</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">ADC 原理</h4>
+        <div class="formula-block">ADC 转换过程：<br>采样 → 保持 → 量化 → 编码<br>采样定理：$f_s \\geq 2f_{max}$（奈奎斯特频率）<br>量化误差：$\\pm\\frac{1}{2}$LSB（不可避免）<div class="text-sm text-gray-500 mt-2">$f_s$ 为采样频率，$f_{max}$ 为信号最高频率</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">四种 ADC 类型</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>速度</th><th>精度</th><th>功耗</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">逐次逼近（SAR）</td><td>中（100k~1MSPS）</td><td>中（12~16 位）</td><td>低</td><td>STM32 内置、传感器采集</td></tr><tr><td class="font-medium">并行比较（Flash）</td><td>极快（>1GSPS）</td><td>低（6~8 位）</td><td>高</td><td>高速通信、示波器</td></tr><tr><td class="font-medium">Σ-Δ 型</td><td>低（<1MSPS）</td><td>极高（24 位）</td><td>低</td><td>音频、精密仪表</td></tr><tr><td class="font-medium">双积分型</td><td>极低</td><td>高</td><td>低</td><td>万用表、温度测量</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">关键参数</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>参数</th><th>含义</th><th>示例</th></tr></thead><tbody><tr><td class="font-medium">分辨率</td><td>位数 $n$，区分 $2^n$ 个等级</td><td>12 位 → 4096 级</td></tr><tr><td class="font-medium">转换速率</td><td>每秒转换次数（SPS）</td><td>1MSPS = 100 万次/秒</td></tr><tr><td class="font-medium">量化误差</td><td>$\\pm\\frac{1}{2}$LSB</td><td>12 位、3.3V → 0.4mV</td></tr><tr><td class="font-medium">INL/DNL</td><td>积分/微分非线性误差</td><td>理想为 0</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：ADC 精度</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">STM32 的 12 位 ADC，参考电压 3.3V。求分辨率和量化误差。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：求分辨率</strong>。$\\Delta = \\frac{3.3V}{2^{12}} = \\frac{3.3}{4096} = 0.806mV$</div></div><div class="step-item"><div><strong>第二步：求量化误差</strong>。$\\pm\\frac{1}{2}$LSB $= \\pm 0.403mV$</div></div><div class="step-item"><div><strong>第三步：求可测量范围</strong>。$0$~$3.3V$，共 4096 个离散值</div></div><div class="step-item"><div><strong>第四步：求采样率</strong>。STM32F1 ADC 最快 1MSPS，可采集 500kHz 以下信号。</div></div></div>
+
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>ADC 类型选型</strong>：①逐次逼近型（SAR）——中速中精度（100kSPS~1MSPS），最常用；②并行比较型（Flash）——超快但功耗大、引脚多；③Σ-Δ 型——高精度低速度（音频、仪表）；④双积分型——低速高抗干扰（万用表）。STM32 内置的多为 SAR ADC。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>采样定理的陷阱</strong>：$f_s \\geq 2f_{max}$ 是最低要求，实际工程中取 $f_s = (5\\sim10) f_{max}$ 以保证信号质量。采样前需加<a href="#" onclick="navigateTo('circ-07');return false;" style="color:var(--primary)">抗混叠滤波器</a>（低通），滤除高于 $f_s/2$ 的频率分量。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('ana-10');return false;" style="color:var(--primary)">比较器</a>的联系</strong>：逐次逼近 ADC 内部用 DAC + 比较器 + 逐次逼近寄存器（SAR）实现——DAC 产生猜测电压，比较器判断大小，SAR 逐位确定数字输出。理解比较器有助于理解 ADC 原理。</div></div>
       ` },
       { id: 'dig-14', title: 'Verilog HDL 入门', desc: '可综合设计（工程方向）', icon: '⌨', tags: ['工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">Verilog HDL：用代码描述硬件</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">Verilog 是硬件描述语言（HDL），用代码描述数字电路结构和行为，经综合工具转为实际电路（FPGA/ASIC）。这是数字 IC 设计和 FPGA 开发的必备技能。</p>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>建模方式</th><th>描述</th></tr></thead><tbody><tr><td class="font-medium">数据流</td><td>assign 连续赋值（组合逻辑）</td></tr><tr><td class="font-medium">行为</td><td>always 块（可描述时序/组合）</td></tr><tr><td class="font-medium">结构</td><td>例化底层模块（门级/模块级）</td></tr></tbody></table></div>
-        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>HDL ≠ 软件编程</strong>：Verilog 描述的是<strong>并行</strong>的硬件，不是顺序执行的程序。所有 assign 和 always 块同时执行（对应并行的硬件单元）。关键原则：①时序逻辑用非阻塞赋值（&lt;=），组合逻辑用阻塞赋值（=）；②避免锁存器（组合逻辑 if/case 要写全所有分支）；③时钟要单一全局时钟。</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">Verilog 是硬件描述语言（HDL），用代码描述数字电路结构和行为，经综合工具转为实际电路（FPGA/ASIC）。这是数字 IC 设计和 FPGA 开发的必备技能。Verilog 是<a href="#" onclick="navigateTo('dig-03');return false;" style="color:var(--primary)">组合逻辑</a>和<a href="#" onclick="navigateTo('dig-08');return false;" style="color:var(--primary)">时序逻辑</a>的代码化表达。</p>
+
+        <h4 class="font-medium mt-6 mb-2">三种建模方式</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>建模方式</th><th>语法</th><th>适用</th><th>示例</th></tr></thead><tbody><tr><td class="font-medium">数据流</td><td>assign 连续赋值</td><td>组合逻辑</td><td>assign y = a &amp; b;</td></tr><tr><td class="font-medium">行为</td><td>always 块</td><td>时序/组合</td><td>always @(posedge clk)</td></tr><tr><td class="font-medium">结构</td><td>模块例化</td><td>层次化设计</td><td>and_gate u1(.a(a),.b(b),.y(y));</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">组合逻辑 vs 时序逻辑</h4>
+        <div class="formula-block">组合逻辑（无记忆）：<br>always @(*) 或 assign<br>输出仅取决于当前输入<br><br>时序逻辑（有记忆）：<br>always @(posedge clk)<br>输出取决于当前输入和状态（<a href="#" onclick="navigateTo('dig-07');return false;" style="color:var(--primary)">触发器</a>）<div class="text-sm text-gray-500 mt-2">组合逻辑 = 门电路，时序逻辑 = 触发器 + 门电路</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">阻塞 vs 非阻塞赋值</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>赋值方式</th><th>语法</th><th>执行顺序</th><th>适用</th></tr></thead><tbody><tr><td class="font-medium">阻塞赋值</td><td>=</td><td>立即执行（顺序）</td><td>组合逻辑</td></tr><tr><td class="font-medium">非阻塞赋值</td><td>&lt;=</td><td>同时执行（并行）</td><td>时序逻辑</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：4 位计数器</h4>
+        <div class="formula-block">Verilog 4位计数器：<br>module counter4(<br>&nbsp;&nbsp;input clk, rst,<br>&nbsp;&nbsp;output reg [3:0] q<br>);<br>always @(posedge clk) begin<br>&nbsp;&nbsp;if (rst) q &lt;= 4'b0;<br>&nbsp;&nbsp;else q &lt;= q + 1;<br>end<br>endmodule<div class="text-sm text-gray-500 mt-2">上升沿触发，同步复位，4 位加法计数器</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：D 触发器</h4>
+        <div class="formula-block">Verilog D触发器：<br>module d_ff(<br>&nbsp;&nbsp;input clk, d,<br>&nbsp;&nbsp;output reg q<br>);<br>always @(posedge clk)<br>&nbsp;&nbsp;q &lt;= d;<br>endmodule<div class="text-sm text-gray-500 mt-2">上升沿触发的 D 触发器，$Q^{n+1}=D$</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">常见错误与陷阱</h4>
+        <div class="step-list"><div class="step-item"><div><strong>阻塞/非阻塞混用</strong>。时序逻辑必须用 &lt;=，组合逻辑用 =。混用会导致仿真与综合结果不一致。</div></div><div class="step-item"><div><strong>不完整分支</strong>。组合逻辑的 if/case 必须写全所有分支，否则综合出<a href="#" onclick="navigateTo('dig-06');return false;" style="color:var(--primary)">锁存器</a>（非预期）。</div></div><div class="step-item"><div><strong>多驱动</strong>。同一个信号不能在多个 always 块中赋值（硬件上无法实现）。</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>HDL ≠ 软件编程</strong>：Verilog 描述的是<strong>并行</strong>的硬件，不是顺序执行的程序。所有 assign 和 always 块同时执行（对应并行的硬件单元）。关键原则：①时序逻辑用非阻塞赋值（&lt;=），组合逻辑用阻塞赋值（=）；②避免锁存器；③时钟要单一全局时钟。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>仿真 vs 综合</strong>：仿真验证功能正确，综合生成实际电路。有些语法可仿真但不可综合（如 #10 延时、initial 块）。可综合代码必须用标准 RTL 风格。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-10');return false;" style="color:var(--primary)">移位寄存器</a>的联系</strong>：移位寄存器用 Verilog 只需一行：always @(posedge clk) q &lt;= {q[N-2:0], serial_in}。理解硬件结构有助于写出正确的 HDL 代码。</div></div>
       ` },
     ]
   },
