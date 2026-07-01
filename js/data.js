@@ -2562,15 +2562,52 @@ const CourseData = {
       ` },
       { id: 'ana-11', title: '有源滤波器', desc: 'LPF/HPF/BPF/BEF、Sallen-Key', icon: '🎚', tags: ['工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">有源滤波器：运放+RC 的高阶滤波</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">无源 RC 滤波器（<a href="#" onclick="navigateTo('circ-07');return false;" style="color:var(--primary)">频率响应</a>）衰减特性差（-20dB/dec）且带负载能力弱。有源滤波器用运放提供增益和隔离，可实现高阶（陡峭衰减）且不衰减通带信号。</p>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>通带</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">LPF 低通</td><td>低频通过</td><td>抗混叠、平滑滤波</td></tr><tr><td class="font-medium">HPF 高通</td><td>高频通过</td><td>去除直流偏移</td></tr><tr><td class="font-medium">BPF 带通</td><td>某频段通过</td><td>选频接收、无线通信</td></tr><tr><td class="font-medium">BEF 带阻（陷波）</td><td>某频段抑制</td><td>滤除 50Hz 工频干扰</td></tr></tbody></table></div>
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>Sallen-Key 拓扑</strong>：最常用的二阶有源滤波器结构，用两个 RC 网络和一个运放（同相放大或跟随器）实现。两个 RC 节经正反馈形成 -40dB/dec 衰减。多级 Sallen-Key 级联可实现 4 阶、6 阶、8 阶高阶滤波。设计时可用巴特沃斯（最大平坦）、切比雪夫（等纹波）、椭圆等逼近类型。</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">无源 RC 滤波器（<a href="#" onclick="navigateTo('circ-07');return false;" style="color:var(--primary)">频率响应</a>）衰减特性差（-20dB/dec）且带负载能力弱。有源滤波器用<a href="#" onclick="navigateTo('ana-09');return false;" style="color:var(--primary)">运放</a>提供增益和隔离，可实现高阶（陡峭衰减）且不衰减通带信号。有源滤波器是<a href="#" onclick="navigateTo('circ-08');return false;" style="color:var(--primary)">谐振电路</a>的高级形式。</p>
+
+        <h4 class="font-medium mt-6 mb-2">四种基本滤波器</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>功能</th><th>通带</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">LPF 低通</td><td>通过低频，抑制高频</td><td>$f < f_c$</td><td>抗混叠、平滑滤波</td></tr><tr><td class="font-medium">HPF 高通</td><td>通过高频，抑制低频</td><td>$f > f_c$</td><td>去除直流偏移</td></tr><tr><td class="font-medium">BPF 带通</td><td>通过某频段</td><td>$f_L < f < f_H$</td><td>选频接收、无线通信</td></tr><tr><td class="font-medium">BEF 带阻</td><td>抑制某频段</td><td>$f < f_L$ 或 $f > f_H$</td><td>滤除 50Hz 工频干扰</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">有源 vs 无源滤波器</h4>
+        <div class="formula-block">有源滤波器的优势：<br>① 提供增益（通带信号不衰减）<br>② 高输入阻抗、低输出阻抗（隔离效果好）<br>③ 可实现高阶滤波（陡峭衰减）<br>④ 不用电感（体积小、成本低）<div class="text-sm text-gray-500 mt-2">缺点：需要电源、带宽受运放限制、有噪声</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">Sallen-Key 拓扑</h4>
+        <div class="formula-block">Sallen-Key 二阶低通滤波器：<br>传递函数：$H(s) = \\frac{\\omega_0^2}{s^2 + \\frac{\\omega_0}{Q}s + \\omega_0^2}$<br>截止频率：$f_0 = \\frac{1}{2\\pi\\sqrt{R_1 R_2 C_1 C_2}}$<br>品质因数：$Q = \\frac{\\sqrt{R_1 R_2 C_1 C_2}}{R_1 C_1 + R_2 C_1 + R_1 C_2(1-A_v)}$<div class="text-sm text-gray-500 mt-2">$A_v$ 为运放增益（跟随器时 $A_v=1$），$Q$ 决定滤波器形状</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">滤波器阶数与衰减</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>阶数</th><th>衰减斜率</th><th>实现方式</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">1 阶</td><td>-20 dB/dec</td><td>单个 RC + 运放</td><td>简单滤波</td></tr><tr><td class="font-medium">2 阶</td><td>-40 dB/dec</td><td>Sallen-Key</td><td>大多数应用</td></tr><tr><td class="font-medium">4 阶</td><td>-80 dB/dec</td><td>两级 Sallen-Key 级联</td><td>高要求滤波</td></tr><tr><td class="font-medium">n 阶</td><td>$-20n$ dB/dec</td><td>多阶级联</td><td>专业音频、通信</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：二阶低通设计</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">设计 Sallen-Key 二阶低通滤波器：$f_0=1kHz$，$Q=0.707$（巴特沃斯），选 $R_1=R_2=R$，$C_1=C_2=C$。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：选电容</strong>。选 $C=100nF$（常用值）。</div></div><div class="step-item"><div><strong>第二步：求电阻</strong>。$R=\\frac{1}{2\\pi f_0 C}=\\frac{1}{2\\pi \\times 10^3 \\times 10^{-7}}=1.59k\\Omega$</div></div><div class="step-item"><div><strong>第三步：验证 Q</strong>。$Q=\\frac{1}{3-A_v}=0.707$，$A_v=3-\\frac{1}{0.707}=1.586$（同相放大器增益）</div></div><div class="step-item"><div><strong>第四步：选电阻</strong>。$A_v=1+\\frac{R_f}{R_g}=1.586$，选 $R_g=10k\\Omega$，$R_f=5.86k\\Omega$</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>滤波器逼近类型</strong>：巴特沃斯（最大平坦，通带最平坦）、切比雪夫（等纹波，过渡带更陡）、贝塞尔（最平坦群延迟，相位失真最小）。选择取决于应用需求——音频用巴特沃斯，通信用切比雪夫，脉冲信号用贝塞尔。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>运放带宽限制</strong>：有源滤波器的上限频率受运放增益带宽积（GBW）限制。$f_0$ 较高时（>100kHz），需选高速运放。超高频滤波器（>10MHz）通常用无源 LC 滤波器。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>Sallen-Key 拓扑</strong>：最常用的二阶有源滤波器结构，用两个 RC 网络和一个运放（同相放大或跟随器）实现。两个 RC 节经正反馈形成 -40dB/dec 衰减。多级 Sallen-Key 级联可实现 4 阶、6 阶、8 阶高阶滤波。</div></div>
       ` },
       { id: 'ana-12', title: '功率放大器', desc: '甲/乙/甲乙类、OTL/OCL', icon: '🔋', tags: ['高频'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">功率放大器：效率与失真的权衡</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">功率放大器关注<strong>能量转换效率</strong>和<strong>最大输出功率</strong>，而非电压增益。根据晶体管导通角分为甲类、乙类、甲乙类——效率越高非线性失真越大，工程中用甲乙类（互补对称）平衡两者。</p>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>导通角</th><th>效率（最大）</th><th>失真</th></tr></thead><tbody><tr><td class="font-medium">甲类</td><td>360°（全周期）</td><td>25%（变压器耦合 50%）</td><td>小（线性好）</td></tr><tr><td class="font-medium">乙类</td><td>180°（半周期）</td><td>78.5%（$\\pi/4$）</td><td>大（交越失真）</td></tr><tr><td class="font-medium">甲乙类</td><td>>180°（略大于半周期）</td><td>接近乙类</td><td>小（消除交越失真）</td></tr></tbody></table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">功率放大器关注<strong>能量转换效率</strong>和<strong>最大输出功率</strong>，而非电压增益。根据<a href="#" onclick="navigateTo('ana-03');return false;" style="color:var(--primary)">晶体管</a>导通角分为甲类、乙类、甲乙类——效率越高非线性失真越大，工程中用甲乙类（互补对称）平衡两者。功率放大器是<a href="#" onclick="navigateTo('ana-04');return false;" style="color:var(--primary)">基本放大电路</a>在大信号下的特殊形式。</p>
+
+        <h4 class="font-medium mt-6 mb-2">三种工作类别</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>导通角</th><th>最大效率</th><th>失真</th><th>静态功耗</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">甲类</td><td>360°（全周期）</td><td>25%~50%</td><td>最小</td><td>大</td><td>小信号前置放大</td></tr><tr><td class="font-medium">乙类</td><td>180°（半周期）</td><td>78.5%</td><td>交越失真</td><td>零</td><td>（实际少用）</td></tr><tr><td class="font-medium">甲乙类</td><td>>180°</td><td>接近乙类</td><td>小</td><td>小</td><td>音频功放（最常用）</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">效率计算</h4>
+        <div class="formula-block">功率放大器效率定义：<br>$\\eta = \\frac{P_o}{P_{DC}} \\times 100\\%$<br>甲类最大效率：$\\eta_{max} = 25\\%$（电阻负载）或 $50\\%$（变压器耦合）<br>乙类最大效率：$\\eta_{max} = \\frac{\\pi}{4} \\approx 78.5\\%$<div class="text-sm text-gray-500 mt-2">$P_o$ 为输出功率，$P_{DC}$ 为电源提供的直流功率</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">互补对称功率放大器</h4>
+        <div class="step-list"><div class="step-item"><div><strong>乙类互补对称</strong>：NPN 和 PNP 两管轮流导通，各放大半周信号。优点是效率高，缺点是有交越失真。</div></div><div class="step-item"><div><strong>甲乙类改进</strong>：用二极管或 $U_{BE}$ 倍增器给两管加微小偏置（约 1.2~1.4V），使其在过零时微微导通，消除交越失真。</div></div><div class="step-item"><div><strong>输出级结构</strong>：OCL（无输出电容）用双电源（$\\pm V_{CC}$），OTL（无输出变压器）用单电源 + 大输出电容。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：OCL 功率放大器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">已知 OCL 功放：$V_{CC}=\\pm 15V$，$R_L=8\\Omega$。求最大输出功率和效率。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：求最大输出电压幅值</strong>。$U_{om} \\approx V_{CC} - U_{CE(sat)} = 15 - 1 = 14V$</div></div><div class="step-item"><div><strong>第二步：求最大输出功率</strong>。$P_{om} = \\frac{U_{om}^2}{2R_L} = \\frac{14^2}{2 \\times 8} = 12.25W$</div></div><div class="step-item"><div><strong>第三步：求电源功率</strong>。$P_{DC} = \\frac{2V_{CC} U_{om}}{\\pi R_L} = \\frac{2 \\times 15 \\times 14}{\\pi \\times 8} = 16.7W$</div></div><div class="step-item"><div><strong>第四步：求效率</strong>。$\\eta = \\frac{P_{om}}{P_{DC}} = \\frac{12.25}{16.7} = 73.4\\%$（接近理论最大值 78.5%）</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>散热设计</strong>：功放管的功耗 $P_T = P_{DC} - P_o$ 转化为热量。最大管耗出现在 $U_{om} = \\frac{2V_{CC}}{\\pi}$ 时，$P_{Tmax} = \\frac{V_{CC}^2}{\\pi^2 R_L}$。大功率功放必须加散热器，防止热击穿。</div></div>
+
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>交越失真与甲乙类</strong>：乙类用两个互补管（NPN+PNP）轮流导通，但晶体管有 0.7V 导通阈值，信号过零时两管都未导通，产生交越失真。甲乙类给两管加微小偏置使其在过零时微微导通，消除交越失真。OCL（无输出电容）用双电源，OTL（无输出变压器）用单电源+大电容。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>现代功放技术</strong>：D 类功放（开关模式）效率可达 90% 以上，广泛用于手机、笔记本电脑等便携设备。集成功放芯片（如 LM386、TDA2030）内置保护电路，使用简单。</div></div>
       ` },
       { id: 'ana-13', title: '直流稳压电源', desc: '整流→滤波→稳压→LDO/开关电源', icon: '🔌', tags: ['工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">直流稳压电源：系统的能量来源</h3>
