@@ -7,22 +7,41 @@ const CourseData = {
   nav: [
     { id: 'home', label: '首页', icon: 'home' },
     {
-      id: 'math', label: '数学', icon: 'calculator', badge: '应试', badgeClass: 'badge-exam',
+      id: 'math', label: '数学基础', icon: 'calculator', badge: '应试', badgeClass: 'badge-exam',
       children: [
         { id: 'advanced-math', label: '高等数学' },
         { id: 'linear-algebra', label: '线性代数' },
       ]
     },
     {
-      id: 'circuit', label: '电子电路', icon: 'cpu',
+      id: 'circuit', label: '电路与电子', icon: 'cpu',
       children: [
         { id: 'circuit-basics', label: '电路基础' },
         { id: 'analog-circuit', label: '模拟电路' },
         { id: 'digital-circuit', label: '数字电路' },
       ]
     },
-    { id: 'control', label: '自动控制原理', icon: 'activity', badge: '工程', badgeClass: 'badge-eng' },
-    { id: 'data-structure', label: '数据结构', icon: 'database' },
+    {
+      id: 'control-sys', label: '控制与自动化', icon: 'activity', badge: '工程', badgeClass: 'badge-eng',
+      children: [
+        { id: 'control', label: '自动控制原理' },
+        { id: 'modern-control', label: '现代控制理论' },
+      ]
+    },
+    {
+      id: 'embedded', label: '嵌入式与机器人', icon: 'chip', badge: '工程', badgeClass: 'badge-eng',
+      children: [
+        { id: 'embedded-sys', label: '嵌入式系统' },
+        { id: 'sensor', label: '传感器与检测' },
+      ]
+    },
+    {
+      id: 'cs', label: '计算机基础', icon: 'database',
+      children: [
+        { id: 'data-structure', label: '数据结构' },
+        { id: 'signals', label: '信号与系统' },
+      ]
+    },
     { id: 'tools', label: '工具箱', icon: 'wrench', badge: '工具', badgeClass: 'badge-tool' },
     { id: 'roadmap', label: '学习路径', icon: 'map', badge: '导航', badgeClass: 'badge-tool' },
   ],
@@ -37,22 +56,23 @@ const CourseData = {
     map: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>',
     wrench: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>',
     book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>',
+    chip: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v2M15 1v2M9 21v2M15 21v2M1 9h2M1 15h2M21 9h2M21 15h2"/></svg>',
   },
 
   // ========== 首页数据 ==========
   home: {
     title: '专业课学习平台 · StudyWeb',
-    subtitle: '应试 + 工程双线并重，覆盖电子、自动化、电气专业核心课程，系统化学习笔试考点与工程实战知识',
-    intro: '本项目把分散在课本、视频、真题里的专业课知识，系统化、可视化、可交互地组织在一个网站里。数学/数电/模电侧重学习笔试考点与计算训练，自动控制/电子电路侧重工程应用与实战仿真，数据结构兼顾计算机统考大纲与工程面试。配合交互图表、公式可视化、自测练习，做到"看得懂、记得牢、用得上"。',
+    subtitle: '应试 + 工程双线并重，覆盖数学、电子、控制、嵌入式、计算机五大领域，系统化学习笔试考点与工程实战知识',
+    intro: '本项目把分散在课本、视频、真题里的专业课知识，系统化、可视化、可交互地组织在一个网站里。数学基础侧重笔试考点与计算训练，电路/控制/嵌入式侧重工程应用与实战仿真，数据结构与信号处理兼顾统考大纲与工程面试。配合交互图表、公式可视化、自测练习，做到"看得懂、记得牢、用得上"。',
     features: [
-      { icon: '📚', label: '系统化知识', desc: '7 大板块、96+ 知识点按学习路径递进，应试与工程双标签筛选' },
+      { icon: '📚', label: '系统化知识', desc: '11 大板块、133 知识点按学习路径递进，应试与工程双标签筛选' },
       { icon: '🧮', label: '公式与计算', desc: 'KaTeX 渲染全部数学/控制公式，配套矩阵计算器、拉氏变换查表等工具' },
       { icon: '🎮', label: '交互可视化', desc: '伯德图、根轨迹、卡诺图、运放电路、排序算法等可交互原理图' },
       { icon: '✏️', label: '自测与真题', desc: '每节配自测题，数学/数电/模电含笔试真题模块，支持错题记录' },
     ],
     stats: [
-      { label: '知识板块', value: '7', color: 'blue' },
-      { label: '知识点', value: '96', color: 'green' },
+      { label: '知识板块', value: '11', color: 'blue' },
+      { label: '知识点', value: '133', color: 'green' },
       { label: '交互图表', value: '15+', color: 'purple' },
       { label: '计算工具', value: '9', color: 'orange' },
     ],
@@ -63,7 +83,11 @@ const CourseData = {
       { id: 'analog-circuit', title: '模拟电路', desc: '二极管、三极管、运放、反馈、功率放大、电源', icon: '🟢', level: '应试+工程' },
       { id: 'digital-circuit', title: '数字电路', desc: '逻辑代数、组合/时序、卡诺图、触发器、HDL', icon: '🟡', level: '应试+工程' },
       { id: 'control', title: '自动控制原理', desc: '时域/频域/根轨迹/校正，工程应用侧重', icon: '🟣', level: '工程' },
+      { id: 'modern-control', title: '现代控制理论', desc: '状态空间、能控能观、LQR、卡尔曼滤波', icon: '🔮', level: '工程' },
       { id: 'data-structure', title: '数据结构', desc: '线性表→树→图→查找→排序，统考大纲与工程实战', icon: '⚫', level: '应试+工程' },
+      { id: 'signals', title: '信号与系统', desc: '傅里叶/拉氏/Z 变换、LTI 系统、采样定理', icon: '📡', level: '应试+工程' },
+      { id: 'embedded-sys', title: '嵌入式系统', desc: 'ARM 架构、GPIO/中断、RTOS、通信接口', icon: '🔩', level: '工程' },
+      { id: 'sensor', title: '传感器与检测', desc: '传感器原理、信号调理、IMU/光电/温度检测', icon: '🌡️', level: '工程' },
     ],
   },
 
@@ -105,7 +129,7 @@ const CourseData = {
         </div>
         <div class="info-box warning">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-          <div><strong>致命陷阱</strong>：等价无穷小<strong>只能在乘除中替换，加减中绝对不能</strong>！例如 $\\lim_{x\\to 0}\\frac{\\tan x - \\sin x}{x^3}$，若把 $\\tan x$ 和 $\\sin x$ 都换成 $x$，会得到 $0/x^3 = 0$（错误，正确答案是 $1/2$）。加减情形要用泰勒公式（见 <a href="#" onclick="navigateTo('hm-03');return false;" style="color:var(--primary)">泰勒公式</a>）。</div>
+          <div><strong>致命陷阱</strong>：等价无穷小<strong>只能在乘除中替换，加减中绝对不能</strong>！例如 $\\lim_{x\\to 0}\\frac{\\tan x - \\sin x}{x^3}$，若把 $\\tan x$ 和 $\\sin x$ 都换成 $x$，会得到 $0/x^3 = 0$（错误，正确答案是 $1/2$）。加减情形要用泰勒公式（见 <a href="javascript:void(0)" onclick="App.loadDetail('hm-03')">泰勒公式</a>）。</div>
         </div>
 
         <h4 class="font-medium mt-6 mb-2">计算利器二：洛必达法则</h4>
@@ -230,7 +254,7 @@ const CourseData = {
       { id: 'hm-03', title: '泰勒公式与函数展开', desc: '麦克劳林展开、余项估计', icon: '📐', tags: ['高频'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">泰勒公式：用多项式逼近任意函数</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          泰勒公式的核心思想：任何"足够好"的函数都能用一个多项式来逼近，且可以精确到任意高的阶数。它是求高阶近似极限、证明不等式、近似计算的利器，也是 <a href="#" onclick="navigateTo('hm-01');return false;" style="color:var(--primary)">极限计算</a>中处理加减结构的终极武器。
+          泰勒公式的核心思想：任何"足够好"的函数都能用一个多项式来逼近，且可以精确到任意高的阶数。它是求高阶近似极限、证明不等式、近似计算的利器，也是 <a href="javascript:void(0)" onclick="App.loadDetail('hm-01')">极限计算</a>中处理加减结构的终极武器。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">泰勒公式与麦克劳林公式</h4>
@@ -301,7 +325,7 @@ const CourseData = {
       { id: 'hm-04', title: '导数应用', desc: '单调性、极值、凹凸性、渐近线、曲率', icon: '📊', tags: ['高频'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">用导数研究函数的性态</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          一阶导数看单调与极值，二阶导数看凹凸与拐点，加上渐近线和曲率，就能完整描绘函数图像的形状。这是分析函数性态的系统方法，也是 <a href="#" onclick="navigateTo('hm-02');return false;" style="color:var(--primary)">一元微分学</a> 的直接应用。
+          一阶导数看单调与极值，二阶导数看凹凸与拐点，加上渐近线和曲率，就能完整描绘函数图像的形状。这是分析函数性态的系统方法，也是 <a href="javascript:void(0)" onclick="App.loadDetail('hm-02')">一元微分学</a> 的直接应用。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">单调性判别</h4>
@@ -370,7 +394,7 @@ const CourseData = {
       { id: 'hm-05', title: '不定积分', desc: '换元法、分部积分、特殊类型', icon: '➕', tags: ['计算重点'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">求导的逆运算——不定积分</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          如果说导数是"已知函数求变化率"，那么不定积分就是"已知变化率还原原函数"。它是整个积分学的基础，也是 <a href="#" onclick="navigateTo('hm-06');return false;" style="color:var(--primary)">定积分</a> 计算的核心工具。掌握不定积分的关键在于：熟记基本公式、灵活运用换元与分部两大方法、识别特殊积分类型。
+          如果说导数是"已知函数求变化率"，那么不定积分就是"已知变化率还原原函数"。它是整个积分学的基础，也是 <a href="javascript:void(0)" onclick="App.loadDetail('hm-06')">定积分</a> 计算的核心工具。掌握不定积分的关键在于：熟记基本公式、灵活运用换元与分部两大方法、识别特殊积分类型。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">不定积分的定义</h4>
@@ -478,7 +502,7 @@ const CourseData = {
       { id: 'hm-06', title: '定积分与反常积分', desc: '牛顿-莱布尼茨公式、判敛法', icon: '∫', tags: ['核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">从面积问题到积分理论</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          定积分源于"求曲边梯形面积"这一经典问题，通过"分割—取近似—求和—取极限"四步构造出积分定义。而牛顿-莱布尼茨公式将定积分计算转化为求原函数，架起了 <a href="#" onclick="navigateTo('hm-05');return false;" style="color:var(--primary)">不定积分</a> 与定积分之间的桥梁。反常积分则将积分推广到无穷区间或无界函数的情形。
+          定积分源于"求曲边梯形面积"这一经典问题，通过"分割—取近似—求和—取极限"四步构造出积分定义。而牛顿-莱布尼茨公式将定积分计算转化为求原函数，架起了 <a href="javascript:void(0)" onclick="App.loadDetail('hm-05')">不定积分</a> 与定积分之间的桥梁。反常积分则将积分推广到无穷区间或无界函数的情形。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">定积分的定义（黎曼和）</h4>
@@ -548,7 +572,7 @@ const CourseData = {
       { id: 'hm-07', title: '定积分应用', desc: '面积、体积、弧长、物理应用', icon: '📏', tags: [], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">定积分的几何与物理应用</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          定积分的核心思想是"微元法"——把整体量分割成无穷多个微小量，再累加求和。掌握了微元法，面积、体积、弧长、物理量的计算都可以统一处理。本节是 <a href="#" onclick="navigateTo('hm-06');return false;" style="color:var(--primary)">定积分</a> 的直接应用。
+          定积分的核心思想是"微元法"——把整体量分割成无穷多个微小量，再累加求和。掌握了微元法，面积、体积、弧长、物理量的计算都可以统一处理。本节是 <a href="javascript:void(0)" onclick="App.loadDetail('hm-06')">定积分</a> 的直接应用。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">平面图形的面积</h4>
@@ -710,7 +734,7 @@ const CourseData = {
       { id: 'hm-09', title: '多元函数微分学', desc: '偏导数、全微分、链式法则', icon: '🌐', tags: [], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">从一元到多元——升维的微分学</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          多元函数微分学是一元微分学的推广，但由于自变量增多，出现了偏导数、全微分、方向导数、梯度等新概念，连续、可微、偏导存在之间的关系也变得复杂。本节是 <a href="#" onclick="navigateTo('hm-10');return false;" style="color:var(--primary)">多元极值</a> 和 <a href="#" onclick="navigateTo('hm-11');return false;" style="color:var(--primary)">二重积分</a> 的基础。
+          多元函数微分学是一元微分学的推广，但由于自变量增多，出现了偏导数、全微分、方向导数、梯度等新概念，连续、可微、偏导存在之间的关系也变得复杂。本节是 <a href="javascript:void(0)" onclick="App.loadDetail('hm-10')">多元极值</a> 和 <a href="javascript:void(0)" onclick="App.loadDetail('hm-11')">二重积分</a> 的基础。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">多元函数的极限与连续</h4>
@@ -792,7 +816,7 @@ const CourseData = {
       { id: 'hm-10', title: '多元极值与拉格朗日乘数法', desc: '条件极值、无条件极值', icon: '⛰', tags: ['高频'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">多元函数的最优化</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          多元极值问题是 <a href="#" onclick="navigateTo('hm-09');return false;" style="color:var(--primary)">多元微分学</a> 的核心应用。无条件极值通过偏导为零找驻点，条件极值则在约束条件下用拉格朗日乘数法。这类问题在工程优化、经济学、物理学中都有广泛应用。
+          多元极值问题是 <a href="javascript:void(0)" onclick="App.loadDetail('hm-09')">多元微分学</a> 的核心应用。无条件极值通过偏导为零找驻点，条件极值则在约束条件下用拉格朗日乘数法。这类问题在工程优化、经济学、物理学中都有广泛应用。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">无条件极值（自由极值）</h4>
@@ -858,7 +882,7 @@ const CourseData = {
       { id: 'hm-11', title: '二重积分', desc: '直角坐标、极坐标计算', icon: '🔲', tags: ['核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">从面积到体积——二重积分</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          二重积分是定积分向二维的推广，几何意义是"曲顶柱体的体积"。它是 <a href="#" onclick="navigateTo('hm-12');return false;" style="color:var(--primary)">三重积分</a> 和 <a href="#" onclick="navigateTo('hm-13');return false;" style="color:var(--primary)">曲线积分</a> 的基础，在概率论（联合密度函数积分）中也有重要应用。关键是掌握化二重积分为累次积分的方法。
+          二重积分是定积分向二维的推广，几何意义是"曲顶柱体的体积"。它是 <a href="javascript:void(0)" onclick="App.loadDetail('hm-12')">三重积分</a> 和 <a href="javascript:void(0)" onclick="App.loadDetail('hm-13')">曲线积分</a> 的基础，在概率论（联合密度函数积分）中也有重要应用。关键是掌握化二重积分为累次积分的方法。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">二重积分的定义与性质</h4>
@@ -927,7 +951,7 @@ const CourseData = {
       { id: 'hm-12', title: '三重积分与含参积分', desc: '柱坐标、球坐标、含参变量积分', icon: '🧊', tags: [], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">三维空间的积分</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          三重积分是 <a href="#" onclick="navigateTo('hm-11');return false;" style="color:var(--primary)">二重积分</a> 向三维的推广，用于计算空间物体的质量、质心、转动惯量等物理量。含参积分则是将积分视为参数的函数来研究，是分析学的重要工具。
+          三重积分是 <a href="javascript:void(0)" onclick="App.loadDetail('hm-11')">二重积分</a> 向三维的推广，用于计算空间物体的质量、质心、转动惯量等物理量。含参积分则是将积分视为参数的函数来研究，是分析学的重要工具。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">三重积分的定义</h4>
@@ -997,7 +1021,7 @@ const CourseData = {
       { id: 'hm-13', title: '曲线积分', desc: '第一类/第二类、格林公式', icon: '〰', tags: ['高频'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">沿曲线的积分</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          曲线积分将积分域从区间推广到曲线，分为第一类（对弧长）和第二类（对坐标）两种。格林公式建立了平面曲线积分与二重积分的联系，是向量分析的基本定理之一。这些内容是 <a href="#" onclick="navigateTo('hm-14');return false;" style="color:var(--primary)">曲面积分</a> 和场论的基础。
+          曲线积分将积分域从区间推广到曲线，分为第一类（对弧长）和第二类（对坐标）两种。格林公式建立了平面曲线积分与二重积分的联系，是向量分析的基本定理之一。这些内容是 <a href="javascript:void(0)" onclick="App.loadDetail('hm-14')">曲面积分</a> 和场论的基础。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">第一类曲线积分（对弧长的积分）</h4>
@@ -1065,7 +1089,7 @@ const CourseData = {
       { id: 'hm-14', title: '曲面积分', desc: '高斯公式、斯托克斯公式', icon: '🔵', tags: ['难点'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">曲面上的积分与场论</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          曲面积分是 <a href="#" onclick="navigateTo('hm-13');return false;" style="color:var(--primary)">曲线积分</a> 向曲面的推广，分为第一类（对面积）和第二类（对坐标）两种。高斯公式和斯托克斯公式分别建立了曲面积分与三重积分、曲线积分的联系，构成了场论的核心内容。
+          曲面积分是 <a href="javascript:void(0)" onclick="App.loadDetail('hm-13')">曲线积分</a> 向曲面的推广，分为第一类（对面积）和第二类（对坐标）两种。高斯公式和斯托克斯公式分别建立了曲面积分与三重积分、曲线积分的联系，构成了场论的核心内容。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">第一类曲面积分（对面积的积分）</h4>
@@ -1218,7 +1242,7 @@ const CourseData = {
       { id: 'hm-16', title: '傅里叶级数', desc: '狄利克雷条件、周期函数展开', icon: '🎵', tags: [], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">用三角函数逼近周期信号</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          傅里叶级数的核心思想是：任何满足一定条件的周期函数都可以分解为一系列正弦和余弦函数的叠加。这个思想在信号处理、振动分析、热传导等领域有深远应用，也是 <a href="#" onclick="navigateTo('hm-15');return false;" style="color:var(--primary)">无穷级数</a> 理论的重要应用。
+          傅里叶级数的核心思想是：任何满足一定条件的周期函数都可以分解为一系列正弦和余弦函数的叠加。这个思想在信号处理、振动分析、热传导等领域有深远应用，也是 <a href="javascript:void(0)" onclick="App.loadDetail('hm-15')">无穷级数</a> 理论的重要应用。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">三角函数系的正交性</h4>
@@ -1362,7 +1386,7 @@ const CourseData = {
       { id: 'la-02', title: '矩阵运算', desc: '乘法、逆、伴随、分块矩阵', icon: '⊞', tags: ['核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">矩阵——线性变换的载体</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          矩阵是线性代数的核心对象，它既可以表示线性方程组，也可以表示线性变换。掌握矩阵的运算是学习 <a href="#" onclick="navigateTo('la-03');return false;" style="color:var(--primary)">初等变换</a>、<a href="#" onclick="navigateTo('la-04');return false;" style="color:var(--primary)">线性方程组</a>、<a href="#" onclick="navigateTo('la-06');return false;" style="color:var(--primary)">特征值</a> 等后续内容的基础。
+          矩阵是线性代数的核心对象，它既可以表示线性方程组，也可以表示线性变换。掌握矩阵的运算是学习 <a href="javascript:void(0)" onclick="App.loadDetail('la-03')">初等变换</a>、<a href="javascript:void(0)" onclick="App.loadDetail('la-04')">线性方程组</a>、<a href="javascript:void(0)" onclick="App.loadDetail('la-06')">特征值</a> 等后续内容的基础。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">矩阵的基本运算</h4>
@@ -1433,7 +1457,7 @@ const CourseData = {
       { id: 'la-03', title: '初等变换与秩', desc: '行变换、矩阵秩的求法', icon: '⇅', tags: ['高频'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">初等变换与矩阵的秩</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          初等变换是矩阵运算的核心工具，它不改变矩阵的秩和行列式的非零性。矩阵的秩反映了矩阵"本质上的大小"，是判断 <a href="#" onclick="navigateTo('la-04');return false;" style="color:var(--primary)">线性方程组</a> 解的情况的关键指标。
+          初等变换是矩阵运算的核心工具，它不改变矩阵的秩和行列式的非零性。矩阵的秩反映了矩阵"本质上的大小"，是判断 <a href="javascript:void(0)" onclick="App.loadDetail('la-04')">线性方程组</a> 解的情况的关键指标。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">三种初等行变换</h4>
@@ -1486,7 +1510,7 @@ const CourseData = {
       { id: 'la-04', title: '线性方程组', desc: '解的结构、Ax=0/Ax=b', icon: '∀', tags: ['核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">线性方程组——线性代数的核心问题</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          线性方程组 $Ax = b$ 是线性代数最核心的问题。它串联了 <a href="#" onclick="navigateTo('la-01');return false;" style="color:var(--primary)">行列式</a>、<a href="#" onclick="navigateTo('la-02');return false;" style="color:var(--primary)">矩阵</a>、<a href="#" onclick="navigateTo('la-05');return false;" style="color:var(--primary)">向量</a> 等几乎所有概念。解的存在性由秩决定，解的结构由齐次解和特解组成。
+          线性方程组 $Ax = b$ 是线性代数最核心的问题。它串联了 <a href="javascript:void(0)" onclick="App.loadDetail('la-01')">行列式</a>、<a href="javascript:void(0)" onclick="App.loadDetail('la-02')">矩阵</a>、<a href="javascript:void(0)" onclick="App.loadDetail('la-05')">向量</a> 等几乎所有概念。解的存在性由秩决定，解的结构由齐次解和特解组成。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">齐次方程组 $Ax = 0$</h4>
@@ -1549,7 +1573,7 @@ const CourseData = {
       { id: 'la-05', title: '向量组与向量空间', desc: '线性相关/无关、基与维数', icon: '→', tags: ['难点'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">向量的线性关系</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          向量组的线性相关性是线性代数的抽象核心，它与 <a href="#" onclick="navigateTo('la-04');return false;" style="color:var(--primary)">线性方程组</a> 的解、矩阵的秩有着深刻联系。理解线性相关/无关、极大线性无关组、向量空间的基与维数，是掌握线性代数的关键。
+          向量组的线性相关性是线性代数的抽象核心，它与 <a href="javascript:void(0)" onclick="App.loadDetail('la-04')">线性方程组</a> 的解、矩阵的秩有着深刻联系。理解线性相关/无关、极大线性无关组、向量空间的基与维数，是掌握线性代数的关键。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">线性组合与线性表示</h4>
@@ -1662,7 +1686,7 @@ const CourseData = {
       { id: 'la-07', title: '相似矩阵与对角化', desc: '相似条件、正交相似', icon: '≈', tags: ['核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">相似与对角化——简化矩阵运算</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          相似矩阵表示同一线性变换在不同基下的矩阵。对角化就是找到一组特殊的基（特征向量），使得变换矩阵变成对角矩阵，从而大幅简化 <a href="#" onclick="navigateTo('la-06');return false;" style="color:var(--primary)">特征值</a> 相关的运算。
+          相似矩阵表示同一线性变换在不同基下的矩阵。对角化就是找到一组特殊的基（特征向量），使得变换矩阵变成对角矩阵，从而大幅简化 <a href="javascript:void(0)" onclick="App.loadDetail('la-06')">特征值</a> 相关的运算。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">相似矩阵的定义</h4>
@@ -1724,7 +1748,7 @@ const CourseData = {
       { id: 'la-08', title: '二次型及其标准形', desc: '配方法、正交变换化标准形', icon: '⊕', tags: ['高频'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">二次型——多元二次函数的标准化</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          二次型是 $n$ 个变量的二次齐次多项式，通过坐标变换可化为只含平方项的标准形。它在优化理论（判断极值）、几何（二次曲面分类）、统计（协方差矩阵）中有重要应用，是 <a href="#" onclick="navigateTo('la-07');return false;" style="color:var(--primary)">对角化</a> 的直接应用。
+          二次型是 $n$ 个变量的二次齐次多项式，通过坐标变换可化为只含平方项的标准形。它在优化理论（判断极值）、几何（二次曲面分类）、统计（协方差矩阵）中有重要应用，是 <a href="javascript:void(0)" onclick="App.loadDetail('la-07')">对角化</a> 的直接应用。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">二次型的矩阵表示</h4>
@@ -1783,7 +1807,7 @@ const CourseData = {
       { id: 'la-09', title: '正交矩阵与正交变换', desc: '施密特正交化、正定二次型', icon: '⊥', tags: [], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">正交性与正定性</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          正交矩阵和正交变换保持向量的长度和角度不变，是 <a href="#" onclick="navigateTo('la-07');return false;" style="color:var(--primary)">正交对角化</a> 的基础。正定二次型则与函数极值判断、优化理论密切相关。
+          正交矩阵和正交变换保持向量的长度和角度不变，是 <a href="javascript:void(0)" onclick="App.loadDetail('la-07')">正交对角化</a> 的基础。正定二次型则与函数极值判断、优化理论密切相关。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">施密特正交化</h4>
@@ -1925,7 +1949,7 @@ const CourseData = {
     sections: [
       { id: 'circ-01', title: '基尔霍夫定律', desc: 'KCL/KVL、节点法、网孔法', icon: '⚡', tags: ['基础必学'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">基尔霍夫定律：电路分析的地基</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">基尔霍夫定律（KCL/KVL）是所有电路分析的出发点，无论电路多复杂，归根结底都基于这两条定律。掌握节点电压法和网孔电流法，就能系统化求解任何线性电路。本节是整个<a href="#" onclick="navigateTo('circuit-basics');return false;" style="color:var(--primary)">电路基础</a>板块的基石，后续的<a href="#" onclick="navigateTo('circ-02');return false;" style="color:var(--primary)">戴维南定理</a>、<a href="#" onclick="navigateTo('circ-03');return false;" style="color:var(--primary)">叠加定理</a>都建立在此基础上。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">基尔霍夫定律（KCL/KVL）是所有电路分析的出发点，无论电路多复杂，归根结底都基于这两条定律。掌握节点电压法和网孔电流法，就能系统化求解任何线性电路。本节是整个<a href="javascript:void(0)" onclick="App.loadDetail('circuit-basics')">电路基础</a>板块的基石，后续的<a href="javascript:void(0)" onclick="App.loadDetail('circ-02')">戴维南定理</a>、<a href="javascript:void(0)" onclick="App.loadDetail('circ-03')">叠加定理</a>都建立在此基础上。</p>
 
         <h4 class="font-medium mt-6 mb-2">KCL：电流连续性原理</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">基尔霍夫电流定律（KCL）指出：任意时刻，流入任一节点的电流代数和为零。其物理本质是<strong>电荷守恒</strong>——电荷不会在节点处积累或消失。</p>
@@ -1958,7 +1982,7 @@ const CourseData = {
       ` },
       { id: 'circ-02', title: '戴维南/诺顿等效', desc: '等效电源定理、等效电阻', icon: '🔀', tags: ['高频'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">戴维南定理：化繁为简的利器</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">任何含源线性二端网络，对外电路而言都可等效为一个<strong>电压源串联电阻</strong>（戴维南）或<strong>电流源并联电阻</strong>（诺顿）。这是简化复杂电路、求最大功率传输的核心工具。戴维南定理建立在<a href="#" onclick="navigateTo('circ-01');return false;" style="color:var(--primary)">基尔霍夫定律</a>基础上，是线性电路叠加性的直接推论。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">任何含源线性二端网络，对外电路而言都可等效为一个<strong>电压源串联电阻</strong>（戴维南）或<strong>电流源并联电阻</strong>（诺顿）。这是简化复杂电路、求最大功率传输的核心工具。戴维南定理建立在<a href="javascript:void(0)" onclick="App.loadDetail('circ-01')">基尔霍夫定律</a>基础上，是线性电路叠加性的直接推论。</p>
 
         <h4 class="font-medium mt-6 mb-2">戴维南定理的数学表述</h4>
         <div class="formula-block">戴维南等效电路：$U = U_{oc} - R_{eq} \\cdot I$<br>其中：$U_{oc}$ 为端口开路电压（$I=0$ 时的端口电压）；$R_{eq}$ 为等效电阻<div class="text-sm text-gray-500 mt-2">对外电路而言，任何线性二端网络都可等效为电压源 $U_{oc}$ 串联电阻 $R_{eq}$</div></div>
@@ -1983,11 +2007,11 @@ const CourseData = {
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>受控源不能置零</strong>：求 $R_{eq}$ 时只有<strong>独立源</strong>置零，受控源必须保留（它受电路变量控制，不能人为消除）。含受控源的电路必须用开路电压/短路电流法或加压求流法。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与叠加定理的关系</strong>：戴维南定理是<a href="#" onclick="navigateTo('circ-03');return false;" style="color:var(--primary)">叠加定理</a>的直接推论——将复杂电路等效为单一激励源，简化分析。在<a href="#" onclick="navigateTo('act-01');return false;" style="color:var(--primary)">自动控制</a>中，传递函数的推导也用到类似思想。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与叠加定理的关系</strong>：戴维南定理是<a href="javascript:void(0)" onclick="App.loadDetail('circ-03')">叠加定理</a>的直接推论——将复杂电路等效为单一激励源，简化分析。在<a href="javascript:void(0)" onclick="App.loadDetail('act-01')">自动控制</a>中，传递函数的推导也用到类似思想。</div></div>
       ` },
       { id: 'circ-03', title: '叠加定理与齐次定理', desc: '线性电路叠加原理', icon: '➗', tags: ['基础'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">叠加定理：线性系统的分解艺术</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">线性电路中，多个激励共同作用产生的响应，等于每个激励<strong>单独作用</strong>产生响应的代数和。这让复杂多源电路可以拆解为单源电路逐个求解。叠加定理是<a href="#" onclick="navigateTo('circ-01');return false;" style="color:var(--primary)">基尔霍夫定律</a>的直接推论，也是<a href="#" onclick="navigateTo('circ-02');return false;" style="color:var(--primary)">戴维南定理</a>的理论基础。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">线性电路中，多个激励共同作用产生的响应，等于每个激励<strong>单独作用</strong>产生响应的代数和。这让复杂多源电路可以拆解为单源电路逐个求解。叠加定理是<a href="javascript:void(0)" onclick="App.loadDetail('circ-01')">基尔霍夫定律</a>的直接推论，也是<a href="javascript:void(0)" onclick="App.loadDetail('circ-02')">戴维南定理</a>的理论基础。</p>
 
         <h4 class="font-medium mt-6 mb-2">叠加定理的数学表述</h4>
         <div class="formula-block">对于线性电路，多个独立源共同作用时的响应：<br>$$U = U_1 + U_2 + \\cdots + U_n$$$$I = I_1 + I_2 + \\cdots + I_n$$<div class="text-sm text-gray-500 mt-2">下标 1,2,...,n 表示各独立源单独作用时的响应分量</div></div>
@@ -1996,7 +2020,7 @@ const CourseData = {
         <div class="formula-block">齐次定理：若激励扩大 $k$ 倍，则响应也扩大 $k$ 倍<br>$$f(k \\cdot x) = k \\cdot f(x)$$<div class="text-sm text-gray-500 mt-2">齐次性是线性系统的必要条件，与叠加性共同构成"线性"的完整定义</div></div>
 
         <h4 class="font-medium mt-6 mb-2">叠加法求解步骤</h4>
-        <div class="step-list"><div class="step-item"><div><strong>第一步：画分电路</strong>。每次只保留一个独立源，其余独立源置零（电压源短路、电流源开路），受控源始终保留。</div></div><div class="step-item"><div><strong>第二步：求分响应</strong>。对每个分电路，用<a href="#" onclick="navigateTo('circ-01');return false;" style="color:var(--primary)">节点法或网孔法</a>求解目标支路的电压或电流分量。</div></div><div class="step-item"><div><strong>第三步：代数叠加</strong>。将各分响应按参考方向代数相加（同向取正、反向取负），得到总响应。</div></div></div>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：画分电路</strong>。每次只保留一个独立源，其余独立源置零（电压源短路、电流源开路），受控源始终保留。</div></div><div class="step-item"><div><strong>第二步：求分响应</strong>。对每个分电路，用<a href="javascript:void(0)" onclick="App.loadDetail('circ-01')">节点法或网孔法</a>求解目标支路的电压或电流分量。</div></div><div class="step-item"><div><strong>第三步：代数叠加</strong>。将各分响应按参考方向代数相加（同向取正、反向取负），得到总响应。</div></div></div>
 
         <h4 class="font-medium mt-6 mb-2">"单独作用"的正确理解</h4>
         <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
@@ -2013,15 +2037,15 @@ const CourseData = {
         <h4 class="font-medium mt-6 mb-2">叠加定理 vs 戴维南定理</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>对比维度</th><th>叠加定理</th><th>戴维南定理</th></tr></thead><tbody><tr><td class="font-medium">核心思想</td><td>多源分解为单源</td><td>复杂网络等效为简单源</td></tr><tr><td class="font-medium">适用范围</td><td>线性电路的电压/电流</td><td>线性二端网络</td></tr><tr><td class="font-medium">优势</td><td>物理概念清晰</td><td>简化外部电路分析</td></tr><tr><td class="font-medium">局限</td><td>不能直接求功率</td><td>只能求端口特性</td></tr></tbody></table></div>
 
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>叠加法优势</strong>：当电路含有多个不同频率的交流源时，叠加法是唯一有效的方法——因为<a href="#" onclick="navigateTo('circ-06');return false;" style="color:var(--primary)">相量法</a>只能处理单一频率，不同频率的响应必须分别用相量法求解后在时域叠加。</div></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>叠加法优势</strong>：当电路含有多个不同频率的交流源时，叠加法是唯一有效的方法——因为<a href="javascript:void(0)" onclick="App.loadDetail('circ-06')">相量法</a>只能处理单一频率，不同频率的响应必须分别用相量法求解后在时域叠加。</div></div>
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>功率不能叠加</strong>：$P = UI = (U_1+U_2)(I_1+I_2) \\ne U_1I_1 + U_2I_2$。求功率必须先叠加求出总电压总电流，再相乘。这是初学者最常犯的错误之一。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>线性系统的本质</strong>：叠加性和齐次性共同定义了"线性"。在<a href="#" onclick="navigateTo('act-01');return false;" style="color:var(--primary)">自动控制</a>中，传递函数描述的也是线性系统——满足叠加原理，才能用拉普拉斯变换分析。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>线性系统的本质</strong>：叠加性和齐次性共同定义了"线性"。在<a href="javascript:void(0)" onclick="App.loadDetail('act-01')">自动控制</a>中，传递函数描述的也是线性系统——满足叠加原理，才能用拉普拉斯变换分析。</div></div>
       ` },
       { id: 'circ-04', title: '一阶电路暂态', desc: 'RC/RL、三要素法', icon: '📈', tags: ['核心'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">一阶电路暂态：三要素法秒杀</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">RC/RL 电路在换路（开关动作）后，电压电流按指数规律从初值过渡到稳态值。掌握"三要素法"，任何一阶暂态问题都能套公式秒解。一阶暂态是<a href="#" onclick="navigateTo('circ-05');return false;" style="color:var(--primary)">二阶暂态</a>的基础，也是<a href="#" onclick="navigateTo('act-05');return false;" style="color:var(--primary)">自动控制时域分析</a>的物理原型。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">RC/RL 电路在换路（开关动作）后，电压电流按指数规律从初值过渡到稳态值。掌握"三要素法"，任何一阶暂态问题都能套公式秒解。一阶暂态是<a href="javascript:void(0)" onclick="App.loadDetail('circ-05')">二阶暂态</a>的基础，也是<a href="javascript:void(0)" onclick="App.loadDetail('act-05')">自动控制时域分析</a>的物理原型。</p>
 
         <h4 class="font-medium mt-6 mb-2">三要素法通用公式</h4>
         <div class="formula-block"><strong>三要素法</strong>：一阶电路暂态响应的通用表达式<br>$$f(t) = f(\\infty) + [f(0_+) - f(\\infty)]e^{-t/\\tau}$$<div class="text-sm text-gray-500 mt-2">三个要素：初值 $f(0_+)$、稳态值 $f(\\infty)$、时间常数 $\\tau$</div></div>
@@ -2051,11 +2075,11 @@ const CourseData = {
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>常见错误</strong>：①求 $R_{eq}$ 时忘记将独立源置零；②混淆 $0_+$ 和 $0_-$ 时刻的电路；③时间常数公式记反（RC 是 τ，L/R 也是 τ，不是 R/L）。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与控制理论的联系</strong>：一阶 RC 电路的传递函数为 $H(s)=\\frac{1}{1+sRC}$，正是<a href="#" onclick="navigateTo('act-05');return false;" style="color:var(--primary)">一阶系统</a>的典型形式。时间常数 $\\tau=RC$ 决定了系统的响应速度。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与控制理论的联系</strong>：一阶 RC 电路的传递函数为 $H(s)=\\frac{1}{1+sRC}$，正是<a href="javascript:void(0)" onclick="App.loadDetail('act-05')">一阶系统</a>的典型形式。时间常数 $\\tau=RC$ 决定了系统的响应速度。</div></div>
       ` },
       { id: 'circ-05', title: '二阶电路暂态', desc: 'RLC 过阻尼/临界/欠阻尼', icon: '〰', tags: ['难点'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">二阶电路：振荡的起源</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">RLC 串联/并联电路是二阶系统，其暂态响应由阻尼比决定——过阻尼单调衰减、临界阻尼最快无振荡收敛、欠阻尼衰减振荡。这与 <a href="#" onclick="navigateTo('act-05');return false;" style="color:var(--primary)">自动控制的二阶系统</a> 完全对应。二阶暂态建立在<a href="#" onclick="navigateTo('circ-04');return false;" style="color:var(--primary)">一阶暂态</a>基础上，增加了振荡的可能性。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">RLC 串联/并联电路是二阶系统，其暂态响应由阻尼比决定——过阻尼单调衰减、临界阻尼最快无振荡收敛、欠阻尼衰减振荡。这与 <a href="javascript:void(0)" onclick="App.loadDetail('act-05')">自动控制的二阶系统</a> 完全对应。二阶暂态建立在<a href="javascript:void(0)" onclick="App.loadDetail('circ-04')">一阶暂态</a>基础上，增加了振荡的可能性。</p>
 
         <h4 class="font-medium mt-6 mb-2">RLC 串联电路的特征方程</h4>
         <div class="formula-block">RLC 串联电路特征方程：$s^2 + 2\\alpha s + \\omega_0^2 = 0$<br>其中：$\\alpha = \\frac{R}{2L}$（衰减常数），$\\omega_0 = \\frac{1}{\\sqrt{LC}}$（无阻尼自然振荡频率）<div class="text-sm text-gray-500 mt-2">特征根 $s_{1,2} = -\\alpha \\pm \\sqrt{\\alpha^2 - \\omega_0^2}$，根的性质决定响应类型</div></div>
@@ -2079,15 +2103,15 @@ const CourseData = {
         <h4 class="font-medium mt-6 mb-2">与控制理论的统一</h4>
         <div class="formula-block">二阶系统传递函数：$H(s)=\\frac{\\omega_0^2}{s^2+2\\zeta\\omega_0 s+\\omega_0^2}$<br>电路中 $\\zeta=\\frac{R}{2}\\sqrt{\\frac{C}{L}}$，控制中 $\\zeta$ 由系统结构决定<div class="text-sm text-gray-500 mt-2">电路与控制在二阶系统层面完全统一——同一套数学描述</div></div>
 
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>阻尼比的调节</strong>：在电路中，调节 R 可以改变阻尼比。增大 R 增大阻尼（抑制振荡），减小 R 减小阻尼（增强振荡）。这在<a href="#" onclick="navigateTo('act-05');return false;" style="color:var(--primary)">控制系统设计</a>中对应调节阻尼系数。</div></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>阻尼比的调节</strong>：在电路中，调节 R 可以改变阻尼比。增大 R 增大阻尼（抑制振荡），减小 R 减小阻尼（增强振荡）。这在<a href="javascript:void(0)" onclick="App.loadDetail('act-05')">控制系统设计</a>中对应调节阻尼系数。</div></div>
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>临界阻尼的工程意义</strong>：临界阻尼（$\\zeta=1$）是"刚好不振荡"的最快响应，但实际元件参数有误差，工程中常设计为轻微欠阻尼（$\\zeta=0.7\\sim 0.8$）以获得快速且几乎无超调的响应。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>工程应用</strong>：RLC 电路的阻尼特性广泛用于滤波器设计（<a href="#" onclick="navigateTo('circ-07');return false;" style="color:var(--primary)">频率响应</a>）、振荡器设计（<a href="#" onclick="navigateTo('circ-08');return false;" style="color:var(--primary)">谐振电路</a>）、以及<a href="#" onclick="navigateTo('act-09');return false;" style="color:var(--primary)">控制系统校正</a>。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>工程应用</strong>：RLC 电路的阻尼特性广泛用于滤波器设计（<a href="javascript:void(0)" onclick="App.loadDetail('circ-07')">频率响应</a>）、振荡器设计（<a href="javascript:void(0)" onclick="App.loadDetail('circ-08')">谐振电路</a>）、以及<a href="javascript:void(0)" onclick="App.loadDetail('act-09')">控制系统校正</a>。</div></div>
       ` },
       { id: 'circ-06', title: '正弦稳态分析', desc: '相量法、阻抗、导纳', icon: '〰️', tags: ['核心'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">相量法：把微积分变成代数</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">正弦稳态电路中，所有电压电流都是同频率正弦量。相量法用复数表示正弦量，把微分方程变成复数代数方程——电阻/电感/电容统一为"阻抗"，<a href="#" onclick="navigateTo('circ-01');return false;" style="color:var(--primary)">KCL/KVL</a> 等所有直流方法都能直接搬用。相量法是<a href="#" onclick="navigateTo('circ-07');return false;" style="color:var(--primary)">频率响应分析</a>和<a href="#" onclick="navigateTo('circ-08');return false;" style="color:var(--primary)">谐振电路</a>的基础。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">正弦稳态电路中，所有电压电流都是同频率正弦量。相量法用复数表示正弦量，把微分方程变成复数代数方程——电阻/电感/电容统一为"阻抗"，<a href="javascript:void(0)" onclick="App.loadDetail('circ-01')">KCL/KVL</a> 等所有直流方法都能直接搬用。相量法是<a href="javascript:void(0)" onclick="App.loadDetail('circ-07')">频率响应分析</a>和<a href="javascript:void(0)" onclick="App.loadDetail('circ-08')">谐振电路</a>的基础。</p>
 
         <h4 class="font-medium mt-6 mb-2">正弦量与相量的对应</h4>
         <div class="formula-block">正弦量 → 相量的转换：<br>时域：$u(t)=U_m\\cos(\\omega t+\\varphi)$<br>相量域：$\\dot{U}=U_m\\angle\\varphi = U_m(\\cos\\varphi+j\\sin\\varphi)$<div class="text-sm text-gray-500 mt-2">相量只包含幅值和初相信息，频率 $\\omega$ 由电源决定（全电路统一）</div></div>
@@ -2099,7 +2123,7 @@ const CourseData = {
         <div class="formula-block">导纳定义：$Y=\\frac{1}{Z}=G+jB$<br>其中：$G$ 为电导（实部），$B$ 为电纳（虚部）<br>并联电路用导纳更方便：$Y=Y_1+Y_2+\\cdots$</div>
 
         <h4 class="font-medium mt-6 mb-2">相量法求解步骤</h4>
-        <div class="step-list"><div class="step-item"><div><strong>第一步：画相量模型</strong>。将时域电路转换为相量域——电压源 $v(t)\\to\\dot{V}$，电阻 $R\\to R$，电感 $L\\to j\\omega L$，电容 $C\\to 1/(j\\omega C)$。</div></div><div class="step-item"><div><strong>第二步：列相量方程</strong>。用<a href="#" onclick="navigateTo('circ-01');return false;" style="color:var(--primary)">节点法或网孔法</a>列写 KCL/KVL 方程（现在是复数代数方程）。</div></div><div class="step-item"><div><strong>第三步：解复数方程</strong>。用复数运算求解各支路电流/电压相量。</div></div><div class="step-item"><div><strong>第四步：转回时域</strong>。$\\dot{I}=I_m\\angle\\varphi \\to i(t)=I_m\\cos(\\omega t+\\varphi)$</div></div></div>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：画相量模型</strong>。将时域电路转换为相量域——电压源 $v(t)\\to\\dot{V}$，电阻 $R\\to R$，电感 $L\\to j\\omega L$，电容 $C\\to 1/(j\\omega C)$。</div></div><div class="step-item"><div><strong>第二步：列相量方程</strong>。用<a href="javascript:void(0)" onclick="App.loadDetail('circ-01')">节点法或网孔法</a>列写 KCL/KVL 方程（现在是复数代数方程）。</div></div><div class="step-item"><div><strong>第三步：解复数方程</strong>。用复数运算求解各支路电流/电压相量。</div></div><div class="step-item"><div><strong>第四步：转回时域</strong>。$\\dot{I}=I_m\\angle\\varphi \\to i(t)=I_m\\cos(\\omega t+\\varphi)$</div></div></div>
 
         <h4 class="font-medium mt-6 mb-2">功率分析</h4>
         <div class="formula-block">三种功率的关系：<br>有功功率 $P=UI\\cos\\varphi$（单位：W，实际做功）<br>无功功率 $Q=UI\\sin\\varphi$（单位：var，能量交换）<br>视在功率 $S=UI=\\sqrt{P^2+Q^2}$（单位：VA，设备容量）<div class="text-sm text-gray-500 mt-2">$\\cos\\varphi$ 为功率因数，$\\varphi$ 为电压与电流的相位差</div></div>
@@ -2111,13 +2135,13 @@ const CourseData = {
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>功率因数补偿</strong>：工业负载多为感性（电机），功率因数低，并联电容可补偿无功，提高 $\\cos\\varphi$ 到 0.9 以上，减少线路损耗和电费。</div></div>
 
-        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>相量法的限制</strong>：相量法只能处理<strong>单一频率</strong>的正弦稳态。若电路中有多个不同频率的电源，必须用<a href="#" onclick="navigateTo('circ-03');return false;" style="color:var(--primary)">叠加定理</a>分别求解后在时域叠加。</div></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>相量法的限制</strong>：相量法只能处理<strong>单一频率</strong>的正弦稳态。若电路中有多个不同频率的电源，必须用<a href="javascript:void(0)" onclick="App.loadDetail('circ-03')">叠加定理</a>分别求解后在时域叠加。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与傅里叶分析的联系</strong>：任意周期信号可用<a href="#" onclick="navigateTo('hm-12');return false;" style="color:var(--primary)">傅里叶级数</a>分解为不同频率正弦量之和。对每个频率分量用相量法求解，再叠加——这就是频域分析的完整思想。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与傅里叶分析的联系</strong>：任意周期信号可用<a href="javascript:void(0)" onclick="App.loadDetail('hm-12')">傅里叶级数</a>分解为不同频率正弦量之和。对每个频率分量用相量法求解，再叠加——这就是频域分析的完整思想。</div></div>
       ` },
       { id: 'circ-07', title: '频率响应与滤波器', desc: 'RC 低通/高通、波特图入门', icon: '📶', tags: ['工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">频率响应：电路的频率特性</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">电路对不同频率正弦输入的响应能力称为频率响应。滤波器利用频率响应特性，选择性地通过或抑制特定频率信号。频率响应分析建立在<a href="#" onclick="navigateTo('circ-06');return false;" style="color:var(--primary)">相量法</a>基础上，是<a href="#" onclick="navigateTo('circ-08');return false;" style="color:var(--primary)">谐振电路</a>和<a href="#" onclick="navigateTo('act-08');return false;" style="color:var(--primary)">自动控制频域分析</a>的核心。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">电路对不同频率正弦输入的响应能力称为频率响应。滤波器利用频率响应特性，选择性地通过或抑制特定频率信号。频率响应分析建立在<a href="javascript:void(0)" onclick="App.loadDetail('circ-06')">相量法</a>基础上，是<a href="javascript:void(0)" onclick="App.loadDetail('circ-08')">谐振电路</a>和<a href="javascript:void(0)" onclick="App.loadDetail('act-08')">自动控制频域分析</a>的核心。</p>
 
         <h4 class="font-medium mt-6 mb-2">传递函数与频率响应</h4>
         <div class="formula-block">网络函数（传递函数）：$H(j\\omega)=\\frac{\\dot{Y}}{\\dot{X}}=|H(j\\omega)|\\angle\\varphi(\\omega)$<br>幅频特性：$|H(j\\omega)|$ 表示增益随频率的变化<br>相频特性：$\\varphi(\\omega)$ 表示相移随频率的变化<div class="text-sm text-gray-500 mt-2">频率响应 = 幅频特性 + 相频特性</div></div>
@@ -2150,13 +2174,13 @@ const CourseData = {
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>-3dB 的含义</strong>：-3dB 对应功率降为一半（$10^{-3/10}=0.5$），是工程上"有效"与"衰减"的分界线。截止频率也称"-3dB 频率"或"半功率点"。</div></div>
 
-        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>一阶滤波器的局限</strong>：RC 滤波器的过渡带斜率只有 -20dB/dec（一阶），选择性差。需要更陡峭的过渡带时，用<a href="#" onclick="navigateTo('circ-08');return false;" style="color:var(--primary)">RLC 谐振电路</a>（二阶，-40dB/dec）或<a href="#" onclick="navigateTo('ana-11');return false;" style="color:var(--primary)">有源滤波器</a>（高阶）。</div></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>一阶滤波器的局限</strong>：RC 滤波器的过渡带斜率只有 -20dB/dec（一阶），选择性差。需要更陡峭的过渡带时，用<a href="javascript:void(0)" onclick="App.loadDetail('circ-08')">RLC 谐振电路</a>（二阶，-40dB/dec）或<a href="javascript:void(0)" onclick="App.loadDetail('ana-11')">有源滤波器</a>（高阶）。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与自动控制的联系</strong>：RC 低通的传递函数 $H(s)=\\frac{1}{1+sRC}$ 正是<a href="#" onclick="navigateTo('act-05');return false;" style="color:var(--primary)">一阶系统</a>的典型形式。<a href="#" onclick="navigateTo('act-08');return false;" style="color:var(--primary)">伯德图</a>是频率响应的标准图形化工具，在控制系统设计中广泛应用。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与自动控制的联系</strong>：RC 低通的传递函数 $H(s)=\\frac{1}{1+sRC}$ 正是<a href="javascript:void(0)" onclick="App.loadDetail('act-05')">一阶系统</a>的典型形式。<a href="javascript:void(0)" onclick="App.loadDetail('act-08')">伯德图</a>是频率响应的标准图形化工具，在控制系统设计中广泛应用。</div></div>
       ` },
       { id: 'circ-08', title: '谐振电路', desc: '串联/并联谐振、品质因数', icon: '🎯', tags: ['高频'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">谐振：能量在 L 和 C 间振荡</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">当感抗和容抗相互抵消（$\\omega L = 1/\\omega C$），电路呈纯阻性，发生谐振。谐振时电路有选频特性，广泛应用于无线电调谐、<a href="#" onclick="navigateTo('circ-07');return false;" style="color:var(--primary)">滤波器</a>、振荡器。谐振电路是<a href="#" onclick="navigateTo('circ-06');return false;" style="color:var(--primary)">正弦稳态分析</a>的特例。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">当感抗和容抗相互抵消（$\\omega L = 1/\\omega C$），电路呈纯阻性，发生谐振。谐振时电路有选频特性，广泛应用于无线电调谐、<a href="javascript:void(0)" onclick="App.loadDetail('circ-07')">滤波器</a>、振荡器。谐振电路是<a href="javascript:void(0)" onclick="App.loadDetail('circ-06')">正弦稳态分析</a>的特例。</p>
 
         <h4 class="font-medium mt-6 mb-2">谐振条件与谐振频率</h4>
         <div class="formula-block">谐振条件：感抗等于容抗，$\\omega L = \\frac{1}{\\omega C}$<br>谐振频率：$\\omega_0 = \\frac{1}{\\sqrt{LC}}$，即 $f_0 = \\frac{1}{2\\pi\\sqrt{LC}}$<div class="text-sm text-gray-500 mt-2">谐振时电路呈纯阻性，电压与电流同相</div></div>
@@ -2180,15 +2204,15 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">设计一个收音机调谐电路，谐振频率 $f_0=1MHz$，带宽 $BW=10kHz$，$L=200\\mu H$。求 C 和 R。</p>
         <div class="step-list"><div class="step-item"><div><strong>第一步：求 Q 值</strong>。$Q=\\frac{f_0}{BW}=\\frac{10^6}{10^4}=100$</div></div><div class="step-item"><div><strong>第二步：求电容</strong>。$C=\\frac{1}{(2\\pi f_0)^2 L}=\\frac{1}{(2\\pi \\times 10^6)^2 \\times 200\\times 10^{-6}}=126pF$</div></div><div class="step-item"><div><strong>第三步：求电阻</strong>。$R=\\frac{\\omega_0 L}{Q}=\\frac{2\\pi \\times 10^6 \\times 200\\times 10^{-6}}{100}=12.6\\Omega$</div></div><div class="step-item"><div><strong>第四步：验证</strong>。$BW=\\frac{f_0}{Q}=10kHz$ ✓，可分辨频率相差 10kHz 以上的电台。</div></div></div>
 
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>Q 值的工程意义</strong>：高 Q 值（>10）用于选频（如收音机调谐），低 Q 值（<1）用于宽带滤波。Q 值也决定了<a href="#" onclick="navigateTo('circ-05');return false;" style="color:var(--primary)">二阶电路的阻尼比</a>：$\\zeta=\\frac{1}{2Q}$。</div></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>Q 值的工程意义</strong>：高 Q 值（>10）用于选频（如收音机调谐），低 Q 值（<1）用于宽带滤波。Q 值也决定了<a href="javascript:void(0)" onclick="App.loadDetail('circ-05')">二阶电路的阻尼比</a>：$\\zeta=\\frac{1}{2Q}$。</div></div>
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>电压谐振的危险</strong>：串联谐振时，电感和电容上的电压可达电源电压的 Q 倍！高 Q 电路中，这可能导致元件击穿。电力系统中需避免串联谐振（铁磁谐振过电压）。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>工程应用</strong>：谐振电路广泛用于无线充电（磁耦合谐振）、金属探测（涡流改变 Q 值）、<a href="#" onclick="navigateTo('ana-14');return false;" style="color:var(--primary)">正弦波振荡器</a>（LC 谐振选频）。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>工程应用</strong>：谐振电路广泛用于无线充电（磁耦合谐振）、金属探测（涡流改变 Q 值）、<a href="javascript:void(0)" onclick="App.loadDetail('ana-14')">正弦波振荡器</a>（LC 谐振选频）。</div></div>
       ` },
       { id: 'circ-09', title: '三相电路', desc: '星形/三角形、功率计算', icon: '⚙', tags: ['基础'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">三相电路：电力系统的基石</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">三相电路是交流输配电的标准。三个幅值相等、相位差 120° 的电源，可星形（Y）或三角形（△）连接。理解线电压/相电压、线电流/相电流的关系，以及功率计算，是电气工程师的必备知识。三相电路是<a href="#" onclick="navigateTo('circ-06');return false;" style="color:var(--primary)">正弦稳态分析</a>在电力系统中的典型应用。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">三相电路是交流输配电的标准。三个幅值相等、相位差 120° 的电源，可星形（Y）或三角形（△）连接。理解线电压/相电压、线电流/相电流的关系，以及功率计算，是电气工程师的必备知识。三相电路是<a href="javascript:void(0)" onclick="App.loadDetail('circ-06')">正弦稳态分析</a>在电力系统中的典型应用。</p>
 
         <h4 class="font-medium mt-6 mb-2">三相电源的基本概念</h4>
         <div class="formula-block">三相对称电源：<br>$u_A = U_m\\cos(\\omega t)$<br>$u_B = U_m\\cos(\\omega t - 120°)$<br>$u_C = U_m\\cos(\\omega t + 120°)$<div class="text-sm text-gray-500 mt-2">三相电压幅值相等、频率相同、相位依次差 120°</div></div>
@@ -2217,7 +2241,7 @@ const CourseData = {
       ` },
       { id: 'circ-10', title: '二端口网络', desc: 'Z/Y/H 参数及其互换', icon: '⬛', tags: ['难点'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">二端口网络：黑箱分析方法</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">二端口网络把复杂电路看作有输入输出两个端口的"黑箱"，用参数矩阵描述端口电压电流关系。不必关心内部结构，只需知道参数即可分析级联、并联等连接。二端口网络是<a href="#" onclick="navigateTo('circ-02');return false;" style="color:var(--primary)">戴维南定理</a>的推广——从单端口扩展到双端口。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">二端口网络把复杂电路看作有输入输出两个端口的"黑箱"，用参数矩阵描述端口电压电流关系。不必关心内部结构，只需知道参数即可分析级联、并联等连接。二端口网络是<a href="javascript:void(0)" onclick="App.loadDetail('circ-02')">戴维南定理</a>的推广——从单端口扩展到双端口。</p>
 
         <h4 class="font-medium mt-6 mb-2">四种参数矩阵</h4>
         <div class="formula-block">Z 参数（阻抗参数）：<br>$$\\begin{bmatrix} \\dot{U}_1 \\\\ \\dot{U}_2 \\end{bmatrix} = \\begin{bmatrix} z_{11} & z_{12} \\\\ z_{21} & z_{22} \\end{bmatrix} \\begin{bmatrix} \\dot{I}_1 \\\\ \\dot{I}_2 \\end{bmatrix}$$<div class="text-sm text-gray-500 mt-2">Z 参数物理意义：$z_{11}=\\frac{U_1}{I_1}|_{I_2=0}$（端口2开路时的输入阻抗）</div></div>
@@ -2229,7 +2253,7 @@ const CourseData = {
         <div class="formula-block">H 参数（混合参数）——用于晶体管：<br>$$\\begin{bmatrix} \\dot{U}_1 \\\\ \\dot{I}_2 \\end{bmatrix} = \\begin{bmatrix} h_{11} & h_{12} \\\\ h_{21} & h_{22} \\end{bmatrix} \\begin{bmatrix} \\dot{I}_1 \\\\ \\dot{U}_2 \\end{bmatrix}$$<div class="text-sm text-gray-500 mt-2">$h_{11}$：输入阻抗；$h_{12}$：反向电压传输比；$h_{21}$：电流增益；$h_{22}$：输出导纳</div></div>
 
         <h4 class="font-medium mt-6 mb-2">四种参数对比</h4>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>参数</th><th>自变量</th><th>因变量</th><th>适用场景</th></tr></thead><tbody><tr><td class="font-medium">Z（阻抗）</td><td>$I_1, I_2$</td><td>$U_1, U_2$</td><td>串联网络</td></tr><tr><td class="font-medium">Y（导纳）</td><td>$U_1, U_2$</td><td>$I_1, I_2$</td><td>并联网络</td></tr><tr><td class="font-medium">T（传输）</td><td>$U_2, -I_2$</td><td>$U_1, I_1$</td><td>级联网络（最常用）</td></tr><tr><td class="font-medium">H（混合）</td><td>$I_1, U_2$</td><td>$U_1, I_2$</td><td><a href="#" onclick="navigateTo('ana-03');return false;" style="color:var(--primary)">晶体管</a>小信号模型</td></tr></tbody></table></div>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>参数</th><th>自变量</th><th>因变量</th><th>适用场景</th></tr></thead><tbody><tr><td class="font-medium">Z（阻抗）</td><td>$I_1, I_2$</td><td>$U_1, U_2$</td><td>串联网络</td></tr><tr><td class="font-medium">Y（导纳）</td><td>$U_1, U_2$</td><td>$I_1, I_2$</td><td>并联网络</td></tr><tr><td class="font-medium">T（传输）</td><td>$U_2, -I_2$</td><td>$U_1, I_1$</td><td>级联网络（最常用）</td></tr><tr><td class="font-medium">H（混合）</td><td>$I_1, U_2$</td><td>$U_1, I_2$</td><td><a href="javascript:void(0)" onclick="App.loadDetail('ana-03')">晶体管</a>小信号模型</td></tr></tbody></table></div>
 
         <h4 class="font-medium mt-6 mb-2">参数互换公式</h4>
         <div class="formula-block">常用互换关系：<br>$Y = Z^{-1}$（Y 是 Z 的逆矩阵）<br>$\\det(Z) = z_{11}z_{22} - z_{12}z_{21}$<br>互易网络：$z_{12}=z_{21}$，$y_{12}=y_{21}$，$AD-BC=1$<div class="text-sm text-gray-500 mt-2">互易网络只有3个独立参数，对称网络只有2个独立参数</div></div>
@@ -2240,13 +2264,13 @@ const CourseData = {
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>级联的便利</strong>：T 参数（传输参数）的最大优势是级联计算简单——两个网络级联后的 T 参数等于各网络 T 参数的乘积：$T=T_1 \\cdot T_2$。这在分析多级放大器时非常方便。</div></div>
 
-        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>互易性与对称性</strong>：互易网络 $z_{12}=z_{21}$（无受控源的线性网络都互易）；对称网络 $z_{11}=z_{22}$（端口可互换）。H 参数在 <a href="#" onclick="navigateTo('ana-03');return false;" style="color:var(--primary)">三极管</a> 小信号模型中是标准描述方式。</div></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>互易性与对称性</strong>：互易网络 $z_{12}=z_{21}$（无受控源的线性网络都互易）；对称网络 $z_{11}=z_{22}$（端口可互换）。H 参数在 <a href="javascript:void(0)" onclick="App.loadDetail('ana-03')">三极管</a> 小信号模型中是标准描述方式。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>工程应用</strong>：二端口网络模型广泛用于<a href="#" onclick="navigateTo('ana-06');return false;" style="color:var(--primary)">多级放大器分析</a>（级联）、滤波器设计、传输线分析。在射频工程中，散射参数（S 参数）是二端口网络在高频下的标准描述方式。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>工程应用</strong>：二端口网络模型广泛用于<a href="javascript:void(0)" onclick="App.loadDetail('ana-06')">多级放大器分析</a>（级联）、滤波器设计、传输线分析。在射频工程中，散射参数（S 参数）是二端口网络在高频下的标准描述方式。</div></div>
       ` },
       { id: 'circ-11', title: '含运放的电路分析', desc: '理想运放线性区模型', icon: '🔺', tags: ['工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">理想运放：两个黄金法则</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">运放（运算放大器）是模拟电路的核心元件。分析含运放的电路，只需牢记两条法则——"虚短"和"虚断"，就能快速求解反相/同相放大、加法、积分等各种运放电路。运放电路是<a href="#" onclick="navigateTo('ana-09');return false;" style="color:var(--primary)">运放线性应用</a>和<a href="#" onclick="navigateTo('ana-10');return false;" style="color:var(--primary)">运放非线性应用</a>的基础。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">运放（运算放大器）是模拟电路的核心元件。分析含运放的电路，只需牢记两条法则——"虚短"和"虚断"，就能快速求解反相/同相放大、加法、积分等各种运放电路。运放电路是<a href="javascript:void(0)" onclick="App.loadDetail('ana-09')">运放线性应用</a>和<a href="javascript:void(0)" onclick="App.loadDetail('ana-10')">运放非线性应用</a>的基础。</p>
 
         <h4 class="font-medium mt-6 mb-2">理想运放的两条法则</h4>
         <div class="formula-block"><strong>理想运放两条法则</strong>（线性区，负反馈）：<br>① 虚短：$u_+ = u_-$（两输入端电压相等，如同短路）<br>② 虚断：$i_+ = i_- = 0$（输入端不取电流，如同断路）<div class="text-sm text-gray-500 mt-2">虚短虚断是分析运放电路的万能工具，适用于所有线性运放电路</div></div>
@@ -2264,15 +2288,15 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">设计一个增益 $A_v=-10$ 的反相放大器，输入电阻 $R_{in}=10k\\Omega$。求 $R_1$ 和 $R_f$。</p>
         <div class="step-list"><div class="step-item"><div><strong>第一步：确定 $R_1$</strong>。反相放大器输入电阻 $R_{in}=R_1$，所以 $R_1=10k\\Omega$</div></div><div class="step-item"><div><strong>第二步：求 $R_f$</strong>。$|A_v|=\\frac{R_f}{R_1}=10$，所以 $R_f=10 \\times 10k=100k\\Omega$</div></div><div class="step-item"><div><strong>第三步：验证</strong>。$A_v=-\\frac{100k}{10k}=-10$ ✓，输入电阻 $10k\\Omega$ ✓</div></div></div>
 
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>经典结论</strong>：反相放大 $A_v=-R_f/R_1$，同相放大 $A_v=1+R_f/R_1$，电压跟随器 $A_v=1$。这些公式的推导只需用虚短虚断列节点方程。详见 <a href="#" onclick="navigateTo('ana-09');return false;" style="color:var(--primary)">运放线性应用</a>。</div></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>经典结论</strong>：反相放大 $A_v=-R_f/R_1$，同相放大 $A_v=1+R_f/R_1$，电压跟随器 $A_v=1$。这些公式的推导只需用虚短虚断列节点方程。详见 <a href="javascript:void(0)" onclick="App.loadDetail('ana-09')">运放线性应用</a>。</div></div>
 
-        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>虚短的前提是负反馈</strong>：只有接成负反馈（输出反馈到反相端），运放才工作在线性区，虚短才成立。开环或正反馈时运放饱和（非线性区），不能用虚短虚断分析，那是<a href="#" onclick="navigateTo('ana-10');return false;" style="color:var(--primary)">比较器</a>/<a href="#" onclick="navigateTo('ana-14');return false;" style="color:var(--primary)">振荡器</a>场景。</div></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>虚短的前提是负反馈</strong>：只有接成负反馈（输出反馈到反相端），运放才工作在线性区，虚短才成立。开环或正反馈时运放饱和（非线性区），不能用虚短虚断分析，那是<a href="javascript:void(0)" onclick="App.loadDetail('ana-10')">比较器</a>/<a href="javascript:void(0)" onclick="App.loadDetail('ana-14')">振荡器</a>场景。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>实际运放的局限</strong>：理想运放增益无穷大、带宽无穷大、输出阻抗为零。实际运放（如 LM741）开环增益约 10⁵，带宽约 1MHz，输出阻抗约 75Ω。设计时需考虑<a href="#" onclick="navigateTo('circ-07');return false;" style="color:var(--primary)">频率响应</a>和<a href="#" onclick="navigateTo('ana-08');return false;" style="color:var(--primary)">反馈对性能的影响</a>。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>实际运放的局限</strong>：理想运放增益无穷大、带宽无穷大、输出阻抗为零。实际运放（如 LM741）开环增益约 10⁵，带宽约 1MHz，输出阻抗约 75Ω。设计时需考虑<a href="javascript:void(0)" onclick="App.loadDetail('circ-07')">频率响应</a>和<a href="javascript:void(0)" onclick="App.loadDetail('ana-08')">反馈对性能的影响</a>。</div></div>
       ` },
       { id: 'circ-12', title: '受控源与电路定理扩展', desc: '受控源处理、定理适用性', icon: '🔌', tags: ['基础'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">受控源：晶体管的电路模型</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">受控源（CCVS/VCCS/VCVS/CCCS）的电压或电流受电路中其他变量控制，是<a href="#" onclick="navigateTo('ana-03');return false;" style="color:var(--primary)">晶体管</a>、<a href="#" onclick="navigateTo('ana-01');return false;" style="color:var(--primary)">场效应管</a>等有源器件的电路模型。掌握受控源在各种定理中的处理方式，是分析含晶体管电路的前提。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">受控源（CCVS/VCCS/VCVS/CCCS）的电压或电流受电路中其他变量控制，是<a href="javascript:void(0)" onclick="App.loadDetail('ana-03')">晶体管</a>、<a href="javascript:void(0)" onclick="App.loadDetail('ana-01')">场效应管</a>等有源器件的电路模型。掌握受控源在各种定理中的处理方式，是分析含晶体管电路的前提。</p>
 
         <h4 class="font-medium mt-6 mb-2">四种受控源类型</h4>
         <div class="formula-block">受控源的一般形式：<br>VCVS（电压控制电压源）：$u_2 = \\mu u_1$<br>VCCS（电压控制电流源）：$i_2 = g_m u_1$<br>CCVS（电流控制电压源）：$u_2 = r_m i_1$<br>CCCS（电流控制电流源）：$i_2 = \\beta i_1$<div class="text-sm text-gray-500 mt-2">$\\mu$、$g_m$、$r_m$、$\\beta$ 为控制系数，$u_1$、$i_1$ 为控制量</div></div>
@@ -2281,7 +2305,7 @@ const CourseData = {
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>受控源类型</th><th>控制量</th><th>被控量</th><th>控制系数</th><th>典型器件</th></tr></thead><tbody><tr><td class="font-medium">VCVS</td><td>电压 $u_1$</td><td>电压 $u_2$</td><td>$\\mu$（无量纲）</td><td>运算放大器</td></tr><tr><td class="font-medium">VCCS</td><td>电压 $u_1$</td><td>电流 $i_2$</td><td>$g_m$（跨导，S）</td><td>MOSFET</td></tr><tr><td class="font-medium">CCVS</td><td>电流 $i_1$</td><td>电压 $u_2$</td><td>$r_m$（互阻，Ω）</td><td>—</td></tr><tr><td class="font-medium">CCCS</td><td>电流 $i_1$</td><td>电流 $i_2$</td><td>$\\beta$（无量纲）</td><td>BJT</td></tr></tbody></table></div>
 
         <h4 class="font-medium mt-6 mb-2">含受控源电路的分析方法</h4>
-        <div class="step-list"><div class="step-item"><div><strong>第一步：识别受控源</strong>。找出控制量（$u_x$ 或 $i_x$）和被控量（受控源的输出）。</div></div><div class="step-item"><div><strong>第二步：列方程</strong>。用<a href="#" onclick="navigateTo('circ-01');return false;" style="color:var(--primary)">节点法或网孔法</a>列写 KCL/KVL 方程，受控源当独立源处理。</div></div><div class="step-item"><div><strong>第三步：补充控制量方程</strong>。用节点电压或网孔电流表示控制量，得到额外方程。</div></div><div class="step-item"><div><strong>第四步：联立求解</strong>。解方程组求出所有未知量。</div></div></div>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：识别受控源</strong>。找出控制量（$u_x$ 或 $i_x$）和被控量（受控源的输出）。</div></div><div class="step-item"><div><strong>第二步：列方程</strong>。用<a href="javascript:void(0)" onclick="App.loadDetail('circ-01')">节点法或网孔法</a>列写 KCL/KVL 方程，受控源当独立源处理。</div></div><div class="step-item"><div><strong>第三步：补充控制量方程</strong>。用节点电压或网孔电流表示控制量，得到额外方程。</div></div><div class="step-item"><div><strong>第四步：联立求解</strong>。解方程组求出所有未知量。</div></div></div>
 
         <h4 class="font-medium mt-6 mb-2">受控源在各定理中的处理</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>定理/方法</th><th>受控源处理方式</th><th>注意事项</th></tr></thead><tbody><tr><td class="font-medium">节点法/网孔法</td><td>当独立源处理，补充控制量方程</td><td>方程数 = 独立方程数 + 控制量方程数</td></tr><tr><td class="font-medium">叠加定理</td><td><strong>始终保留</strong>，只置零独立源</td><td>受控源不能置零（它受电路变量控制）</td></tr><tr><td class="font-medium">戴维南求 $R_{eq}$</td><td>不能置零，用加压求流法</td><td>$R_{eq}=U_{test}/I_{test}$（加测试电压/电流）</td></tr><tr><td class="font-medium">诺顿求 $R_{eq}$</td><td>不能置零，用开路/短路法</td><td>$R_{eq}=U_{oc}/I_{sc}$</td></tr><tr><td class="font-medium">互易定理</td><td>含受控源一般<strong>不互易</strong></td><td>互易定理只适用于无源线性网络</td></tr></tbody></table></div>
@@ -2294,7 +2318,7 @@ const CourseData = {
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>受控源在各定理中的处理</strong>：①节点法/网孔法——受控源当独立源处理，但要补充控制量方程；②叠加定理——受控源<strong>始终保留</strong>（不置零），只置零独立源；③戴维南求 $R_{eq}$——受控源不能置零，必须用加压求流法；④互易定理——含受控源的网络一般不互易。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>小信号模型</strong>：在<a href="#" onclick="navigateTo('ana-04');return false;" style="color:var(--primary)">放大电路分析</a>中，BJT 和 MOSFET 用小信号受控源模型代替。理解受控源的处理方法，是分析<a href="#" onclick="navigateTo('ana-06');return false;" style="color:var(--primary)">多级放大器</a>和<a href="#" onclick="navigateTo('ana-08');return false;" style="color:var(--primary)">反馈电路</a>的基础。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>小信号模型</strong>：在<a href="javascript:void(0)" onclick="App.loadDetail('ana-04')">放大电路分析</a>中，BJT 和 MOSFET 用小信号受控源模型代替。理解受控源的处理方法，是分析<a href="javascript:void(0)" onclick="App.loadDetail('ana-06')">多级放大器</a>和<a href="javascript:void(0)" onclick="App.loadDetail('ana-08')">反馈电路</a>的基础。</div></div>
       ` },
     ]
   },
@@ -2307,7 +2331,7 @@ const CourseData = {
     sections: [
       { id: 'ana-01', title: '半导体二极管', desc: '伏安特性、模型、稳压管', icon: '➡', tags: ['基础'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">二极管：单向导电的基础元件</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">二极管由 PN 结构成，核心特性是<strong>单向导电</strong>——正向导通、反向截止。理解伏安特性和等效模型，是分析<a href="#" onclick="navigateTo('ana-02');return false;" style="color:var(--primary)">整流</a>、钳位、<a href="#" onclick="navigateTo('ana-13');return false;" style="color:var(--primary)">稳压</a>等电路的基础。二极管是最简单的半导体器件，也是理解<a href="#" onclick="navigateTo('ana-03');return false;" style="color:var(--primary)">三极管</a>和<a href="#" onclick="navigateTo('ana-01');return false;" style="color:var(--primary)">场效应管</a>的基础。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">二极管由 PN 结构成，核心特性是<strong>单向导电</strong>——正向导通、反向截止。理解伏安特性和等效模型，是分析<a href="javascript:void(0)" onclick="App.loadDetail('ana-02')">整流</a>、钳位、<a href="javascript:void(0)" onclick="App.loadDetail('ana-13')">稳压</a>等电路的基础。二极管是最简单的半导体器件，也是理解<a href="javascript:void(0)" onclick="App.loadDetail('ana-03')">三极管</a>和<a href="javascript:void(0)" onclick="App.loadDetail('ana-01')">场效应管</a>的基础。</p>
 
         <h4 class="font-medium mt-6 mb-2">PN 结的形成</h4>
         <div class="formula-block">PN 结形成过程：<br>P 型半导体（多子为空穴）+ N 型半导体（多子为电子）<br>→ 交界面扩散形成空间电荷区（耗尽层）<br>→ 内建电场阻止进一步扩散，达到动态平衡<div class="text-sm text-gray-500 mt-2">PN 结是二极管、三极管、集成电路的基础结构</div></div>
@@ -2324,7 +2348,7 @@ const CourseData = {
         <h4 class="font-medium mt-6 mb-2">稳压管（齐纳二极管）</h4>
         <div class="formula-block">稳压管工作在反向击穿区：<br>稳压值 $U_Z$（标称值，如 5.1V、12V）<br>工作电流 $I_Z$ 范围：$I_{Zmin} < I_Z < I_{Zmax}$<div class="text-sm text-gray-500 mt-2">$I_{Zmin}$ 保证稳压，$I_{Zmax}$ 防止过热损坏</div></div>
 
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>稳压管利用击穿</strong>：普通二极管要避免反向击穿（会损坏），但稳压管（齐纳二极管）专门工作在反向击穿区——电压基本不随电流变化，实现稳压。详见 <a href="#" onclick="navigateTo('ana-13');return false;" style="color:var(--primary)">直流稳压电源</a>。</div></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>稳压管利用击穿</strong>：普通二极管要避免反向击穿（会损坏），但稳压管（齐纳二极管）专门工作在反向击穿区——电压基本不随电流变化，实现稳压。详见 <a href="javascript:void(0)" onclick="App.loadDetail('ana-13')">直流稳压电源</a>。</div></div>
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>温度影响</strong>：温度升高时，$U_T$ 增大，$I_S$ 急剧增大（每升 10°C 翻倍）。正向压降约 -2mV/°C（负温度系数），这是热不稳定的根源。大电流二极管需考虑散热。</div></div>
 
@@ -2332,7 +2356,7 @@ const CourseData = {
       ` },
       { id: 'ana-02', title: '二极管整流与滤波', desc: '半波/全波整流、电容滤波', icon: '🌊', tags: ['工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">整流滤波：把交流变直流</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">整流电路利用<a href="#" onclick="navigateTo('ana-01');return false;" style="color:var(--primary)">二极管</a>的单向导电性，把交流电转为脉动直流；滤波电路（电容/电感）平滑脉动，输出较平稳的直流。这是所有直流电源的第一级，也是<a href="#" onclick="navigateTo('ana-13');return false;" style="color:var(--primary)">直流稳压电源</a>的基础。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">整流电路利用<a href="javascript:void(0)" onclick="App.loadDetail('ana-01')">二极管</a>的单向导电性，把交流电转为脉动直流；滤波电路（电容/电感）平滑脉动，输出较平稳的直流。这是所有直流电源的第一级，也是<a href="javascript:void(0)" onclick="App.loadDetail('ana-13')">直流稳压电源</a>的基础。</p>
 
         <h4 class="font-medium mt-6 mb-2">半波整流</h4>
         <div class="formula-block">半波整流电路：1 个二极管 + 负载电阻<br>输出电压平均值：$U_o = \\frac{U_m}{\\pi} \\approx 0.318 U_m$<br>输出电压有效值：$U_{rms} = \\frac{U_m}{2}$<div class="text-sm text-gray-500 mt-2">只利用正半周，负半周被截掉，效率低、脉动大</div></div>
@@ -2354,11 +2378,11 @@ const CourseData = {
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>浪涌电流</strong>：上电瞬间，电容相当于短路，二极管承受很大浪涌电流。需在电路中串联小电阻或 NTC 热敏电阻限流，保护二极管。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与一阶暂态的联系</strong>：电容滤波本质是<a href="#" onclick="navigateTo('circ-04');return false;" style="color:var(--primary)">RC 一阶电路</a>的充放电过程——二极管导通时电容充电（时间常数小），截止时电容放电（时间常数大）。理解一阶暂态有助于分析纹波特性。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与一阶暂态的联系</strong>：电容滤波本质是<a href="javascript:void(0)" onclick="App.loadDetail('circ-04')">RC 一阶电路</a>的充放电过程——二极管导通时电容充电（时间常数小），截止时电容放电（时间常数大）。理解一阶暂态有助于分析纹波特性。</div></div>
       ` },
       { id: 'ana-03', title: '三极管(BJT)工作原理', desc: '放大区、特性曲线', icon: '🔺', tags: ['核心'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">三极管：电流控制电流的放大器</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">双极型晶体管（BJT）有三个电极（基极 B、集电极 C、发射极 E），核心功能是<strong>用小基极电流控制大集电极电流</strong>（电流控制电流源 CCCS），实现信号放大。三个工作区对应不同应用——模拟放大和数字开关。BJT 是<a href="#" onclick="navigateTo('ana-04');return false;" style="color:var(--primary)">基本放大电路</a>的核心器件。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">双极型晶体管（BJT）有三个电极（基极 B、集电极 C、发射极 E），核心功能是<strong>用小基极电流控制大集电极电流</strong>（电流控制电流源 CCCS），实现信号放大。三个工作区对应不同应用——模拟放大和数字开关。BJT 是<a href="javascript:void(0)" onclick="App.loadDetail('ana-04')">基本放大电路</a>的核心器件。</p>
 
         <h4 class="font-medium mt-6 mb-2">BJT 的结构与符号</h4>
         <div class="formula-block">BJT 由两个 PN 结组成（NPN 或 PNP）：<br>NPN：基极 P 型，集电极和发射极 N 型<br>PNP：基极 N 型，集电极和发射极 P 型<div class="text-sm text-gray-500 mt-2">箭头方向表示发射结正向偏置方向（NPN 箭头向外，PNP 箭头向内）</div></div>
@@ -2375,15 +2399,15 @@ const CourseData = {
         <h4 class="font-medium mt-6 mb-2">小信号模型</h4>
         <div class="formula-block">混合 $\\pi$ 模型（低频简化）：<br>输入电阻：$r_{be} = r_{bb'} + (1+\\beta)\\frac{U_T}{I_{CQ}} \\approx \\beta \\frac{U_T}{I_{CQ}}$<br>跨导：$g_m = \\frac{I_{CQ}}{U_T} = \\frac{\\beta}{r_{be}}$<br>受控源：$i_c = g_m u_{be} = \\beta i_b$<div class="text-sm text-gray-500 mt-2">$U_T \\approx 26mV$（室温），$I_{CQ}$ 为静态工作点电流</div></div>
 
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>放大与开关的统一</strong>：模拟电路用放大区（线性），数字电路用饱和/截止区（开关）。同一器件，工作区不同用途完全不同。详见 <a href="#" onclick="navigateTo('dig-14');return false;" style="color:var(--primary)">数字电路</a>。</div></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>放大与开关的统一</strong>：模拟电路用放大区（线性），数字电路用饱和/截止区（开关）。同一器件，工作区不同用途完全不同。详见 <a href="javascript:void(0)" onclick="App.loadDetail('dig-14')">数字电路</a>。</div></div>
 
-        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>温度影响</strong>：$U_{BE}$ 温度系数约 -2mV/°C，$\\beta$ 随温度升高而增大。这导致静态工作点漂移，需要<a href="#" onclick="navigateTo('ana-05');return false;" style="color:var(--primary)">稳定偏置电路</a>来补偿。</div></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>温度影响</strong>：$U_{BE}$ 温度系数约 -2mV/°C，$\\beta$ 随温度升高而增大。这导致静态工作点漂移，需要<a href="javascript:void(0)" onclick="App.loadDetail('ana-05')">稳定偏置电路</a>来补偿。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('circ-12');return false;" style="color:var(--primary)">受控源</a>的联系</strong>：BJT 本质是 CCCS（电流控制电流源），$i_c=\\beta i_b$。在电路分析中，BJT 用受控源模型代替，这是<a href="#" onclick="navigateTo('ana-04');return false;" style="color:var(--primary)">小信号等效电路</a>的基础。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('circ-12')">受控源</a>的联系</strong>：BJT 本质是 CCCS（电流控制电流源），$i_c=\\beta i_b$。在电路分析中，BJT 用受控源模型代替，这是<a href="javascript:void(0)" onclick="App.loadDetail('ana-04')">小信号等效电路</a>的基础。</div></div>
       ` },
       { id: 'ana-04', title: '基本放大电路', desc: '共射/共集/共基、交直流分析', icon: '🔊', tags: ['高频核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">三种基本组态：放大电路的基石</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">根据输入输出公共端不同，基本放大电路分三种组态：共射（CE）、共集（CC）、共基（CB）。三者各有特点，掌握其电压/电流增益、输入/输出电阻，是分析所有放大电路的基础。基本放大电路建立在<a href="#" onclick="navigateTo('ana-03');return false;" style="color:var(--primary)">BJT 工作原理</a>基础上，是<a href="#" onclick="navigateTo('ana-06');return false;" style="color:var(--primary)">多级放大电路</a>和<a href="#" onclick="navigateTo('ana-08');return false;" style="color:var(--primary)">反馈电路</a>的基石。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">根据输入输出公共端不同，基本放大电路分三种组态：共射（CE）、共集（CC）、共基（CB）。三者各有特点，掌握其电压/电流增益、输入/输出电阻，是分析所有放大电路的基础。基本放大电路建立在<a href="javascript:void(0)" onclick="App.loadDetail('ana-03')">BJT 工作原理</a>基础上，是<a href="javascript:void(0)" onclick="App.loadDetail('ana-06')">多级放大电路</a>和<a href="javascript:void(0)" onclick="App.loadDetail('ana-08')">反馈电路</a>的基石。</p>
 
         <h4 class="font-medium mt-6 mb-2">三种组态对比</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>组态</th><th>电压增益</th><th>电流增益</th><th>输入电阻</th><th>输出电阻</th><th>特点</th></tr></thead><tbody><tr><td class="font-medium">共射 (CE)</td><td>大（反相）</td><td>大（$\\beta$）</td><td>中（$r_{be}$）</td><td>中（$R_C$）</td><td>最常用，增益高</td></tr><tr><td class="font-medium">共集 (CC)</td><td>$\\approx 1$（同相）</td><td>大（$1+\\beta$）</td><td>大</td><td>小</td><td>射极跟随器，阻抗变换</td></tr><tr><td class="font-medium">共基 (CB)</td><td>大（同相）</td><td>$\\approx 1$（$\\alpha$）</td><td>小</td><td>大</td><td>高频特性好</td></tr></tbody></table></div>
@@ -2405,11 +2429,11 @@ const CourseData = {
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>交直流分离分析</strong>：放大电路既有直流偏置（设静态工作点）又有交流信号（被放大）。分析时先算直流（电容开路），再算交流（电容短路、直流源置零）。两者叠加就是实际工作状态。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('circ-12');return false;" style="color:var(--primary)">受控源</a>的联系</strong>：BJT 小信号模型是 CCCS（电流控制电流源），$i_c=\\beta i_b$。在电路分析中，用受控源模型代替 BJT，简化计算。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('circ-12')">受控源</a>的联系</strong>：BJT 小信号模型是 CCCS（电流控制电流源），$i_c=\\beta i_b$。在电路分析中，用受控源模型代替 BJT，简化计算。</div></div>
       ` },
       { id: 'ana-05', title: '静态工作点稳定', desc: '图解法、分压偏置', icon: '⚖', tags: ['核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">工作点稳定：温度补偿的艺术</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4"><a href="#" onclick="navigateTo('ana-03');return false;" style="color:var(--primary)">三极管</a>参数（$\\beta$、$I_{CBO}$、$U_{BE}$）随温度变化大，导致静态工作点漂移，可能引起饱和失真或截止失真。分压偏置电路利用负反馈稳定工作点，是工程最常用的偏置方案。工作点稳定是<a href="#" onclick="navigateTo('ana-04');return false;" style="color:var(--primary)">基本放大电路</a>可靠工作的前提。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4"><a href="javascript:void(0)" onclick="App.loadDetail('ana-03')">三极管</a>参数（$\\beta$、$I_{CBO}$、$U_{BE}$）随温度变化大，导致静态工作点漂移，可能引起饱和失真或截止失真。分压偏置电路利用负反馈稳定工作点，是工程最常用的偏置方案。工作点稳定是<a href="javascript:void(0)" onclick="App.loadDetail('ana-04')">基本放大电路</a>可靠工作的前提。</p>
 
         <h4 class="font-medium mt-6 mb-2">温度对工作点的影响</h4>
         <div class="formula-block">温度升高时：<br>$U_{BE}$ 下降（约 -2mV/°C）→ $I_B$ 增大 → $I_C$ 增大<br>$\\beta$ 增大 → $I_C$ 增大<br>$I_{CBO}$ 翻倍（每升 10°C）→ $I_C$ 增大<div class="text-sm text-gray-500 mt-2">三种效应都使 $I_C$ 随温度升高而增大，导致工作点漂移</div></div>
@@ -2431,11 +2455,11 @@ const CourseData = {
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>设计条件的重要性</strong>：$I_1 \\gg I_B$ 是工作点稳定的前提。若 $I_1$ 不够大，$V_B$ 会受 $I_B$ 影响而变化，稳定效果变差。工程上通常取 $I_1 \\geq (5\\sim10) I_B$。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('ana-08');return false;" style="color:var(--primary)">反馈</a>的联系</strong>：分压偏置是直流负反馈的应用——$R_E$ 将输出电流变化反馈到输入端，自动调节 $U_{BE}$，稳定工作点。理解负反馈原理有助于分析更复杂的<a href="#" onclick="navigateTo('ana-08');return false;" style="color:var(--primary)">反馈放大电路</a>。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('ana-08')">反馈</a>的联系</strong>：分压偏置是直流负反馈的应用——$R_E$ 将输出电流变化反馈到输入端，自动调节 $U_{BE}$，稳定工作点。理解负反馈原理有助于分析更复杂的<a href="javascript:void(0)" onclick="App.loadDetail('ana-08')">反馈放大电路</a>。</div></div>
       ` },
       { id: 'ana-06', title: '多级放大电路', desc: '耦合方式、级联分析', icon: '📊', tags: ['基础'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">多级放大：突破单级增益极限</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">单级放大器增益有限（共射约几十到几百），要获得更高增益需多级级联。级间耦合方式有三种：阻容耦合、直接耦合、变压器耦合，各有适用场景。多级放大是<a href="#" onclick="navigateTo('ana-04');return false;" style="color:var(--primary)">基本放大电路</a>的扩展，也是<a href="#" onclick="navigateTo('ana-07');return false;" style="color:var(--primary)">集成运放</a>的内部结构基础。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">单级放大器增益有限（共射约几十到几百），要获得更高增益需多级级联。级间耦合方式有三种：阻容耦合、直接耦合、变压器耦合，各有适用场景。多级放大是<a href="javascript:void(0)" onclick="App.loadDetail('ana-04')">基本放大电路</a>的扩展，也是<a href="javascript:void(0)" onclick="App.loadDetail('ana-07')">集成运放</a>的内部结构基础。</p>
 
         <h4 class="font-medium mt-6 mb-2">三种耦合方式</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>耦合方式</th><th>连接方式</th><th>频率响应</th><th>优点</th><th>缺点</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">阻容耦合</td><td>电容连接</td><td>低频差</td><td>各级直流独立，设计简单</td><td>不能放大直流</td><td>分立元件交流放大</td></tr><tr><td class="font-medium">直接耦合</td><td>导线直接</td><td>低频好</td><td>可放大直流，集成化</td><td>有零点漂移</td><td>集成运放（必用）</td></tr><tr><td class="font-medium">变压器耦合</td><td>变压器</td><td>频带窄</td><td>阻抗匹配，隔离直流</td><td>体积大、笨重</td><td>功率放大、射频</td></tr></tbody></table></div>
@@ -2452,13 +2476,13 @@ const CourseData = {
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>组合组态</strong>：实际电路常组合使用不同组态——共射-共集级联（兼顾增益和带负载能力）、共射-共基级联（提高高频特性）。理解各组态特点，才能合理选择级联方式。</div></div>
 
-        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>级联增益 = 各级增益之积</strong>：但要注意<strong>后级输入电阻是前级负载</strong>。计算时必须把后级输入电阻作为前级负载考虑，不能简单相乘空载增益。直接耦合的零点漂移问题需用差动放大电路解决，详见 <a href="#" onclick="navigateTo('ana-07');return false;" style="color:var(--primary)">集成运放基础</a>。</div></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>级联增益 = 各级增益之积</strong>：但要注意<strong>后级输入电阻是前级负载</strong>。计算时必须把后级输入电阻作为前级负载考虑，不能简单相乘空载增益。直接耦合的零点漂移问题需用差动放大电路解决，详见 <a href="javascript:void(0)" onclick="App.loadDetail('ana-07')">集成运放基础</a>。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>集成运放的内部结构</strong>：<a href="#" onclick="navigateTo('ana-07');return false;" style="color:var(--primary)">集成运放</a>就是多级直接耦合放大器——差动输入级（抑制零漂）+ 中间放大级（高增益）+ 输出级（低阻抗）。理解多级放大有助于理解运放内部工作原理。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>集成运放的内部结构</strong>：<a href="javascript:void(0)" onclick="App.loadDetail('ana-07')">集成运放</a>就是多级直接耦合放大器——差动输入级（抑制零漂）+ 中间放大级（高增益）+ 输出级（低阻抗）。理解多级放大有助于理解运放内部工作原理。</div></div>
       ` },
       { id: 'ana-07', title: '集成运放基础', desc: '差动放大、电流源', icon: '🔬', tags: ['核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">集成运放的内部基石</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">集成运放是高增益<a href="#" onclick="navigateTo('ana-06');return false;" style="color:var(--primary)">直接耦合多级放大器</a>，内部由差动输入级 + 中间放大级 + 输出级 + 偏置电流源组成。差动放大解决零点漂移，电流源提供稳定偏置和高增益负载。集成运放是<a href="#" onclick="navigateTo('circ-11');return false;" style="color:var(--primary)">运放电路分析</a>和<a href="#" onclick="navigateTo('ana-09');return false;" style="color:var(--primary)">运放线性应用</a>的硬件基础。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">集成运放是高增益<a href="javascript:void(0)" onclick="App.loadDetail('ana-06')">直接耦合多级放大器</a>，内部由差动输入级 + 中间放大级 + 输出级 + 偏置电流源组成。差动放大解决零点漂移，电流源提供稳定偏置和高增益负载。集成运放是<a href="javascript:void(0)" onclick="App.loadDetail('circ-11')">运放电路分析</a>和<a href="javascript:void(0)" onclick="App.loadDetail('ana-09')">运放线性应用</a>的硬件基础。</p>
 
         <h4 class="font-medium mt-6 mb-2">集成运放内部结构</h4>
         <div class="formula-block">集成运放四级结构：<br>① 差动输入级（抑制零漂，高输入阻抗）<br>② 中间放大级（提供主要电压增益）<br>③ 输出级（低输出阻抗，带负载能力）<br>④ 偏置电流源（提供稳定工作电流）<div class="text-sm text-gray-500 mt-2">典型运放（如 LM741）：开环增益 $A_{od} \\approx 2 \\times 10^5$，输入阻抗 $R_{id} \\approx 2M\\Omega$，输出阻抗 $R_o \\approx 75\\Omega$</div></div>
@@ -2483,11 +2507,11 @@ const CourseData = {
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>实际运放的非理想特性</strong>：①输入失调电压 $V_{IO}$（典型 1~5mV）；②输入偏置电流 $I_B$（典型 nA~μA）；③有限开环增益；④有限带宽（增益带宽积恒定）。设计高精度电路时需考虑这些非理想因素。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('circ-11');return false;" style="color:var(--primary)">运放电路</a>的联系</strong>：理解运放内部结构，有助于理解"虚短虚断"的来源——差动输入级的高增益使两输入端电压差趋近于零（虚短），高输入阻抗使输入电流趋近于零（虚断）。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('circ-11')">运放电路</a>的联系</strong>：理解运放内部结构，有助于理解"虚短虚断"的来源——差动输入级的高增益使两输入端电压差趋近于零（虚短），高输入阻抗使输入电流趋近于零（虚断）。</div></div>
       ` },
       { id: 'ana-08', title: '反馈放大电路', desc: '四种组态、判别、性能影响', icon: '↩', tags: ['难点核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">反馈：改善放大器性能的核心手段</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">反馈是把输出量的一部分送回输入端。负反馈虽降低增益，但能提高增益稳定性、展宽频带、改善输入输出阻抗、减小非线性失真——几乎所有实用放大器都引入负反馈。反馈是<a href="#" onclick="navigateTo('ana-05');return false;" style="color:var(--primary)">工作点稳定</a>的推广，也是<a href="#" onclick="navigateTo('ana-09');return false;" style="color:var(--primary)">运放线性应用</a>的理论基础。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">反馈是把输出量的一部分送回输入端。负反馈虽降低增益，但能提高增益稳定性、展宽频带、改善输入输出阻抗、减小非线性失真——几乎所有实用放大器都引入负反馈。反馈是<a href="javascript:void(0)" onclick="App.loadDetail('ana-05')">工作点稳定</a>的推广，也是<a href="javascript:void(0)" onclick="App.loadDetail('ana-09')">运放线性应用</a>的理论基础。</p>
 
         <h4 class="font-medium mt-6 mb-2">反馈的基本概念</h4>
         <div class="formula-block">反馈放大器的基本关系：<br>开环增益 $A = \\frac{X_o}{X_i'}$（无反馈时的增益）<br>反馈系数 $F = \\frac{X_f}{X_o}$（反馈网络的传递函数）<br>闭环增益 $A_f = \\frac{A}{1+AF}$（有反馈时的增益）<div class="text-sm text-gray-500 mt-2">$1+AF$ 称为"反馈深度"，是负反馈的核心参数</div></div>
@@ -2509,11 +2533,11 @@ const CourseData = {
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>反馈极性判别（瞬时极性法）</strong>：假设输入端瞬时升高，沿信号通路标各点极性变化，看反馈到输入端是增强（正反馈）还是削弱（负反馈）原信号。四种组态判别：输出短路法判电压/电流反馈（反馈消失则为电压反馈），输入端看串联/并联。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('circ-11');return false;" style="color:var(--primary)">运放电路</a>的联系</strong>：运放的"虚短虚断"本质上是深度负反馈的结果——开环增益 $A \\to \\infty$ 时，$1+AF \\to \\infty$，$u_{be} \\to 0$（虚短）。理解反馈有助于理解运放电路的本质。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('circ-11')">运放电路</a>的联系</strong>：运放的"虚短虚断"本质上是深度负反馈的结果——开环增益 $A \\to \\infty$ 时，$1+AF \\to \\infty$，$u_{be} \\to 0$（虚短）。理解反馈有助于理解运放电路的本质。</div></div>
       ` },
       { id: 'ana-09', title: '运放线性应用', desc: '比例/求和/积分/微分', icon: '∓', tags: ['工程高频'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">运放线性应用：模拟计算的实现</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">运放接成<a href="#" onclick="navigateTo('ana-08');return false;" style="color:var(--primary)">负反馈</a>（线性区），配合不同外围元件可实现各种数学运算：比例（放大）、求和（加法）、积分、微分。这是模拟计算机的基础，也是信号处理的核心电路。分析只需 <a href="#" onclick="navigateTo('circ-11');return false;" style="color:var(--primary)">虚短虚断</a>。运放线性应用是<a href="#" onclick="navigateTo('ana-10');return false;" style="color:var(--primary)">运放非线性应用</a>和<a href="#" onclick="navigateTo('ana-11');return false;" style="color:var(--primary)">有源滤波器</a>的基础。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">运放接成<a href="javascript:void(0)" onclick="App.loadDetail('ana-08')">负反馈</a>（线性区），配合不同外围元件可实现各种数学运算：比例（放大）、求和（加法）、积分、微分。这是模拟计算机的基础，也是信号处理的核心电路。分析只需 <a href="javascript:void(0)" onclick="App.loadDetail('circ-11')">虚短虚断</a>。运放线性应用是<a href="javascript:void(0)" onclick="App.loadDetail('ana-10')">运放非线性应用</a>和<a href="javascript:void(0)" onclick="App.loadDetail('ana-11')">有源滤波器</a>的基础。</p>
 
         <h4 class="font-medium mt-6 mb-2">反相比例放大器</h4>
         <div class="formula-block">反相比例放大器：<br>输入信号经 $R_1$ 接反相端，$R_f$ 从输出到反相端，同相端接地<br>电压增益：$A_v = -\\frac{R_f}{R_1}$<br>输入电阻：$R_{in} = R_1$（反相端虚地）<div class="text-sm text-gray-500 mt-2">负号表示反相，增益由电阻比值决定，与运放参数无关</div></div>
@@ -2532,11 +2556,11 @@ const CourseData = {
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>实际运放的限制</strong>：①输出电压不超过电源电压（通常 $\\pm 13V$，$\\pm 15V$ 供电）；②输出电流有限（典型 20mA）；③带宽有限（增益带宽积恒定）。设计时需考虑这些实际限制。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('ana-11');return false;" style="color:var(--primary)">有源滤波器</a>的联系</strong>：运放 + RC 网络可构成有源滤波器（低通、高通、带通、带阻），比无源 RC 滤波器性能更好。积分器是开关电容滤波器和 sigma-delta ADC 的基础。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('ana-11')">有源滤波器</a>的联系</strong>：运放 + RC 网络可构成有源滤波器（低通、高通、带通、带阻），比无源 RC 滤波器性能更好。积分器是开关电容滤波器和 sigma-delta ADC 的基础。</div></div>
       ` },
       { id: 'ana-10', title: '运放非线性应用', desc: '比较器、施密特、波形发生', icon: '🔲', tags: ['工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">运放非线性应用：开环与正反馈</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">运放开环（无反馈）或正反馈时工作在非线性区（饱和），输出只有高/低两个电平。这构成比较器、施密特触发器、方波/三角波发生器——这些是 ADC 输入、电平检测、波形产生的核心。运放非线性应用与<a href="#" onclick="navigateTo('ana-09');return false;" style="color:var(--primary)">运放线性应用</a>形成对比——线性用负反馈，非线性用开环或正反馈。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">运放开环（无反馈）或正反馈时工作在非线性区（饱和），输出只有高/低两个电平。这构成比较器、施密特触发器、方波/三角波发生器——这些是 ADC 输入、电平检测、波形产生的核心。运放非线性应用与<a href="javascript:void(0)" onclick="App.loadDetail('ana-09')">运放线性应用</a>形成对比——线性用负反馈，非线性用开环或正反馈。</p>
 
         <h4 class="font-medium mt-6 mb-2">比较器：电平判决</h4>
         <div class="formula-block">过零比较器（开环）：<br>$u_i > 0$ → $u_o = +V_{sat}$（正饱和，约 $+V_{CC}-1V$）<br>$u_i < 0$ → $u_o = -V_{sat}$（负饱和，约 $-V_{EE}+1V$）<div class="text-sm text-gray-500 mt-2">输入电压与参考电压比较，输出高/低电平</div></div>
@@ -2554,15 +2578,15 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">设计施密特触发器：$V_{sat}=13V$，要求 $U_{T+}=3V$，$U_{T-}=-3V$。求 $R_1$ 和 $R_2$。</p>
         <div class="step-list"><div class="step-item"><div><strong>第一步：列方程</strong>。$U_{T+}=\\frac{R_2}{R_1+R_2} V_{sat}=3V$</div></div><div class="step-item"><div><strong>第二步：求比值</strong>。$\\frac{R_2}{R_1+R_2}=\\frac{3}{13}$，$R_1:R_2=10:3$</div></div><div class="step-item"><div><strong>第三步：选电阻</strong>。选 $R_2=3k\\Omega$，$R_1=10k\\Omega$</div></div><div class="step-item"><div><strong>第四步：验证</strong>。$U_{T+}=\\frac{3k}{13k} \\times 13=3V$ ✓，$U_{T-}=-3V$ ✓，滞回电压 $\\Delta U=6V$</div></div></div>
 
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>施密特的滞回价值</strong>：普通比较器在阈值附近受噪声干扰会频繁翻转。施密特触发器用正反馈产生两个阈值（上升阈值 $U_{T+}$、下降阈值 $U_{T-}$），信号在两阈值之间时输出不翻转，有效抗干扰。这是 <a href="#" onclick="navigateTo('dig-11');return false;" style="color:var(--primary)">555 定时器</a> 施密特模式的基础。</div></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>施密特的滞回价值</strong>：普通比较器在阈值附近受噪声干扰会频繁翻转。施密特触发器用正反馈产生两个阈值（上升阈值 $U_{T+}$、下降阈值 $U_{T-}$），信号在两阈值之间时输出不翻转，有效抗干扰。这是 <a href="javascript:void(0)" onclick="App.loadDetail('dig-11')">555 定时器</a> 施密特模式的基础。</div></div>
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>比较器 vs 运放</strong>：专用比较器（如 LM311）响应速度快（ns 级），输出电平与数字电路兼容。运放作比较器时响应慢（μs 级），但成本低。高速应用应选专用比较器。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-06');return false;" style="color:var(--primary)">数字电路</a>的联系</strong>：施密特触发器是模拟到数字的桥梁——将缓慢变化的模拟信号整形为边沿陡峭的数字信号。在<a href="#" onclick="navigateTo('dig-11');return false;" style="color:var(--primary)">555 定时器</a>和 ADC 输入电路中广泛应用。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('dig-06')">数字电路</a>的联系</strong>：施密特触发器是模拟到数字的桥梁——将缓慢变化的模拟信号整形为边沿陡峭的数字信号。在<a href="javascript:void(0)" onclick="App.loadDetail('dig-11')">555 定时器</a>和 ADC 输入电路中广泛应用。</div></div>
       ` },
       { id: 'ana-11', title: '有源滤波器', desc: 'LPF/HPF/BPF/BEF、Sallen-Key', icon: '🎚', tags: ['工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">有源滤波器：运放+RC 的高阶滤波</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">无源 RC 滤波器（<a href="#" onclick="navigateTo('circ-07');return false;" style="color:var(--primary)">频率响应</a>）衰减特性差（-20dB/dec）且带负载能力弱。有源滤波器用<a href="#" onclick="navigateTo('ana-09');return false;" style="color:var(--primary)">运放</a>提供增益和隔离，可实现高阶（陡峭衰减）且不衰减通带信号。有源滤波器是<a href="#" onclick="navigateTo('circ-08');return false;" style="color:var(--primary)">谐振电路</a>的高级形式。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">无源 RC 滤波器（<a href="javascript:void(0)" onclick="App.loadDetail('circ-07')">频率响应</a>）衰减特性差（-20dB/dec）且带负载能力弱。有源滤波器用<a href="javascript:void(0)" onclick="App.loadDetail('ana-09')">运放</a>提供增益和隔离，可实现高阶（陡峭衰减）且不衰减通带信号。有源滤波器是<a href="javascript:void(0)" onclick="App.loadDetail('circ-08')">谐振电路</a>的高级形式。</p>
 
         <h4 class="font-medium mt-6 mb-2">四种基本滤波器</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>功能</th><th>通带</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">LPF 低通</td><td>通过低频，抑制高频</td><td>$f < f_c$</td><td>抗混叠、平滑滤波</td></tr><tr><td class="font-medium">HPF 高通</td><td>通过高频，抑制低频</td><td>$f > f_c$</td><td>去除直流偏移</td></tr><tr><td class="font-medium">BPF 带通</td><td>通过某频段</td><td>$f_L < f < f_H$</td><td>选频接收、无线通信</td></tr><tr><td class="font-medium">BEF 带阻</td><td>抑制某频段</td><td>$f < f_L$ 或 $f > f_H$</td><td>滤除 50Hz 工频干扰</td></tr></tbody></table></div>
@@ -2588,7 +2612,7 @@ const CourseData = {
       ` },
       { id: 'ana-12', title: '功率放大器', desc: '甲/乙/甲乙类、OTL/OCL', icon: '🔋', tags: ['高频'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">功率放大器：效率与失真的权衡</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">功率放大器关注<strong>能量转换效率</strong>和<strong>最大输出功率</strong>，而非电压增益。根据<a href="#" onclick="navigateTo('ana-03');return false;" style="color:var(--primary)">晶体管</a>导通角分为甲类、乙类、甲乙类——效率越高非线性失真越大，工程中用甲乙类（互补对称）平衡两者。功率放大器是<a href="#" onclick="navigateTo('ana-04');return false;" style="color:var(--primary)">基本放大电路</a>在大信号下的特殊形式。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">功率放大器关注<strong>能量转换效率</strong>和<strong>最大输出功率</strong>，而非电压增益。根据<a href="javascript:void(0)" onclick="App.loadDetail('ana-03')">晶体管</a>导通角分为甲类、乙类、甲乙类——效率越高非线性失真越大，工程中用甲乙类（互补对称）平衡两者。功率放大器是<a href="javascript:void(0)" onclick="App.loadDetail('ana-04')">基本放大电路</a>在大信号下的特殊形式。</p>
 
         <h4 class="font-medium mt-6 mb-2">三种工作类别</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>导通角</th><th>最大效率</th><th>失真</th><th>静态功耗</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">甲类</td><td>360°（全周期）</td><td>25%~50%</td><td>最小</td><td>大</td><td>小信号前置放大</td></tr><tr><td class="font-medium">乙类</td><td>180°（半周期）</td><td>78.5%</td><td>交越失真</td><td>零</td><td>（实际少用）</td></tr><tr><td class="font-medium">甲乙类</td><td>>180°</td><td>接近乙类</td><td>小</td><td>小</td><td>音频功放（最常用）</td></tr></tbody></table></div>
@@ -2611,10 +2635,10 @@ const CourseData = {
       ` },
       { id: 'ana-13', title: '直流稳压电源', desc: '整流→滤波→稳压→LDO/开关电源', icon: '🔌', tags: ['工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">直流稳压电源：系统的能量来源</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">几乎所有电子系统都需要稳定的直流电源。直流稳压电源由<a href="#" onclick="navigateTo('ana-02');return false;" style="color:var(--primary)">整流滤波</a>和稳压两部分组成。线性稳压电源（LDO）简单低噪但效率低，开关电源（SMPS）效率高但有纹波。理解两者的原理和选型，是硬件设计的基础。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">几乎所有电子系统都需要稳定的直流电源。直流稳压电源由<a href="javascript:void(0)" onclick="App.loadDetail('ana-02')">整流滤波</a>和稳压两部分组成。线性稳压电源（LDO）简单低噪但效率低，开关电源（SMPS）效率高但有纹波。理解两者的原理和选型，是硬件设计的基础。</p>
 
         <h4 class="font-medium mt-6 mb-2">直流电源的组成</h4>
-        <div class="step-list"><div class="step-item"><div><strong>① 变压</strong>：工频变压器把 220V 降到低压交流（或直接用开关电源高频变压器）。</div></div><div class="step-item"><div><strong>② 整流</strong>：桥式整流把交流变脉动直流（<a href="#" onclick="navigateTo('ana-02');return false;" style="color:var(--primary)">整流滤波</a>）。</div></div><div class="step-item"><div><strong>③ 滤波</strong>：大电容平滑脉动，得到带纹波的直流。</div></div><div class="step-item"><div><strong>④ 稳压</strong>：稳压管/线性稳压器（LDO）/开关电源（SMPS）输出稳定直流。</div></div></div>
+        <div class="step-list"><div class="step-item"><div><strong>① 变压</strong>：工频变压器把 220V 降到低压交流（或直接用开关电源高频变压器）。</div></div><div class="step-item"><div><strong>② 整流</strong>：桥式整流把交流变脉动直流（<a href="javascript:void(0)" onclick="App.loadDetail('ana-02')">整流滤波</a>）。</div></div><div class="step-item"><div><strong>③ 滤波</strong>：大电容平滑脉动，得到带纹波的直流。</div></div><div class="step-item"><div><strong>④ 稳压</strong>：稳压管/线性稳压器（LDO）/开关电源（SMPS）输出稳定直流。</div></div></div>
 
         <h4 class="font-medium mt-6 mb-2">线性稳压器（LDO）</h4>
         <div class="formula-block">LDO 工作原理：调整管工作在线性区，通过负反馈稳定输出<br>输出电压：$V_o = V_{ref} \\cdot (1 + \\frac{R_1}{R_2})$<br>效率：$\\eta = \\frac{V_o}{V_i} \\times 100\\%$（压差越大效率越低）<div class="text-sm text-gray-500 mt-2">压差 $V_i - V_o$ 必须大于最小压差 $V_{DO}$（典型 0.3~1V）</div></div>
@@ -2637,7 +2661,7 @@ const CourseData = {
       ` },
       { id: 'ana-14', title: '振荡电路', desc: 'RC 文氏桥、LC、晶体振荡器', icon: '📡', tags: ['高频'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">振荡电路：自激产生周期信号</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">振荡器不需要外部输入，自激产生周期信号（正弦波、方波）。它是时钟、载波、信号源的核心。振荡电路建立在<a href="#" onclick="navigateTo('circ-08');return false;" style="color:var(--primary)">谐振电路</a>和<a href="#" onclick="navigateTo('ana-08');return false;" style="color:var(--primary)">正反馈</a>基础上。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">振荡器不需要外部输入，自激产生周期信号（正弦波、方波）。它是时钟、载波、信号源的核心。振荡电路建立在<a href="javascript:void(0)" onclick="App.loadDetail('circ-08')">谐振电路</a>和<a href="javascript:void(0)" onclick="App.loadDetail('ana-08')">正反馈</a>基础上。</p>
 
         <h4 class="font-medium mt-6 mb-2">巴克豪森判据（振荡条件）</h4>
         <div class="formula-block"><strong>振荡的两个必要条件</strong>：<br>① 相位条件：环路相移 $\\angle A\\beta = 2n\\pi$（正反馈，$n$ 为整数）<br>② 幅度条件：环路增益 $|A\\beta| \\ge 1$（起振时 >1，稳态 =1）<div class="text-sm text-gray-500 mt-2">$A$ 为放大器增益，$\\beta$ 为反馈系数，必须同时满足两个条件才能振荡</div></div>
@@ -2662,7 +2686,7 @@ const CourseData = {
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>起振与稳幅</strong>：起振时 $|A\\beta|>1$，振幅逐渐增大；稳态时 $|A\\beta|=1$，振幅恒定。实际电路需加稳幅措施（如热敏电阻、二极管限幅、AGC），防止增益过大导致波形失真。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('ana-10');return false;" style="color:var(--primary)">运放非线性应用</a>的联系</strong>：方波/三角波发生器也是振荡器，但输出非正弦。正弦波振荡器需要选频网络（RC/LC/晶体）来保证单一频率振荡。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('ana-10')">运放非线性应用</a>的联系</strong>：方波/三角波发生器也是振荡器，但输出非正弦。正弦波振荡器需要选频网络（RC/LC/晶体）来保证单一频率振荡。</div></div>
       ` },
     ]
   },
@@ -2675,7 +2699,7 @@ const CourseData = {
     sections: [
       { id: 'dig-01', title: '数制与编码', desc: '二进制/BCD/格雷码/原码补码', icon: '0️⃣', tags: ['基础'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">数制与编码：数字世界的语言</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">数字电路用二进制处理信息。掌握各数制转换、有符号数表示（原码/反码/补码）、BCD 码和格雷码，是理解数字系统和计算机运算的基础。数制编码是<a href="#" onclick="navigateTo('dig-02');return false;" style="color:var(--primary)">逻辑代数</a>和<a href="#" onclick="navigateTo('dig-03');return false;" style="color:var(--primary)">组合逻辑电路</a>的基础。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">数字电路用二进制处理信息。掌握各数制转换、有符号数表示（原码/反码/补码）、BCD 码和格雷码，是理解数字系统和计算机运算的基础。数制编码是<a href="javascript:void(0)" onclick="App.loadDetail('dig-02')">逻辑代数</a>和<a href="javascript:void(0)" onclick="App.loadDetail('dig-03')">组合逻辑电路</a>的基础。</p>
 
         <h4 class="font-medium mt-6 mb-2">常用数制</h4>
         <div class="formula-block">四种常用数制：<br>二进制（基 2）：0, 1（数字电路的基础）<br>八进制（基 8）：0~7（3 位二进制一组）<br>十进制（基 10）：0~9（人类习惯）<br>十六进制（基 16）：0~9, A~F（4 位二进制一组）<div class="text-sm text-gray-500 mt-2">数字电路内部用二进制，但显示和编程常用十六进制</div></div>
@@ -2697,11 +2721,11 @@ const CourseData = {
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>溢出判断</strong>：两个正数相加结果为负，或两个负数相加结果为正，说明溢出。判断方法：最高位进位 $\\oplus$ 次高位进位 $= 1$ 则溢出。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-05');return false;" style="color:var(--primary)">加法器</a>的联系</strong>：补码运算的硬件实现就是<a href="#" onclick="navigateTo('dig-05');return false;" style="color:var(--primary)">加法器</a>——减法通过求补后相加实现。理解数制编码有助于理解计算机运算原理。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('dig-05')">加法器</a>的联系</strong>：补码运算的硬件实现就是<a href="javascript:void(0)" onclick="App.loadDetail('dig-05')">加法器</a>——减法通过求补后相加实现。理解数制编码有助于理解计算机运算原理。</div></div>
       ` },
       { id: 'dig-02', title: '逻辑代数基础', desc: '公式法、卡诺图化简', icon: '∧∨', tags: ['核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">逻辑代数与卡诺图化简</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">逻辑代数是分析和设计数字电路的数学工具。卡诺图是化简逻辑函数最直观的方法，能把复杂的布尔表达式化为最简"与或式"，减少门电路数量。逻辑代数是<a href="#" onclick="navigateTo('dig-03');return false;" style="color:var(--primary)">组合逻辑电路</a>设计的基础。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">逻辑代数是分析和设计数字电路的数学工具。卡诺图是化简逻辑函数最直观的方法，能把复杂的布尔表达式化为最简"与或式"，减少门电路数量。逻辑代数是<a href="javascript:void(0)" onclick="App.loadDetail('dig-03')">组合逻辑电路</a>设计的基础。</p>
 
         <h4 class="font-medium mt-6 mb-2">基本逻辑运算</h4>
         <div class="formula-block">三种基本运算：<br>与（AND）：$Y = A \\cdot B$（全 1 出 1）<br>或（OR）：$Y = A + B$（有 1 出 1）<br>非（NOT）：$Y = \\bar{A}$（取反）<div class="text-sm text-gray-500 mt-2">任何逻辑函数都可用这三种运算组合实现</div></div>
@@ -2726,17 +2750,17 @@ const CourseData = {
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>最简的标准</strong>：最简与或式 = 乘积项最少 + 每个乘积项变量最少。卡诺图保证得到最简结果，但变量超过 5 个时卡诺图变复杂，宜用公式法或计算机辅助。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-04');return false;" style="color:var(--primary)">译码器</a>的联系</strong>：卡诺图化简的结果直接对应门电路实现。最小项可用<a href="#" onclick="navigateTo('dig-04');return false;" style="color:var(--primary)">译码器</a>+或门实现，这是组合逻辑设计的两种方法之一。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('dig-04')">译码器</a>的联系</strong>：卡诺图化简的结果直接对应门电路实现。最小项可用<a href="javascript:void(0)" onclick="App.loadDetail('dig-04')">译码器</a>+或门实现，这是组合逻辑设计的两种方法之一。</div></div>
       ` },
       { id: 'dig-03', title: '组合逻辑电路', desc: '分析步骤、设计方法', icon: '🔀', tags: ['核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">组合逻辑：无记忆的逻辑电路</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">组合逻辑电路的输出仅取决于当前输入（无记忆）。分析是"从电路到功能"，设计是"从功能到电路"。掌握这两套流程，就能处理任意组合逻辑问题。组合逻辑建立在<a href="#" onclick="navigateTo('dig-02');return false;" style="color:var(--primary)">逻辑代数</a>基础上，是<a href="#" onclick="navigateTo('dig-04');return false;" style="color:var(--primary)">编码器/译码器/选择器</a>等中规模芯片的理论基础。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">组合逻辑电路的输出仅取决于当前输入（无记忆）。分析是"从电路到功能"，设计是"从功能到电路"。掌握这两套流程，就能处理任意组合逻辑问题。组合逻辑建立在<a href="javascript:void(0)" onclick="App.loadDetail('dig-02')">逻辑代数</a>基础上，是<a href="javascript:void(0)" onclick="App.loadDetail('dig-04')">编码器/译码器/选择器</a>等中规模芯片的理论基础。</p>
 
         <h4 class="font-medium mt-6 mb-2">组合逻辑的定义</h4>
         <div class="formula-block">组合逻辑电路特征：<br>输出 $Y_i = f(X_1, X_2, \\cdots, X_n)$（仅取决于当前输入）<br>无记忆（无反馈、无存储元件）<br>任意时刻输出可由输入唯一确定<div class="text-sm text-gray-500 mt-2">与时序逻辑的区别：时序逻辑有记忆，输出还取决于之前的状态</div></div>
 
         <h4 class="font-medium mt-6 mb-2">分析步骤（从电路到功能）</h4>
-        <div class="step-list"><div class="step-item"><div><strong>第一步：写表达式</strong>。从输入到输出，逐级写各门电路的逻辑表达式。</div></div><div class="step-item"><div><strong>第二步：化简</strong>。用<a href="#" onclick="navigateTo('dig-02');return false;" style="color:var(--primary)">公式法或卡诺图</a>化简表达式。</div></div><div class="step-item"><div><strong>第三步：列真值表</strong>。根据化简后的表达式，列出所有输入组合对应的输出。</div></div><div class="step-item"><div><strong>第四步：描述功能</strong>。用文字描述电路的功能（如"判奇电路"、"多数表决器"）。</div></div></div>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：写表达式</strong>。从输入到输出，逐级写各门电路的逻辑表达式。</div></div><div class="step-item"><div><strong>第二步：化简</strong>。用<a href="javascript:void(0)" onclick="App.loadDetail('dig-02')">公式法或卡诺图</a>化简表达式。</div></div><div class="step-item"><div><strong>第三步：列真值表</strong>。根据化简后的表达式，列出所有输入组合对应的输出。</div></div><div class="step-item"><div><strong>第四步：描述功能</strong>。用文字描述电路的功能（如"判奇电路"、"多数表决器"）。</div></div></div>
 
         <h4 class="font-medium mt-6 mb-2">设计步骤（从功能到电路）</h4>
         <div class="step-list"><div class="step-item"><div><strong>第一步：逻辑抽象</strong>。确定输入变量和输出函数，明确功能要求。</div></div><div class="step-item"><div><strong>第二步：列真值表</strong>。列出所有输入组合对应的输出值。</div></div><div class="step-item"><div><strong>第三步：写表达式</strong>。从真值表写最小项表达式，用卡诺图化简。</div></div><div class="step-item"><div><strong>第四步：画逻辑图</strong>。根据化简后的表达式，用门电路实现。</div></div></div>
@@ -2750,13 +2774,13 @@ const CourseData = {
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与非门万能</strong>：任何组合逻辑都可用与非门实现——先写与或式，再用德摩根定律转为与非-与非形式。实际芯片（如 74LS00 四 2 输入与非门）就是基于这个原理。</div></div>
 
-        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>竞争冒险</strong>：组合逻辑中，由于门电路延迟，输入变化时输出可能出现短暂毛刺。消除方法：①加冗余项；②加滤波电容；③用<a href="#" onclick="navigateTo('dig-06');return false;" style="color:var(--primary)">选通脉冲</a>。详见<a href="#" onclick="navigateTo('dig-06');return false;" style="color:var(--primary)">竞争冒险</a>。</div></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>竞争冒险</strong>：组合逻辑中，由于门电路延迟，输入变化时输出可能出现短暂毛刺。消除方法：①加冗余项；②加滤波电容；③用<a href="javascript:void(0)" onclick="App.loadDetail('dig-06')">选通脉冲</a>。详见<a href="javascript:void(0)" onclick="App.loadDetail('dig-06')">竞争冒险</a>。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-07');return false;" style="color:var(--primary)">时序逻辑</a>的区别</strong>：组合逻辑无记忆，输出仅取决于当前输入；时序逻辑有记忆（触发器），输出还取决于之前的状态。组合逻辑是时序逻辑的子模块。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('dig-07')">时序逻辑</a>的区别</strong>：组合逻辑无记忆，输出仅取决于当前输入；时序逻辑有记忆（触发器），输出还取决于之前的状态。组合逻辑是时序逻辑的子模块。</div></div>
       ` },
       { id: 'dig-04', title: '编码器/译码器/选择器', desc: '常用组合芯片及其应用', icon: '▦', tags: ['高频'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">中规模组合逻辑芯片</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">编码器、译码器、数据选择器是集成化的<a href="#" onclick="navigateTo('dig-03');return false;" style="color:var(--primary)">组合逻辑</a>器件，用少量芯片实现复杂功能。译码器实现地址译码，选择器实现多路复用，是数字系统的核心元件。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">编码器、译码器、数据选择器是集成化的<a href="javascript:void(0)" onclick="App.loadDetail('dig-03')">组合逻辑</a>器件，用少量芯片实现复杂功能。译码器实现地址译码，选择器实现多路复用，是数字系统的核心元件。</p>
 
         <h4 class="font-medium mt-6 mb-2">四种常用芯片</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>器件</th><th>功能</th><th>典型芯片</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">编码器</td><td>多输入→二进制编码</td><td>74LS148（8-3 线优先）</td><td>键盘、中断请求</td></tr><tr><td class="font-medium">译码器</td><td>二进制→多输出（最小项）</td><td>74LS138（3-8 线）</td><td>地址译码、实现逻辑函数</td></tr><tr><td class="font-medium">数据选择器</td><td>多路输入→1 路输出</td><td>74LS151（8 选 1）</td><td>数据切换、实现逻辑函数</td></tr><tr><td class="font-medium">数据分配器</td><td>1 路输入→多路输出</td><td>译码器反用</td><td>数据分发</td></tr></tbody></table></div>
@@ -2775,11 +2799,11 @@ const CourseData = {
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>低有效输出</strong>：74LS138 输出低有效（$Y_i = \\bar{m_i}$），所以用与非门（不是或门）来实现最小项之和。这是初学者常犯的错误。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-09');return false;" style="color:var(--primary)">计数器</a>的联系</strong>：译码器常与计数器配合——计数器产生地址，译码器产生时序控制信号（如 LED 扫描、数码管动态显示）。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('dig-09')">计数器</a>的联系</strong>：译码器常与计数器配合——计数器产生地址，译码器产生时序控制信号（如 LED 扫描、数码管动态显示）。</div></div>
       ` },
       { id: 'dig-05', title: '加法器与比较器', desc: '半加/全加、数值比较', icon: '➕', tags: ['基础'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">算术运算电路</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">加法器是算术逻辑单元（ALU）的核心，是<a href="#" onclick="navigateTo('dig-01');return false;" style="color:var(--primary)">补码运算</a>的硬件实现。半加器处理两个 1 位相加，全加器考虑低位进位，多位级联构成多位加法器。数值比较器比较两数大小。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">加法器是算术逻辑单元（ALU）的核心，是<a href="javascript:void(0)" onclick="App.loadDetail('dig-01')">补码运算</a>的硬件实现。半加器处理两个 1 位相加，全加器考虑低位进位，多位级联构成多位加法器。数值比较器比较两数大小。</p>
 
         <h4 class="font-medium mt-6 mb-2">半加器与全加器</h4>
         <div class="formula-block">半加器（不考虑进位输入）：<br>$S = A \\oplus B$（和）<br>$C_{out} = AB$（进位）<br><br>全加器（考虑进位输入）：<br>$S = A \\oplus B \\oplus C_{in}$（和）<br>$C_{out} = AB + BC_{in} + AC_{in}$（进位）<div class="text-sm text-gray-500 mt-2">全加器 = 两个半加器 + 一个或门</div></div>
@@ -2797,7 +2821,7 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">用 74LS283（4 位超前进位加法器）计算 $1011 + 0110 = ?$</p>
         <div class="step-list"><div class="step-item"><div><strong>第一步：接线</strong>。$A_3A_2A_1A_0 = 1011$，$B_3B_2B_1B_0 = 0110$，$C_0 = 0$</div></div><div class="step-item"><div><strong>第二步：逐位计算</strong>。$S_0=1\\oplus0\\oplus0=1$，$S_1=1\\oplus1\\oplus0=0$，$C_1=1$；$S_2=0\\oplus1\\oplus1=0$，$C_2=1$；$S_3=1\\oplus0\\oplus1=0$，$C_3=1$</div></div><div class="step-item"><div><strong>第三步：结果</strong>。$C_3S_3S_2S_1S_0 = 10001 = (17)_{10}$</div></div><div class="step-item"><div><strong>第四步：验证</strong>。$(1011)_2 = 11$，$(0110)_2 = 6$，$11+6=17$ ✓</div></div></div>
 
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>加法器实现减法</strong>：减法通过补码加法实现——$A-B = A + \\bar{B} + 1$。硬件上，将 B 取反（异或门），进位置 1，用加法器求和。这就是<a href="#" onclick="navigateTo('dig-01');return false;" style="color:var(--primary)">补码</a>的工程实现。</div></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>加法器实现减法</strong>：减法通过补码加法实现——$A-B = A + \\bar{B} + 1$。硬件上，将 B 取反（异或门），进位置 1，用加法器求和。这就是<a href="javascript:void(0)" onclick="App.loadDetail('dig-01')">补码</a>的工程实现。</div></div>
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>溢出检测</strong>：有符号加法中，两个正数相加得负数（或反之）表示溢出。检测方法：$V = C_{n-1} \\oplus C_{n-2}$（最高位进位与次高位进位异或）。</div></div>
 
@@ -2805,7 +2829,7 @@ const CourseData = {
       ` },
       { id: 'dig-06', title: '竞争冒险', desc: '产生原因、消除方法', icon: '⚠', tags: ['基础'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">竞争冒险：信号到达时间差导致的毛刺</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">信号经不同路径到达门电路输入端有时间差（竞争），可能导致输出瞬间出现不该有的脉冲（冒险/毛刺）。虽然<a href="#" onclick="navigateTo('dig-03');return false;" style="color:var(--primary)">组合逻辑</a>最终输出正确，但毛刺可能误触发后续<a href="#" onclick="navigateTo('dig-07');return false;" style="color:var(--primary)">时序电路</a>。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">信号经不同路径到达门电路输入端有时间差（竞争），可能导致输出瞬间出现不该有的脉冲（冒险/毛刺）。虽然<a href="javascript:void(0)" onclick="App.loadDetail('dig-03')">组合逻辑</a>最终输出正确，但毛刺可能误触发后续<a href="javascript:void(0)" onclick="App.loadDetail('dig-07')">时序电路</a>。</p>
 
         <h4 class="font-medium mt-6 mb-2">竞争与冒险的定义</h4>
         <div class="formula-block">竞争：信号经不同路径到达同一门电路输入端有时间差<br>冒险：竞争导致输出出现不该有的毛刺脉冲<br>静态冒险：输入变化一次，输出应不变但出现毛刺<br>动态冒险：输入变化一次，输出应变化一次但出现多次<div class="text-sm text-gray-500 mt-2">冒险是组合逻辑电路的固有问题，必须妥善处理</div></div>
@@ -2822,13 +2846,13 @@ const CourseData = {
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>同步设计消除冒险</strong>：现代数字系统几乎都用同步设计——所有触发器共用时钟，只在时钟边沿采样输入。毛刺在时钟边沿之间出现，被触发器自动滤除。这是消除冒险最可靠的方法。</div></div>
 
-        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>判别与消除</strong>：代数法判别——若表达式在某种取值下可化成 $A+\\bar{A}$ 或 $A\\cdot\\bar{A}$ 形式，则可能冒险。消除方法：①增加冗余项（卡诺图加冗余圈）；②引入选通脉冲（等信号稳定后采样）；③用 <a href="#" onclick="navigateTo('dig-07');return false;" style="color:var(--primary)">触发器</a> 同步（时钟边沿采样消除毛刺）。</div></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>判别与消除</strong>：代数法判别——若表达式在某种取值下可化成 $A+\\bar{A}$ 或 $A\\cdot\\bar{A}$ 形式，则可能冒险。消除方法：①增加冗余项（卡诺图加冗余圈）；②引入选通脉冲（等信号稳定后采样）；③用 <a href="javascript:void(0)" onclick="App.loadDetail('dig-07')">触发器</a> 同步（时钟边沿采样消除毛刺）。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-07');return false;" style="color:var(--primary)">时序电路</a>的联系</strong>：冒险问题促使我们使用同步时序设计——用触发器在时钟边沿采样，自动滤除毛刺。这是现代数字系统设计的基本原则。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('dig-07')">时序电路</a>的联系</strong>：冒险问题促使我们使用同步时序设计——用触发器在时钟边沿采样，自动滤除毛刺。这是现代数字系统设计的基本原则。</div></div>
       ` },
       { id: 'dig-07', title: '锁存器与触发器', desc: 'RS/D/JK/T 触发器', icon: '🔒', tags: ['核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">触发器：数字系统的记忆单元</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">触发器是存储 1 位二进制信息的基本单元，是<a href="#" onclick="navigateTo('dig-08');return false;" style="color:var(--primary)">时序逻辑电路</a>的基础。锁存器电平触发（透明），触发器边沿触发（更可靠）。掌握各类触发器的功能表和激励表是分析时序电路的前提。触发器解决了<a href="#" onclick="navigateTo('dig-06');return false;" style="color:var(--primary)">竞争冒险</a>中的毛刺问题。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">触发器是存储 1 位二进制信息的基本单元，是<a href="javascript:void(0)" onclick="App.loadDetail('dig-08')">时序逻辑电路</a>的基础。锁存器电平触发（透明），触发器边沿触发（更可靠）。掌握各类触发器的功能表和激励表是分析时序电路的前提。触发器解决了<a href="javascript:void(0)" onclick="App.loadDetail('dig-06')">竞争冒险</a>中的毛刺问题。</p>
 
         <h4 class="font-medium mt-6 mb-2">锁存器 vs 触发器</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>触发方式</th><th>特点</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">锁存器</td><td>电平触发</td><td>CLK 有效期间输出跟随输入（透明）</td><td>数据暂存</td></tr><tr><td class="font-medium">触发器</td><td>边沿触发</td><td>只在 CLK 边沿采样，其余保持</td><td>同步时序设计（首选）</td></tr></tbody></table></div>
@@ -2846,11 +2870,11 @@ const CourseData = {
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>建立时间和保持时间</strong>：触发器要求输入信号在时钟边沿前后保持稳定——建立时间 $t_{su}$（边沿前）和保持时间 $t_h$（边沿后）。违反会导致亚稳态（输出不确定）。这是高速数字设计的关键参数。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-09');return false;" style="color:var(--primary)">计数器</a>的联系</strong>：T 触发器（翻转/保持）是计数器的基本单元——每来一个时钟翻转一次，实现二分频。n 个 T 触发器级联构成 $2^n$ 进制计数器。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('dig-09')">计数器</a>的联系</strong>：T 触发器（翻转/保持）是计数器的基本单元——每来一个时钟翻转一次，实现二分频。n 个 T 触发器级联构成 $2^n$ 进制计数器。</div></div>
       ` },
       { id: 'dig-08', title: '时序逻辑电路分析', desc: '状态方程/状态图/状态表', icon: '🔄', tags: ['核心难点'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">时序逻辑：有记忆的电路</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">时序电路的输出不仅取决于当前输入，还取决于电路当前状态（历史）。分析时序电路的三要素：驱动方程（<a href="#" onclick="navigateTo('dig-07');return false;" style="color:var(--primary)">触发器</a>输入）、状态方程（次态）、输出方程。用状态图/状态表直观描述状态转换。时序电路是<a href="#" onclick="navigateTo('dig-09');return false;" style="color:var(--primary)">计数器</a>和<a href="#" onclick="navigateTo('dig-10');return false;" style="color:var(--primary)">移位寄存器</a>的理论基础。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">时序电路的输出不仅取决于当前输入，还取决于电路当前状态（历史）。分析时序电路的三要素：驱动方程（<a href="javascript:void(0)" onclick="App.loadDetail('dig-07')">触发器</a>输入）、状态方程（次态）、输出方程。用状态图/状态表直观描述状态转换。时序电路是<a href="javascript:void(0)" onclick="App.loadDetail('dig-09')">计数器</a>和<a href="javascript:void(0)" onclick="App.loadDetail('dig-10')">移位寄存器</a>的理论基础。</p>
 
         <h4 class="font-medium mt-6 mb-2">时序电路的组成</h4>
         <div class="formula-block">时序电路 = 组合逻辑 + 存储元件（触发器）<br>输入 $X$ → 组合逻辑 → 输出 $Z$<br>         ↑                    ↓<br>      状态 $Q$ ← 触发器 ← 次态 $Q^{n+1}$<div class="text-sm text-gray-500 mt-2">输出取决于输入和当前状态，状态在时钟边沿更新</div></div>
@@ -2872,11 +2896,11 @@ const CourseData = {
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>同步 vs 异步</strong>：同步时序电路所有触发器共享同一时钟（同时翻转），设计简单、速度快；异步时序电路各触发器时钟不同（输出互为时钟），省器件但分析复杂、易出毛刺。现代数字系统几乎都用同步设计。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-03');return false;" style="color:var(--primary)">组合逻辑</a>的区别</strong>：组合逻辑无记忆，输出仅取决于当前输入；时序逻辑有记忆（触发器），输出还取决于之前的状态。组合逻辑是时序逻辑的子模块。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('dig-03')">组合逻辑</a>的区别</strong>：组合逻辑无记忆，输出仅取决于当前输入；时序逻辑有记忆（触发器），输出还取决于之前的状态。组合逻辑是时序逻辑的子模块。</div></div>
       ` },
       { id: 'dig-09', title: '计数器', desc: '异步/同步、任意进制设计', icon: '🔢', tags: ['高频'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">计数器：分频与定时的核心</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">计数器是统计时钟脉冲个数的<a href="#" onclick="navigateTo('dig-08');return false;" style="color:var(--primary)">时序电路</a>，用于分频、定时、事件计数。用集成计数器（74LS161/160 等）加反馈可实现任意进制计数，是工程中最常用的时序器件。计数器是<a href="#" onclick="navigateTo('dig-11');return false;" style="color:var(--primary)">555 定时器</a>应用的基础。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">计数器是统计时钟脉冲个数的<a href="javascript:void(0)" onclick="App.loadDetail('dig-08')">时序电路</a>，用于分频、定时、事件计数。用集成计数器（74LS161/160 等）加反馈可实现任意进制计数，是工程中最常用的时序器件。计数器是<a href="javascript:void(0)" onclick="App.loadDetail('dig-11')">555 定时器</a>应用的基础。</p>
 
         <h4 class="font-medium mt-6 mb-2">计数器分类</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>特点</th><th>典型芯片</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">异步计数器</td><td>逐级进位（行波），简单但慢</td><td>74LS90（十进制）</td><td>低速分频</td></tr><tr><td class="font-medium">同步计数器</td><td>所有触发器同时钟，快且无毛刺</td><td>74LS161（4 位二进制）</td><td>高速计数</td></tr><tr><td class="font-medium">十进制计数器</td><td>BCD 码输出（0~9 循环）</td><td>74LS160</td><td>数码管显示</td></tr></tbody></table></div>
@@ -2895,11 +2919,11 @@ const CourseData = {
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>清零法的毛刺</strong>：异步清零法中，清零信号持续时间极短（几个门延迟），可能产生毛刺。工程中推荐用同步置数法，或在清零信号后加锁存器。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-04');return false;" style="color:var(--primary)">译码器</a>的配合</strong>：计数器产生地址，译码器产生时序控制信号——如 LED 扫描显示、数码管动态显示、波形发生器等。这是数字系统中常见的组合。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('dig-04')">译码器</a>的配合</strong>：计数器产生地址，译码器产生时序控制信号——如 LED 扫描显示、数码管动态显示、波形发生器等。这是数字系统中常见的组合。</div></div>
       ` },
       { id: 'dig-10', title: '移位寄存器', desc: '移位、环形/扭环形计数器', icon: '➡➡', tags: ['基础'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">移位寄存器：串并转换的利器</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">移位寄存器由多个<a href="#" onclick="navigateTo('dig-07');return false;" style="color:var(--primary)">D 触发器</a>级联组成，在时钟驱动下逐位移存数据。可实现串行↔并行转换、延时、构成特殊<a href="#" onclick="navigateTo('dig-09');return false;" style="color:var(--primary)">计数器</a>。是通信接口（UART/SPI）和数字信号处理的基础。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">移位寄存器由多个<a href="javascript:void(0)" onclick="App.loadDetail('dig-07')">D 触发器</a>级联组成，在时钟驱动下逐位移存数据。可实现串行↔并行转换、延时、构成特殊<a href="javascript:void(0)" onclick="App.loadDetail('dig-09')">计数器</a>。是通信接口（UART/SPI）和数字信号处理的基础。</p>
 
         <h4 class="font-medium mt-6 mb-2">四种基本类型</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>功能</th><th>典型芯片</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">串入串出 (SISO)</td><td>数据逐位移入移出</td><td>—</td><td>延时线</td></tr><tr><td class="font-medium">串入并出 (SIPO)</td><td>串行→并行</td><td>74LS164</td><td>扩展输出端口</td></tr><tr><td class="font-medium">并入串出 (PISO)</td><td>并行→串行</td><td>74LS165</td><td>扩展输入端口</td></tr><tr><td class="font-medium">并入并出 (PIPO)</td><td>并行→并行</td><td>74LS175</td><td>数据暂存</td></tr></tbody></table></div>
@@ -2915,11 +2939,11 @@ const CourseData = {
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>环形计数器的自启动</strong>：环形计数器可能进入无效状态（如 0000）。需加反馈逻辑保证自启动——上电后能自动进入有效循环。扭环形计数器无此问题。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-14');return false;" style="color:var(--primary)">Verilog</a>的联系</strong>：在 Verilog 中，移位寄存器用 always @(posedge clk) q &lt;= {q[N-2:0], serial_in} 实现。理解硬件结构有助于写出正确的 HDL 代码。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('dig-14')">Verilog</a>的联系</strong>：在 Verilog 中，移位寄存器用 always @(posedge clk) q &lt;= {q[N-2:0], serial_in} 实现。理解硬件结构有助于写出正确的 HDL 代码。</div></div>
       ` },
       { id: 'dig-11', title: '555 定时器', desc: '多谐/单稳/施密特', icon: '⏱', tags: ['高频'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">555 定时器：万能模拟-数字接口</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">555 定时器是经典的模拟-数字混合芯片，外接少量电阻电容可构成三种基本电路：多谐振荡器（方波）、单稳态触发器（定时脉冲）、<a href="#" onclick="navigateTo('ana-10');return false;" style="color:var(--primary)">施密特触发器</a>（波形整形）。工程应用极广，是<a href="#" onclick="navigateTo('ana-14');return false;" style="color:var(--primary)">振荡电路</a>的实用形式。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">555 定时器是经典的模拟-数字混合芯片，外接少量电阻电容可构成三种基本电路：多谐振荡器（方波）、单稳态触发器（定时脉冲）、<a href="javascript:void(0)" onclick="App.loadDetail('ana-10')">施密特触发器</a>（波形整形）。工程应用极广，是<a href="javascript:void(0)" onclick="App.loadDetail('ana-14')">振荡电路</a>的实用形式。</p>
 
         <h4 class="font-medium mt-6 mb-2">555 内部结构</h4>
         <div class="formula-block">555 定时器内部组成：<br>① 两个比较器（阈值 2/3Vcc 和触发 1/3Vcc）<br>② RS 触发器（输出高低电平）<br>③ 放电管（控制外部电容充放电）<br>④ 输出缓冲器（驱动能力强）<div class="text-sm text-gray-500 mt-2">8 引脚：GND、TRI、OUT、RES、CON、THR、DIS、VCC</div></div>
@@ -2938,11 +2962,11 @@ const CourseData = {
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>占空比调节</strong>：标准多谐振荡器占空比 >50%（$R_1+R_2$ 充电，$R_2$ 放电）。要实现 50% 占空比，可在 $R_2$ 两端并联二极管，使充电和放电路径不同。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-09');return false;" style="color:var(--primary)">计数器</a>的配合</strong>：555 产生时钟脉冲，计数器统计脉冲个数——如电子表（555 产生 1Hz，60 进制计数器计秒）、频率计等。555 是最简单的时钟源。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('dig-09')">计数器</a>的配合</strong>：555 产生时钟脉冲，计数器统计脉冲个数——如电子表（555 产生 1Hz，60 进制计数器计秒）、频率计等。555 是最简单的时钟源。</div></div>
       ` },
       { id: 'dig-12', title: '半导体存储器', desc: 'RAM/ROM、存储扩展', icon: '💾', tags: ['基础'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">半导体存储器</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">存储器是数字系统的"仓库"。RAM 临时存储（断电丢失），ROM 永久存储（断电保留）。理解存储器结构和字/位扩展方法，是计算机组成的基础。存储器是<a href="#" onclick="navigateTo('dig-04');return false;" style="color:var(--primary)">译码器</a>的典型应用。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">存储器是数字系统的"仓库"。RAM 临时存储（断电丢失），ROM 永久存储（断电保留）。理解存储器结构和字/位扩展方法，是计算机组成的基础。存储器是<a href="javascript:void(0)" onclick="App.loadDetail('dig-04')">译码器</a>的典型应用。</p>
 
         <h4 class="font-medium mt-6 mb-2">RAM vs ROM</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>特性</th><th>子类</th><th>速度</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">RAM</td><td>读写、易失</td><td>SRAM（静态）、DRAM（动态）</td><td>快（ns 级）</td><td>内存、缓存</td></tr><tr><td class="font-medium">ROM</td><td>读为主、非易失</td><td>PROM/EPROM/Flash</td><td>中</td><td>固件、BIOS</td></tr></tbody></table></div>
@@ -2963,11 +2987,11 @@ const CourseData = {
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>DRAM 刷新</strong>：DRAM 用电容存储，电荷会泄漏，必须定期刷新（读出再写入）。刷新期间不能访问，影响性能。刷新策略（行刷新、列刷新）是 DRAM 控制器的关键设计。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-04');return false;" style="color:var(--primary)">译码器</a>的联系</strong>：存储器内部用译码器选择地址——地址线经译码器选中特定字线，连接到对应存储单元。理解译码器有助于理解存储器寻址原理。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('dig-04')">译码器</a>的联系</strong>：存储器内部用译码器选择地址——地址线经译码器选中特定字线，连接到对应存储单元。理解译码器有助于理解存储器寻址原理。</div></div>
       ` },
       { id: 'dig-13', title: 'A/D 与 D/A 转换器', desc: '转换原理、参数指标', icon: '🔤', tags: ['工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">A/D 与 D/A：模拟与数字的桥梁</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">现实世界是模拟的，计算机是数字的。ADC（模数转换）把传感器模拟信号转数字，DAC（数模转换）把数字信号转模拟输出。这是所有嵌入式系统的关键接口，也是<a href="#" onclick="navigateTo('dig-01');return false;" style="color:var(--primary)">数制编码</a>的工程应用。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">现实世界是模拟的，计算机是数字的。ADC（模数转换）把传感器模拟信号转数字，DAC（数模转换）把数字信号转模拟输出。这是所有嵌入式系统的关键接口，也是<a href="javascript:void(0)" onclick="App.loadDetail('dig-01')">数制编码</a>的工程应用。</p>
 
         <h4 class="font-medium mt-6 mb-2">DAC 原理</h4>
         <div class="formula-block">R-2R 梯形电阻网络 DAC：<br>输出电压：$V_o = -V_{ref} \\cdot \\frac{D}{2^n}$<br>$D$ 为数字输入（$0$~$2^n-1$），$n$ 为位数<br>分辨率：$\\Delta = \\frac{V_{ref}}{2^n}$（最小输出变化量）<div class="text-sm text-gray-500 mt-2">R-2R 网络只需两种阻值的电阻，易于集成</div></div>
@@ -2987,19 +3011,19 @@ const CourseData = {
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>ADC 类型选型</strong>：①逐次逼近型（SAR）——中速中精度（100kSPS~1MSPS），最常用；②并行比较型（Flash）——超快但功耗大、引脚多；③Σ-Δ 型——高精度低速度（音频、仪表）；④双积分型——低速高抗干扰（万用表）。STM32 内置的多为 SAR ADC。</div></div>
 
-        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>采样定理的陷阱</strong>：$f_s \\geq 2f_{max}$ 是最低要求，实际工程中取 $f_s = (5\\sim10) f_{max}$ 以保证信号质量。采样前需加<a href="#" onclick="navigateTo('circ-07');return false;" style="color:var(--primary)">抗混叠滤波器</a>（低通），滤除高于 $f_s/2$ 的频率分量。</div></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>采样定理的陷阱</strong>：$f_s \\geq 2f_{max}$ 是最低要求，实际工程中取 $f_s = (5\\sim10) f_{max}$ 以保证信号质量。采样前需加<a href="javascript:void(0)" onclick="App.loadDetail('circ-07')">抗混叠滤波器</a>（低通），滤除高于 $f_s/2$ 的频率分量。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('ana-10');return false;" style="color:var(--primary)">比较器</a>的联系</strong>：逐次逼近 ADC 内部用 DAC + 比较器 + 逐次逼近寄存器（SAR）实现——DAC 产生猜测电压，比较器判断大小，SAR 逐位确定数字输出。理解比较器有助于理解 ADC 原理。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('ana-10')">比较器</a>的联系</strong>：逐次逼近 ADC 内部用 DAC + 比较器 + 逐次逼近寄存器（SAR）实现——DAC 产生猜测电压，比较器判断大小，SAR 逐位确定数字输出。理解比较器有助于理解 ADC 原理。</div></div>
       ` },
       { id: 'dig-14', title: 'Verilog HDL 入门', desc: '可综合设计（工程方向）', icon: '⌨', tags: ['工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">Verilog HDL：用代码描述硬件</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">Verilog 是硬件描述语言（HDL），用代码描述数字电路结构和行为，经综合工具转为实际电路（FPGA/ASIC）。这是数字 IC 设计和 FPGA 开发的必备技能。Verilog 是<a href="#" onclick="navigateTo('dig-03');return false;" style="color:var(--primary)">组合逻辑</a>和<a href="#" onclick="navigateTo('dig-08');return false;" style="color:var(--primary)">时序逻辑</a>的代码化表达。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">Verilog 是硬件描述语言（HDL），用代码描述数字电路结构和行为，经综合工具转为实际电路（FPGA/ASIC）。这是数字 IC 设计和 FPGA 开发的必备技能。Verilog 是<a href="javascript:void(0)" onclick="App.loadDetail('dig-03')">组合逻辑</a>和<a href="javascript:void(0)" onclick="App.loadDetail('dig-08')">时序逻辑</a>的代码化表达。</p>
 
         <h4 class="font-medium mt-6 mb-2">三种建模方式</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>建模方式</th><th>语法</th><th>适用</th><th>示例</th></tr></thead><tbody><tr><td class="font-medium">数据流</td><td>assign 连续赋值</td><td>组合逻辑</td><td>assign y = a &amp; b;</td></tr><tr><td class="font-medium">行为</td><td>always 块</td><td>时序/组合</td><td>always @(posedge clk)</td></tr><tr><td class="font-medium">结构</td><td>模块例化</td><td>层次化设计</td><td>and_gate u1(.a(a),.b(b),.y(y));</td></tr></tbody></table></div>
 
         <h4 class="font-medium mt-6 mb-2">组合逻辑 vs 时序逻辑</h4>
-        <div class="formula-block">组合逻辑（无记忆）：<br>always @(*) 或 assign<br>输出仅取决于当前输入<br><br>时序逻辑（有记忆）：<br>always @(posedge clk)<br>输出取决于当前输入和状态（<a href="#" onclick="navigateTo('dig-07');return false;" style="color:var(--primary)">触发器</a>）<div class="text-sm text-gray-500 mt-2">组合逻辑 = 门电路，时序逻辑 = 触发器 + 门电路</div></div>
+        <div class="formula-block">组合逻辑（无记忆）：<br>always @(*) 或 assign<br>输出仅取决于当前输入<br><br>时序逻辑（有记忆）：<br>always @(posedge clk)<br>输出取决于当前输入和状态（<a href="javascript:void(0)" onclick="App.loadDetail('dig-07')">触发器</a>）<div class="text-sm text-gray-500 mt-2">组合逻辑 = 门电路，时序逻辑 = 触发器 + 门电路</div></div>
 
         <h4 class="font-medium mt-6 mb-2">阻塞 vs 非阻塞赋值</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>赋值方式</th><th>语法</th><th>执行顺序</th><th>适用</th></tr></thead><tbody><tr><td class="font-medium">阻塞赋值</td><td>=</td><td>立即执行（顺序）</td><td>组合逻辑</td></tr><tr><td class="font-medium">非阻塞赋值</td><td>&lt;=</td><td>同时执行（并行）</td><td>时序逻辑</td></tr></tbody></table></div>
@@ -3011,13 +3035,13 @@ const CourseData = {
         <div class="formula-block">Verilog D触发器：<br>module d_ff(<br>&nbsp;&nbsp;input clk, d,<br>&nbsp;&nbsp;output reg q<br>);<br>always @(posedge clk)<br>&nbsp;&nbsp;q &lt;= d;<br>endmodule<div class="text-sm text-gray-500 mt-2">上升沿触发的 D 触发器，$Q^{n+1}=D$</div></div>
 
         <h4 class="font-medium mt-6 mb-2">常见错误与陷阱</h4>
-        <div class="step-list"><div class="step-item"><div><strong>阻塞/非阻塞混用</strong>。时序逻辑必须用 &lt;=，组合逻辑用 =。混用会导致仿真与综合结果不一致。</div></div><div class="step-item"><div><strong>不完整分支</strong>。组合逻辑的 if/case 必须写全所有分支，否则综合出<a href="#" onclick="navigateTo('dig-06');return false;" style="color:var(--primary)">锁存器</a>（非预期）。</div></div><div class="step-item"><div><strong>多驱动</strong>。同一个信号不能在多个 always 块中赋值（硬件上无法实现）。</div></div></div>
+        <div class="step-list"><div class="step-item"><div><strong>阻塞/非阻塞混用</strong>。时序逻辑必须用 &lt;=，组合逻辑用 =。混用会导致仿真与综合结果不一致。</div></div><div class="step-item"><div><strong>不完整分支</strong>。组合逻辑的 if/case 必须写全所有分支，否则综合出<a href="javascript:void(0)" onclick="App.loadDetail('dig-06')">锁存器</a>（非预期）。</div></div><div class="step-item"><div><strong>多驱动</strong>。同一个信号不能在多个 always 块中赋值（硬件上无法实现）。</div></div></div>
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>HDL ≠ 软件编程</strong>：Verilog 描述的是<strong>并行</strong>的硬件，不是顺序执行的程序。所有 assign 和 always 块同时执行（对应并行的硬件单元）。关键原则：①时序逻辑用非阻塞赋值（&lt;=），组合逻辑用阻塞赋值（=）；②避免锁存器；③时钟要单一全局时钟。</div></div>
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>仿真 vs 综合</strong>：仿真验证功能正确，综合生成实际电路。有些语法可仿真但不可综合（如 #10 延时、initial 块）。可综合代码必须用标准 RTL 风格。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="#" onclick="navigateTo('dig-10');return false;" style="color:var(--primary)">移位寄存器</a>的联系</strong>：移位寄存器用 Verilog 只需一行：always @(posedge clk) q &lt;= {q[N-2:0], serial_in}。理解硬件结构有助于写出正确的 HDL 代码。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('dig-10')">移位寄存器</a>的联系</strong>：移位寄存器用 Verilog 只需一行：always @(posedge clk) q &lt;= {q[N-2:0], serial_in}。理解硬件结构有助于写出正确的 HDL 代码。</div></div>
       ` },
     ]
   },
@@ -3047,7 +3071,7 @@ const CourseData = {
         </table></div>
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <div><strong>反馈的本质</strong>：闭环控制用"偏差"驱动——输出偏高就减小控制量，偏低就增大。这正是 PID 控制器的工作原理（详见 <a href="#" onclick="navigateTo('act-14');return false;" style="color:var(--primary)">PID 整定</a>）。反馈带来精度的同时也带来稳定性风险，这是自控理论的核心矛盾。</div>
+          <div><strong>反馈的本质</strong>：闭环控制用"偏差"驱动——输出偏高就减小控制量，偏低就增大。这正是 PID 控制器的工作原理（详见 <a href="javascript:void(0)" onclick="App.loadDetail('act-14')">PID 整定</a>）。反馈带来精度的同时也带来稳定性风险，这是自控理论的核心矛盾。</div>
         </div>
 
         <h4 class="font-medium mt-6 mb-2">反馈控制系统的典型结构</h4>
@@ -3133,7 +3157,7 @@ const CourseData = {
       { id: 'act-03', title: '拉普拉斯变换与传递函数', desc: '拉氏变换查表、性质、传函', icon: 'ℒ', tags: ['核心工具'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">拉氏变换：把微分方程变成代数方程</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          拉普拉斯变换是自控理论的数学基础——它把时域微分方程转化为 s 域代数方程，使求解大幅简化。传递函数则是系统在 s 域的"身份证"。本节配合 <a href="#" onclick="navigateTo('hm-03');return false;" style="color:var(--primary)">泰勒公式</a> 的展开思想理解拉氏变换的物理含义。
+          拉普拉斯变换是自控理论的数学基础——它把时域微分方程转化为 s 域代数方程，使求解大幅简化。传递函数则是系统在 s 域的"身份证"。本节配合 <a href="javascript:void(0)" onclick="App.loadDetail('hm-03')">泰勒公式</a> 的展开思想理解拉氏变换的物理含义。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">拉氏变换的定义与常用变换对</h4>
@@ -3155,7 +3179,7 @@ const CourseData = {
         </table></div>
         <div class="info-box exam">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-          <div><strong>必须背</strong>：上表是整个自控的工具箱。记忆技巧：阶跃→1/s，指数→1/(s-a)，三角函数→分母是 $s^2+\\omega^2$。配合 <a href="#" onclick="navigateTo('hm-08');return false;" style="color:var(--primary)">常微分方程</a> 中的拉氏变换解法一起用。</div>
+          <div><strong>必须背</strong>：上表是整个自控的工具箱。记忆技巧：阶跃→1/s，指数→1/(s-a)，三角函数→分母是 $s^2+\\omega^2$。配合 <a href="javascript:void(0)" onclick="App.loadDetail('hm-08')">常微分方程</a> 中的拉氏变换解法一起用。</div>
         </div>
 
         <h4 class="font-medium mt-6 mb-2">三大性质（线性、微分、积分）</h4>
@@ -3189,7 +3213,7 @@ const CourseData = {
         </div>
         <div class="info-box info">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <div><strong>$\\frac{1}{Ts+1}$ 是最基本的一阶惯性环节</strong>，T 越大响应越慢。RC 电路、热容系统、液位系统的一阶模型都是这个形式。详见 <a href="#" onclick="navigateTo('act-05');return false;" style="color:var(--primary)">时域分析</a>。</div>
+          <div><strong>$\\frac{1}{Ts+1}$ 是最基本的一阶惯性环节</strong>，T 越大响应越慢。RC 电路、热容系统、液位系统的一阶模型都是这个形式。详见 <a href="javascript:void(0)" onclick="App.loadDetail('act-05')">时域分析</a>。</div>
         </div>
       ` },
       { id: 'act-04', title: '结构图与信号流图', desc: '梅逊公式、等效变换', icon: '🔀', tags: ['高频'], goals: { eng: true }, content: `
@@ -3372,7 +3396,7 @@ const CourseData = {
       { id: 'act-07', title: '稳态误差', desc: '误差系数法、系统型别', icon: '📏', tags: ['高频'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">稳态精度：系统最终能跟踪多准</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          <a href="#" onclick="navigateTo('act-05');return false;" style="color:var(--primary)">时域分析</a> 关注响应的动态过程（快不快、振不振），而稳态误差关注的是<strong>最终精度</strong>——当过渡过程结束后，输出与期望值之间的永久偏差。本节建立稳态误差的系统化分析方法，核心工具是"系统型别"与"误差系数"。
+          <a href="javascript:void(0)" onclick="App.loadDetail('act-05')">时域分析</a> 关注响应的动态过程（快不快、振不振），而稳态误差关注的是<strong>最终精度</strong>——当过渡过程结束后，输出与期望值之间的永久偏差。本节建立稳态误差的系统化分析方法，核心工具是"系统型别"与"误差系数"。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">稳态误差的定义</h4>
@@ -3534,7 +3558,7 @@ const CourseData = {
         </div>
         <div class="info-box info">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <div><strong>伯德图 vs 奈奎斯特图</strong>：伯德图是奈奎斯特图的"拆开版"——把幅值和相位分别画在两张图上。伯德图更直观易画（渐近线近似），工程中最常用；奈奎斯特图更紧凑（一张图包含全部信息），是奈奎斯特稳定判据的基础。详见 <a href="#" onclick="navigateTo('act-10');return false;" style="color:var(--primary)">奈奎斯特稳定判据</a>。</div>
+          <div><strong>伯德图 vs 奈奎斯特图</strong>：伯德图是奈奎斯特图的"拆开版"——把幅值和相位分别画在两张图上。伯德图更直观易画（渐近线近似），工程中最常用；奈奎斯特图更紧凑（一张图包含全部信息），是奈奎斯特稳定判据的基础。详见 <a href="javascript:void(0)" onclick="App.loadDetail('act-10')">奈奎斯特稳定判据</a>。</div>
         </div>
 
         <h4 class="font-medium mt-6 mb-2">实例：画 $G(s)=\\frac{10}{s(0.1s+1)}$ 的伯德图</h4>
@@ -3598,7 +3622,7 @@ const CourseData = {
       { id: 'act-11', title: '闭环频域与时域指标', desc: '指标换算、闭环频率特性', icon: '🔁', tags: ['工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">闭环指标：从开环特性推断闭环性能</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          <a href="#" onclick="navigateTo('act-10');return false;" style="color:var(--primary)">奈奎斯特判据</a> 用开环特性判断稳定性，但工程中更关心的是<strong>闭环系统的性能</strong>——超调多少、响应多快。本节建立开环频域指标（相位裕度）与闭环时域指标（超调量）之间的经验换算关系，以及闭环频率特性的绘制方法。
+          <a href="javascript:void(0)" onclick="App.loadDetail('act-10')">奈奎斯特判据</a> 用开环特性判断稳定性，但工程中更关心的是<strong>闭环系统的性能</strong>——超调多少、响应多快。本节建立开环频域指标（相位裕度）与闭环时域指标（超调量）之间的经验换算关系，以及闭环频率特性的绘制方法。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">闭环频率特性</h4>
@@ -3633,7 +3657,7 @@ const CourseData = {
           <tbody>
             <tr><td class="font-medium">$M_r$ 增大</td><td>超调 $\\sigma\\%$ 增大</td><td>$M_r=1$ 无超调，$M_r>1.5$ 振荡明显</td></tr>
             <tr><td class="font-medium">$\\omega_b$ 增大</td><td>调节时间 $t_s$ 减小</td><td>带宽越大系统越快</td></tr>
-            <tr><td class="font-medium">$\\gamma$ 增大</td><td>超调减小但响应变慢</td><td>与 <a href="#" onclick="navigateTo('act-05');return false;" style="color:var(--primary)">时域分析</a> 中 $\\zeta$ 增大的效果一致</td></tr>
+            <tr><td class="font-medium">$\\gamma$ 增大</td><td>超调减小但响应变慢</td><td>与 <a href="javascript:void(0)" onclick="App.loadDetail('act-05')">时域分析</a> 中 $\\zeta$ 增大的效果一致</td></tr>
             <tr><td class="font-medium">$G_m$ 增大</td><td>系统更稳定</td><td>幅值裕度是稳定性的"余量"</td></tr>
           </tbody>
         </table></div>
@@ -3701,7 +3725,7 @@ const CourseData = {
         </table></div>
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <div><strong>PID 就是超前-滞后校正的工业版</strong>：I 项 = 滞后校正（提高低频增益→消除稳态误差），D 项 = 超前校正（增加相位裕度→改善稳定性）。理解了超前/滞后校正，就理解了 PID 调参的本质——调 $K_i$ 影响低频，调 $K_d$ 影响中高频，调 $K_p$ 影响全局。详见 <a href="#" onclick="navigateTo('act-14');return false;" style="color:var(--primary)">PID 整定工程实战</a>。</div>
+          <div><strong>PID 就是超前-滞后校正的工业版</strong>：I 项 = 滞后校正（提高低频增益→消除稳态误差），D 项 = 超前校正（增加相位裕度→改善稳定性）。理解了超前/滞后校正，就理解了 PID 调参的本质——调 $K_i$ 影响低频，调 $K_d$ 影响中高频，调 $K_p$ 影响全局。详见 <a href="javascript:void(0)" onclick="App.loadDetail('act-14')">PID 整定工程实战</a>。</div>
         </div>
         <div class="info-box warning">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
@@ -3747,7 +3771,7 @@ const CourseData = {
         </div>
         <div class="info-box info">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <div><strong>工程实现</strong>：在 MCU 中，PID 控制器的 z 域实现就是"差分方程"——用当前和过去的采样值计算控制输出。z 变换的"延迟" $z^{-1}$ 在代码中就是"上一次的值"。详见 <a href="#" onclick="navigateTo('act-14');return false;" style="color:var(--primary)">PID 整定工程实战</a> 中的离散 PID 代码。</div>
+          <div><strong>工程实现</strong>：在 MCU 中，PID 控制器的 z 域实现就是"差分方程"——用当前和过去的采样值计算控制输出。z 变换的"延迟" $z^{-1}$ 在代码中就是"上一次的值"。详见 <a href="javascript:void(0)" onclick="App.loadDetail('act-14')">PID 整定工程实战</a> 中的离散 PID 代码。</div>
         </div>
 
         <h4 class="font-medium mt-6 mb-2">离散系统的稳定性判据</h4>
@@ -3771,7 +3795,7 @@ const CourseData = {
       { id: 'act-14', title: '工程实战：PID 整定', desc: 'Ziegler-Nichols、Cohen-Coon + STM32', icon: '💻', tags: ['工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">PID 整定：从理论到工程落地</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          <a href="#" onclick="navigateTo('act-12');return false;" style="color:var(--primary)">系统校正</a> 告诉我们 PID 的频域本质——P 抬增益、I 补低频、D 加超前。本节解决工程中最实际的问题：<strong>三个参数怎么确定？</strong>介绍 Ziegler-Nichols 和 Cohen-Coon 两大经典整定法，并给出 STM32 平台的离散 PID 代码实现。
+          <a href="javascript:void(0)" onclick="App.loadDetail('act-12')">系统校正</a> 告诉我们 PID 的频域本质——P 抬增益、I 补低频、D 加超前。本节解决工程中最实际的问题：<strong>三个参数怎么确定？</strong>介绍 Ziegler-Nichols 和 Cohen-Coon 两大经典整定法，并给出 STM32 平台的离散 PID 代码实现。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">Ziegler-Nichols 临界比例法（闭环整定）</h4>
@@ -3872,7 +3896,7 @@ const CourseData = {
         </div>
         <div class="info-box info">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <div><strong>参考资源</strong>：电机控制中 PID 整定的完整工程案例（含速度环/电流环双环调试、STM32 代码）可参考 <a href="#" onclick="navigateTo('act-05');return false;" style="color:var(--primary)">时域分析</a> 中的性能指标定义。实际项目中建议用 MATLAB/Simulink 先做仿真验证，再上板调试。</div>
+          <div><strong>参考资源</strong>：电机控制中 PID 整定的完整工程案例（含速度环/电流环双环调试、STM32 代码）可参考 <a href="javascript:void(0)" onclick="App.loadDetail('act-05')">时域分析</a> 中的性能指标定义。实际项目中建议用 MATLAB/Simulink 先做仿真验证，再上板调试。</div>
         </div>
       ` },
     ]
@@ -3946,7 +3970,7 @@ const CourseData = {
         </ul>
         <div class="info-box warning">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-          <div><strong>时间空间权衡</strong>：很多算法可以用空间换时间（哈希表加速查找），或用时间换空间（压缩存储）。工程中内存充足时优先优化时间，嵌入式/大数据场景则需平衡。详见 <a href="#" onclick="navigateTo('ds-02');return false;" style="color:var(--primary)">线性表</a> 中顺序表 vs 链表的取舍。</div>
+          <div><strong>时间空间权衡</strong>：很多算法可以用空间换时间（哈希表加速查找），或用时间换空间（压缩存储）。工程中内存充足时优先优化时间，嵌入式/大数据场景则需平衡。详见 <a href="javascript:void(0)" onclick="App.loadDetail('ds-02')">线性表</a> 中顺序表 vs 链表的取舍。</div>
         </div>
       ` },
       { id: 'ds-02', title: '线性表', desc: '顺序表 vs 链表、单/双/循环链表', icon: '🔗', tags: ['核心'], goals: { exam: true, eng: true }, content: `
@@ -3970,7 +3994,7 @@ const CourseData = {
         </table></div>
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <div><strong>选型口诀</strong>：读多写少、需要随机访问 → 顺序表；频繁头尾增删、长度不确定 → 链表。实际工程中顺序表（动态数组 vector）远比链表常用——现代 CPU 缓存让连续内存的速度优势压倒一切。详见 <a href="#" onclick="navigateTo('ds-01');return false;" style="color:var(--primary)">复杂度分析</a>。</div>
+          <div><strong>选型口诀</strong>：读多写少、需要随机访问 → 顺序表；频繁头尾增删、长度不确定 → 链表。实际工程中顺序表（动态数组 vector）远比链表常用——现代 CPU 缓存让连续内存的速度优势压倒一切。详见 <a href="javascript:void(0)" onclick="App.loadDetail('ds-01')">复杂度分析</a>。</div>
         </div>
 
         <h4 class="font-medium mt-6 mb-2">单链表的基本操作</h4>
@@ -4053,7 +4077,7 @@ const CourseData = {
         </div>
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <div><strong>递归的本质就是栈</strong>：函数调用时，参数和返回地址压入"调用栈"；递归返回时弹出。所以任何递归都能用显式栈改写成迭代。系统调用栈大小有限（通常几 MB），深度递归会栈溢出——这就是为什么深度大的 DFS 要改用迭代+栈。详见 <a href="#" onclick="navigateTo('ds-11');return false;" style="color:var(--primary)">图的遍历</a>。</div>
+          <div><strong>递归的本质就是栈</strong>：函数调用时，参数和返回地址压入"调用栈"；递归返回时弹出。所以任何递归都能用显式栈改写成迭代。系统调用栈大小有限（通常几 MB），深度递归会栈溢出——这就是为什么深度大的 DFS 要改用迭代+栈。详见 <a href="javascript:void(0)" onclick="App.loadDetail('ds-11')">图的遍历</a>。</div>
         </div>
 
         <h4 class="font-medium mt-6 mb-2">循环队列（解决假溢出）</h4>
@@ -4255,7 +4279,7 @@ const CourseData = {
       { id: 'ds-07', title: 'BST 与 AVL 树', desc: '二叉搜索树、平衡二叉树', icon: '⚖', tags: ['高频'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">BST 与 AVL：让查找高效的树</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          二叉搜索树（BST）通过"左小右大"的规则，把查找、插入、删除都做到 $O(h)$。但 BST 可能退化为链表（$h=n$），AVL 树通过<strong>自平衡</strong>把高度控制在 $O(\\log n)$，保证最坏情况也是 $O(\\log n)$。BST/AVL 是<a href="#" onclick="navigateTo('ds-06');return false;" style="color:var(--primary)">二叉树</a>的有序形式，也是理解<a href="#" onclick="navigateTo('ds-08');return false;" style="color:var(--primary)">红黑树、B 树</a>的基础。
+          二叉搜索树（BST）通过"左小右大"的规则，把查找、插入、删除都做到 $O(h)$。但 BST 可能退化为链表（$h=n$），AVL 树通过<strong>自平衡</strong>把高度控制在 $O(\\log n)$，保证最坏情况也是 $O(\\log n)$。BST/AVL 是<a href="javascript:void(0)" onclick="App.loadDetail('ds-06')">二叉树</a>的有序形式，也是理解<a href="javascript:void(0)" onclick="App.loadDetail('ds-08')">红黑树、B 树</a>的基础。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">二叉搜索树（BST）的性质</h4>
@@ -4312,11 +4336,11 @@ const CourseData = {
         </div>
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <div><strong>AVL vs BST vs 红黑树</strong>：BST 最简单但可能退化；AVL 严格平衡（BF≤1），查找快但插入删除旋转多；红黑树弱平衡，查找稍慢但增删更快。所以 AVL 适合"查找密集"场景，红黑树适合"增删频繁"场景（如 C++ map、Linux 进程调度）。详见 <a href="#" onclick="navigateTo('ds-08');return false;" style="color:var(--primary)">红黑树与 B 树</a>。</div>
+          <div><strong>AVL vs BST vs 红黑树</strong>：BST 最简单但可能退化；AVL 严格平衡（BF≤1），查找快但插入删除旋转多；红黑树弱平衡，查找稍慢但增删更快。所以 AVL 适合"查找密集"场景，红黑树适合"增删频繁"场景（如 C++ map、Linux 进程调度）。详见 <a href="javascript:void(0)" onclick="App.loadDetail('ds-08')">红黑树与 B 树</a>。</div>
         </div>
         <div class="info-box info">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <div><strong>与<a href="#" onclick="navigateTo('ds-09');return false;" style="color:var(--primary)">堆</a>的对比</strong>：BST 支持有序遍历和范围查询，堆只支持最大/最小值。BST 查找 $O(\\log n)$，堆查找 $O(n)$。但堆的插入和删除最值都是 $O(\\log n)$，且可用数组实现（更紧凑）。</div>
+          <div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('ds-09')">堆</a>的对比</strong>：BST 支持有序遍历和范围查询，堆只支持最大/最小值。BST 查找 $O(\\log n)$，堆查找 $O(n)$。但堆的插入和删除最值都是 $O(\\log n)$，且可用数组实现（更紧凑）。</div>
         </div>
       ` },
       { id: 'ds-08', title: '红黑树与 B 树', desc: '红黑树性质、B/B+ 树（数据库索引）', icon: '🔴', tags: ['工程'], goals: { eng: true }, content: `
@@ -4458,7 +4482,7 @@ const CourseData = {
 }</div>
         <div class="info-box warning">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-          <div><strong>路径压缩是关键优化</strong>：Find 时把路径上所有节点直接指向根，下次查询 $O(1)$。配合按秩合并，单次操作均摊 $O(\\alpha(n)) \\approx O(1)$（α 是反阿克曼函数，n≤10⁸⁰ 时 α≤4）。并查集是 <a href="#" onclick="navigateTo('ds-12');return false;" style="color:var(--primary)">Kruskal 最小生成树</a> 和连通分量问题的标准工具。</div>
+          <div><strong>路径压缩是关键优化</strong>：Find 时把路径上所有节点直接指向根，下次查询 $O(1)$。配合按秩合并，单次操作均摊 $O(\\alpha(n)) \\approx O(1)$（α 是反阿克曼函数，n≤10⁸⁰ 时 α≤4）。并查集是 <a href="javascript:void(0)" onclick="App.loadDetail('ds-12')">Kruskal 最小生成树</a> 和连通分量问题的标准工具。</div>
         </div>
       ` },
       { id: 'ds-11', title: '图的存储与遍历', desc: '邻接矩阵/表、DFS/BFS', icon: '🕸', tags: ['核心'], goals: { exam: true, eng: true }, content: `
@@ -4519,13 +4543,13 @@ const CourseData = {
         </table></div>
         <div class="info-box warning">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-          <div><strong>连通分量</strong>：对每个未访问顶点调用 DFS/BFS，调用次数 = 连通分量个数。这是判断图连通性、统计岛屿数量（LeetCode 200）的标准做法。详见 <a href="#" onclick="navigateTo('ds-12');return false;" style="color:var(--primary)">图的应用</a>。</div>
+          <div><strong>连通分量</strong>：对每个未访问顶点调用 DFS/BFS，调用次数 = 连通分量个数。这是判断图连通性、统计岛屿数量（LeetCode 200）的标准做法。详见 <a href="javascript:void(0)" onclick="App.loadDetail('ds-12')">图的应用</a>。</div>
         </div>
       ` },
       { id: 'ds-12', title: '图的应用', desc: '最小生成树、最短路径、拓扑排序、关键路径', icon: '🗺', tags: ['高频核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">图算法四大应用</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          图的四大经典应用：最小生成树（网络布线）、最短路径（导航）、拓扑排序（任务依赖）、关键路径（项目管理）。它们是工程和笔试的高频考点，也是理解 <a href="#" onclick="navigateTo('ds-11');return false;" style="color:var(--primary)">图的遍历</a> 后的实际应用。
+          图的四大经典应用：最小生成树（网络布线）、最短路径（导航）、拓扑排序（任务依赖）、关键路径（项目管理）。它们是工程和笔试的高频考点，也是理解 <a href="javascript:void(0)" onclick="App.loadDetail('ds-11')">图的遍历</a> 后的实际应用。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">一、最小生成树（MST）</h4>
@@ -4732,7 +4756,7 @@ const CourseData = {
         </p>
         <div class="info-box warning">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-          <div><strong>最佳归并树</strong>：归并段长度不同时，用哈夫曼树思想——短段先合并（多用 I/O 少的短段参与多次归并）。这能最小化总 I/O 次数。这与 <a href="#" onclick="navigateTo('ds-10');return false;" style="color:var(--primary)">哈夫曼树</a> 的构造完全一致。</div>
+          <div><strong>最佳归并树</strong>：归并段长度不同时，用哈夫曼树思想——短段先合并（多用 I/O 少的短段参与多次归并）。这能最小化总 I/O 次数。这与 <a href="javascript:void(0)" onclick="App.loadDetail('ds-10')">哈夫曼树</a> 的构造完全一致。</div>
         </div>
       ` },
       { id: 'ds-16', title: '工程进阶结构', desc: '跳表、布隆过滤器、LRU/LFU、Trie', icon: '🚀', tags: ['工程'], goals: { eng: true }, content: `
@@ -4791,13 +4815,1863 @@ const CourseData = {
       ` },
     ]
   },
+
+  // ========== 现代控制理论 ==========
+  'modern-control': {
+    title: '现代控制理论',
+    subtitle: '状态空间建模、能控能观、最优控制与状态估计，自动控制的进阶核心',
+    icon: '🔮',
+    sections: [
+      { id: 'mct-01', title: '经典控制与现代控制概述', desc: '状态空间 vs 传递函数、现代控制的优势', icon: '🎯', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">为什么需要现代控制理论？</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          经典控制理论以传递函数为核心工具，通过频率响应和根轨迹分析 SISO 系统的动态行为，在工业实践中取得了巨大成功。然而，传递函数仅描述输入-输出关系，无法揭示系统内部结构，对 MIMO 系统、非线性系统和时变系统也力不从心。
+        </p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          20 世纪 60 年代，Kalman 等人提出了状态空间方法，将系统内部状态显式建模，使得能控性、能观性、最优控制和状态估计等概念成为可能。本节梳理两种范式的核心区别，建立从"输入-输出"到"状态-结构"的思维转换。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">状态空间描述</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          一个线性时不变（LTI）系统的状态空间表达式为：
+        </p>
+        <div class="formula-block">$$\\dot{\\mathbf{x}}(t) = A\\mathbf{x}(t) + B\\mathbf{u}(t)$$</div>
+        <div class="formula-block">$$\\mathbf{y}(t) = C\\mathbf{x}(t) + D\\mathbf{u}(t)$$</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          其中 $\\mathbf{x} \\in \\mathbb{R}^n$ 为状态向量，$\\mathbf{u} \\in \\mathbb{R}^m$ 为输入，$\\mathbf{y} \\in \\mathbb{R}^p$ 为输出；$A, B, C, D$ 为适当维数的常数矩阵。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">两种范式的核心区别</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>传递函数</strong>：仅描述输入到输出的外部关系，零初始条件下拉普拉斯变换得到 $G(s)=C(sI-A)^{-1}B+D$</li>
+          <li><strong>状态空间</strong>：描述系统内部全部状态的演化，包含更丰富的结构信息</li>
+          <li><strong>适用范围</strong>：传递函数限于 SISO/LTI；状态空间可推广至 MIMO、时变、非线性系统</li>
+          <li><strong>初始条件</strong>：传递函数假设零初始条件；状态空间自然处理非零初态</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">从状态空间到传递函数</h4>
+        <div class="formula-block">$$G(s) = C(sI - A)^{-1}B + D = \\frac{\\text{adj}(sI-A)B}{\\det(sI-A)} + D$$</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          分母 $\\det(sI-A)$ 即为系统的特征多项式，其根为 $A$ 的特征值，也就是系统的极点。
+        </p>
+
+        <table class="compare-table">
+          <thead><tr><th>比较维度</th><th>经典控制（传递函数）</th><th>现代控制（状态空间）</th></tr></thead>
+          <tbody>
+            <tr><td><strong>系统描述</strong></td><td>输入-输出映射</td><td>内部状态演化</td></tr>
+            <tr><td><strong>适用系统</strong></td><td>SISO / LTI</td><td>MIMO / LTV / 非线性</td></tr>
+            <tr><td><strong>分析域</strong></td><td>频域 / s 域</td><td>时域 / 状态空间</td></tr>
+            <tr><td><strong>设计方法</strong></td><td>根轨迹、Bode 图</td><td>极点配置、LQR、观测器</td></tr>
+            <tr><td><strong>初态处理</strong></td><td>零初始条件</td><td>任意初始条件</td></tr>
+          </tbody>
+        </table>
+
+        <div class="info-box tip">💡 <strong>记忆口诀</strong>："传函看外，状态看内"——传递函数只看输入输出之间的外部表现，状态空间则深入系统内部追踪每一个状态变量的演化。</div>
+        <div class="info-box warning">⚠️ <strong>常见误区</strong>：不要以为学了现代控制就要抛弃经典控制。工程实际中，PID 控制器依然占据 90% 以上的工业应用。现代控制是对经典控制的"升维"，两者互补而非替代。</div>
+        <div class="info-box info">📘 <strong>历史脉络</strong>：1960 年 R.E. Kalman 发表里程碑论文，正式奠定了状态空间方法的数学基础。同年他提出了卡尔曼滤波器，成为阿波罗登月导航的核心算法。参见<a href="javascript:void(0)" onclick="App.loadDetail('act-01')">控制系统的基本概念</a>。</div>
+
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>判断描述方式</strong><br>给定系统微分方程 $\\ddot{y}+3\\dot{y}+2y=\\dot{u}+u$，分别用传递函数和状态空间描述</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>传递函数</strong><br>零初值取拉普拉斯变换，$G(s)=\\frac{s+1}{s^2+3s+2}=\\frac{1}{s+2}$（零极点对消）</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>状态空间</strong><br>令 $x_1=y, x_2=\\dot{y}$，则 $\\dot{x}_1=x_2, \\dot{x}_2=-2x_1-3x_2+u$</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>关键结论</strong><br>零极点对消说明系统存在能控但不能观的模态——这正是状态空间方法能揭示而传递函数隐藏的信息</div></div>
+        </div>
+      ` },
+      { id: 'mct-02', title: '状态空间建模', desc: '微分方程→状态方程、物理系统建模方法', icon: '📐', tags: ['核心', '高频考点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">如何建立状态空间模型？</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          掌握状态空间建模是学习现代控制理论的第一步。无论是机械系统、电路系统还是热力学系统，都需要将其物理规律转化为标准形式 $\\dot{\\mathbf{x}}=A\\mathbf{x}+B\\mathbf{u}$。本节介绍从高阶微分方程、传递函数和物理机理三种途径建立状态空间模型的方法。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">能控标准形（Controllable Canonical Form）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">对于 $n$ 阶传递函数：</p>
+        <div class="formula-block">$$G(s) = \\frac{b_0 s^n + b_1 s^{n-1} + \\cdots + b_n}{s^n + a_1 s^{n-1} + \\cdots + a_n}$$</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">其能控标准形实现中，$A$ 矩阵为友矩阵形式，最后一行为系数 $-a_n, -a_{n-1}, \\ldots, -a_1$，$B$ 为单位向量。</p>
+
+        <h4 class="font-medium mt-6 mb-2">能观标准形（Observable Canonical Form）</h4>
+        <div class="formula-block">$$A_o = A_c^T, \\quad C_o = \\begin{bmatrix} 0 & 0 & \\cdots & 1 \\end{bmatrix}$$</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">能观标准形是能控标准形的转置对偶，信息集中在 $C$ 向量。</p>
+
+        <h4 class="font-medium mt-6 mb-2">建模方法总结</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>直接法</strong>：从高阶微分方程引入状态变量 $x_i = y^{(i-1)}$，逐阶展开</li>
+          <li><strong>串联分解法</strong>：对传递函数 $G(s)=\\prod G_i(s)$ 逐级建立子系统再串联</li>
+          <li><strong>并联分解法</strong>：部分分式展开后，每个分式对应一个一阶子系统，对角化形式</li>
+          <li><strong>物理机理法</strong>：选取储能元件的状态（位移/速度、电压/电流、温度等）</li>
+          <li><strong>最小实现</strong>：传递函数的所有极点都出现、不含零极点对消的最简实现</li>
+        </ul>
+
+        <table class="compare-table">
+          <thead><tr><th>特性</th><th>能控标准形</th><th>能观标准形</th><th>对角标准形</th></tr></thead>
+          <tbody>
+            <tr><td><strong>$A$ 矩阵结构</strong></td><td>友矩阵（底部系数行）</td><td>友矩阵转置</td><td>对角阵 $\\text{diag}(\\lambda_i)$</td></tr>
+            <tr><td><strong>适用场景</strong></td><td>极点配置设计</td><td>观测器设计</td><td>解耦分析</td></tr>
+            <tr><td><strong>能控性</strong></td><td>天然能控</td><td>需验证</td><td>特征值互异时自动能控</td></tr>
+            <tr><td><strong>能观性</strong></td><td>需验证</td><td>天然能观</td><td>特征值互异时自动能观</td></tr>
+          </tbody>
+        </table>
+
+        <div class="info-box tip">💡 <strong>记忆口诀</strong>："能控看 $B$，能观看 $C$"——能控标准形把信息集中在 $B$ 向量，能观标准形把信息集中在 $C$ 向量。可参考<a href="javascript:void(0)" onclick="App.loadDetail('act-02')">自动控制的数学模型</a>复习拉普拉斯变换基础。</div>
+        <div class="info-box warning">⚠️ <strong>常见错误</strong>：状态变量的选择不唯一，但状态的维数（即系统的阶数）是不变的。初学者常犯的错误是将输入变量误选为状态变量——状态变量必须是描述系统储能的独立变量。</div>
+        <div class="info-box info">📘 <strong>补充知识</strong>：同一个传递函数可以有无穷多个状态空间实现，但最小实现的维数等于传递函数的 McMillan 度数。实现的等价性通过非奇异变换 $\\bar{x}=Tx$ 建立。</div>
+
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>建模步骤</strong><br>给定三阶系统 $\\dddot{y}+6\\ddot{y}+11\\dot{y}+6y=u$，选取状态变量 $x_1=y, x_2=\\dot{y}, x_3=\\ddot{y}$</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>一阶方程组</strong><br>$\\dot{x}_1=x_2,\\; \\dot{x}_2=x_3,\\; \\dot{x}_3=-6x_1-11x_2-6x_3+u$</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>矩阵形式</strong><br>$A$ 为友矩阵，$B=[0,0,1]^T$，$C=[1,0,0]$</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>验证</strong><br>$G(s)=C(sI-A)^{-1}B=\\frac{1}{(s+1)(s+2)(s+3)}$，与原方程一致 ✓</div></div>
+        </div>
+      ` },
+      { id: 'mct-03', title: '状态方程的求解', desc: '矩阵指数 e^{At}、时域响应计算', icon: '📈', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">状态方程的解是什么样的？</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          一旦建立了状态空间模型，下一步就是求解它。与标量微分方程 $\\dot{x}=ax+bu$ 的解类似，矩阵微分方程的解需要引入"矩阵指数" $e^{At}$ 的概念。矩阵指数是现代控制理论中最重要的数学工具之一。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">齐次解（自由响应）</h4>
+        <div class="formula-block">$$\\mathbf{x}(t) = e^{At}\\mathbf{x}(0) = \\Phi(t)\\mathbf{x}(0)$$</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">其中 $\\Phi(t)=e^{At}$ 称为<strong>状态转移矩阵</strong>（State Transition Matrix）。</p>
+
+        <h4 class="font-medium mt-6 mb-2">完全解（强制+自由）</h4>
+        <div class="formula-block">$$\\mathbf{x}(t) = e^{At}\\mathbf{x}(0) + \\int_0^t e^{A(t-\\tau)}B\\mathbf{u}(\\tau)d\\tau$$</div>
+
+        <h4 class="font-medium mt-6 mb-2">矩阵指数的性质</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>定义</strong>：$e^{At}=\\sum_{k=0}^{\\infty}\\frac{(At)^k}{k!}=I+At+\\frac{(At)^2}{2!}+\\cdots$</li>
+          <li><strong>初始条件</strong>：$e^{A \\cdot 0}=I$</li>
+          <li><strong>乘法性质</strong>：$e^{At}e^{As}=e^{A(t+s)}$</li>
+          <li><strong>逆</strong>：$(e^{At})^{-1}=e^{-At}$</li>
+          <li><strong>微分</strong>：$\\frac{d}{dt}e^{At}=Ae^{At}=e^{At}A$</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">$e^{At}$ 的计算方法</h4>
+        <div class="formula-block">$$e^{At} = \\mathcal{L}^{-1}\\left\\{(sI-A)^{-1}\\right\\}$$</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">这是最实用的方法：先求 $(sI-A)^{-1}$，再对每个元素取拉普拉斯反变换。</p>
+
+        <table class="compare-table">
+          <thead><tr><th>方法</th><th>适用条件</th><th>计算量</th><th>特点</th></tr></thead>
+          <tbody>
+            <tr><td><strong>拉普拉斯反变换</strong></td><td>一般 LTI 系统</td><td>中等</td><td>最常用，概念清晰</td></tr>
+            <tr><td><strong>Cayley-Hamilton</strong></td><td>特征值已知</td><td>较低</td><td>用特征多项式降阶</td></tr>
+            <tr><td><strong>对角化</strong></td><td>$A$ 可对角化</td><td>较低</td><td>$e^{At}=Te^{\\Lambda t}T^{-1}$</td></tr>
+            <tr><td><strong>Jordan 标准形</strong></td><td>有重特征值</td><td>较高</td><td>最一般的方法</td></tr>
+          </tbody>
+        </table>
+
+        <div class="info-box tip">💡 <strong>记忆口诀</strong>："齐次用转移，非齐加卷积"——齐次方程解就是状态转移矩阵乘初态，加上输入引起的卷积积分就是完全解。参见<a href="javascript:void(0)" onclick="App.loadDetail('act-03')">拉氏变换与传递函数</a>。</div>
+        <div class="info-box warning">⚠️ <strong>工程陷阱</strong>：计算 $e^{At}$ 时，部分分式展开必须考虑每个矩阵元素的拉普拉斯反变换，不能简单地对整个矩阵取反变换。特别注意重特征值情况下，$e^{\\lambda t}$ 会变成 $te^{\\lambda t}$ 等形式。</div>
+        <div class="info-box info">📘 <strong>Cayley-Hamilton 定理</strong>：方阵 $A$ 满足自身的特征方程。这允许将 $e^{At}$ 表示为 $I, A, A^2, \\ldots, A^{n-1}$ 的有限线性组合，大大简化计算。</div>
+
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>给定</strong><br>$A=\\begin{bmatrix}0&1\\\\-2&-3\\end{bmatrix}$，求 $e^{At}$</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>求逆</strong><br>计算 $(sI-A)^{-1}=\\frac{1}{(s+1)(s+2)}\\begin{bmatrix}s+3&1\\\\-2&s\\end{bmatrix}$</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>部分分式</strong><br>对各元素做部分分式展开并取拉普拉斯反变换</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>结果</strong><br>$e^{At}=\\begin{bmatrix}2e^{-t}-e^{-2t} & e^{-t}-e^{-2t}\\\\-2e^{-t}+2e^{-2t} & -e^{-t}+2e^{-2t}\\end{bmatrix}$</div></div>
+        </div>
+      ` },
+      { id: 'mct-04', title: '能控性与能观性', desc: '能控/能观判据、对偶原理、结构分解', icon: '🔍', tags: ['高频考点', '难点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">系统状态能否被完全操控和观测？</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          能控性（Controllability）和能观性（Observability）是现代控制理论中两个最基本、最重要的结构性概念。如果系统不能控，某些状态模态无法通过输入改变，极点配置将不可能完成；如果不能观，我们将无法设计状态观测器。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">能控性定义与判据</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">系统是<strong>完全能控</strong>的，当且仅当能控性矩阵满秩：</p>
+        <div class="formula-block">$$\\text{rank}\\,\\mathcal{C} = \\text{rank}\\,\\begin{bmatrix} B & AB & A^2B & \\cdots & A^{n-1}B \\end{bmatrix} = n$$</div>
+
+        <h4 class="font-medium mt-6 mb-2">能观性定义与判据</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">系统是<strong>完全能观</strong>的，当且仅当能观性矩阵满秩：</p>
+        <div class="formula-block">$$\\text{rank}\\,\\mathcal{O} = \\text{rank}\\,\\begin{bmatrix} C \\\\ CA \\\\ CA^2 \\\\ \\vdots \\\\ CA^{n-1} \\end{bmatrix} = n$$</div>
+
+        <h4 class="font-medium mt-6 mb-2">对偶原理</h4>
+        <div class="formula-block">$$\\Sigma=(A,B,C) \\text{ 能控} \\iff \\Sigma^*=(A^T,C^T,B^T) \\text{ 能观}$$</div>
+
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>PBH 秩判据</strong>：$\\text{rank}[sI-A \\; B]=n,\\;\\forall s\\in\\mathbb{C}$（能控）</li>
+          <li><strong>模态判据</strong>：$A$ 的同一特征值对应的 Jordan 块在 $B$ 中对应行不全为零</li>
+          <li><strong>Kalman 分解</strong>：将系统同时按能控/能观分解为四个子空间</li>
+          <li><strong>零极点对消</strong>：发生对消时，被对消的极点对应的模态是不能控或不能观的</li>
+        </ul>
+
+        <table class="compare-table">
+          <thead><tr><th>判据</th><th>条件</th><th>优点</th><th>缺点</th></tr></thead>
+          <tbody>
+            <tr><td><strong>秩判据（Kalman）</strong></td><td>$\\text{rank}\\,\\mathcal{C}=n$</td><td>直观、易编程</td><td>数值条件可能差</td></tr>
+            <tr><td><strong>PBH 判据</strong></td><td>$\\text{rank}[sI-A\\;B]=n,\\forall s$</td><td>可逐特征值检验</td><td>需先求特征值</td></tr>
+            <tr><td><strong>模态判据</strong></td><td>Jordan 块对应行非零</td><td>物理意义清晰</td><td>需 Jordan 分解</td></tr>
+            <tr><td><strong>Gram 矩阵判据</strong></td><td>$W_c>0$（正定）</td><td>可衡量能控程度</td><td>计算积分较复杂</td></tr>
+          </tbody>
+        </table>
+
+        <div class="info-box tip">💡 <strong>记忆口诀</strong>："能控看 $\\mathcal{C}$，能观看 $\\mathcal{O}$"——能控矩阵是 $A$ 对 $B$ 的反复作用，能观矩阵是 $A$ 对 $C$ 的反复作用。本节需要先掌握<a href="javascript:void(0)" onclick="App.loadDetail('mct-02')">状态空间建模</a>。</div>
+        <div class="info-box warning">⚠️ <strong>常见错误</strong>：能控性是系统的结构性质，不因状态变量选取而改变。但能控性矩阵的具体数值在不同坐标系下不同——判断的是秩，不是具体的矩阵值。</div>
+        <div class="info-box info">📘 <strong>Kalman 分解</strong>：对于一般系统，通过适当的状态变换可将系统分为四个子空间：既能控又能观、能控但不能观、能观但不能控、既不能控也不能观。传递函数只包含既能控又能观的部分。</div>
+
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>构造能控性矩阵</strong><br>给定 $A=\\begin{bmatrix}-1&0\\\\0&-2\\end{bmatrix}, B=\\begin{bmatrix}1\\\\1\\end{bmatrix}$</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>计算</strong><br>$\\mathcal{C}=[B \\; AB]=\\begin{bmatrix}1&-1\\\\1&-2\\end{bmatrix}$</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>判断秩</strong><br>$\\det(\\mathcal{C})=-1 \\neq 0$，故 $\\text{rank}\\,\\mathcal{C}=2=n$</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>结论</strong><br>系统完全能控。即使 $A$ 为对角阵，只要 $B$ 的每个分量都不为零，系统仍然能控</div></div>
+        </div>
+      ` },
+      { id: 'mct-05', title: '稳定性分析', desc: 'Lyapunov 稳定性、BIBO 稳定、渐近稳定', icon: '⚖️', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">系统是否稳定？——从输入输出到内部状态</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          稳定性是控制系统最基本的性能要求。经典控制中我们通过 Routh 判据和 Nyquist 判据分析 BIBO 稳定。现代控制理论引入了 Lyapunov 方法，从系统内部状态的角度给出了更深刻的稳定性判据，不仅适用于线性系统，更是分析非线性系统稳定性的核心工具。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">稳定性的基本概念</h4>
+        <div class="formula-block">$$\\text{Lyapunov 稳定：} \\forall \\epsilon>0,\\;\\exists \\delta>0,\\;\\|\\mathbf{x}(0)\\|<\\delta \\Rightarrow \\|\\mathbf{x}(t)\\|<\\epsilon$$</div>
+        <div class="formula-block">$$\\text{渐近稳定：Lyapunov 稳定} + \\lim_{t \\to \\infty}\\mathbf{x}(t)=\\mathbf{0}$$</div>
+
+        <h4 class="font-medium mt-6 mb-2">Lyapunov 第二方法（直接法）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">若存在正定函数 $V(\\mathbf{x})>0$ 使得 $\\dot{V}(\\mathbf{x}) \\leq 0$，则平衡点是 Lyapunov 稳定的；若 $\\dot{V}(\\mathbf{x})<0$（严格负定），则渐近稳定。</p>
+
+        <h4 class="font-medium mt-6 mb-2">线性系统的 Lyapunov 方程</h4>
+        <div class="formula-block">$$A^T P + PA = -Q$$</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">其中 $Q>0$ 为正定矩阵（通常取 $Q=I$）。若 Lyapunov 方程有唯一正定解 $P>0$，则系统渐近稳定。</p>
+
+        <table class="compare-table">
+          <thead><tr><th>稳定性类型</th><th>定义</th><th>判据</th><th>适用范围</th></tr></thead>
+          <tbody>
+            <tr><td><strong>BIBO 稳定</strong></td><td>有界输入→有界输出</td><td>极点均在左半平面</td><td>线性系统</td></tr>
+            <tr><td><strong>Lyapunov 稳定</strong></td><td>小扰动不发散</td><td>$\\exists V>0, \\dot{V}\\leq 0$</td><td>线性/非线性</td></tr>
+            <tr><td><strong>渐近稳定</strong></td><td>扰动衰减至零</td><td>$\\exists V>0, \\dot{V}<0$</td><td>线性/非线性</td></tr>
+            <tr><td><strong>指数稳定</strong></td><td>指数速率衰减</td><td>$\\|x(t)\\|\\leq\\alpha e^{-\\beta t}\\|x(0)\\|$</td><td>线性系统</td></tr>
+          </tbody>
+        </table>
+
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>特征值判据</strong>：$A$ 的所有特征值 $\\text{Re}(\\lambda_i)<0$ ⟺ 渐近稳定</li>
+          <li><strong>Lyapunov 方程</strong>：$A^TP+PA=-Q$ 有唯一正定解 $P>0$ ⟺ 渐近稳定</li>
+          <li><strong>对于 LTI 系统</strong>：BIBO 稳定 ⟺ 渐近稳定 ⟺ 特征值全在左半平面</li>
+        </ul>
+
+        <div class="info-box tip">💡 <strong>记忆口诀</strong>："$V$ 是能量，$\\dot{V}$ 是耗散"——$V(\\mathbf{x})$ 好比系统的能量，$\\dot{V}<0$ 表示能量在不断耗散，系统最终趋于零状态。复习<a href="javascript:void(0)" onclick="App.loadDetail('act-06')">稳定性判据</a>中的 Routh 判据。</div>
+        <div class="info-box warning">⚠️ <strong>工程陷阱</strong>：Lyapunov 稳定只保证系统不发散，不保证收敛！例如简谐振子 $\\ddot{x}+x=0$ 是 Lyapunov 稳定的（等幅振荡），但不是渐近稳定的。</div>
+        <div class="info-box info">📘 <strong>Krasovskii 方法</strong>：对于非线性系统 $\\dot{\\mathbf{x}}=f(\\mathbf{x})$，若雅可比矩阵 $J+J^T$ 处处负定，则系统全局渐近稳定。</div>
+
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>给定系统</strong><br>$A=\\begin{bmatrix}0&1\\\\-2&-3\\end{bmatrix}$，取 $Q=I$，解 Lyapunov 方程</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>设未知矩阵</strong><br>设 $P=\\begin{bmatrix}p_{11}&p_{12}\\\\p_{12}&p_{22}\\end{bmatrix}$，代入 $A^TP+PA=-I$</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>解方程</strong><br>解得 $p_{11}=\\frac{5}{4},\\;p_{12}=\\frac{1}{4},\\;p_{22}=\\frac{1}{4}$</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>验证正定</strong><br>$\\det P=1/4>0$，$p_{11}>0$，故 $P>0$，系统渐近稳定 ✓</div></div>
+        </div>
+      ` },
+      { id: 'mct-06', title: '状态反馈与极点配置', desc: 'Ackermann 公式、状态反馈增益设计', icon: '🎛️', tags: ['核心', '高频考点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">如何用状态反馈改变系统的行为？</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          经典控制中用输出反馈（如 PID）调节系统行为。现代控制理论中，更强大的工具是<strong>状态反馈</strong>——利用全部状态信息 $\\mathbf{u}=-K\\mathbf{x}+r$ 来设计控制器，将闭环极点配置到任意期望位置。极点配置的前提是系统完全能控。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">状态反馈控制律</h4>
+        <div class="formula-block">$$\\dot{\\mathbf{x}} = (A - BK)\\mathbf{x} + Br$$</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">闭环系统矩阵为 $A_{cl}=A-BK$，闭环极点为 $\\det(sI-(A-BK))=0$ 的根。</p>
+
+        <h4 class="font-medium mt-6 mb-2">极点配置定理</h4>
+        <div class="formula-block">$$\\text{系统}(A,B)\\text{完全能控} \\iff \\exists K \\text{ 使得 } A-BK \\text{ 的特征值可任意配置}$$</div>
+
+        <h4 class="font-medium mt-6 mb-2">Ackermann 公式</h4>
+        <div class="formula-block">$$K = \\begin{bmatrix} 0 & 0 & \\cdots & 1 \\end{bmatrix} \\mathcal{C}^{-1} \\alpha_d(A)$$</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">其中 $\\mathcal{C}$ 为能控性矩阵，$\\alpha_d(A)$ 为将期望特征多项式中的 $s$ 替换为 $A$。</p>
+
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>Step 1</strong>：验证系统完全能控（$\\text{rank}\\,\\mathcal{C}=n$）</li>
+          <li><strong>Step 2</strong>：根据性能要求选择期望极点 $\\{\\mu_1, \\mu_2, \\ldots, \\mu_n\\}$</li>
+          <li><strong>Step 3</strong>：构造期望特征多项式 $\\alpha_d(s)$</li>
+          <li><strong>Step 4</strong>：用 Ackermann 公式或直接比较法求 $K$</li>
+        </ul>
+
+        <table class="compare-table">
+          <thead><tr><th>方法</th><th>计算方式</th><th>适用阶数</th><th>特点</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Ackermann 公式</strong></td><td>矩阵求逆+代入</td><td>任意 $n$</td><td>解析解，适合编程</td></tr>
+            <tr><td><strong>直接比较法</strong></td><td>比较特征多项式系数</td><td>$n\\leq 3$</td><td>手工计算直观</td></tr>
+            <tr><td><strong>能控标准形法</strong></td><td>先变换再读取</td><td>任意 $n$</td><td>概念清晰</td></tr>
+            <tr><td><strong>LQR 方法</strong></td><td>解 Riccati 方程</td><td>任意 $n$</td><td>最优增益，鲁棒性好</td></tr>
+          </tbody>
+        </table>
+
+        <div class="info-box tip">💡 <strong>记忆口诀</strong>："能控才能配"——极点配置的前提是系统完全能控。$K$ 矩阵像一个"魔法旋钮"，能控的系统可以把所有极点"扭"到期望位置。参见<a href="javascript:void(0)" onclick="App.loadDetail('mct-04')">能控性与能观性</a>。</div>
+        <div class="info-box warning">⚠️ <strong>工程陷阱</strong>：理论上极点可以任意配置，但实际中不应把极点放在过于远离虚轴的位置，因为这需要极大的控制增益 $K$，导致执行器饱和。</div>
+        <div class="info-box info">📘 <strong>极点选择原则</strong>：工程中常选取主导极点使系统满足阻尼比 $\\zeta$ 和自然频率 $\\omega_n$ 的要求。非主导极点放在主导极点左侧 3-5 倍远处。参见<a href="javascript:void(0)" onclick="App.loadDetail('act-05')">时域性能指标</a>。</div>
+
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>给定系统</strong><br>$A=\\begin{bmatrix}0&1\\\\0&-2\\end{bmatrix}, B=\\begin{bmatrix}0\\\\1\\end{bmatrix}$，期望极点 $s=-1\\pm j$</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>期望特征多项式</strong><br>$\\alpha_d(s)=(s+1-j)(s+1+j)=s^2+2s+2$</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>设增益</strong><br>设 $K=[k_1 \\; k_2]$，$\\det(sI-(A-BK))=s^2+(2+k_2)s+k_1$</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>对比系数</strong><br>$k_1=2, k_2=0$，验证闭环极点为 $-1\\pm j$ ✓</div></div>
+        </div>
+      ` },
+      { id: 'mct-07', title: '观测器设计', desc: '全阶/降阶观测器、分离原理', icon: '👁️', tags: ['难点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">状态不能直接测量怎么办？</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          极点配置需要全部状态信息 $\\mathbf{x}$，但实际工程中很多状态变量无法直接测量。我们需要从可测量的输出 $\\mathbf{y}$ 和已知的输入 $\\mathbf{u}$ 来<strong>估计</strong>不可测的状态——这就是观测器的核心任务。观测器设计依赖于系统的能观性。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">全阶 Luenberger 观测器</h4>
+        <div class="formula-block">$$\\dot{\\hat{\\mathbf{x}}} = (A - LC)\\hat{\\mathbf{x}} + B\\mathbf{u} + L\\mathbf{y}$$</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">估计误差 $\\mathbf{e}=\\mathbf{x}-\\hat{\\mathbf{x}}$ 满足 $\\dot{\\mathbf{e}} = (A - LC)\\mathbf{e}$。若 $A-LC$ 的特征值全在左半平面，则估计收敛。</p>
+
+        <h4 class="font-medium mt-6 mb-2">分离原理</h4>
+        <div class="formula-block">$$\\text{闭环极点} = \\text{控制器极点}(A-BK) \\cup \\text{观测器极点}(A-LC)$$</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2"><strong>分离原理</strong>：控制器增益 $K$ 和观测器增益 $L$ 可以独立设计，互不影响。</p>
+
+        <h4 class="font-medium mt-6 mb-2">降阶观测器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">若 $p$ 个输出可直接测量，则只需要估计 $n-p$ 个状态，降低计算量和实现复杂度。</p>
+
+        <table class="compare-table">
+          <thead><tr><th>比较维度</th><th>全阶观测器</th><th>降阶观测器</th></tr></thead>
+          <tbody>
+            <tr><td><strong>观测器维数</strong></td><td>$n$（与系统同阶）</td><td>$n-p$</td></tr>
+            <tr><td><strong>抗噪性能</strong></td><td>较好</td><td>较差</td></tr>
+            <tr><td><strong>实现难度</strong></td><td>简单</td><td>较复杂</td></tr>
+            <tr><td><strong>工程适用</strong></td><td>通用</td><td>高速/低延迟场景</td></tr>
+          </tbody>
+        </table>
+
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>极点选择</strong>：观测器极点通常放在控制器极点左侧 2-5 倍，保证估计快速收敛</li>
+          <li><strong>抗噪权衡</strong>：极点太远会导致观测器对测量噪声敏感</li>
+          <li><strong>对偶关系</strong>：观测器设计 = 对偶系统的极点配置</li>
+        </ul>
+
+        <div class="info-box tip">💡 <strong>对偶原理妙用</strong>：观测器设计就是对偶系统的极点配置。$L$ 的求法 = 对偶系统 $(A^T, C^T)$ 的 $K^T$。掌握<a href="javascript:void(0)" onclick="App.loadDetail('mct-06')">极点配置</a>后，观测器设计自然水到渠成！</div>
+        <div class="info-box warning">⚠️ <strong>工程陷阱</strong>：分离原理保证了 $K$ 和 $L$ 的独立设计，但不保证鲁棒性最优。实际系统中，观测器极点过远会放大传感器噪声。工程中常采用卡尔曼滤波器代替固定增益观测器。</div>
+        <div class="info-box info">📘 <strong>Kalman 滤波器</strong>是最优观测器的特例：当过程噪声和测量噪声均为白噪声时，Kalman 滤波器通过实时调节 $L$ 使估计误差的方差最小。参见<a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">卡尔曼滤波</a>。</div>
+
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>给定系统</strong><br>$A=\\begin{bmatrix}0&1\\\\-2&-3\\end{bmatrix}, C=\\begin{bmatrix}1&0\\end{bmatrix}$，期望观测器极点 $s=-5, -5$</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>验证能观</strong><br>$\\mathcal{O}=\\begin{bmatrix}1&0\\\\0&1\\end{bmatrix}$，$\\text{rank}\\,\\mathcal{O}=2$ ✓</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>设增益</strong><br>设 $L=[l_1, l_2]^T$，$\\det(sI-(A-LC))=s^2+(3+l_1)s+(3l_1+l_2+2)$</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>对比系数</strong><br>对比 $(s+5)^2=s^2+10s+25$ 得 $l_1=7, l_2=4$</div></div>
+        </div>
+      ` },
+      { id: 'mct-08', title: '最优控制基础', desc: 'LQR 问题、Riccati 方程、性能指标', icon: '🏆', tags: ['难点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">什么是最优控制？</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          极点配置可以任意放置闭环极点，但无法告诉我们"放哪里最好"。最优控制理论给出了更深刻的答案：在某个性能指标下，寻找使代价最小的控制策略。线性二次型调节器（LQR）是最优控制中最经典、应用最广泛的框架，具有出色的鲁棒性保证。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">LQR 问题描述</h4>
+        <div class="formula-block">$$J = \\int_0^{\\infty}\\left(\\mathbf{x}^T Q\\mathbf{x} + \\mathbf{u}^T R\\mathbf{u}\\right)dt$$</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">其中 $Q \\geq 0$ 为状态权重矩阵，$R > 0$ 为控制权重矩阵。</p>
+
+        <h4 class="font-medium mt-6 mb-2">连续时间代数 Riccati 方程（CARE）</h4>
+        <div class="formula-block">$$A^TP + PA - PBR^{-1}B^TP + Q = 0$$</div>
+
+        <h4 class="font-medium mt-6 mb-2">最优控制律</h4>
+        <div class="formula-block">$$\\mathbf{u}^*(t) = -K\\mathbf{x}(t), \\quad K = R^{-1}B^TP$$</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">最优代价为 $J^*=\\mathbf{x}^T(0)P\\mathbf{x}(0)$。</p>
+
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>$Q$ 矩阵</strong>：状态偏差的惩罚权重，$Q$ 越大 → 越强调状态快速归零</li>
+          <li><strong>$R$ 矩阵</strong>：控制能量的惩罚权重，$R$ 越大 → 越节省控制能量</li>
+          <li><strong>$Q/R$ 比值</strong>：决定"快速响应"与"节能"之间的权衡</li>
+        </ul>
+
+        <table class="compare-table">
+          <thead><tr><th>比较维度</th><th>极点配置</th><th>LQR</th><th>LQG</th></tr></thead>
+          <tbody>
+            <tr><td><strong>设计目标</strong></td><td>指定极点位置</td><td>最小化二次型代价</td><td>带噪声的最优</td></tr>
+            <tr><td><strong>需要信息</strong></td><td>能控 + 期望极点</td><td>能控 + $Q, R$</td><td>能控能观 + 噪声统计</td></tr>
+            <tr><td><strong>鲁棒性</strong></td><td>不保证</td><td>$\\infty$ 增益裕度</td><td>不保证</td></tr>
+          </tbody>
+        </table>
+
+        <div class="info-box tip">💡 <strong>记忆口诀</strong>："$Q$ 管状态，$R$ 管能量，Riccati 出最优增益"——$Q$ 和 $R$ 是你给系统的"偏好设定"，Riccati 方程是求解最优策略的"核心引擎"。参见<a href="javascript:void(0)" onclick="App.loadDetail('mct-06')">极点配置</a>。</div>
+        <div class="info-box warning">⚠️ <strong>常见错误</strong>：$Q$ 必须半正定，$R$ 必须正定，否则最优解可能不存在。$(A,B)$ 能控是 Riccati 方程存在唯一正定解的充分条件。</div>
+        <div class="info-box info">📘 <strong>鲁棒性保证</strong>：LQR 的一个重要理论结果是保证至少 $\\infty$ 的增益裕度和 $60°$ 的相位裕度，这使得 LQR 在工程中非常受欢迎。</div>
+
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>给定系统</strong><br>$A=\\begin{bmatrix}0&1\\\\0&0\\end{bmatrix}, B=\\begin{bmatrix}0\\\\1\\end{bmatrix}, Q=I, R=1$</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>设 Riccati 解</strong><br>设 $P=\\begin{bmatrix}p_{11}&p_{12}\\\\p_{12}&p_{22}\\end{bmatrix}$，代入 $A^TP+PA-PBR^{-1}B^TP+Q=0$</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>解方程</strong><br>$-p_{12}^2+1=0,\\; p_{11}-p_{12}p_{22}=0,\\; 2p_{12}-p_{22}^2+1=0$</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>最优增益</strong><br>$K=R^{-1}B^TP=[1\\;\\sqrt{3}]$，闭环特征值为 $-\\frac{\\sqrt{3}}{2}\\pm j\\frac{1}{2}$</div></div>
+        </div>
+      ` },
+      { id: 'mct-09', title: '卡尔曼滤波', desc: '状态估计、预测-更新框架、协方差传播', icon: '📡', tags: ['难点', '工程应用'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">在噪声中如何精确估计状态？</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          Luenberger 观测器假设系统模型精确且测量无噪声，但现实中两者都不满足。卡尔曼滤波器（Kalman Filter）是处理含噪声系统状态估计的最优方法——它在最小均方误差意义下，给出状态的最优线性无偏估计。GPS 定位、自动驾驶传感器融合背后都是卡尔曼滤波。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">系统模型（带噪声）</h4>
+        <div class="formula-block">$$\\mathbf{x}_{k+1} = A\\mathbf{x}_k + B\\mathbf{u}_k + \\mathbf{w}_k, \\quad \\mathbf{w}_k \\sim \\mathcal{N}(0, Q_n)$$</div>
+        <div class="formula-block">$$\\mathbf{y}_k = C\\mathbf{x}_k + \\mathbf{v}_k, \\quad \\mathbf{v}_k \\sim \\mathcal{N}(0, R_n)$$</div>
+
+        <h4 class="font-medium mt-6 mb-2">预测步（Time Update）</h4>
+        <div class="formula-block">$$\\hat{\\mathbf{x}}_{k|k-1} = A\\hat{\\mathbf{x}}_{k-1|k-1} + B\\mathbf{u}_{k-1}$$</div>
+        <div class="formula-block">$$P_{k|k-1} = AP_{k-1|k-1}A^T + Q_n$$</div>
+
+        <h4 class="font-medium mt-6 mb-2">更新步（Measurement Update）</h4>
+        <div class="formula-block">$$K_k = P_{k|k-1}C^T(CP_{k|k-1}C^T + R_n)^{-1}$$</div>
+        <div class="formula-block">$$\\hat{\\mathbf{x}}_{k|k} = \\hat{\\mathbf{x}}_{k|k-1} + K_k(\\mathbf{y}_k - C\\hat{\\mathbf{x}}_{k|k-1})$$</div>
+        <div class="formula-block">$$P_{k|k} = (I - K_kC)P_{k|k-1}$$</div>
+
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>先验估计</strong> $\\hat{\\mathbf{x}}_{k|k-1}$：仅用模型预测</li>
+          <li><strong>后验估计</strong> $\\hat{\\mathbf{x}}_{k|k}$：融合预测和测量后的最优估计</li>
+          <li><strong>新息</strong> $\\tilde{\\mathbf{y}}_k$：测量值与预测值的差</li>
+          <li><strong>Kalman 增益</strong> $K_k$：决定"更相信模型"还是"更相信测量"</li>
+        </ul>
+
+        <table class="compare-table">
+          <thead><tr><th>比较维度</th><th>Luenberger 观测器</th><th>Kalman 滤波器</th></tr></thead>
+          <tbody>
+            <tr><td><strong>噪声假设</strong></td><td>确定性（无噪声）</td><td>随机（白高斯噪声）</td></tr>
+            <tr><td><strong>增益特性</strong></td><td>固定增益 $L$</td><td>时变增益 $K_k$</td></tr>
+            <tr><td><strong>最优性</strong></td><td>无最优性保证</td><td>最小均方误差最优</td></tr>
+            <tr><td><strong>设计参数</strong></td><td>期望极点</td><td>噪声协方差 $Q_n, R_n$</td></tr>
+          </tbody>
+        </table>
+
+        <div class="info-box tip">💡 <strong>直觉理解</strong>：$R_n$ 大（测量不准）→ $K_k$ 小 → 更相信模型；$Q_n$ 大（模型不可靠）→ $K_k$ 大 → 更相信测量。参见<a href="javascript:void(0)" onclick="App.loadDetail('mct-07')">观测器设计</a>和<a href="javascript:void(0)" onclick="App.loadDetail('mct-08')">最优控制基础</a>。</div>
+        <div class="info-box warning">⚠️ <strong>工程陷阱</strong>：$Q_n$ 和 $R_n$ 的选择对滤波性能影响巨大。$Q_n$ 设太小会导致滤波器"过度信任模型"；$R_n$ 设太小会放大噪声。实际中常通过实验调试来整定。</div>
+        <div class="info-box info">📘 <strong>稳态 Kalman 滤波</strong>：当时不变系统满足能控能观条件时，$P_k$ 收敛到稳态值，Kalman 增益为常值，滤波器退化为固定增益的最优 Luenberger 观测器。</div>
+
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>简化问题</strong><br>估计常量 $x$，测量 $y_k=x+v_k$，$A=C=1$</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>初始化</strong><br>$\\hat{x}_0=0, P_0=100$（大不确定性）</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>第 1 次测量</strong><br>$y_1=5.1$：$K_1=\\frac{100}{100+R_n}$，$\\hat{x}_1=K_1 \\cdot 5.1$</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>收敛</strong><br>随着测量次数增加，$P_k$ 递减，$K_k$ 减小，估计趋于平稳</div></div>
+        </div>
+      ` },
+      { id: 'mct-10', title: '离散状态空间', desc: '连续系统离散化、离散 Lyapunov 方程', icon: '💻', tags: ['工程应用'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">为什么要离散化？</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          数字计算机只能处理离散时间信号。无论是嵌入式控制器、DSP 芯片还是 PLC 系统，都需要将连续时间模型转化为离散时间模型才能实际实现。离散状态空间方法是连接理论与工程实现的桥梁。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">连续到离散的转化（零阶保持器法）</h4>
+        <div class="formula-block">$$G = e^{AT_s}, \\quad H = A^{-1}(G-I)B$$</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">其中 $T_s$ 为采样周期。离散状态方程：$\\mathbf{x}_{k+1} = G\\mathbf{x}_k + H\\mathbf{u}_k$</p>
+
+        <h4 class="font-medium mt-6 mb-2">离散系统的基本解</h4>
+        <div class="formula-block">$$\\mathbf{x}_k = G^k\\mathbf{x}_0 + \\sum_{i=0}^{k-1}G^{k-1-i}H\\mathbf{u}_i$$</div>
+
+        <h4 class="font-medium mt-6 mb-2">离散系统稳定性</h4>
+        <div class="formula-block">$$\\text{渐近稳定} \\iff \\text{所有特征值} \\; |\\lambda_i(G)| < 1$$</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">即所有特征值在复平面的单位圆内。</p>
+
+        <h4 class="font-medium mt-6 mb-2">离散 Lyapunov 方程</h4>
+        <div class="formula-block">$$G^TPG - P = -Q_d$$</div>
+
+        <table class="compare-table">
+          <thead><tr><th>性质</th><th>连续系统</th><th>离散系统</th></tr></thead>
+          <tbody>
+            <tr><td><strong>状态方程</strong></td><td>$\\dot{x}=Ax+Bu$</td><td>$x_{k+1}=Gx_k+Hu_k$</td></tr>
+            <tr><td><strong>状态转移</strong></td><td>$e^{At}$</td><td>$G^k$</td></tr>
+            <tr><td><strong>稳定条件</strong></td><td>$\\text{Re}(\\lambda_i)<0$</td><td>$|\\lambda_i|<1$</td></tr>
+            <tr><td><strong>Lyapunov</strong></td><td>$A^TP+PA=-Q$</td><td>$G^TPG-P=-Q_d$</td></tr>
+            <tr><td><strong>能控性矩阵</strong></td><td>$[B\\;AB\\;\\cdots\\;A^{n-1}B]$</td><td>$[H\\;GH\\;\\cdots\\;G^{n-1}H]$</td></tr>
+          </tbody>
+        </table>
+
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>采样定理</strong>：采样频率 $f_s \\geq 2f_{max}$（Nyquist），工程中常取 $f_s \\geq 10f_{max}$</li>
+          <li><strong>ZOH 假设</strong>：输入在一个采样周期内保持不变</li>
+          <li><strong>特征值映射</strong>：连续极点 $\\lambda$ → 离散极点 $e^{\\lambda T_s}$</li>
+          <li><strong>双线性变换</strong>：$s=\\frac{2}{T_s}\\frac{z-1}{z+1}$（Tustin 变换）</li>
+        </ul>
+
+        <div class="info-box tip">💡 <strong>记忆口诀</strong>："连续 $e^{At}$，离散 $G^k$；左半平面稳，单位圆内稳"。复习<a href="javascript:void(0)" onclick="App.loadDetail('mct-03')">状态方程求解</a>中矩阵指数的计算方法。</div>
+        <div class="info-box warning">⚠️ <strong>工程陷阱</strong>：离散化会改变系统的能控性和能观性！当采样周期 $T_s$ 选得不恰当时，原本能控的连续系统离散化后可能变得不能控。</div>
+        <div class="info-box info">📘 <strong>离散 LQR</strong>：离散系统的最优控制代价函数变为 $J=\\sum_{k=0}^{\\infty}(x_k^TQ_dx_k+u_k^TR_du_k)$，最优增益 $K=(R_d+H^TPH)^{-1}H^TPG$。参见<a href="javascript:void(0)" onclick="App.loadDetail('mct-08')">最优控制基础</a>。</div>
+
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>给定系统</strong><br>$A=\\begin{bmatrix}0&1\\\\-2&-3\\end{bmatrix}, B=\\begin{bmatrix}0\\\\1\\end{bmatrix}$，$T_s=0.1\\text{s}$</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>近似计算</strong><br>$G \\approx I+AT_s+\\frac{A^2T_s^2}{2}$</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>求 H</strong><br>$H=A^{-1}(G-I)B$</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>验证稳定性</strong><br>$|\\lambda(G)|=|e^{\\lambda_c T_s}|<1$（$\\lambda_c=-1,-2$），单位圆内 ✓</div></div>
+        </div>
+      ` },
+    ]
+  },
+
+  'signals': {
+    title: '信号与系统',
+    subtitle: '傅里叶/拉氏/Z 变换、LTI 系统分析、采样定理，信号处理与控制的数学基础',
+    icon: '📡',
+    sections: [
+      // ===== sig-01 信号与系统概述 =====
+      { id: 'sig-01', title: '信号与系统概述', desc: '信号分类、系统性质（线性/时不变/因果）', icon: '📊', tags: ['核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">信号与系统：信息处理的数学语言</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          现实世界充满"信号"——语音、图像、温度、股价随时间的变化，本质上都是携带信息的函数。<strong>系统</strong>则是对信号进行"加工"的规则：滤波器过滤噪声、放大器增强信号、编码器压缩数据。本节建立信号与系统的数学分类框架，为后续傅里叶变换、拉氏变换打下概念基础。
+        </p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          信号与系统课程的核心范式是：<strong>输入 → 系统 → 输出</strong>。给定输入信号 $x(t)$ 和系统特性，求输出 $y(t)$ 是正问题；从输入输出推断系统特性是辨识问题。LTI 系统的美妙之处在于：只要知道系统对一个冲激的响应，就能算出对任意输入的响应。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">信号的分类</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>连续时间信号</strong> vs <strong>离散时间信号</strong>：$x(t)$ 在实数域上连续定义；$x[n]$ 仅在整数时刻有值。前者对应模拟世界（电压、声波），后者对应数字世界（采样后的序列）。</li>
+          <li><strong>周期信号</strong> vs <strong>非周期信号</strong>：$x(t) = x(t+T_0)$，$T_0$ 为最小正周期。离散周期信号要求 $N$ 为整数周期：$x[n] = x[n+N]$。</li>
+          <li><strong>能量信号</strong> vs <strong>功率信号</strong>：能量有限（$0 < E < \\infty$，平均功率为零）的信号是能量信号；功率有限（$0 < P < \\infty$，能量无穷）的是功率信号。</li>
+          <li><strong>确定信号</strong> vs <strong>随机信号</strong>：前者可用确定函数表示，后者只能用统计特性描述。</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">信号的能量与功率</h4>
+        <div class="formula-block">
+          $$E = \\int_{-\\infty}^{+\\infty} |x(t)|^2 \\, dt \\quad (\\text{连续}) \\qquad E = \\sum_{n=-\\infty}^{+\\infty} |x[n]|^2 \\quad (\\text{离散})$$
+          $$P = \\lim_{T \\to \\infty} \\frac{1}{2T} \\int_{-T}^{+T} |x(t)|^2 \\, dt$$
+        </div>
+        <div class="info-box info">📘 <strong>物理意义</strong>：能量 $E$ 等于信号瞬时功率 $|x(t)|^2$ 的全时间积分，单位为焦耳（若 $x(t)$ 为电压，则 $E$ 的单位是伏特²·秒，除以电阻后得焦耳）。实际工程中，能量信号持续时间有限（如脉冲），功率信号持续时间无限（如正弦波）。</div>
+
+        <h4 class="font-medium mt-6 mb-2">常见基本信号</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>单位冲激（Dirac δ）</strong>：$\\int_{-\\infty}^{+\\infty}\\delta(t)\\,dt = 1$，$\\delta(t) = 0,\\; t \\ne 0$。不是普通函数而是广义函数（分布），具有<strong>筛选性质</strong>：$\\int x(t)\\delta(t-t_0)\\,dt = x(t_0)$。</li>
+          <li><strong>单位阶跃</strong>：$u(t) = 1,\\; t > 0$；$u(t) = 0,\\; t &lt; 0$。$u(t)$ 与 $\\delta(t)$ 的关系：$\\delta(t) = \\frac{du(t)}{dt}$，$u(t) = \\int_{-\\infty}^{t} \\delta(\\tau)\\,d\\tau$。</li>
+          <li><strong>复指数信号</strong>：$x(t) = e^{st}$，$s = \\sigma + j\\omega$。它是 LTI 系统分析的核心"特征函数"——LTI 系统对复指数输入的输出仍是复指数，只是幅度和相位发生改变。</li>
+          <li><strong>正弦信号</strong>：$x(t) = A\\cos(\\omega_0 t + \\phi)$，是复指数的实部，周期 $T_0 = 2\\pi / \\omega_0$。</li>
+        </ul>
+        <div class="formula-block">
+          $$e^{st} = e^{\\sigma t}(\\cos\\omega t + j\\sin\\omega t) \\qquad \\text{当 } \\sigma=0 \\text{ 时退化为纯正弦}$$
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">系统的性质</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>性质</th><th>数学定义</th><th>直觉理解</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">线性（齐次+叠加）</td><td>$T[a_1x_1 + a_2x_2] = a_1T[x_1] + a_2T[x_2]$</td><td>输入加权和的输出 = 输出的加权和</td></tr>
+            <tr><td class="font-medium">时不变</td><td>若 $x(t) \\to y(t)$，则 $x(t-t_0) \\to y(t-t_0)$</td><td>系统特性不随时间改变</td></tr>
+            <tr><td class="font-medium">因果性</td><td>输出只依赖当前及过去的输入</td><td>$t_0$ 时刻的输出不依赖 $t>t_0$ 的输入</td></tr>
+            <tr><td class="font-medium">稳定性（BIBO）</td><td>有界输入必有界输出</td><td>$|x(t)|\\le M \\Rightarrow |y(t)|\\le N &lt; \\infty$</td></tr>
+            <tr><td class="font-medium">记忆性/无记忆</td><td>无记忆：$y(t)$ 只取决于 $x(t)$ 同一时刻</td><td>电阻无记忆，电容有记忆</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">判断系统性质的例题</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          判断 $y(t) = x(t) \\cdot \\cos(\\omega_0 t)$ 是否满足线性、时不变性、因果性。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：判断线性</strong>。设 $x = a_1x_1 + a_2x_2$，则输出 $y = (a_1x_1 + a_2x_2)\\cos\\omega_0 t = a_1x_1\\cos\\omega_0 t + a_2x_2\\cos\\omega_0 t = a_1y_1 + a_2y_2$。✓ 线性。</div></div>
+          <div class="step-item"><div><strong>第二步：判断时不变</strong>。$x(t-t_0)$ 的输出为 $x(t-t_0)\\cos\\omega_0 t$；而 $y(t-t_0) = x(t-t_0)\\cos\\omega_0(t-t_0)$。两者不等（$\\cos\\omega_0 t \\ne \\cos\\omega_0(t-t_0)$）。✗ 时变系统。</div></div>
+          <div class="step-item"><div><strong>第三步：判断因果</strong>。$y(t) = x(t)\\cos\\omega_0 t$，输出只取决于当前时刻 $x(t)$。✓ 因果。结论：该系统线性、因果、时变。</div></div>
+        </div>
+
+        <div class="info-box tip">💡 <strong>记忆口诀</strong>："线性看叠加，时不变看移位，因果看时序，稳定看有界。" 考试常考组合判断——先查线性，再查时不变，最后查因果。注意 $y(t) = x(2t)$ 是线性、时变、非因果的（压缩了时间轴，未来输入影响当前输出）。</div>
+        <div class="info-box warning">⚠️ <strong>常见错误</strong>：混淆"线性"和"增量线性"。$y(t) = 2x(t) + 3$ 不满足齐次性（$T[kx] = 2kx+3 \\ne k(2x+3)$），但满足"增量线性"：去掉常数项后的增量满足叠加。考试中"线性"指严格齐次+叠加，不是增量线性。</div>
+        <h4 class="font-medium mt-6 mb-2">LTI 系统的特征函数</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          复指数信号 $e^{st}$ 是 LTI 系统的<strong>特征函数</strong>：当输入为 $e^{st}$ 时，输出为
+        </p>
+        <div class="formula-block">
+          $$y(t) = H(s)\\,e^{st}$$
+          <div class="text-sm text-gray-500 mt-2">$H(s) = \\int_{-\\infty}^{+\\infty} h(\\tau)e^{-s\\tau}d\\tau$ 是系统的"特征值"，由冲激响应完全决定</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          这一结论的深远意义在于：既然任意信号都可以分解为复指数的叠加（傅里叶变换/拉氏变换），那么 LTI 系统对任意输入的响应就是各复指数分量乘以对应"特征值"后的叠加。这正是频域分析方法的理论根基。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">连续与离散的对照</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>概念</th><th>连续时间</th><th>离散时间</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">自变量</td><td>$t$（实数）</td><td>$n$（整数）</td></tr>
+            <tr><td class="font-medium">冲激</td><td>$\\delta(t)$（广义函数）</td><td>$\\delta[n]$（普通序列）</td></tr>
+            <tr><td class="font-medium">特征函数</td><td>$e^{st}$，$s=\\sigma+j\\omega$</td><td>$z^n$，$z=re^{j\\omega}$</td></tr>
+            <tr><td class="font-medium">系统分析工具</td><td>拉氏变换 $H(s)$</td><td>Z 变换 $H(z)$</td></tr>
+            <tr><td class="font-medium">稳定条件</td><td>极点在 $s$ 左半平面</td><td>极点在 $z$ 单位圆内</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box info">📘 <strong>跨学科联系</strong>：信号与系统中的"线性时不变"和<a href="javascript:void(0)" onclick="App.loadDetail('act-01')">自动控制原理中的线性定常系统</a>本质相同。控制系统的传递函数 $H(s)$ 就是 LTI 系统函数在 $s$ 域的表达。线性代数中的<a href="javascript:void(0)" onclick="App.loadDetail('la-07')">特征值与特征向量</a>是复指数信号 $e^{st}$ 作为 LTI 系统"特征函数"的数学基础。电路分析中<a href="javascript:void(0)" onclick="App.loadDetail('circ-04')">一阶电路暂态</a>和<a href="javascript:void(0)" onclick="App.loadDetail('circ-05')">二阶电路暂态</a>本质上就是 LTI 系统对指数/正弦输入的响应。</div>
+      ` },
+
+      // ===== sig-02 连续时间 LTI 系统 =====
+      { id: 'sig-02', title: '连续时间 LTI 系统', desc: '卷积积分、冲激响应、阶跃响应', icon: '🔗', tags: ['核心', '高频考点'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">卷积：LTI 系统的万能钥匙</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          连续时间 LTI 系统的<strong>核心结论</strong>：系统完全由其冲激响应 $h(t)$ 刻画。任何输入 $x(t)$ 的输出都可通过卷积积分 $y(t) = x(t) * h(t)$ 求得。这是信号与系统中最优美的定理之一——无论系统多复杂，只要知道它对 $\\delta(t)$ 的响应，就能算出对任意输入的响应。
+        </p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          本节掌握卷积积分的计算方法、性质，以及冲激响应与系统特性的关系。这是后续<a href="javascript:void(0)" onclick="App.loadDetail('sig-04')">傅里叶变换</a>和<a href="javascript:void(0)" onclick="App.loadDetail('sig-05')">拉氏变换</a>的基础——时域卷积对应频域/复频域乘积。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">卷积积分的定义</h4>
+        <div class="formula-block">
+          $$y(t) = x(t) * h(t) = \\int_{-\\infty}^{+\\infty} x(\\tau) \\, h(t - \\tau) \\, d\\tau$$
+          <div class="text-sm text-gray-500 mt-2">等价形式：$y(t) = \\int_{-\\infty}^{+\\infty} h(\\tau)\\,x(t-\\tau)\\,d\\tau$（交换律保证结果相同）</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">卷积的物理直觉</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>分解</strong>：任意输入 $x(t)$ 可分解为无穷多个冲激的加权叠加：$x(t) = \\int x(\\tau)\\delta(t-\\tau)\\,d\\tau$。</li>
+          <li><strong>响应叠加</strong>：每个冲激 $\\delta(t-\\tau)$ 经系统产生 $h(t-\\tau)$，加权 $x(\\tau)$ 后叠加。</li>
+          <li><strong>翻转-平移-乘积-积分</strong>：卷积的操作步骤——把 $h(\\tau)$ 翻转成 $h(-\\tau)$，平移 $t$ 得 $h(t-\\tau)$，与 $x(\\tau)$ 逐点相乘后积分。</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">卷积的性质</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>性质</th><th>公式</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">交换律</td><td>$x * h = h * x$</td><td>翻转哪个信号结果一样</td></tr>
+            <tr><td class="font-medium">分配律</td><td>$x * (h_1 + h_2) = x * h_1 + x * h_2$</td><td>并联系统的冲激响应相加</td></tr>
+            <tr><td class="font-medium">结合律</td><td>$(x * h_1) * h_2 = x * (h_1 * h_2)$</td><td>级联系统的冲激响应做卷积</td></tr>
+            <tr><td class="font-medium">与 δ 的卷积</td><td>$x(t) * \\delta(t) = x(t)$</td><td>$\\delta$ 是卷积的"单位元"</td></tr>
+            <tr><td class="font-medium">与 δ(t-T) 的卷积</td><td>$x(t) * \\delta(t-T) = x(t-T)$</td><td>延迟 $T$ 秒</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">BIBO 稳定性与因果性的充要条件</h4>
+        <div class="formula-block">
+          <div class="text-left">
+            <strong>BIBO 稳定</strong>：$\\int_{-\\infty}^{+\\infty} |h(t)|\\,dt &lt; \\infty$（冲激响应绝对可积）<br><br>
+            <strong>因果</strong>：$h(t) = 0,\\; t &lt; 0$（冲激响应是因果信号）
+          </div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：计算 $h(t) = e^{-at}u(t)$ 与 $x(t) = u(t)$ 的卷积</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          设 $a > 0$，求 $y(t) = x(t) * h(t) = u(t) * e^{-at}u(t)$。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：写出积分</strong>。$y(t) = \\int_{-\\infty}^{+\\infty} u(\\tau) \\cdot e^{-a(t-\\tau)}u(t-\\tau)\\,d\\tau$。两个 $u$ 函数限定 $\\tau > 0$ 且 $t-\\tau > 0$，即 $0 &lt; \\tau &lt; t$。</div></div>
+          <div class="step-item"><div><strong>第二步：确定积分限</strong>。当 $t &lt; 0$ 时积分区间为空，$y(t) = 0$；当 $t \\ge 0$ 时，$y(t) = \\int_0^t e^{-a(t-\\tau)}\\,d\\tau$。</div></div>
+          <div class="step-item"><div><strong>第三步：计算积分</strong>。$y(t) = e^{-at} \\int_0^t e^{a\\tau}\\,d\\tau = e^{-at} \\cdot \\frac{1}{a}(e^{at} - 1) = \\frac{1}{a}(1 - e^{-at})u(t)$。</div></div>
+        </div>
+        <div class="formula-block">
+          $$y(t) = \\frac{1}{a}(1 - e^{-at})\\,u(t)$$
+          <div class="text-sm text-gray-500 mt-2">这就是一阶 RC 电路对阶跃输入的充电响应</div>
+        </div>
+
+        <div class="info-box tip">💡 <strong>阶跃响应与冲激响应</strong>：$s(t) = \\int_{-\\infty}^{t} h(\\tau)\\,d\\tau$（阶跃响应是冲激响应的积分）。反过来 $h(t) = \\frac{ds(t)}{dt}$。考试中常由阶跃响应求冲激响应——直接求导即可。</div>
+        <div class="info-box warning">⚠️ <strong>卷积计算陷阱</strong>：分段确定积分限是卷积计算的难点。关键是画出 $x(\\tau)$ 和 $h(t-\\tau)$ 的重叠区间。$t$ 不同取值范围要分别讨论，避免遗漏或积分限错误。考试时间紧张时极易出错，建议画图辅助。</div>
+        <h4 class="font-medium mt-6 mb-2">级联与并联系统</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          LTI 系统的级联和并联可以用卷积性质简洁表达：
+        </p>
+        <div class="formula-block">
+          <div class="text-left">
+            <strong>级联</strong>（$h_1$ 后接 $h_2$）：$h_{\\text{total}}(t) = h_1(t) * h_2(t)$<br><br>
+            <strong>并联</strong>（$h_1$ 和 $h_2$ 同时接收输入）：$h_{\\text{total}}(t) = h_1(t) + h_2(t)$
+          </div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          级联时顺序不影响结果（交换律），这是 LTI 系统特有的性质。非线性或时变系统的级联顺序改变，输出就不同。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">常用信号卷积结果速查</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>$x(t)$</th><th>$h(t)$</th><th>$x(t) * h(t)$</th></tr></thead>
+          <tbody>
+            <tr><td>$e^{-at}u(t)$</td><td>$e^{-bt}u(t)$</td><td>$\\frac{e^{-at}-e^{-bt}}{b-a}u(t)$（$a\\ne b$）</td></tr>
+            <tr><td>$e^{-at}u(t)$</td><td>$e^{-at}u(t)$</td><td>$te^{-at}u(t)$</td></tr>
+            <tr><td>$u(t)$</td><td>$u(t)$</td><td>$t\\,u(t)$（斜坡函数）</td></tr>
+            <tr><td>$u(t)$</td><td>$e^{-at}u(t)$</td><td>$\\frac{1}{a}(1-e^{-at})u(t)$</td></tr>
+            <tr><td>$\\delta(t-t_1)$</td><td>$\\delta(t-t_2)$</td><td>$\\delta(t-t_1-t_2)$</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box info">📘 <strong>工程应用</strong>：卷积在图像处理中用于模糊（高斯核卷积）、锐化（拉普拉斯核卷积）；在音频中用于混响效果（房间脉冲响应卷积）。离散卷积是数字滤波的数学基础，见<a href="javascript:void(0)" onclick="App.loadDetail('sig-07')">频率响应与滤波器</a>。在<a href="javascript:void(0)" onclick="App.loadDetail('act-02')">自动控制的数学模型</a>中，卷积积分也用于求解零状态响应。</div>
+      ` },
+
+      // ===== sig-03 傅里叶级数 =====
+      { id: 'sig-03', title: '傅里叶级数', desc: '周期信号频谱分析、三角/指数形式', icon: '📈', tags: ['核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">傅里叶级数：用正弦波拼出任意波形</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          傅里叶级数的核心思想：任何满足狄利克雷条件的周期信号，都可以分解为<strong>基波和谐波</strong>的叠加——不同频率的正弦波通过适当的幅度和相位组合，拼出任意复杂的周期波形。这一思想是整个频域分析的基石，也是从时域思维转向频域思维的第一步。
+        </p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          从工程角度看，频谱分析能告诉你信号"包含哪些频率成分"以及"各成分的强度和相位"。这在通信（载波调制）、音频（均衡器）、振动分析（机械故障诊断）中都有直接应用。高数中已经学过<a href="javascript:void(0)" onclick="App.loadDetail('hm-16')">傅里叶级数的数学基础</a>，本节从信号分析角度重新审视。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">三角形式的傅里叶级数</h4>
+        <div class="formula-block">
+          $$x(t) = a_0 + \\sum_{n=1}^{\\infty} \\left[ a_n \\cos(n\\omega_0 t) + b_n \\sin(n\\omega_0 t) \\right]$$
+          $$a_0 = \\frac{1}{T_0}\\int_{T_0} x(t)\\,dt, \\quad a_n = \\frac{2}{T_0}\\int_{T_0} x(t)\\cos(n\\omega_0 t)\\,dt, \\quad b_n = \\frac{2}{T_0}\\int_{T_0} x(t)\\sin(n\\omega_0 t)\\,dt$$
+          <div class="text-sm text-gray-500 mt-2">其中 $\\omega_0 = 2\\pi/T_0$ 为基波角频率，$T_0$ 为周期</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">指数形式的傅里叶级数</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          利用欧拉公式 $\\cos\\theta = \\frac{e^{j\\theta}+e^{-j\\theta}}{2}$，三角形式可改写为更紧凑的<strong>指数形式</strong>：
+        </p>
+        <div class="formula-block">
+          $$x(t) = \\sum_{n=-\\infty}^{+\\infty} c_n \\, e^{jn\\omega_0 t}, \\qquad c_n = \\frac{1}{T_0}\\int_{T_0} x(t) \\, e^{-jn\\omega_0 t}\\,dt$$
+          <div class="text-sm text-gray-500 mt-2">$c_n$ 是复数，$|c_n|$ 为幅度谱，$\\angle c_n$ 为相位谱；$c_0 = a_0$</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">频谱的关键特性</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>离散性</strong>：周期信号的频谱只在 $n\\omega_0$ 处有值（离散谱/线谱），相邻谱线间隔为基频 $\\omega_0$。</li>
+          <li><strong>谐波性</strong>：频谱分量都是基频的整数倍，没有"非整数倍频率"。</li>
+          <li><strong>收敛性</strong>：对于满足狄利克雷条件的信号，$|c_n| \\to 0$（$|n| \\to \\infty$）。高频谐波幅度衰减。</li>
+          <li><strong>对称性</strong>：实信号的频谱满足 $c_{-n} = c_n^*$（共轭对称），因此幅度谱偶对称、相位谱奇对称。</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">方波信号的傅里叶级数展开</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          求周期为 $T_0$、幅度为 $A$ 的对称方波（占空比 50%）的傅里叶级数。方波在一个周期内：$x(t) = A$（$0 &lt; t &lt; T_0/2$），$x(t) = -A$（$-T_0/2 &lt; t &lt; 0$）。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：判断对称性</strong>。方波是奇函数，$a_0 = 0$，$a_n = 0$，只需算 $b_n$。</div></div>
+          <div class="step-item"><div><strong>第二步：计算 $b_n$</strong>。$b_n = \\frac{2}{T_0}\\int_{-T_0/2}^{T_0/2} x(t)\\sin(n\\omega_0 t)\\,dt$。奇函数 $\\times$ 偶函数 = 奇函数，积分化简。最终 $b_n = \\frac{4A}{n\\pi}$（$n$ 为奇数），$b_n = 0$（$n$ 为偶数）。</div></div>
+          <div class="step-item"><div><strong>第三步：写出结果</strong>。$x(t) = \\frac{4A}{\\pi}\\left[\\sin\\omega_0 t + \\frac{1}{3}\\sin 3\\omega_0 t + \\frac{1}{5}\\sin 5\\omega_0 t + \\cdots\\right]$。只有奇次谐波，幅度按 $1/n$ 衰减。</div></div>
+        </div>
+        <div class="formula-block">
+          $$x_{\\text{square}}(t) = \\frac{4A}{\\pi} \\sum_{k=0}^{\\infty} \\frac{1}{2k+1} \\sin((2k+1)\\omega_0 t)$$
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">吉布斯现象</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          用有限项傅里叶级数逼近方波时，在<strong>间断点附近</strong>会出现约 9% 的过冲（overshoot），且不论取多少项都不会消失——这就是<strong>吉布斯现象</strong>。过冲的幅度趋于信号跳跃幅度的约 8.95%，但过冲的宽度随项数增加而缩小。
+        </p>
+
+        <div class="info-box tip">💡 <strong>记忆技巧</strong>：方波只有奇次谐波（1、3、5、…），幅度按 $1/n$ 衰减；三角波只有奇次谐波，幅度按 $1/n^2$ 衰减（衰减更快，波形更光滑）。锯齿波包含所有谐波（$1/n$ 衰减）。口诀："方波奇次一比n，三角奇次一比n方。"</div>
+        <div class="info-box warning">⚠️ <strong>常见错误</strong>：指数形式中 $n$ 从 $-\\infty$ 到 $+\\infty$，不要只算正数项！$c_{-n}$ 和 $c_n$ 共轭对称，共同贡献频率 $n\\omega_0$ 处的实际幅度。另外，$c_n$ 是复数，写答案时要同时写幅度和相位，不能只写实部。</div>
+        <h4 class="font-medium mt-6 mb-2">帕塞瓦尔定理（傅里叶级数形式）</h4>
+        <div class="formula-block">
+          $$\\frac{1}{T_0}\\int_{T_0}|x(t)|^2\\,dt = a_0^2 + \\frac{1}{2}\\sum_{n=1}^{\\infty}(a_n^2 + b_n^2) = \\sum_{n=-\\infty}^{+\\infty}|c_n|^2$$
+          <div class="text-sm text-gray-500 mt-2">周期信号的平均功率 = 各谐波分量功率之和（功率守恒）</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          这一定理说明各频率分量的功率互相独立，可以直接相加。工程上用<strong>功率谱</strong> $|c_n|^2$ 分析信号能量在各频率上的分布，用于判断信号带宽、设计滤波器截止频率。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">狄利克雷收敛条件</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li>在一个周期内<strong>绝对可积</strong>：$\\int_{T_0}|x(t)|dt &lt; \\infty$。</li>
+          <li>在一个周期内只有<strong>有限个极值点</strong>（单调区间有限）。</li>
+          <li>在一个周期内只有<strong>有限个第一类间断点</strong>（左右极限都存在）。</li>
+          <li>在连续点处，级数收敛到 $x(t)$；在间断点处，收敛到左右极限的<strong>平均值</strong> $\\frac{x(t^+)+x(t^-)}{2}$。</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">偶函数与奇函数的简化</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>对称性</th><th>三角形式简化</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">偶函数 $x(t)=x(-t)$</td><td>$b_n=0$，只含 $\\cos$ 项</td><td>余弦是偶函数</td></tr>
+            <tr><td class="font-medium">奇函数 $x(t)=-x(-t)$</td><td>$a_0=a_n=0$，只含 $\\sin$ 项</td><td>正弦是奇函数</td></tr>
+            <tr><td class="font-medium">半波对称 $x(t)=-x(t+T/2)$</td><td>只有奇次谐波</td><td>方波、三角波典型特征</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          利用对称性可以大幅简化计算。方波是奇函数+半波对称，因此只需计算 $b_n$ 且只有奇次谐波，计算量减少四分之三。
+        </p>
+
+        <div class="info-box info">📘 <strong>工程意义</strong>：方波的谐波分析直接解释了为什么数字信号会产生电磁干扰——方波含无穷多次谐波，高频分量通过导线辐射出去。工程上用<a href="javascript:void(0)" onclick="App.loadDetail('sig-07')">低通滤波器</a>截断高频谐波来抑制 EMI。与<a href="javascript:void(0)" onclick="App.loadDetail('circ-08')">谐振电路</a>中频率选择性的联系也在此。在<a href="javascript:void(0)" onclick="App.loadDetail('hm-16')">高等数学的傅里叶级数</a>中详细讨论了收敛性证明和各类展开技巧。</div>
+      ` },
+
+      // ===== sig-04 傅里叶变换 =====
+      { id: 'sig-04', title: '傅里叶变换', desc: '非周期信号频谱、性质与常见变换对', icon: '🌊', tags: ['核心', '高频考点'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">傅里叶变换：从离散谱到连续谱</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          傅里叶级数只适用于周期信号，而现实中的大多数信号（语音、图像、脉冲）是非周期的。傅里叶变换是傅里叶级数的自然推广：当周期 $T_0 \\to \\infty$，离散谱线之间的间隔 $\\omega_0 \\to 0$，频谱从离散变为<strong>连续</strong>。傅里叶变换将时域信号 $x(t)$ 映射为频域函数 $X(j\\omega)$，揭示信号包含的全部频率成分。
+        </p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          傅里叶变换是信号处理的灵魂工具。在<a href="javascript:void(0)" onclick="App.loadDetail('sig-07')">滤波器设计</a>中，频域相乘比时域卷积更直观；在<a href="javascript:void(0)" onclick="App.loadDetail('sig-08')">采样定理</a>中，频谱搬移解释了混叠现象；在通信中，调制解调的本质就是频谱搬移。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">傅里叶变换对</h4>
+        <div class="formula-block">
+          <div class="text-left">
+            <strong>正变换</strong>（时域 → 频域）：
+            $$X(j\\omega) = \\int_{-\\infty}^{+\\infty} x(t)\\,e^{-j\\omega t}\\,dt$$
+            <strong>逆变换</strong>（频域 → 时域）：
+            $$x(t) = \\frac{1}{2\\pi}\\int_{-\\infty}^{+\\infty} X(j\\omega)\\,e^{j\\omega t}\\,d\\omega$$
+          </div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">常用傅里叶变换对（必背）</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>时域信号 $x(t)$</th><th>频域 $X(j\\omega)$</th><th>备注</th></tr></thead>
+          <tbody>
+            <tr><td>$\\delta(t)$</td><td>$1$</td><td>冲激包含所有频率（均匀分布）</td></tr>
+            <tr><td>$1$</td><td>$2\\pi\\,\\delta(\\omega)$</td><td>直流只有零频率</td></tr>
+            <tr><td>$e^{-at}u(t)$，$a>0$</td><td>$\\frac{1}{a + j\\omega}$</td><td>单边指数衰减</td></tr>
+            <tr><td>$e^{-a|t|}$，$a>0$</td><td>$\\frac{2a}{a^2 + \\omega^2}$</td><td>双边指数衰减</td></tr>
+            <tr><td>$\\text{rect}(t/\\tau)$（矩形脉冲）</td><td>$\\tau\\,\\text{Sa}(\\omega\\tau/2)$</td><td>$\\text{Sa}(x) = \\sin x/x$</td></tr>
+            <tr><td>$\\text{Sa}(\\omega_0 t)$（抽样函数）</td><td>$\\frac{\\pi}{\\omega_0}\\text{rect}(\\omega/2\\omega_0)$</td><td>时频对称</td></tr>
+            <tr><td>$e^{j\\omega_0 t}$</td><td>$2\\pi\\,\\delta(\\omega - \\omega_0)$</td><td>复正弦的频谱</td></tr>
+            <tr><td>$\\cos\\omega_0 t$</td><td>$\\pi[\\delta(\\omega-\\omega_0)+\\delta(\\omega+\\omega_0)]$</td><td>实正弦两条谱线</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">傅里叶变换的重要性质</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>性质</th><th>公式</th><th>工程意义</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">线性</td><td>$ax_1 + bx_2 \\leftrightarrow aX_1 + bX_2$</td><td>叠加信号的频谱 = 频谱的叠加</td></tr>
+            <tr><td class="font-medium">时移</td><td>$x(t-t_0) \\leftrightarrow e^{-j\\omega t_0}X(j\\omega)$</td><td>时移只改相位，不改幅度谱</td></tr>
+            <tr><td class="font-medium">频移（调制）</td><td>$x(t)e^{j\\omega_0 t} \\leftrightarrow X(j(\\omega-\\omega_0))$</td><td>调制将频谱搬移到载波频率</td></tr>
+            <tr><td class="font-medium"><strong>时域卷积</strong></td><td>$x_1 * x_2 \\leftrightarrow X_1 \\cdot X_2$</td><td>时域卷积 = 频域乘积（核心！）</td></tr>
+            <tr><td class="font-medium"><strong>频域卷积</strong></td><td>$x_1 \\cdot x_2 \\leftrightarrow \\frac{1}{2\\pi}X_1 * X_2$</td><td>时域乘积 = 频域卷积</td></tr>
+            <tr><td class="font-medium">时域微分</td><td>$\\frac{dx}{dt} \\leftrightarrow j\\omega X(j\\omega)$</td><td>微分增强高频（斜率大→高频丰富）</td></tr>
+            <tr><td class="font-medium">Parseval 定理</td><td>$\\int|x(t)|^2 dt = \\frac{1}{2\\pi}\\int|X(j\\omega)|^2 d\\omega$</td><td>时域能量 = 频域能量（能量守恒）</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：求矩形脉冲的傅里叶变换</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          求 $x(t) = \\text{rect}(t/\\tau)$（幅度为 1、宽度为 $\\tau$ 的矩形脉冲）的频谱。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：写出定义</strong>。$X(j\\omega) = \\int_{-\\tau/2}^{\\tau/2} 1 \\cdot e^{-j\\omega t}\\,dt$。</div></div>
+          <div class="step-item"><div><strong>第二步：计算积分</strong>。$X(j\\omega) = \\left[\\frac{e^{-j\\omega t}}{-j\\omega}\\right]_{-\\tau/2}^{\\tau/2} = \\frac{e^{-j\\omega\\tau/2} - e^{j\\omega\\tau/2}}{-j\\omega} = \\frac{2\\sin(\\omega\\tau/2)}{\\omega} = \\tau\\,\\text{Sa}(\\omega\\tau/2)$。</div></div>
+          <div class="step-item"><div><strong>第三步：分析频谱</strong>。$|X(j\\omega)| = \\tau|\\text{Sa}(\\omega\\tau/2)|$，零点在 $\\omega = 2k\\pi/\\tau$。脉冲越窄（$\\tau$ 越小），主瓣越宽——这就是<strong>时宽带宽互斥</strong>的体现。</div></div>
+        </div>
+        <div class="formula-block">
+          $$\\text{rect}(t/\\tau) \\leftrightarrow \\tau\\,\\text{Sa}\\!\\left(\\frac{\\omega\\tau}{2}\\right) = \\frac{2\\sin(\\omega\\tau/2)}{\\omega}$$
+        </div>
+
+        <div class="info-box tip">💡 <strong>核心互链</strong>：时域卷积定理 $x_1 * x_2 \\leftrightarrow X_1 \\cdot X_2$ 是整个课程最重要的定理之一。它意味着 LTI 系统输出的频谱 = 输入频谱 × 系统频率响应 $H(j\\omega)$。后续<a href="javascript:void(0)" onclick="App.loadDetail('sig-05')">拉氏变换</a>将这一关系推广到复频域：$Y(s) = X(s) \\cdot H(s)$。</div>
+        <div class="info-box warning">⚠️ <strong>傅里叶变换存在条件</strong>：并非所有信号的傅里叶变换都存在！$x(t)$ 必须<strong>绝对可积</strong>（$\\int|x(t)|dt &lt; \\infty$）。常数、周期信号、$e^{at}u(t)$（$a>0$）等不满足此条件，需引入广义函数（$\\delta$ 函数）才能定义其变换。考试中出题通常给满足条件的信号，但概念题要能判断。</div>
+        <h4 class="font-medium mt-6 mb-2">傅里叶变换与傅里叶级数的关系</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>傅里叶级数</th><th>傅里叶变换</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">适用信号</td><td>周期信号</td><td>非周期信号（绝对可积）</td></tr>
+            <tr><td class="font-medium">频谱类型</td><td>离散（线谱）</td><td>连续</td></tr>
+            <tr><td class="font-medium">频率变量</td><td>$n\\omega_0$（$n$ 为整数）</td><td>$\\omega$（连续实数）</td></tr>
+            <tr><td class="font-medium">系数/密度</td><td>$c_n$（无量纲）</td><td>$X(j\\omega)$（频谱密度）</td></tr>
+            <tr><td class="font-medium">数学关系</td><td>$T_0 c_n \\to X(j\\omega)$（$T_0\\to\\infty$）</td><td>$T_0\\to\\infty$ 时级数退化为积分</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：求双边指数信号的频谱</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          求 $x(t) = e^{-a|t|}$（$a > 0$）的傅里叶变换。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：拆分绝对值</strong>。$x(t) = e^{-at}u(t) + e^{at}u(-t)$。分别对两部分求变换。</div></div>
+          <div class="step-item"><div><strong>第二步：分别计算</strong>。$\\mathcal{F}\\{e^{-at}u(t)\\} = \\frac{1}{a+j\\omega}$，$\\mathcal{F}\\{e^{at}u(-t)\\} = \\frac{1}{a-j\\omega}$。</div></div>
+          <div class="step-item"><div><strong>第三步：相加</strong>。$X(j\\omega) = \\frac{1}{a+j\\omega} + \\frac{1}{a-j\\omega} = \\frac{2a}{a^2+\\omega^2}$。这是一个洛伦兹型谱（钟形），$a$ 越小脉冲越窄，频谱越宽——再次体现时宽带宽互斥。</div></div>
+        </div>
+        <div class="formula-block">
+          $$e^{-a|t|} \\leftrightarrow \\frac{2a}{a^2 + \\omega^2} \\qquad (a > 0)$$
+        </div>
+
+        <div class="info-box info">📘 <strong>帕塞瓦尔定理的工程意义</strong>：$\\int|x(t)|^2 dt = \\frac{1}{2\\pi}\\int|X(j\\omega)|^2 d\\omega$。$|X(j\\omega)|^2$ 称为<strong>能量谱密度</strong>，表示单位频率的能量。这一定理保证了时域和频域分析的能量一致性，是<a href="javascript:void(0)" onclick="App.loadDetail('sig-07')">滤波器设计</a>中能量损失评估的基础。<a href="javascript:void(0)" onclick="App.loadDetail('circ-06')">电路正弦稳态分析</a>中的功率计算也可以从频域视角统一理解。</div>
+      ` },
+
+      // ===== sig-05 拉氏变换 =====
+      { id: 'sig-05', title: '拉氏变换', desc: '收敛域、逆变换、系统函数 H(s)', icon: '📐', tags: ['核心', '高频考点'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">拉氏变换：复频域的万能分析工具</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          傅里叶变换要求信号绝对可积，排除了许多工程常见信号（如 $e^{at}u(t)$，$a>0$）。拉氏变换通过引入衰减因子 $e^{-\\sigma t}$ 将不满足绝对可积的信号"拉回来"：$\\mathcal{L}\\{x(t)\\} = \\int_0^\\infty x(t)e^{-st}dt$，$s = \\sigma + j\\omega$。当 $\\sigma = 0$ 时，拉氏变换退化为傅里叶变换。
+        </p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          拉氏变换是分析 LTI 系统的<strong>主力工具</strong>。系统函数 $H(s) = Y(s)/X(s)$ 将微分方程转化为代数方程，极大简化了系统分析。它与<a href="javascript:void(0)" onclick="App.loadDetail('act-03')">自动控制原理中的传递函数</a>完全一致，是控制与信号处理的桥梁。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">拉氏变换的定义</h4>
+        <div class="formula-block">
+          <div class="text-left">
+            <strong>单边拉氏变换</strong>（信号与系统中默认）：
+            $$X(s) = \\int_{0^-}^{+\\infty} x(t)\\,e^{-st}\\,dt, \\qquad s = \\sigma + j\\omega$$
+            <strong>收敛域（ROC）</strong>：使积分收敛的 $s$ 平面区域，通常表示为 $\\text{Re}(s) > \\sigma_0$ 或带状区域。
+          </div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">常用拉氏变换对</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>时域 $x(t)$，$t \\ge 0$</th><th>$X(s)$</th><th>ROC</th></tr></thead>
+          <tbody>
+            <tr><td>$\\delta(t)$</td><td>$1$</td><td>全 $s$ 平面</td></tr>
+            <tr><td>$u(t)$</td><td>$\\frac{1}{s}$</td><td>$\\text{Re}(s) > 0$</td></tr>
+            <tr><td>$t^n u(t)$</td><td>$\\frac{n!}{s^{n+1}}$</td><td>$\\text{Re}(s) > 0$</td></tr>
+            <tr><td>$e^{-at}u(t)$</td><td>$\\frac{1}{s+a}$</td><td>$\\text{Re}(s) > -a$</td></tr>
+            <tr><td>$\\cos(\\omega_0 t)\\,u(t)$</td><td>$\\frac{s}{s^2+\\omega_0^2}$</td><td>$\\text{Re}(s) > 0$</td></tr>
+            <tr><td>$\\sin(\\omega_0 t)\\,u(t)$</td><td>$\\frac{\\omega_0}{s^2+\\omega_0^2}$</td><td>$\\text{Re}(s) > 0$</td></tr>
+            <tr><td>$e^{-at}\\cos(\\omega_0 t)\\,u(t)$</td><td>$\\frac{s+a}{(s+a)^2+\\omega_0^2}$</td><td>$\\text{Re}(s) > -a$</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">拉氏变换的关键性质</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>性质</th><th>公式</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">线性</td><td>$ax_1 + bx_2 \\leftrightarrow aX_1 + bX_2$</td><td>ROC 至少为两者交集</td></tr>
+            <tr><td class="font-medium">时移</td><td>$x(t-t_0)u(t-t_0) \\leftrightarrow e^{-st_0}X(s)$</td><td>延时因子</td></tr>
+            <tr><td class="font-medium">s 域平移</td><td>$e^{-at}x(t) \\leftrightarrow X(s+a)$</td><td>频谱在 $s$ 平面左移 $a$</td></tr>
+            <tr><td class="font-medium"><strong>时域微分</strong></td><td>$x'(t) \\leftrightarrow sX(s) - x(0^-)$</td><td>将微分方程变为代数方程</td></tr>
+            <tr><td class="font-medium"><strong>时域卷积</strong></td><td>$x_1 * x_2 \\leftrightarrow X_1(s) \\cdot X_2(s)$</td><td>核心性质，$H(s) = Y(s)/X(s)$</td></tr>
+            <tr><td class="font-medium">初值定理</td><td>$x(0^+) = \\lim_{s\\to\\infty} sX(s)$</td><td>由 $X(s)$ 直接算初值</td></tr>
+            <tr><td class="font-medium">终值定理</td><td>$x(\\infty) = \\lim_{s\\to 0} sX(s)$</td><td>要求 $sX(s)$ 的极点在左半平面</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">系统函数 $H(s)$ 与极零点分析</h4>
+        <div class="formula-block">
+          $$H(s) = \\frac{Y(s)}{X(s)} = \\frac{b_m s^m + b_{m-1}s^{m-1} + \\cdots + b_0}{a_n s^n + a_{n-1}s^{n-1} + \\cdots + a_0} = K \\frac{(s-z_1)(s-z_2)\\cdots(s-z_m)}{(s-p_1)(s-p_2)\\cdots(s-p_n)}$$
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>极点 $p_i$</strong>：$H(s)$ 分母为零的点，决定系统的<strong>自然响应模式</strong>。极点在左半平面→稳定；在虚轴上→临界稳定；在右半平面→不稳定。</li>
+          <li><strong>零点 $z_i$</strong>：$H(s)$ 分子为零的点，影响各自然响应模式的<strong>权重</strong>。零点可以改变幅频特性形状。</li>
+          <li><strong>ROC 与因果稳定性</strong>：因果系统的 ROC 是最右极点右侧；稳定要求 ROC 包含 $j\\omega$ 轴。因果+稳定 $\\Leftrightarrow$ 所有极点在左半平面。</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">部分分式展开法求逆拉氏变换</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          求 $X(s) = \\frac{3s+5}{s^2+3s+2}$ 的逆变换（系统初始松弛）。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：因式分解分母</strong>。$s^2+3s+2 = (s+1)(s+2)$。极点 $p_1 = -1$，$p_2 = -2$。</div></div>
+          <div class="step-item"><div><strong>第二步：部分分式展开</strong>。$X(s) = \\frac{A}{s+1} + \\frac{B}{s+2}$。$A = \\left.\\frac{3s+5}{s+2}\\right|_{s=-1} = \\frac{2}{1} = 2$，$B = \\left.\\frac{3s+5}{s+1}\\right|_{s=-2} = \\frac{-1}{-1} = 1$。</div></div>
+          <div class="step-item"><div><strong>第三步：查表逆变换</strong>。$x(t) = 2e^{-t}u(t) + e^{-2t}u(t)$。两个衰减指数的叠加，极点越负衰减越快。</div></div>
+        </div>
+
+        <div class="info-box tip">💡 <strong>记忆口诀</strong>：拉氏变换 = "微分变乘法，卷积变乘法"。$x'(t) \\to sX(s) - x(0^-)$ 消除了微分运算，$x_1*x_2 \\to X_1X_2$ 消除了卷积运算。两个"消"让微分方程和卷积积分都变成了<strong>代数运算</strong>——这就是拉氏变换的威力。</div>
+        <div class="info-box warning">⚠️ <strong>ROC 容易忽略</strong>：同一个 $X(s)$ 表达式，不同的 ROC 对应不同的时域信号。$\\frac{1}{s+1}$ 的 ROC 是 $\\text{Re}(s) > -1$ 时对应 $e^{-t}u(t)$（因果），ROC 是 $\\text{Re}(s) &lt; -1$ 时对应 $-e^{-t}u(-t)$（反因果）。考试中若未特别说明，默认因果信号。</div>
+        <h4 class="font-medium mt-6 mb-2">ROC 的三条规则</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>规则一</strong>：ROC 由 $s$ 平面上的极点界定，但 ROC 本身不包含任何极点。</li>
+          <li><strong>规则二</strong>：对于有理拉氏变换，ROC 由极点之间的水平带状区域组成。</li>
+          <li><strong>规则三</strong>：因果信号的 ROC 是最右极点右侧的区域；反因果信号的 ROC 是最左极点左侧的区域。</li>
+        </ul>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          对于物理可实现的因果系统，ROC 自动确定——只需要知道 $X(s)$ 的极点分布即可。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">拉氏变换与微分方程求解</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          拉氏变换的核心应用：将微分方程变为代数方程。以二阶电路为例：
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：对微分方程取拉氏变换</strong>。$y''(t)+3y'(t)+2y(t)=x(t)$ 变为 $s^2Y(s)-sy(0)-y'(0)+3[sY(s)-y(0)]+2Y(s)=X(s)$。</div></div>
+          <div class="step-item"><div><strong>第二步：代数求解</strong>。$Y(s)(s^2+3s+2) = X(s) + sy(0)+y'(0)+3y(0)$。令初始松弛（零初始条件），$Y(s) = \\frac{X(s)}{s^2+3s+2}$。</div></div>
+          <div class="step-item"><div><strong>第三步：部分分式+查表</strong>。若 $X(s)=1$（冲激输入），则 $H(s)=\\frac{1}{(s+1)(s+2)}=\\frac{1}{s+1}-\\frac{1}{s+2}$，$h(t)=(e^{-t}-e^{-2t})u(t)$。</div></div>
+        </div>
+
+        <div class="info-box info">📘 <strong>与自动控制的联系</strong>：控制理论中的<a href="javascript:void(0)" onclick="App.loadDetail('act-03')">传递函数 $G(s)$</a>就是系统函数 $H(s)$。<a href="javascript:void(0)" onclick="App.loadDetail('act-05')">二阶系统的时域指标</a>（超调量、调节时间）由极点位置决定。极零点分析和<a href="javascript:void(0)" onclick="App.loadDetail('act-08')">根轨迹法</a>一脉相承。电路中<a href="javascript:void(0)" onclick="App.loadDetail('circ-04')">一阶暂态</a>和<a href="javascript:void(0)" onclick="App.loadDetail('circ-05')">二阶暂态</a>的求解正是拉氏变换微分性质的直接应用。</div>
+      ` },
+
+      // ===== sig-06 离散时间信号与 Z 变换 =====
+      { id: 'sig-06', title: '离散时间信号与 Z 变换', desc: '采样信号、Z 变换定义与性质', icon: '💻', tags: ['核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">Z 变换：离散世界的拉氏变换</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          连续时间系统用拉氏变换分析，离散时间系统则用<strong>Z 变换</strong>。Z 变换是拉氏变换在离散域的对应物：$z = e^{sT}$（$T$ 为采样周期），将差分方程变为代数方程。它是数字信号处理（DSP）、数字控制、通信系统的数学基础。
+        </p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          本节从离散时间信号的基本概念出发，建立 Z 变换的定义、性质和逆变换方法。与<a href="javascript:void(0)" onclick="App.loadDetail('sig-05')">拉氏变换</a>的学习路径完全平行——掌握拉氏变换后再学 Z 变换会非常高效。与<a href="javascript:void(0)" onclick="App.loadDetail('act-13')">自动控制中的离散系统</a>也直接相关。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">离散时间基本信号</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>单位脉冲</strong>：$\\delta[n] = 1$（$n=0$），$\\delta[n] = 0$（$n \\ne 0$）。对应连续域的 $\\delta(t)$，具有筛选性质：$x[n]\\delta[n-n_0] = x[n_0]\\delta[n-n_0]$。</li>
+          <li><strong>单位阶跃</strong>：$u[n] = 1$（$n \\ge 0$），$u[n] = 0$（$n &lt; 0$）。$u[n] = \\sum_{k=0}^{\\infty}\\delta[n-k]$。</li>
+          <li><strong>实指数序列</strong>：$x[n] = a^n u[n]$，当 $|a| &lt; 1$ 时衰减，$|a| > 1$ 时增长。</li>
+          <li><strong>复指数序列</strong>：$x[n] = z^n$，$z = re^{j\\omega_0}$。离散 LTI 系统的特征序列。</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">Z 变换的定义</h4>
+        <div class="formula-block">
+          $$X(z) = \\sum_{n=-\\infty}^{+\\infty} x[n]\\,z^{-n} \\qquad (\\text{双边 Z 变换})$$
+          $$X(z) = \\sum_{n=0}^{+\\infty} x[n]\\,z^{-n} \\qquad (\\text{单边 Z 变换})$$
+          <div class="text-sm text-gray-500 mt-2">收敛域（ROC）：使级数收敛的 $z$ 平面环形区域</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">常用 Z 变换对</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>时域 $x[n]$，$n \\ge 0$</th><th>$X(z)$</th><th>ROC</th></tr></thead>
+          <tbody>
+            <tr><td>$\\delta[n]$</td><td>$1$</td><td>全 $z$ 平面</td></tr>
+            <tr><td>$u[n]$</td><td>$\\frac{z}{z-1} = \\frac{1}{1-z^{-1}}$</td><td>$|z| > 1$</td></tr>
+            <tr><td>$a^n u[n]$</td><td>$\\frac{z}{z-a} = \\frac{1}{1-az^{-1}}$</td><td>$|z| > |a|$</td></tr>
+            <tr><td>$n\\,a^n u[n]$</td><td>$\\frac{az}{(z-a)^2}$</td><td>$|z| > |a|$</td></tr>
+            <tr><td>$\\cos(\\omega_0 n)\\,u[n]$</td><td>$\\frac{z(z-\\cos\\omega_0)}{z^2-2z\\cos\\omega_0+1}$</td><td>$|z| > 1$</td></tr>
+            <tr><td>$\\sin(\\omega_0 n)\\,u[n]$</td><td>$\\frac{z\\sin\\omega_0}{z^2-2z\\cos\\omega_0+1}$</td><td>$|z| > 1$</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">Z 变换的关键性质</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>性质</th><th>公式</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">线性</td><td>$ax_1 + bx_2 \\leftrightarrow aX_1 + bX_2$</td><td>ROC 至少为交集</td></tr>
+            <tr><td class="font-medium">时移</td><td>$x[n-n_0] \\leftrightarrow z^{-n_0}X(z)$</td><td>延迟 $n_0$ 对应乘 $z^{-n_0}$</td></tr>
+            <tr><td class="font-medium"><strong>卷积和</strong></td><td>$x_1[n]*x_2[n] \\leftrightarrow X_1(z) \\cdot X_2(z)$</td><td>离散卷积 = Z 域乘积</td></tr>
+            <tr><td class="font-medium">z 域微分</td><td>$n\\,x[n] \\leftrightarrow -z\\frac{dX(z)}{dz}$</td><td>用于求 $na^n u[n]$ 的变换</td></tr>
+            <tr><td class="font-medium">初值定理</td><td>$x[0] = \\lim_{z\\to\\infty}X(z)$</td><td>由 $X(z)$ 直接读初值</td></tr>
+            <tr><td class="font-medium">终值定理</td><td>$\\lim_{n\\to\\infty}x[n] = \\lim_{z\\to 1}(z-1)X(z)$</td><td>要求 $(z-1)X(z)$ 的极点在单位圆内</td></div>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">离散 LTI 系统函数 $H(z)$</h4>
+        <div class="formula-block">
+          $$H(z) = \\frac{Y(z)}{X(z)} = \\frac{\\sum_{k=0}^{M} b_k z^{-k}}{\\sum_{k=0}^{N} a_k z^{-k}}$$
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>因果稳定</strong>：$H(z)$ 的所有极点在<strong>单位圆内</strong>（$|p_i| &lt; 1$）。</li>
+          <li><strong>FIR 系统</strong>：$a_k = 0$（$k \\ge 1$），$H(z)$ 只有零点无极点（除 $z=0$），总是稳定的。</li>
+          <li><strong>IIR 系统</strong>：存在 $a_k \\ne 0$（$k \\ge 1$），有反馈环路，可能不稳定。</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">差分方程与 Z 变换</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          离散 LTI 系统的输入输出关系由<strong>常系数线性差分方程</strong>描述。Z 变换的时移性质 $x[n-k] \\leftrightarrow z^{-k}X(z)$ 将差分方程变为代数方程：
+        </p>
+        <div class="formula-block">
+          <div class="text-left">
+            差分方程：$y[n] + a_1 y[n-1] + a_2 y[n-2] = b_0 x[n] + b_1 x[n-1]$<br><br>
+            Z 变换后：$Y(z)(1 + a_1 z^{-1} + a_2 z^{-2}) = X(z)(b_0 + b_1 z^{-1})$<br><br>
+            系统函数：$H(z) = \\frac{Y(z)}{X(z)} = \\frac{b_0 + b_1 z^{-1}}{1 + a_1 z^{-1} + a_2 z^{-2}}$
+          </div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          这与连续系统中拉氏变换将微分方程变为代数方程完全类似。差分方程可以直接用软件（如 MATLAB/Python）迭代实现，是 DSP 算法的编程基础。
+        </p>
+
+        <div class="info-box tip">💡 <strong>拉氏与 Z 变换对照</strong>：$s$ 平面左半平面对应 $z$ 平面单位圆内；$s$ 平面虚轴对应 $z$ 平面单位圆上；$s$ 平面右半平面对应 $z$ 平面单位圆外。映射关系 $z = e^{sT}$ 将 $s$ 平面的无穷条带映射为 $z$ 平面的一个环。</div>
+        <div class="info-box warning">⚠️ <strong>ROC 不能忘</strong>：和拉氏变换一样，同一个 $X(z)$ 表达式对应不同时域序列，取决于 ROC。$\\frac{z}{z-a}$ 当 $|z| > |a|$ 时对应 $a^n u[n]$（因果），当 $|z| &lt; |a|$ 时对应 $-a^n u[-n-1]$（反因果）。</div>
+        <h4 class="font-medium mt-6 mb-2">部分分式展开求逆 Z 变换</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          求 $X(z) = \\frac{z}{(z-0.5)(z-0.8)}$，$|z| > 0.8$ 的逆变换。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：除以 $z$ 后展开</strong>。$\\frac{X(z)}{z} = \\frac{1}{(z-0.5)(z-0.8)} = \\frac{A}{z-0.5} + \\frac{B}{z-0.8}$。</div></div>
+          <div class="step-item"><div><strong>第二步：求系数</strong>。$A = \\frac{1}{0.5-0.8} = -\\frac{10}{3}$，$B = \\frac{1}{0.8-0.5} = \\frac{10}{3}$。因此 $X(z) = -\\frac{10}{3}\\cdot\\frac{z}{z-0.5} + \\frac{10}{3}\\cdot\\frac{z}{z-0.8}$。</div></div>
+          <div class="step-item"><div><strong>第三步：查表逆变换</strong>。$x[n] = \\frac{10}{3}\\left[(0.8)^n - (0.5)^n\\right]u[n]$。ROC $|z|>0.8$ 确保因果性。</div></div>
+        </div>
+        <div class="formula-block">
+          $$x[n] = \\frac{10}{3}\\left[(0.8)^n - (0.5)^n\\right]u[n]$$
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          注意技巧：先除以 $z$ 再展开（$\\frac{X(z)}{z}$ 的极点是一阶的），最后乘回 $z$ 得到标准形式。这比直接展开 $X(z)$ 更方便。
+        </p>
+
+        <div class="info-box info">📘 <strong>DSP 应用</strong>：数字滤波器的设计直接基于 $H(z)$ 的极零点配置。IIR 滤波器（如 Butterworth、Chebyshev）通过将模拟滤波器的 $H(s)$ 按映射规则转换为 $H(z)$ 实现；FIR 滤波器则直接在 $z$ 域设计零点位置。详见<a href="javascript:void(0)" onclick="App.loadDetail('sig-07')">频率响应与滤波器</a>。<a href="javascript:void(0)" onclick="App.loadDetail('act-13')">自动控制中的离散系统</a>用 Z 变换分析数字控制器，<a href="javascript:void(0)" onclick="App.loadDetail('dig-13')">A/D 与 D/A 转换器</a>则负责连续域与离散域之间的桥接。</div>
+      ` },
+
+      // ===== sig-07 频率响应与滤波器 =====
+      { id: 'sig-07', title: '频率响应与滤波器', desc: '幅频/相频特性、理想滤波器', icon: '📻', tags: ['工程应用'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">频率响应：系统对不同频率信号的"态度"</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          LTI 系统对复指数输入 $e^{j\\omega t}$ 的输出仍是 $e^{j\\omega t}$，只是幅度乘以 $|H(j\\omega)|$、相位偏移 $\\angle H(j\\omega)$。<strong>频率响应</strong> $H(j\\omega)$ 就是系统对各频率成分的"增益和延迟"。滤波器设计的本质就是设计 $|H(j\\omega)|$ 的形状——让某些频率通过，抑制另一些频率。
+        </p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          本节将<a href="javascript:void(0)" onclick="App.loadDetail('sig-04')">傅里叶变换</a>中的频域分析与系统设计结合，介绍幅频/相频特性、Bode 图绘制、理想滤波器和实际滤波器的设计思路。与<a href="javascript:void(0)" onclick="App.loadDetail('circ-07')">电路基础中的频率响应</a>和<a href="javascript:void(0)" onclick="App.loadDetail('ana-11')">模拟电路中的有源滤波器</a>形成完整知识链。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">频率响应的定义</h4>
+        <div class="formula-block">
+          $$H(j\\omega) = |H(j\\omega)|\\,e^{j\\angle H(j\\omega)} = \\left.H(s)\\right|_{s=j\\omega}$$
+          <div class="text-sm text-gray-500 mt-2">将系统函数 $H(s)$ 中的 $s$ 用 $j\\omega$ 替换即得频率响应</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">幅频特性与相频特性</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>幅频特性</strong> $|H(j\\omega)|$：各频率的增益。$|H| > 1$ 表示放大，$|H| &lt; 1$ 表示衰减，$|H| = 0$ 表示完全抑制。</li>
+          <li><strong>相频特性</strong> $\\angle H(j\\omega)$：各频率的相位偏移。负相位表示<strong>延迟</strong>（信号滞后）。</li>
+          <li><strong>群延迟</strong>：$\\tau_g(\\omega) = -\\frac{d}{d\\omega}\\angle H(j\\omega)$。群延迟为常数时，信号各频率成分延迟相同，波形不失真。</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">理想滤波器类型</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>滤波器类型</th><th>通带</th><th>阻带</th><th>典型应用</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">低通滤波器（LPF）</td><td>$|\\omega| &lt; \\omega_c$</td><td>$|\\omega| > \\omega_c$</td><td>去高频噪声、抗混叠</td></tr>
+            <tr><td class="font-medium">高通滤波器（HPF）</td><td>$|\\omega| > \\omega_c$</td><td>$|\\omega| &lt; \\omega_c$</td><td>去直流偏移、边缘检测</td></tr>
+            <tr><td class="font-medium">带通滤波器（BPF）</td><td>$\\omega_1 &lt; |\\omega| &lt; \\omega_2$</td><td>其余频率</td><td>选频（收音机调台）</td></tr>
+            <tr><td class="font-medium">带阻滤波器（BEF）</td><td>其余频率</td><td>$\\omega_1 &lt; |\\omega| &lt; \\omega_2$</td><td>陷波器（去工频干扰 50Hz）</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">一阶 RC 低通滤波器</h4>
+        <div class="formula-block">
+          $$H(s) = \\frac{1}{1 + sRC} = \\frac{\\omega_c}{s + \\omega_c}, \\qquad \\omega_c = \\frac{1}{RC}$$
+          $$|H(j\\omega)| = \\frac{1}{\\sqrt{1 + (\\omega/\\omega_c)^2}}, \\qquad \\angle H(j\\omega) = -\\arctan\\!\\left(\\frac{\\omega}{\\omega_c}\\right)$$
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          截止频率 $\\omega_c = 1/(RC)$ 处，$|H| = 1/\\sqrt{2} \\approx 0.707$（即 $-3\\text{dB}$）。Bode 图上幅频特性为：低频段 $0\\text{dB}$ 平坦，高频段以 $-20\\text{dB/dec}$ 斜率下降。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">Bode 图的绘制要点</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：标准化</strong>。将 $H(s)$ 写成 $(1+s/\\omega_1)(1+s/\\omega_2)\\cdots$ 的标准形式，找出各转角频率。</div></div>
+          <div class="step-item"><div><strong>第二步：幅频渐近线</strong>。零点贡献 $+20\\text{dB/dec}$ 斜率变化，极点贡献 $-20\\text{dB/dec}$ 斜率变化。在每个转角频率处斜率改变一档。</div></div>
+          <div class="step-item"><div><strong>第三步：相频渐近线</strong>。每个零点贡献 $+90°$（分三段渐变），每个极点贡献 $-90°$。在转角频率处相位变化最剧烈。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">经典滤波器类型对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>类型</th><th>通带特性</th><th>过渡带</th><th>阶数需求</th><th>典型应用</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">Butterworth</td><td>最大平坦（无纹波）</td><td>中等</td><td>较高</td><td>通用滤波、音频</td></tr>
+            <tr><td class="font-medium">Chebyshev I 型</td><td>等纹波</td><td>较窄</td><td>较低</td><td>通信系统</td></tr>
+            <tr><td class="font-medium">Chebyshev II 型</td><td>平坦（阻带纹波）</td><td>较窄</td><td>较低</td><td>需要平坦通带时</td></tr>
+            <tr><td class="font-medium">椭圆（Cauer）</td><td>等纹波</td><td>最窄</td><td>最低</td><td>阶数受限场合</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          设计时的核心权衡：<strong>通带平坦度 ↔ 阻带衰减 ↔ 过渡带宽度 ↔ 滤波器阶数</strong>。椭圆滤波器阶数最低但通带和阻带都有纹波；Butterworth 最平坦但过渡带最宽。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">二阶系统的频率响应</h4>
+        <div class="formula-block">
+          $$H(s) = \\frac{\\omega_n^2}{s^2 + 2\\zeta\\omega_n s + \\omega_n^2}$$
+          $$|H(j\\omega)| = \\frac{\\omega_n^2}{\\sqrt{(\\omega_n^2 - \\omega^2)^2 + (2\\zeta\\omega_n\\omega)^2}}$$
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          当阻尼比 $\\zeta &lt; \\frac{1}{\\sqrt{2}} \\approx 0.707$ 时，幅频特性在 $\\omega = \\omega_n\\sqrt{1-2\\zeta^2}$ 处出现<strong>谐振峰</strong>，峰值为 $\\frac{1}{2\\zeta\\sqrt{1-\\zeta^2}}$。$\\zeta$ 越小，谐振峰越高。<a href="javascript:void(0)" onclick="App.loadDetail('circ-08')">谐振电路</a>中的品质因数 $Q = \\frac{1}{2\\zeta}$ 直接控制谐振峰的锐度。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">串联滤波器的频率响应</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          当两个 LTI 系统级联时，总频率响应为各环节频率响应的乘积。在 Bode 图上，这意味着幅频特性<strong>相加</strong>（dB 叠加）：
+        </p>
+        <div class="formula-block">
+          $$H_{\\text{total}}(j\\omega) = H_1(j\\omega) \\cdot H_2(j\\omega)$$
+          $$|H_{\\text{total}}|_{\\text{dB}} = |H_1|_{\\text{dB}} + |H_2|_{\\text{dB}}, \\qquad \\angle H_{\\text{total}} = \\angle H_1 + \\angle H_2$$
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          这一特性使得 Bode 图在工程中极为方便——画出各环节的 Bode 图后直接叠加，无需复杂计算。<a href="javascript:void(0)" onclick="App.loadDetail('act-09')">自动控制频域分析</a>中绘制开环 Bode 图判断稳定裕度，正是利用了这一叠加性。
+        </p>
+
+        <div class="info-box tip">💡 <strong>Bode 图速记</strong>：一阶极点在转角频率处幅值 $-3\\text{dB}$，相位 $-45°$。二阶极点在转角频率处幅值取决于阻尼比 $\\zeta$：$\\zeta$ 小则出现峰值（谐振峰），$\\zeta = 0.707$ 时恰好无峰值。</div>
+        <div class="info-box warning">⚠️ <strong>理想滤波器不可实现</strong>：理想低通滤波器在截止频率处突变（砖墙特性），其冲激响应是 $\\text{Sa}$ 函数（非因果、无限长），物理上不可实现。实际滤波器用 Butterworth、Chebyshev、椭圆等逼近函数，在通带纹波、阻带衰减、过渡带宽度之间折中。</div>
+        <div class="info-box info">📘 <strong>工程实践</strong>：音频均衡器是多个带通滤波器的并联；50Hz 陷波器用于消除电力线干扰；抗混叠滤波器在<a href="javascript:void(0)" onclick="App.loadDetail('sig-08')">ADC 采样前</a>滤除高于奈奎斯特频率的分量。在<a href="javascript:void(0)" onclick="App.loadDetail('act-09')">自控频域分析</a>中，Bode 图用于判断系统稳定裕度。</div>
+      ` },
+
+      // ===== sig-08 采样定理与信号恢复 =====
+      { id: 'sig-08', title: '采样定理与信号恢复', desc: '奈奎斯特采样、混叠、零阶保持', icon: '⚡', tags: ['高频考点'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">采样定理：模拟到数字的桥梁</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          采样定理（Shannon-Nyquist 定理）是数字信号处理的<strong>第一原理</strong>：只要采样频率大于信号最高频率的 2 倍，就能从采样值<strong>完美恢复</strong>原始连续信号。这一看似简单的结论，是 CD、数字通信、数字图像等一切数字化技术的理论基础。
+        </p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          本节从频域角度理解采样过程（频谱搬移与周期延拓），掌握混叠现象的本质和避免方法，以及零阶保持和信号恢复的工程实现。与<a href="javascript:void(0)" onclick="App.loadDetail('dig-13')">数字电路中的 A/D 与 D/A 转换器</a>和<a href="javascript:void(0)" onclick="App.loadDetail('sig-06')">离散时间信号</a>紧密相连。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">采样的数学模型</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          理想采样（冲激串采样）将连续信号 $x(t)$ 与周期冲激串 $p(t) = \\sum_{n=-\\infty}^{+\\infty}\\delta(t - nT_s)$ 相乘：
+        </p>
+        <div class="formula-block">
+          $$x_s(t) = x(t) \\cdot p(t) = \\sum_{n=-\\infty}^{+\\infty} x(nT_s)\\,\\delta(t - nT_s)$$
+          $$X_s(j\\omega) = \\frac{1}{T_s}\\sum_{k=-\\infty}^{+\\infty} X\\!\\left(j(\\omega - k\\omega_s)\\right), \\qquad \\omega_s = \\frac{2\\pi}{T_s}$$
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">奈奎斯特采样定理</h4>
+        <div class="formula-block">
+          <div class="text-left">
+            <strong>定理</strong>：若 $x(t)$ 是带限信号，即 $X(j\\omega) = 0$（$|\\omega| > \\omega_M$），则当采样频率满足
+            $$\\omega_s > 2\\omega_M \\quad (\\text{即 } f_s > 2f_M)$$
+            时，$x(t)$ 可以从采样序列 $x(nT_s)$ 中<strong>唯一且完美地</strong>恢复。$f_N = 2f_M$ 称为<strong>奈奎斯特频率</strong>。
+          </div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">混叠现象</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          当 $f_s &lt; 2f_M$（欠采样）时，频谱搬移后的各周期产生<strong>重叠</strong>（混叠），高频分量"伪装"成低频分量，无法分离。恢复出的信号与原始信号不同。
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>混叠频率</strong>：若原始频率为 $f_0$，采样后观测到的频率为 $f_{alias} = |f_0 - kf_s|$（$k$ 为使结果在 $[0, f_s/2]$ 内的整数）。</li>
+          <li><strong>实例</strong>：汽车轮毂在视频中"倒转"——帧率（采样率）不够高，高速旋转的轮毂频率超过帧率的一半，发生混叠。</li>
+          <li><strong>避免方法</strong>：采样前加<strong>抗混叠滤波器</strong>（低通），将高于 $f_s/2$ 的频率成分滤除。</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">信号恢复方法</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>恢复方法</th><th>原理</th><th>特点</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">理想内插</td><td>用 $\\text{Sa}$ 函数内插：$x(t) = \\sum x(nT_s)\\,\\text{Sa}\\!\\left(\\frac{\\pi(t-nT_s)}{T_s}\\right)$</td><td>完美恢复，但非因果不可实现</td></tr>
+            <tr><td class="font-medium">零阶保持（ZOH）</td><td>每个采样值保持到下一个采样时刻</td><td>阶梯波形，产生高频纹波</td></tr>
+            <tr><td class="font-medium">一阶保持</td><td>相邻采样值线性插值</td><td>锯齿波形，比 ZOH 平滑</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">零阶保持的频域分析</h4>
+        <div class="formula-block">
+          $$H_{\\text{ZOH}}(j\\omega) = T_s \\cdot \\text{Sa}\\!\\left(\\frac{\\omega T_s}{2}\\right) \\cdot e^{-j\\omega T_s/2}$$
+          <div class="text-sm text-gray-500 mt-2">零阶保持等效于一个低通滤波器，截止特性按 $\\text{Sa}$ 函数衰减</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          零阶保持在 $\\omega = \\omega_s$ 处衰减不完全（$\\text{Sa}(\\pi) = 0$ 但之后回升），因此输出信号仍有残余的高频分量，实际工程中需要加<strong>后置平滑滤波器</strong>。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">例题：判断采样是否产生混叠</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>题目</strong>：信号 $x(t) = \\cos(2\\pi \\cdot 300t) + 0.5\\cos(2\\pi \\cdot 600t)$，以 $f_s = 500\\text{Hz}$ 采样，是否混叠？</div></div>
+          <div class="step-item"><div><strong>第一步：找最高频率</strong>。$f_M = 600\\text{Hz}$，奈奎斯特频率 $f_N = 2f_M = 1200\\text{Hz}$。</div></div>
+          <div class="step-item"><div><strong>第二步：判断</strong>。$f_s = 500 &lt; 1200$，<strong>产生混叠</strong>。$600\\text{Hz}$ 分量的混叠频率 $= |600 - 500| = 100\\text{Hz}$（折叠到 $100\\text{Hz}$）。</div></div>
+          <div class="step-item"><div><strong>第三步：改进</strong>。至少需要 $f_s = 1200\\text{Hz}$；或先用 $f_c = 250\\text{Hz}$ 的低通滤波器滤除 $600\\text{Hz}$ 分量再以 $500\\text{Hz}$ 采样。</div></div>
+        </div>
+
+        <div class="info-box tip">💡 <strong>记忆口诀</strong>："采样频率两倍高，频谱搬移不重叠；不到两倍就混叠，高频伪装成低频。" 或者用 "fs > 2fmax" 直接判断。工程实践中通常取 $f_s = (3 \\sim 5)f_M$ 留裕量。</div>
+        <div class="info-box warning">⚠️ <strong>常见误区</strong>：奈奎斯特条件是 $f_s > 2f_M$（严格大于），不是 $\\ge$。恰好等于时理论上可恢复，但实际采样时刻若有微小偏移就会出问题。此外，现实中的信号很难做到严格带限，必须用抗混叠滤波器预处理。</div>
+        <h4 class="font-medium mt-6 mb-2">工程采样系统完整流程</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：抗混叠滤波</strong>。用低通滤波器将信号带宽限制在 $f_s/2$ 以内，滤除高于奈奎斯特频率的分量。滤波器截止频率 $f_c \\le f_s/2$。</div></div>
+          <div class="step-item"><div><strong>第二步：采样保持</strong>。ADC 内部的采样保持电路（S/H）在采样时刻"冻结"模拟信号电压，为量化提供稳定输入。保持时间越短，允许的采样率越高。</div></div>
+          <div class="step-item"><div><strong>第三步：量化编码</strong>。将采样值映射为有限精度的数字码（如 16 bit），引入量化噪声（信噪比约 $6.02N + 1.76$ dB，$N$ 为位数）。</div></div>
+          <div class="step-item"><div><strong>第四步：信号恢复</strong>。DAC 输出阶梯波（零阶保持）后经重建滤波器（低通）平滑，去除高频阶梯纹波，恢复连续模拟信号。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">各行业典型采样率</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>应用场景</th><th>采样率</th><th>信号带宽</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">电话语音</td><td>$8\\text{kHz}$</td><td>$300$-$3400\\text{Hz}$</td><td>Nyquist: $2\\times3.4=6.8\\text{kHz}$，取 $8$ 留裕量</td></tr>
+            <tr><td class="font-medium">CD 音频</td><td>$44.1\\text{kHz}$</td><td>$20$-$20000\\text{Hz}$</td><td>$2\\times20=40\\text{kHz}$，取 $44.1$</td></tr>
+            <tr><td class="font-medium">专业录音</td><td>$96\\text{kHz}$</td><td>$20$-$40000\\text{Hz}$</td><td>过采样降低抗混叠滤波器要求</td></tr>
+            <tr><td class="font-medium">心电图 ECG</td><td>$500\\text{Hz}$</td><td>$0.05$-$150\\text{Hz}$</td><td>$2\\times150=300\\text{Hz}$，取 $500$</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box info">📘 <strong>工程应用</strong>：音频 CD 以 $44.1\\text{kHz}$ 采样（人耳上限约 $20\\text{kHz}$，$20 \\times 2.2 = 44$）；电话语音以 $8\\text{kHz}$ 采样（语音上限约 $3.4\\text{kHz}$）；ADC 芯片内置采样保持电路和抗混叠滤波器，与<a href="javascript:void(0)" onclick="App.loadDetail('dig-13')">A/D 转换器</a>配合完成模拟到数字的转换。过采样（$f_s \\gg 2f_M$）是现代高精度 ADC 的核心技术——提高采样率后用数字滤波器降采样，可降低对模拟抗混叠滤波器的设计难度并提升信噪比。与<a href="javascript:void(0)" onclick="App.loadDetail('sig-06')">Z 变换</a>中的离散信号形成完整的"采样→处理→恢复"链路。</div>
+      ` },
+
+      // ===== sig-09 信号与系统工程应用 =====
+      { id: 'sig-09', title: '信号与系统工程应用', desc: '通信/控制/音频中的应用案例', icon: '🎯', tags: ['工程应用'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">从理论到实战：信号与系统的工程全景</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          前八节建立了信号与系统的数学工具箱——傅里叶变换、拉氏变换、Z 变换、卷积、采样定理。本节将这些工具应用于三大工程领域：<strong>通信系统</strong>（调制解调、OFDM）、<strong>控制系统</strong>（PID 补偿、数字实现）、<strong>音频/语音处理</strong>（滤波、均衡、降噪）。通过真实场景理解每种变换的工程价值。
+        </p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          信号与系统不是纯数学课——它是现代信息工程的理论基础。掌握这些知识，才能在后续<a href="javascript:void(0)" onclick="App.loadDetail('act-14')">自动控制工程实战</a>、DSP 系统设计、嵌入式信号处理等课程中游刃有余。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">应用一：通信系统中的幅度调制（AM）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          调制是将低频信号（基带）搬移到高频载波上的过程，是无线通信的基础。
+        </p>
+        <div class="formula-block">
+          <div class="text-left">
+            <strong>标准 AM 调制</strong>：
+            $$y(t) = [1 + m \\cdot x(t)]\\cos(\\omega_c t)$$
+            其中 $x(t)$ 为基带信号，$m$ 为调制指数（$0 &lt; m \\le 1$），$\\omega_c$ 为载波频率。
+            <br><br>
+            <strong>频域</strong>（频谱搬移定理）：
+            $$Y(j\\omega) = \\pi[\\delta(\\omega-\\omega_c)+\\delta(\\omega+\\omega_c)] + \\frac{m}{2}[X(j(\\omega-\\omega_c))+X(j(\\omega+\\omega_c))]$$
+          </div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li>调制的本质是<a href="javascript:void(0)" onclick="App.loadDetail('sig-04')">频谱搬移</a>：基带频谱 $X(j\\omega)$ 被搬移到 $\\pm\\omega_c$ 处。</li>
+          <li>解调（恢复基带）：乘以同频同相载波后低通滤波（相干解调）。</li>
+          <li><strong>OFDM</strong>（4G/5G/WiFi）：将高速数据分成多个子载波并行传输，每个子载波用低速 QAM 调制。接收端用 FFT 分离子载波——本质就是<a href="javascript:void(0)" onclick="App.loadDetail('sig-03')">离散傅里叶变换</a>的应用。</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">应用二：数字滤波器设计</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          数字滤波器是 DSP 的核心组件，分为 FIR（有限脉冲响应）和 IIR（无限脉冲响应）两类：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>FIR 滤波器</th><th>IIR 滤波器</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">脉冲响应</td><td>有限长（$N$ 个系数后截断）</td><td>无限长（有反馈环路）</td></tr>
+            <tr><td class="font-medium">相位特性</td><td>可设计为<strong>严格线性相位</strong></td><td>非线性相位</td></tr>
+            <tr><td class="font-medium">稳定性</td><td>总是稳定（无极点）</td><td>极点须在单位圆内</td></tr>
+            <tr><td class="font-medium">实现结构</td><td>$y[n] = \\sum_{k=0}^{N-1} b_k x[n-k]$（卷积和）</td><td>$y[n] = \\sum b_k x[n-k] - \\sum a_k y[n-k]$</td></tr>
+            <tr><td class="font-medium">计算量</td><td>阶数高时计算量大</td><td>低阶即可达同样效果</td></tr>
+            <tr><td class="font-medium">典型应用</td><td>音频处理、通信均衡</td><td>实时控制、模拟滤波器仿真</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">应用三：PID 控制器的信号与系统视角</h4>
+        <div class="formula-block">
+          <div class="text-left">
+            <strong>连续 PID</strong>：
+            $$u(t) = K_p e(t) + K_i \\int_0^t e(\\tau)\\,d\\tau + K_d \\frac{de(t)}{dt}$$
+            <strong>传递函数</strong>：
+            $$G_{\\text{PID}}(s) = K_p + \\frac{K_i}{s} + K_d s = \\frac{K_d s^2 + K_p s + K_i}{s}$$
+          </div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>P（比例）</strong>：频域上为常数增益，改善响应速度但可能振荡。</li>
+          <li><strong>I（积分）</strong>：对应 $1/s$，低频增益无穷大→消除稳态误差。对应<a href="javascript:void(0)" onclick="App.loadDetail('sig-05')">拉氏变换</a>中的积分性质。</li>
+          <li><strong>D（微分）</strong>：对应 $s$，高频增益大→预见变化趋势、改善瞬态。对应<a href="javascript:void(0)" onclick="App.loadDetail('sig-04')">傅里叶变换中的微分性质</a>。</li>
+          <li>离散实现用<a href="javascript:void(0)" onclick="App.loadDetail('sig-06')">Z 变换</a>的后向差分近似：$s \\approx \\frac{1-z^{-1}}{T_s}$，与<a href="javascript:void(0)" onclick="App.loadDetail('act-13')">离散控制系统</a>直接关联。</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">应用四：音频均衡器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          音频均衡器是多个并联<a href="javascript:void(0)" onclick="App.loadDetail('sig-07')">带通滤波器</a>的组合，每个频段独立调节增益：
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：频段划分</strong>。将 20Hz-20kHz 划分为若干频段（如 5 段/10 段/31 段），每段中心频率按倍频程（octave）递增。</div></div>
+          <div class="step-item"><div><strong>第二步：带通滤波</strong>。每个频段用一组带通滤波器（如二阶 IIR 峰化滤波器）提取该频段的信号分量。</div></div>
+          <div class="step-item"><div><strong>第三步：增益调节与合成</strong>。各频段乘以用户设定的增益系数后相加，得到均衡后的输出。$Y(\\omega) = \\sum_k G_k \\cdot B_k(\\omega) \\cdot X(\\omega)$。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">各变换的工程应用总结</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>变换</th><th>核心应用</th><th>典型场景</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">傅里叶变换</td><td>频谱分析、滤波器设计</td><td>音频频谱仪、通信调制解调</td></tr>
+            <tr><td class="font-medium">拉氏变换</td><td>连续系统分析、传递函数</td><td>模拟控制、电路分析</td></tr>
+            <tr><td class="font-medium">Z 变换</td><td>数字系统分析、数字滤波器</td><td>DSP 算法、数字控制</td></tr>
+            <tr><td class="font-medium">卷积</td><td>系统响应计算、图像处理</td><td>模糊/锐化滤波、混响效果</td></tr>
+            <tr><td class="font-medium">采样定理</td><td>ADC/DAC 设计</td><td>音频数字化、雷达信号采集</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box tip">💡 <strong>学完信号与系统的下一步</strong>：如果走<strong>控制方向</strong>，继续学习<a href="javascript:void(0)" onclick="App.loadDetail('act-09')">频域分析</a>和<a href="javascript:void(0)" onclick="App.loadDetail('act-12')">系统校正</a>；如果走<strong>DSP 方向</strong>，学习 FIR/IIR 滤波器设计（窗函数法、双线性变换法）和 FFT 算法；如果走<strong>通信方向</strong>，学习数字调制（QPSK、QAM）和信道编码。</div>
+        <div class="info-box warning">⚠️ <strong>工程陷阱</strong>：理论分析假设信号是理想的（无限精度、无限时间），但实际工程中 ADC 有量化噪声（通常 12-24 bit）、采样有抖动（jitter）、滤波器系数量化会改变极零点位置。设计时必须考虑这些非理想因素，留足裕量。特别是<a href="javascript:void(0)" onclick="App.loadDetail('ana-13')">电源纹波</a>和地弹噪声对 ADC 精度的影响。</div>
+        <div class="info-box info">📘 <strong>现代前沿</strong>：压缩感知（Compressed Sensing）突破了奈奎斯特采样率的限制——对稀疏信号，只需远低于 $2f_M$ 的采样率即可恢复。深度学习中的 CNN（卷积神经网络）直接利用卷积操作提取图像特征，其"卷积层"就是信号与系统中卷积的二维推广。自适应滤波器（LMS/RLS 算法）是主动降噪耳机的核心。</div>
+      ` },
+    ]
+  },
+
+  'sensor': {
+    title: '传感器与检测',
+    subtitle: '传感器原理、信号调理与检测系统设计，机器人感知的硬件基础',
+    icon: '🌡️',
+    sections: [
+      { id: 'sns-01', title: '传感器基础', desc: '传感器分类、性能指标（精度/灵敏度/线性度/分辨率）', icon: '📏', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">传感器：机器的感觉器官</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">传感器是将被测量（物理量、化学量、生物量）转换为可测量电信号的器件。它是检测系统的"第一道关口"——传感器的性能上限决定了整个系统的测量精度。在机器人、工业自动化、智能驾驶等领域，传感器是感知环境的硬件基础。理解传感器的分类和性能指标，是选择和使用传感器的前提。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">传感器学是<a href="javascript:void(0)" onclick="App.loadDetail('circ-06')">电路基础</a>和<a href="javascript:void(0)" onclick="App.loadDetail('ana-07')">模拟电路</a>的工程延伸——信号调理（放大、滤波）依赖运放和滤波电路知识，而<a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">数据采集</a>又需要 A/D 转换和嵌入式系统配合。</p>
+
+        <h4 class="font-medium mt-6 mb-2">传感器的基本组成</h4>
+        <div class="formula-block">传感器由<strong>敏感元件</strong> + <strong>转换元件</strong> + <strong>信号调理电路</strong>三部分组成<br>敏感元件：直接感受被测量，输出与被测量有确定关系的物理量<br>转换元件：将敏感元件输出转换为电参量（电阻/电容/电感/电压/电流）<br>信号调理电路：将电参量转换为标准电信号（如 4~20mA、0~5V）<div class="text-sm text-gray-500 mt-2">有些传感器三者合一（如热电偶），有些分立（如应变片 + 电桥 + 放大器）</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">传感器分类</h4>
+        <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
+          <li><strong>按被测量</strong>：物理量（温度、压力、位移、速度）、化学量（气体浓度、pH 值）、生物量（酶、DNA）</li>
+          <li><strong>按工作原理</strong>：电阻式、电容式、电感式、压电式、磁电式、光电式、热电式</li>
+          <li><strong>按输出信号</strong>：模拟量输出（连续电压/电流）、数字量输出（脉冲/编码）</li>
+          <li><strong>按能量关系</strong>：自源型（有源传感器，如热电偶）、外源型（需激励源，如应变片电桥）</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">核心性能指标</h4>
+        <div class="formula-block">传感器的六项关键指标：<br><strong>精度</strong>：测量值与真值的接近程度，用满量程误差表示：$\delta = \frac{\Delta_{max}}{y_{FS}} \times 100\%$<br><strong>灵敏度</strong>：输出变化量与输入变化量之比：$S = \frac{\Delta y}{\Delta x}$<br><strong>线性度</strong>：实际特性曲线偏离理想直线的最大程度<br><strong>分辨率</strong>：能检测到的最小输入变化量<div class="text-sm text-gray-500 mt-2">精度是系统级指标，灵敏度是器件级指标，两者不可混淆</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">性能指标详解</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>指标</th><th>定义</th><th>单位</th><th>越高越好</th><th>影响因素</th></tr></thead><tbody><tr><td class="font-medium">精度</td><td>测量误差占满量程百分比</td><td>%FS</td><td>✓</td><td>非线性、迟滞、重复性综合</td></tr><tr><td class="font-medium">灵敏度</td><td>输出/输入变化量之比</td><td>mV/V 等</td><td>✓</td><td>转换原理、结构参数</td></tr><tr><td class="font-medium">线性度</td><td>实际曲线与拟合直线最大偏差</td><td>%FS</td><td>✓（越小越好）</td><td>传感器原理、制造工艺</td></tr><tr><td class="font-medium">分辨率</td><td>可检测最小输入变化</td><td>与输入同</td><td>✓（越小越好）</td><td>噪声、A/D 位数</td></tr><tr><td class="font-medium">响应时间</td><td>输出达到稳态 63.2% 的时间</td><td>ms/s</td><td>✓（越小越好）</td><td>热惯性、机械惯性</td></tr><tr><td class="font-medium">漂移</td><td>零点或灵敏度随时间/温度变化</td><td>%/°C</td><td>✓（越小越好）</td><td>材料老化、温度变化</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">传感器选型的一般步骤</h4>
+        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>明确被测量</strong><br>确定测量对象（温度/压力/位移…）、量程范围、精度要求</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>选择工作原理</strong><br>根据使用环境（温度/湿度/电磁干扰）选择合适的转换原理</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>匹配性能指标</strong><br>对比灵敏度、线性度、响应时间、稳定性是否满足要求</div></div><div class="step"><span class="step-num">4</span><div class="step-content"><strong>考虑接口与成本</strong><br>输出信号类型（模拟/数字）、供电要求、尺寸封装、价格</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>记忆口诀</strong>："精灵线分响漂"——精度、灵敏度、线性度、分辨率、响应时间、漂移，六大指标记全。传感器选型看"环境-量程-精度-接口"四要素。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>精度 ≠ 灵敏度</strong>：高灵敏度不等于高精度！灵敏度高但线性度差、漂移大的传感器，精度可能很低。工程选型时，精度是最终评判标准，灵敏度只是其中一项指标。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>传感器发展趋势</strong>：微型化（MEMS）、智能化（传感器 + MCU = 智能传感器）、网络化（物联网传感节点）、多参数融合（IMU 融合加速度计+陀螺仪+磁力计）。详见 <a href="javascript:void(0)" onclick="App.loadDetail('sns-07')">运动传感器</a>。</div></div>
+      ` },
+
+      { id: 'sns-02', title: '电阻式传感器', desc: '应变片、热电阻、电位器、惠斯通电桥', icon: '🔌', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">电阻式传感器：最经典、最广泛的一类</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">电阻式传感器通过改变电阻值来反映被测量的变化——应变片反映力/形变，热电阻反映温度，电位器反映位移。它们结构简单、成本低、可靠性高，是工业检测中应用最广泛的传感器类型。配合<a href="javascript:void(0)" onclick="App.loadDetail('circ-06')">惠斯通电桥</a>和<a href="javascript:void(0)" onclick="App.loadDetail('ana-07')">仪表放大器</a>，可实现高精度测量。</p>
+
+        <h4 class="font-medium mt-6 mb-2">电阻应变片</h4>
+        <div class="formula-block">电阻应变效应：导体受力变形时电阻变化<br>$\frac{\Delta R}{R} = K \cdot \varepsilon$<br>其中 $K$ 为灵敏度系数（金属丝约 2，半导体约 50~200）<br>$\varepsilon = \frac{\Delta L}{L}$ 为应变（无量纲）<div class="text-sm text-gray-500 mt-2">金属应变片线性好、稳定；半导体应变片灵敏度高但温漂大</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">惠斯通电桥</h4>
+        <div class="formula-block">惠斯通电桥输出电压：<br>$U_o = U_i \cdot \frac{R_1 R_3 - R_2 R_4}{(R_1+R_2)(R_3+R_4)}$<br>单臂工作（$R_1$ 变化 $\Delta R$）：$U_o \approx \frac{U_i}{4} \cdot \frac{\Delta R}{R}$<br>全桥工作（四臂均变化）：$U_o \approx U_i \cdot \frac{\Delta R}{R}$<div class="text-sm text-gray-500 mt-2">全桥灵敏度是单臂的 4 倍，且具有温度补偿功能</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">常用电阻式传感器</h4>
+        <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
+          <li><strong>金属应变片</strong>：测力/应力/扭矩，灵敏度系数 $K\approx 2$，需配合电桥使用</li>
+          <li><strong>半导体应变片</strong>：压阻效应，灵敏度系数 $K\approx 100$，但温度系数大</li>
+          <li><strong>热电阻（RTD）</strong>：Pt100（0°C 时 100Ω），测温范围 -200~650°C，精度高</li>
+          <li><strong>电位器式</strong>：滑动变阻器测位移，输出电压与位移成正比，结构最简单</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">电桥的三种工作方式</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>方式</th><th>桥臂数</th><th>输出电压</th><th>灵敏度</th><th>温度补偿</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">单臂</td><td>1 臂工作</td><td>$\frac{U_i}{4}\cdot\frac{\Delta R}{R}$</td><td>低</td><td>无</td><td>简单测量</td></tr><tr><td class="font-medium">半桥</td><td>2 臂工作</td><td>$\frac{U_i}{2}\cdot\frac{\Delta R}{R}$</td><td>中</td><td>部分</td><td>弯曲测量</td></tr><tr><td class="font-medium">全桥</td><td>4 臂工作</td><td>$U_i\cdot\frac{\Delta R}{R}$</td><td>最高</td><td>完全</td><td>高精度测量</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：应变片测量梁的弯曲</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">用全桥方式测量悬臂梁末端受力，电桥供电 $U_i=5V$，应变片 $R=120\Omega$，$K=2$，梁受力后应变 $\varepsilon=500\mu\varepsilon$。</p>
+        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>计算电阻变化</strong><br>$\frac{\Delta R}{R}=K\cdot\varepsilon=2\times500\times10^{-6}=0.001$</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>计算电桥输出</strong><br>$U_o=U_i\cdot\frac{\Delta R}{R}=5\times0.001=5mV$</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>评估信号调理需求</strong><br>5mV 信号极微弱，需要仪表放大器放大 500~1000 倍至 2.5~5V，再送 <a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">A/D 转换</a></div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>跨节互链</strong>：惠斯通电桥的平衡条件和计算方法，详见 <a href="javascript:void(0)" onclick="App.loadDetail('circ-06')">电路基础·正弦稳态</a>。微弱信号放大需要 <a href="javascript:void(0)" onclick="App.loadDetail('ana-07')">集成运放·仪表放大器</a>。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>导线电阻误差</strong>：应变片到电桥之间长导线的电阻会叠加到桥臂中，引起测量误差。三线制接法可消除导线电阻影响——两根线分属相邻桥臂，第三根供激励，导线电阻变化被抵消。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>Pt100 分度表</strong>：Pt100 热电阻是最常用的工业温度传感器，0°C 时阻值恰好 100Ω，阻值与温度近似线性关系：$R_T = R_0(1+\alpha T)$，其中 $\alpha \approx 0.00385\Omega/\Omega/°C$。详见 <a href="javascript:void(0)" onclick="App.loadDetail('sns-06')">温度传感器</a>。</div></div>
+      ` },
+
+      { id: 'sns-03', title: '电容与电感式传感器', desc: '电容式位移、LVDT、涡流传感器', icon: '🧲', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">电容与电感：非接触测量的两大利器</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">电容式传感器通过改变极板间距、面积或介质来改变电容值；电感式传感器通过改变线圈磁路来改变电感值。两者共同优势是<strong>非接触测量</strong>——没有机械磨损，寿命长、可靠性高。在精密位移测量、金属检测、液位测量等场景中广泛应用。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">电容和电感的阻抗特性与频率密切相关，分析时需要用到<a href="javascript:void(0)" onclick="App.loadDetail('circ-06')">正弦稳态分析</a>和<a href="javascript:void(0)" onclick="App.loadDetail('circ-08')">谐振电路</a>的知识。</p>
+
+        <h4 class="font-medium mt-6 mb-2">电容式传感器原理</h4>
+        <div class="formula-block">平行板电容器：$C = \frac{\varepsilon_0 \varepsilon_r A}{d}$<br>变间距型：$C = \frac{\varepsilon_0 \varepsilon_r A}{d_0 - \Delta d}$，灵敏度随间距增大而降低<br>变面积型：$C = \frac{\varepsilon_0 \varepsilon_r (A_0 - \Delta A)}{d}$，线性度好<br>变介质型：$C = \frac{\varepsilon_0 (A_1 \varepsilon_{r1} + A_2 \varepsilon_{r2})}{d}$，用于液位测量<div class="text-sm text-gray-500 mt-2">$\varepsilon_0 = 8.85\times10^{-12}$ F/m，$\varepsilon_r$ 为相对介电常数</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">LVDT（线性可变差动变压器）</h4>
+        <div class="formula-block">LVDT 输出电压与铁芯位移关系：<br>$E_o = E_1 - E_2 = k \cdot x$（$x$ 在线性范围内）<br>零位时 $E_1 = E_2$，输出为零<br>铁芯向左或向右移动时输出反相<div class="text-sm text-gray-500 mt-2">LVDT 分辨率可达 0.1μm，量程从 ±0.1mm 到 ±250mm</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">电涡流传感器</h4>
+        <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
+          <li><strong>原理</strong>：线圈通高频交变电流，在金属导体表面感应涡流，涡流反作用改变线圈阻抗</li>
+          <li><strong>测量参数</strong>：位移（探头到金属面距离）、厚度、材质鉴别、裂纹检测</li>
+          <li><strong>特点</strong>：非接触、响应快（可达 100kHz）、耐油污，适合旋转机械振动监测</li>
+          <li><strong>局限</strong>：只能测金属导体，灵敏度受被测体材料电导率和磁导率影响</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">三种电容/电感式传感器对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>测量量</th><th>量程</th><th>精度</th><th>特点</th><th>典型应用</th></tr></thead><tbody><tr><td class="font-medium">电容式位移</td><td>位移/间距</td><td>0~数百 mm</td><td>0.01μm</td><td>非接触、高分辨</td><td>精密定位</td></tr><tr><td class="font-medium">LVDT</td><td>位移</td><td>±0.1~250mm</td><td>0.1%</td><td>线性好、无摩擦</td><td>阀门位置反馈</td></tr><tr><td class="font-medium">电涡流</td><td>位移/厚度</td><td>0~50mm</td><td>1%</td><td>只测金属、响应快</td><td>轴振动监测</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：电容式传感器测量微小位移</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">变间距型电容传感器，极板面积 $A=1cm^2$，初始间距 $d_0=1mm$，$\varepsilon_r=1$，当间距减小 $\Delta d=10\mu m$ 时，求电容变化率和灵敏度。</p>
+        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>计算初始电容</strong><br>$C_0=\frac{8.85\times10^{-12}\times10^{-4}}{10^{-3}}=0.885pF$</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>计算变化后电容</strong><br>$C=\frac{8.85\times10^{-12}\times10^{-4}}{0.99\times10^{-3}}=0.894pF$</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>计算变化率</strong><br>$\frac{\Delta C}{C_0}=\frac{0.009}{0.885}\approx 1.02\%$，即 $\Delta d/d_0=1\%$ 对应约 1% 的电容变化</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>记忆要点</strong>：变间距型灵敏度不恒定（非线性），变面积型线性好。LVDT 是差动结构，零位输出为零——过零反相可判断移动方向。涡流传感器只对金属有效。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>寄生电容干扰</strong>：电容式传感器本体电容仅 pF 级，引线寄生电容可能远大于传感器电容。必须使用<strong>驱动电缆技术</strong>（将电缆屏蔽层接至放大器输出端）或<strong>集成前置放大器</strong>来消除寄生电容影响。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>电容触摸屏</strong>：手机电容触摸屏本质是电容式传感器阵列——手指触摸改变局部电容，通过行列扫描确定触摸位置。电容变化仅 0.1~1pF，需要高灵敏度检测电路。</div></div>
+      ` },
+
+      { id: 'sns-04', title: '压电与磁电传感器', desc: '压电效应、霍尔传感器、磁阻传感器', icon: '💎', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">压电与磁电：力与磁的直接转换</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">压电传感器利用<strong>压电效应</strong>——某些晶体受力变形时产生电荷，实现力到电信号的直接转换。磁电传感器利用<strong>霍尔效应</strong>或<strong>磁阻效应</strong>——磁场引起材料电学特性变化。两者都是自源型（有源）传感器，广泛用于振动测量、加速度测量、磁场检测、电流检测等场景。</p>
+
+        <h4 class="font-medium mt-6 mb-2">压电效应</h4>
+        <div class="formula-block">正压电效应（传感器用）：晶体受力 → 产生电荷<br>$Q = d \cdot F$（$d$ 为压电常数，单位 pC/N）<br>开路电压：$V = \frac{Q}{C_p} = \frac{d \cdot F}{C_p}$（$C_p$ 为传感器电容）<br>等效电路：电荷源 $Q$ 并联 $C_p$ 和泄漏电阻 $R_p$<div class="text-sm text-gray-500 mt-2">逆压电效应（执行器用）：施加电场 → 晶体变形，用于压电驱动器、超声换能器</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">霍尔传感器</h4>
+        <div class="formula-block">霍尔效应：载流导体在磁场中产生横向电压<br>$V_H = \frac{R_H \cdot I \cdot B}{d} = K_H \cdot I \cdot B$<br>$R_H$ 为霍尔系数，$d$ 为导体厚度<br>$K_H = R_H/d$ 为灵敏度系数（mV/mA·T）<div class="text-sm text-gray-500 mt-2">霍尔电压方向由左手定则判断：四指→电流方向，掌心→磁场穿入，拇指→霍尔电压正端</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">常用压电/磁电传感器</h4>
+        <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
+          <li><strong>压电加速度计</strong>：测振动加速度，频率响应宽（0.5Hz~50kHz），需电荷放大器</li>
+          <li><strong>压电力传感器</strong>：测动态力（冲压力、爆炸力），不能测静态力（电荷泄漏）</li>
+          <li><strong>霍尔位置传感器</strong>：检测磁铁位置/角度，用于 BLDC 电机换向、节气门位置</li>
+          <li><strong>霍尔电流传感器</strong>：非接触测大电流（0~数千 A），响应快、隔离度高</li>
+          <li><strong>磁阻传感器（AMR/GMR/TMR）</strong>：磁场灵敏度比霍尔高 100 倍，用于电子罗盘</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">压电 vs 霍尔对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>特性</th><th>压电传感器</th><th>霍尔传感器</th></tr></thead><tbody><tr><td class="font-medium">转换效应</td><td>力 → 电荷（压电效应）</td><td>磁场 → 电压（霍尔效应）</td></tr><tr><td class="font-medium">信号类型</td><td>电荷（高阻抗）</td><td>电压（低阻抗）</td></tr><tr><td class="font-medium">静态测量</td><td>不能（电荷泄漏）</td><td>可以</td></tr><tr><td class="font-medium">频率响应</td><td>极宽（0.5Hz~MHz）</td><td>中（DC~100kHz）</td></tr><tr><td class="font-medium">典型量</td><td>振动/冲击/力</td><td>磁场/位置/电流</td></tr><tr><td class="font-medium">信号调理</td><td>电荷/电压放大器</td><td>差分放大器</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">压电传感器信号调理</h4>
+        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>电荷放大器</strong><br>输出电压 $V_o = -\frac{Q}{C_f}$（$C_f$ 为反馈电容），输出与电缆电容无关，是压电传感器的标准接口</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>电压放大器</strong><br>输入电阻需极高（$>10^9\Omega$），否则低频信号泄漏。适合高频振动测量</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>滤波与数字化</strong><br>高通滤波去除直流偏移，低通滤波防混叠，再经 A/D 转换送入 <a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">数据采集系统</a></div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>跨节互链</strong>：压电传感器的电荷放大器本质是<a href="javascript:void(0)" onclick="App.loadDetail('ana-07')">集成运放的积分应用</a>。霍尔传感器用于 BLDC 电机换向，与<a href="javascript:void(0)" onclick="App.loadDetail('act-14')">自动控制·执行器</a>密切关联。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>压电传感器不能测静态量</strong>：压电材料虽然能产生电荷，但电荷会通过泄漏电阻逐渐消失（时间常数 $\tau = R_p C_p$）。因此只能测量<strong>动态信号</strong>（振动、冲击），不能用于静态力/压力的长时间测量。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>常见压电材料</strong>：石英（SiO₂）稳定性好但灵敏度低，PZT（锆钛酸铅）灵敏度高是主力材料，PVDF（聚偏氟乙烯）柔性薄膜适合大面积传感。GMR/TMR 磁阻传感器灵敏度远超霍尔，已用于硬盘磁头。</div></div>
+      ` },
+
+      { id: 'sns-05', title: '光电传感器', desc: '光电二极管、CCD/CMOS、光纤传感器', icon: '💡', tags: ['工程应用'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">光电传感器：用光感知世界</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">光电传感器将光信号转换为电信号，或利用光作为媒介进行测量。从简单的光电开关到高精度的 CCD/CMOS 图像传感器，光电传感覆盖了工业自动化、机器视觉、通信、医疗等几乎所有领域。光电传感器的核心是<a href="javascript:void(0)" onclick="App.loadDetail('ana-01')">光电二极管</a>——PN 结在光照下产生光电流。</p>
+
+        <h4 class="font-medium mt-6 mb-2">光电效应基础</h4>
+        <div class="formula-block">光电效应三种类型：<br><strong>外光电效应</strong>：光子使电子逸出金属表面（光电倍增管 PMT）<br><strong>内光电效应</strong>：光子在半导体中激发电子-空穴对（光电二极管/三极管）<br><strong>光生伏特效应</strong>：PN 结在光照下产生电动势（光电池/太阳能电池）<div class="text-sm text-gray-500 mt-2">光子能量 $E=h\nu = hc/\lambda$，必须大于半导体禁带宽度 $E_g$ 才能激发载流子</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">常用光电传感器</h4>
+        <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
+          <li><strong>光电二极管（PD）</strong>：反偏工作，光照产生光电流 $I_p = R \cdot P$（$R$ 为响应度 A/W，$P$ 为光功率）</li>
+          <li><strong>光电三极管</strong>：比光电二极管多了电流增益 $\beta$，灵敏度更高但速度较慢</li>
+          <li><strong>CCD 传感器</strong>：电荷耦合器件，逐行转移电荷读出，动态范围大、噪声低</li>
+          <li><strong>CMOS 传感器</strong>：每个像素独立读出，功耗低、集成度高、速度快，主流图像传感器</li>
+          <li><strong>光纤传感器</strong>：光纤既是传输介质又是敏感元件，可测温度、应变、压力等</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">CCD vs CMOS 对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>特性</th><th>CCD</th><th>CMOS</th></tr></thead><tbody><tr><td class="font-medium">读出方式</td><td>电荷逐行转移</td><td>每个像素独立读出</td></tr><tr><td class="font-medium">功耗</td><td>高</td><td>低（CCD 的 1/3~1/10）</td></tr><tr><td class="font-medium">噪声</td><td>低</td><td>较高（持续改善中）</td></tr><tr><td class="font-medium">动态范围</td><td>大</td><td>中等</td></tr><tr><td class="font-medium">集成度</td><td>低（需外置电路）</td><td>高（片上集成 ADC/DSP）</td></tr><tr><td class="font-medium">成本</td><td>高</td><td>低</td></tr><tr><td class="font-medium">主流应用</td><td>科学成像、天文</td><td>手机、安防、汽车</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">光电传感器应用模式</h4>
+        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>对射式</strong><br>发射器与接收器相对，物体遮断光路时触发。检测距离最远，抗干扰强</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>反射式</strong><br>发射器和接收器在同一侧，物体反射光线至接收器。适合近距离检测</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>漫反射式</strong><br>利用物体表面漫反射，无需反光板。适合不规则表面检测</div></div><div class="step"><span class="step-num">4</span><div class="step-content"><strong>光纤式</strong><br>光纤导光至远端，适合狭小空间、高温/强电磁干扰环境</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>跨节互链</strong>：光电二极管的 I-V 特性与<a href="javascript:void(0)" onclick="App.loadDetail('ana-01')">半导体二极管</a>相同，只是增加了光生电流项。光纤传感器涉及光的全反射原理和光波导理论。CMOS 传感器的 ADC 集成在 <a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">嵌入式系统</a>中。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>暗电流问题</strong>：光电二极管在无光照时仍有微小电流（暗电流 $I_d$），温度每升高 10°C 暗电流约翻倍。精密光检测需制冷或暗电流补偿。CCD/CMOS 中暗电流产生固定噪声模式（暗电流噪声）。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>光纤传感前沿</strong>：分布式光纤传感（DFOS）可在一根数十公里长的光纤上连续测量温度和应变分布，分辨率到米级。光纤布拉格光栅（FBG）传感器利用波长编码，抗电磁干扰，广泛用于桥梁/隧道结构健康监测。</div></div>
+      ` },
+
+      { id: 'sns-06', title: '温度传感器', desc: '热电偶、RTD、热敏电阻、红外测温', icon: '🌡️', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">温度传感器：应用最广泛的物理量检测</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">温度是最常被测量的物理量——从工业过程控制、汽车发动机管理到医疗体温检测，无处不在。温度传感器种类繁多，各有适用场景：热电偶测高温（可达 2000°C），RTD 精度高（±0.1°C），热敏电阻响应快，红外测温实现非接触。选型的关键是<strong>量程、精度、响应速度、成本</strong>的综合权衡。</p>
+
+        <h4 class="font-medium mt-6 mb-2">热电偶</h4>
+        <div class="formula-block">塞贝克效应：两种不同金属构成回路，结点温差产生电动势<br>$E = \int_{T_0}^{T} (S_A - S_B) dT \approx \alpha(T - T_0)$<br>其中 $S_A, S_B$ 为塞贝克系数，$\alpha$ 为热电势率（μV/°C）<br>常用类型：K 型（镍铬-镍硅，$\alpha \approx 41\mu V/°C$），S 型（铂铑-铂）<div class="text-sm text-gray-500 mt-2">热电偶需要冷端补偿——参考端温度 $T_0$ 必须已知（通常用冰点或 IC 补偿）</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">热电阻（RTD）</h4>
+        <div class="formula-block">金属电阻随温度变化：<br>$R_T = R_0(1 + \alpha T + \beta T^2 + \cdots)$（Callendar-Van Dusen 方程）<br>简化线性近似：$R_T \approx R_0(1 + \alpha T)$<br>Pt100：$R_0=100\Omega$，$\alpha=0.00385\Omega/\Omega/°C$，测温 -200~650°C<div class="text-sm text-gray-500 mt-2">铂电阻是工业测温的标准传感器，IEC 60751 规定了分度表</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">热敏电阻</h4>
+        <div class="formula-block">NTC 热敏电阻（负温度系数）：<br>$R_T = R_{25} \cdot e^{B(\frac{1}{T} - \frac{1}{298})}$<br>$B$ 值通常 2000~5000K，$R_{25}$ 为 25°C 时的标称阻值<br>灵敏度高但非线性严重，需要查表或线性化<div class="text-sm text-gray-500 mt-2">PTC（正温度系数）热敏电阻在居里温度附近阻值剧增，常用作过流/过温保护</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">四种温度传感器对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>量程</th><th>精度</th><th>响应速度</th><th>线性度</th><th>成本</th><th>典型应用</th></tr></thead><tbody><tr><td class="font-medium">热电偶</td><td>-200~2000°C</td><td>±1~2°C</td><td>中</td><td>中</td><td>低</td><td>炉温、发动机</td></tr><tr><td class="font-medium">RTD(Pt100)</td><td>-200~650°C</td><td>±0.1°C</td><td>慢</td><td>好</td><td>中</td><td>工业过程控制</td></tr><tr><td class="font-medium">NTC热敏电阻</td><td>-40~125°C</td><td>±0.5°C</td><td>快</td><td>差</td><td>低</td><td>家电、电池温度</td></tr><tr><td class="font-medium">红外测温</td><td>-50~3000°C</td><td>±2°C</td><td>极快</td><td>中</td><td>高</td><td>非接触、移动目标</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：Pt100 测温电路设计</h4>
+        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>选择测量方法</strong><br>恒流源法：流过 Pt100 的电流恒定（1mA），测两端电压。或用电桥法</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>计算分辨率</strong><br>0~100°C 对应 100~138.5Ω，$\Delta R=38.5\Omega$，1mA 恒流源输出 100~138.5mV</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>信号调理</strong><br>用 <a href="javascript:void(0)" onclick="App.loadDetail('ana-07')">仪表放大器</a>放大至 0~3.3V，再经 12bit ADC 采样，分辨率 = 3300/4096 ≈ 0.08mV ≈ 0.02°C</div></div><div class="step"><span class="step-num">4</span><div class="step-content"><strong>线性化处理</strong><br>在 MCU 中用查表法或多项式拟合进行非线性补偿，最终输出温度值</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>选型速记</strong>：高温（>600°C）选热电偶，高精度工业选 RTD，快速响应/低成本选 NTC，非接触选红外。热电偶看分度表（K/J/T 型），RTD 看 IEC 60751。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>自热效应</strong>：RTD 和热敏电阻需要通电流才能测量，电流产生的焦耳热会升高传感器自身温度，造成测量误差。RTD 激励电流通常限制在 0.1~1mA，NTC 则需要在设计时计入自热功率。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>集成温度传感器</strong>：如 DS18B20（数字输出，单总线协议）、LM35（模拟输出，10mV/°C）。集成传感器内部含 ADC 和校准数据，使用简单但量程有限（通常 -55~125°C）。与<a href="javascript:void(0)" onclick="App.loadDetail('emb-06')">嵌入式通信接口</a>配合使用。</div></div>
+      ` },
+
+      { id: 'sns-07', title: '运动传感器', desc: '加速度计、陀螺仪、IMU、磁力计', icon: '📐', tags: ['工程应用', '难点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">运动感知：机器人导航的硬件核心</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">运动传感器测量物体的加速度、角速度、方向和磁场，是无人机飞控、手机姿态检测、惯性导航的核心器件。MEMS 技术使这些传感器微型化到芯片级，成本大幅降低。但每种传感器都有其局限性——加速度计受振动干扰，陀螺仪有漂移，磁力计受磁场干扰——因此需要<strong>传感器融合</strong>算法综合利用。</p>
+
+        <h4 class="font-medium mt-6 mb-2">MEMS 加速度计</h4>
+        <div class="formula-block">工作原理：牛顿第二定律 $F=ma$<br>MEMS 结构：弹簧-质量块-阻尼器系统<br>电容式检测：$C_1 - C_2 \propto x \propto a$（差动电容变化正比于位移，正比于加速度）<br>固有频率：$\omega_n = \sqrt{\frac{k}{m}}$（通常 1~10kHz）<div class="text-sm text-gray-500 mt-2">量程可选 ±2g（高精度）到 ±200g（冲击测量），分辨率可达 μg 级</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">MEMS 陀螺仪</h4>
+        <div class="formula-block">科里奥利效应：旋转参考系中运动物体受惯性力<br>$\vec{F}_c = -2m(\vec{\omega} \times \vec{v})$<br>MEMS 陀螺仪：振动质量块在旋转时受科里奥利力，引起垂直方向位移<br>输出正比于角速度 $\omega$（°/s）<div class="text-sm text-gray-500 mt-2">零偏稳定性是关键指标，消费级约 1~10°/h，战术级 &lt; 0.01°/h</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">IMU 惯性测量单元</h4>
+        <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
+          <li><strong>组成</strong>：3 轴加速度计 + 3 轴陀螺仪 = 6 轴 IMU；再加 3 轴磁力计 = 9 轴</li>
+          <li><strong>输出</strong>：线加速度 ($a_x, a_y, a_z$)、角速度 ($\omega_x, \omega_y, \omega_z$)、磁场 ($B_x, B_y, B_z$)</li>
+          <li><strong>融合算法</strong>：互补滤波、卡尔曼滤波、Madgwick/Mahony 算法，融合多传感器数据</li>
+          <li><strong>典型芯片</strong>：MPU6050（6 轴，I²C/SPI）、ICM-20948（9 轴）、BMI270</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">运动传感器对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>传感器</th><th>测量量</th><th>优势</th><th>局限</th><th>典型应用</th></tr></thead><tbody><tr><td class="font-medium">加速度计</td><td>线加速度/倾斜角</td><td>无漂移、可测重力</td><td>振动敏感、噪声大</td><td>计步、倾角</td></tr><tr><td class="font-medium">陀螺仪</td><td>角速度</td><td>动态响应好</td><td>零偏漂移、需校准</td><td>姿态控制</td></tr><tr><td class="font-medium">磁力计</td><td>磁场/航向角</td><td>绝对方向参考</td><td>磁场干扰严重</td><td>电子罗盘</td></tr><tr><td class="font-medium">IMU（融合）</td><td>6/9 轴姿态</td><td>互补优势</td><td>算法复杂</td><td>无人机飞控</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">传感器融合：互补滤波</h4>
+        <div class="formula-block">互补滤波融合加速度计和陀螺仪：<br>$\theta = \alpha(\theta + \omega \cdot \Delta t) + (1-\alpha)\theta_{acc}$<br>陀螺仪积分：短期准确（无噪声），长期漂移<br>加速度计：长期稳定（无漂移），短期振动噪声大<br>$\alpha$ 取 0.95~0.98，以陀螺仪为主、加速度计修正<div class="text-sm text-gray-500 mt-2">卡尔曼滤波是更优方案——自适应权重，但计算量更大。详见 <a href="javascript:void(0)" onclick="App.loadDetail('act-09')">现代控制理论·状态估计</a></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>跨节互链</strong>：IMU 融合算法中的卡尔曼滤波是<a href="javascript:void(0)" onclick="App.loadDetail('act-09')">现代控制理论·状态观测器</a>的工程应用。传感器数据通过 <a href="javascript:void(0)" onclick="App.loadDetail('emb-06')">I²C/SPI 接口</a>传输至 MCU，在 <a href="javascript:void(0)" onclick="App.loadDetail('emb-08')">RTOS</a> 中周期性采集。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>陀螺仪零偏漂移</strong>：MEMS 陀螺仪存在温度相关的零偏（bias），上电后零偏还会缓慢变化。不做校准和补偿，角度积分几分钟就会偏离几十度。工程中必须做上电零偏校准 + 温度补偿 + 融合修正。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>加速度计测倾角</strong>：静止时加速度计只测到重力分量，可直接算出倾斜角：$\theta = \arctan(\frac{a_x}{a_z})$。但运动时加速度计包含运动加速度和重力，无法区分——这正是需要陀螺仪融合的根本原因。</div></div>
+      ` },
+
+      { id: 'sns-08', title: '信号调理与数据采集', desc: '放大、滤波、A/D 转换、抗干扰技术', icon: '⚙️', tags: ['工程应用'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">信号调理：从传感器到数字世界的桥梁</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">传感器输出的原始信号通常是微弱、含噪声、非标准的模拟信号。信号调理电路完成<strong>放大、滤波、隔离、线性化</strong>，将其变换为 A/D 转换器可接受的标准电压范围。数据采集系统（DAQ）则完成模拟到数字的转换，将物理量送入 <a href="javascript:void(0)" onclick="App.loadDetail('emb-01')">嵌入式系统</a>处理。信号调理的优劣直接决定了整个检测系统的精度和可靠性。</p>
+
+        <h4 class="font-medium mt-6 mb-2">信号调理的基本环节</h4>
+        <div class="formula-block">信号调理链路：<br>传感器 → <strong>放大</strong> → <strong>滤波</strong> → <strong>隔离</strong> → <strong>线性化</strong> → ADC<br>放大：将 mV 级信号放大至 V 级（增益 100~10000 倍）<br>滤波：去除噪声和干扰（低通/带通/陷波）<br>隔离：消除地环路干扰（光耦/变压器隔离）<br>线性化：补偿传感器非线性（硬件或软件）<div class="text-sm text-gray-500 mt-2">并非每个系统都需要全部环节，但放大和滤波是最基本的</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">放大电路</h4>
+        <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
+          <li><strong>仪表放大器</strong>：高输入阻抗、高共模抑制比（CMRR &gt; 100dB），是桥式传感器的标准接口</li>
+          <li><strong>电荷放大器</strong>：压电传感器专用，输出与电缆电容无关</li>
+          <li><strong>程控增益放大器（PGA）</strong>：增益可数字编程，适应不同量程</li>
+          <li><strong>隔离放大器</strong>：信号通路电气隔离，保护 ADC 和 MCU</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">抗混叠滤波与采样定理</h4>
+        <div class="formula-block">奈奎斯特采样定理：<br>$f_s \geq 2 f_{max}$（采样频率 $\geq$ 信号最高频率的 2 倍）<br>抗混叠滤波：在 ADC 前加低通滤波器，截止频率 $f_c \leq f_s/2$<br>工程取值：$f_s \geq (3\sim 5) f_{max}$，留足够余量<div class="text-sm text-gray-500 mt-2">混叠是不可恢复的——一旦采样不满足奈奎斯特条件，信号就永久失真</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">A/D 转换关键参数</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>参数</th><th>定义</th><th>12bit ADC 示例</th><th>影响</th></tr></thead><tbody><tr><td class="font-medium">分辨率</td><td>$V_{ref}/2^n$</td><td>3.3V/4096 = 0.8mV</td><td>可分辨最小信号</td></tr><tr><td class="font-medium">量化误差</td><td>±0.5 LSB</td><td>±0.4mV</td><td>不可避免的量化噪声</td></tr><tr><td class="font-medium">INL/DNL</td><td>积分/微分非线性</td><td>±1 LSB</td><td>精度上限</td></tr><tr><td class="font-medium">转换速率</td><td>每秒采样数</td><td>1MSPS</td><td>可测信号频率上限</td></tr><tr><td class="font-medium">SNR</td><td>信噪比</td><td>72dB (理论 12bit)</td><td>有效位数</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">抗干扰设计</h4>
+        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>屏蔽</strong><br>信号线用屏蔽电缆，屏蔽层单端接地（避免地环路电流）</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>接地</strong><br>模拟地与数字地单点汇合，避免数字开关噪声耦合到模拟信号</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>滤波</strong><br>电源端加去耦电容（0.1μF 陶瓷 + 10μF 电解），信号端加 RC 低通</div></div><div class="step"><span class="step-num">4</span><div class="step-content"><strong>差分传输</strong><br>长距离信号用差分传输（如 RS-485），共模噪声被差分放大器抑制</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>跨节互链</strong>：仪表放大器详见 <a href="javascript:void(0)" onclick="App.loadDetail('ana-07')">模拟电路·集成运放</a>。抗混叠滤波涉及 <a href="javascript:void(0)" onclick="App.loadDetail('circ-06')">电路基础·频率响应</a>。ADC 工作原理涉及 <a href="javascript:void(0)" onclick="App.loadDetail('emb-07')">嵌入式系统·ADC 与 DAC</a>。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>ADC 精度 ≠ 系统精度</strong>：12bit ADC 理论分辨率 0.025%FS，但如果前端放大器噪声、传感器非线性、参考电压误差各占 0.1%，系统精度远达不到 12bit。有效位数（ENOB）才是真正的系统精度指标。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>Σ-Δ ADC</strong>：过采样 + 数字滤波架构，分辨率可达 24bit，适合高精度低频信号（称重、温度）。原理是用 1bit 高速 ADC 过采样，再用数字滤波器抽取降噪。与逐次逼近型（SAR）ADC 形成互补——SAR 快（MSPS 级）但精度一般（12~16bit），Σ-Δ 慢但精度高。</div></div>
+      ` },
+    ]
+  },
+
+
+// ===课程2===
+// ============================================================
+// 课程 2：嵌入式系统（10 节）
+// ============================================================
+  'embedded-sys': {
+    title: '嵌入式系统',
+    subtitle: 'ARM 架构、外设驱动、RTOS 与低功耗设计，控制算法的硬件载体',
+    icon: '🔩',
+    sections: [
+      { id: 'emb-01', title: '嵌入式系统概述', desc: '定义、组成、与通用计算机对比、应用领域', icon: '🎯', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">嵌入式系统：看不见的智能</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">嵌入式系统是以应用为中心、以计算机技术为基础，软硬件可裁剪，适用于对功能、可靠性、成本、体积、功耗有严格要求的专用计算机系统。从智能手表、汽车 ECU 到工业 PLC，嵌入式系统无处不在——全球每年生产超过 300 亿颗嵌入式处理器，远超 PC 和手机的总和。理解嵌入式系统的基本组成和特点，是学习后续所有章节的前提。</p>
+
+        <h4 class="font-medium mt-6 mb-2">嵌入式系统的基本组成</h4>
+        <div class="formula-block">嵌入式系统四层结构：<br><strong>硬件层</strong>：处理器（MCU/MPU/DSP/FPGA）+ 存储器 + 外设接口<br><strong>BSP/HAL 层</strong>：板级支持包，硬件抽象，驱动程序<br><strong>OS 层</strong>：实时操作系统（RTOS）或裸机（bare-metal）<br><strong>应用层</strong>：面向具体任务的应用软件<div class="text-sm text-gray-500 mt-2">简单系统（如温控器）可能没有 OS 层，直接裸机编程</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">嵌入式 vs 通用计算机</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>特性</th><th>嵌入式系统</th><th>通用计算机</th></tr></thead><tbody><tr><td class="font-medium">用途</td><td>专用（控制/检测/通信）</td><td>通用（计算/办公/娱乐）</td></tr><tr><td class="font-medium">处理器</td><td>MCU（Cortex-M）、DSP、SoC</td><td>CPU（x86、ARM Cortex-A）</td></tr><tr><td class="font-medium">资源</td><td>有限（KB~MB 级存储）</td><td>丰富（GB 级存储）</td></tr><tr><td class="font-medium">OS</td><td>RTOS 或裸机</td><td>Windows/Linux/macOS</td></tr><tr><td class="font-medium">实时性</td><td>硬实时要求（μs 级响应）</td><td>软实时即可</td></tr><tr><td class="font-medium">功耗</td><td>mW~W 级，需电池供电</td><td>百 W 级，插电使用</td></tr><tr><td class="font-medium">开发方式</td><td>交叉编译 + 仿真器调试</td><td>本机编译运行</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">处理器分类</h4>
+        <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
+          <li><strong>MCU（微控制器）</strong>：Cortex-M 系列，片上集成 Flash/RAM/外设，适合控制类应用（STM32、ESP32）</li>
+          <li><strong>MPU（微处理器）</strong>：Cortex-A 系列，需外接存储，运行 Linux，适合复杂应用（树莓派）</li>
+          <li><strong>DSP（数字信号处理器）</strong>：哈佛结构、硬件乘法器，专为信号处理优化（TI C6000）</li>
+          <li><strong>FPGA</strong>：可编程逻辑器件，并行处理、自定义硬件加速（Xilinx、Intel/Altera）</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">嵌入式系统开发流程</h4>
+        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>需求分析</strong><br>明确功能需求、性能指标（实时性/精度/功耗）、成本约束</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>硬件选型</strong><br>选择 MCU/外设/电源/通信方案，画原理图和 PCB</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>软件开发</strong><br>BSP 驱动 → RTOS 移植 → 应用层开发，<a href="javascript:void(0)" onclick="App.loadDetail('emb-10')">交叉编译</a> + 在线调试</div></div><div class="step"><span class="step-num">4</span><div class="step-content"><strong>集成测试</strong><br>功能测试、压力测试、EMC 测试、环境（高低温/振动）测试</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>跨节互链</strong>：嵌入式系统是<a href="javascript:void(0)" onclick="App.loadDetail('act-14')">自动控制·PID 算法</a>的硬件载体——控制律在 MCU 中实时执行。传感器数据通过 <a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">信号调理与 ADC</a> 采集，控制输出通过 <a href="javascript:void(0)" onclick="App.loadDetail('emb-05')">PWM</a> 驱动执行器。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>嵌入式 ≠ 单片机</strong>：嵌入式系统范围远大于单片机——从 8 位 AVR 到 64 位 ARM Cortex-A，从裸机到 Linux，都是嵌入式。MCU 编程只是嵌入式的一个子集。高端嵌入式系统（如手机 SoC）的复杂度不亚于 PC。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>物联网（IoT）与嵌入式</strong>：IoT 终端就是嵌入式系统 + 无线通信。典型方案：MCU（ESP32）+ 传感器 + WiFi/BLE + 云平台。边缘计算进一步在嵌入式端部署 AI 推理（TinyML），减少云端依赖。</div></div>
+      ` },
+
+      { id: 'emb-02', title: '处理器架构', desc: 'ARM Cortex-M、哈佛/冯诺依曼、流水线', icon: '🏗️', tags: ['核心', '高频考点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">处理器架构：嵌入式的"大脑"</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">处理器架构决定了嵌入式系统的计算能力、功耗和编程模型。ARM Cortex-M 系列是当前最主流的嵌入式处理器内核，覆盖从低成本（Cortex-M0，$0.3）到高性能（Cortex-M7，300MHz+）。理解哈佛/冯诺依曼结构差异、流水线原理和 Cortex-M 寄存器模型，是编写高效嵌入式程序的基础。</p>
+
+        <h4 class="font-medium mt-6 mb-2">哈佛结构 vs 冯诺依曼结构</h4>
+        <div class="formula-block"><strong>冯诺依曼结构</strong>：指令和数据共享同一条总线<br>$\text{取指} + \text{取数} = 2 \text{次总线访问，顺序执行}$<br><strong>哈佛结构</strong>：指令总线和数据总线独立<br>$\text{取指} \parallel \text{取数} = 1 \text{次总线周期，并行访问}$<div class="text-sm text-gray-500 mt-2">Cortex-M3/M4 采用改进哈佛结构（指令和数据独立总线，但 Flash 统一编址）</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">ARM Cortex-M 系列对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>内核</th><th>流水线</th><th>频率</th><th>DSP</th><th>FPU</th><th>典型应用</th></tr></thead><tbody><tr><td class="font-medium">Cortex-M0/M0+</td><td>2/3 级</td><td>48MHz</td><td>无</td><td>无</td><td>低功耗传感器节点</td></tr><tr><td class="font-medium">Cortex-M3</td><td>3 级</td><td>72~120MHz</td><td>无</td><td>无</td><td>工业控制、IoT</td></tr><tr><td class="font-medium">Cortex-M4</td><td>3 级</td><td>168MHz</td><td>有</td><td>可选</td><td>电机控制、音频</td></tr><tr><td class="font-medium">Cortex-M7</td><td>6 级</td><td>300MHz+</td><td>有</td><td>有</td><td>图形处理、AI 推理</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">流水线原理</h4>
+        <div class="formula-block">三级流水线：<strong>取指（Fetch）→ 译码（Decode）→ 执行（Execute）</strong><br>无流水线：3 条指令需 9 个周期<br>有流水线：3 条指令仅需 5 个周期（第 1 条指令需 3 周期，之后每条 1 周期）<br>理想加速比 = 流水线级数（3 级 → 最高 3 倍速）<div class="text-sm text-gray-500 mt-2">流水线冒险（数据冒险、控制冒险）会降低实际加速比——分支预测失败需冲刷流水线</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">Cortex-M 关键寄存器</h4>
+        <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
+          <li><strong>R0~R12</strong>：通用寄存器，其中 R0~R7 为低位寄存器（所有 Thumb 指令可访问）</li>
+          <li><strong>SP（R13）</strong>：栈指针，支持 MSP（主栈指针）和 PSP（进程栈指针）双栈</li>
+          <li><strong>LR（R14）</strong>：链接寄存器，保存子程序返回地址</li>
+          <li><strong>PC（R15）</strong>：程序计数器，读 PC 返回当前指令 +4（流水线预取）</li>
+          <li><strong>xPSR</strong>：程序状态寄存器，包含 N/Z/C/V 标志位和中断状态</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">操作模式与特权级</h4>
+        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>线程模式（Thread）</strong><br>普通程序执行，可选特权级或用户级</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>处理模式（Handler）</strong><br>异常/中断处理，始终处于特权级</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>特权级 vs 用户级</strong><br>特权级可访问所有资源（NVIC、SysTick 等），用户级受限（保护 RTOS 内核不被应用破坏）</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>记忆口诀</strong>："取译执"三级流水线。M0 最省电、M3 最通用、M4 有 DSP、M7 最强。寄存器记 "R0-R12 通用、SP 栈、LR 返、PC 行、xPSR 标志"。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>读 PC 的陷阱</strong>：Cortex-M 读 R15（PC）得到的是当前指令地址 +4（而非 +2 或当前地址），这是因为 3 级流水线预取了下一条指令。写 PC 时必须对齐到半字（偶数地址），否则会产生 HardFault。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>Thumb-2 指令集</strong>：Cortex-M 只支持 Thumb-2（16/32 位混合指令），不支持 ARM（32 位）指令。Thumb-2 在代码密度和性能之间取得最佳平衡——代码大小接近 Thumb，性能接近 ARM。</div></div>
+      ` },
+
+      { id: 'emb-03', title: '存储系统', desc: 'Flash/SRAM、存储映射、Cache 原理', icon: '💾', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">存储系统：程序和数据的载体</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">嵌入式系统的存储体系比 PC 简单但同样关键——Flash 存储程序代码，SRAM 存储运行数据，两者通过总线矩阵统一编址。理解存储映射是理解外设编程（寄存器操作）的基础，也是优化程序性能和资源占用的前提。Cortex-M 的统一地址空间设计使程序可以通过指针直接访问任何外设。</p>
+
+        <h4 class="font-medium mt-6 mb-2">存储类型</h4>
+        <div class="formula-block">嵌入式常用存储：<br><strong>Flash（闪存）</strong>：非易失，断电保留数据，存储程序代码和常量<br>写入速度慢（μs 级），擦除以扇区为单位（KB 级），擦写寿命 10K~100K 次<br><strong>SRAM</strong>：易失性，断电丢失，存储变量和栈<br>读写速度快（ns 级），无需擦除，面积大、成本高<div class="text-sm text-gray-500 mt-2">Flash 读取速度通常 0 等待（配合预取缓冲），写入需要专用编程算法</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">Cortex-M 存储映射</h4>
+        <div class="formula-block">4GB 地址空间统一编址（$2^{32}$ 字节）：<br>$0x0000\_0000 \sim 0x1FFF\_FFFF$：Code 区（Flash/ROM，512MB）<br>$0x2000\_0000 \sim 0x3FFF\_FFFF$：SRAM 区（512MB）<br>$0x4000\_0000 \sim 0x5FFF\_FFFF$：外设区（512MB）<br>$0xE000\_0000 \sim 0xE00F\_FFFF$：私有外设（NVIC、SysTick、MPU）<div class="text-sm text-gray-500 mt-2">实际芯片只用到其中一小部分，如 STM32F103：64KB Flash @ 0x0800_0000，20KB SRAM @ 0x2000_0000</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">位带操作（Bit-Banding）</h4>
+        <div class="formula-block">将 1MB SRAM/外设区的每一位映射到 32MB 位带别名区的一个字：<br>$\text{别名地址} = \text{位带基址} + (\text{字节偏移} \times 32) + (\text{位号} \times 4)$<br>SRAM 位带：$0x2200\_0000 + (byte\_offset \times 32) + (bit\_number \times 4)$<br>外设位带：$0x4200\_0000 + (byte\_offset \times 32) + (bit\_number \times 4)$<div class="text-sm text-gray-500 mt-2">位带操作实现原子位读写，避免"读-改-写"的竞态条件</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">Flash 与 SRAM 对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>特性</th><th>Flash</th><th>SRAM</th></tr></thead><tbody><tr><td class="font-medium">易失性</td><td>非易失（断电保留）</td><td>易失（断电丢失）</td></tr><tr><td class="font-medium">读速度</td><td>0 等待（有预取）</td><td>0 等待</td></tr><tr><td class="font-medium">写速度</td><td>慢（μs~ms）</td><td>快（ns）</td></tr><tr><td class="font-medium">擦除</td><td>需按扇区擦除</td><td>无需擦除</td></tr><tr><td class="font-medium">密度/成本</td><td>高密度、低成本</td><td>低密度、高成本</td></tr><tr><td class="font-medium">用途</td><td>程序代码、常量</td><td>变量、堆、栈</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">链接脚本与内存布局</h4>
+        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>定义 MEMORY 区域</strong><br>FLASH (rx) : ORIGIN = 0x08000000, LENGTH = 64K<br>RAM (rwx) : ORIGIN = 0x20000000, LENGTH = 20K</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>分配段（SECTIONS）</strong><br>.text（代码）→ Flash，.data（初始化变量）→ Flash 常量区 + RAM 拷贝，.bss（未初始化变量）→ RAM</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>启动代码</strong><br>上电后 Startup 文件将 .data 从 Flash 拷贝到 RAM，清零 .bss，然后跳转 main()</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>跨节互链</strong>：存储映射的概念是理解 <a href="javascript:void(0)" onclick="App.loadDetail('emb-04')">GPIO 寄存器操作</a>的基础——外设寄存器就是外设区的内存地址。链接脚本和启动代码是 <a href="javascript:void(0)" onclick="App.loadDetail('emb-10')">嵌入式开发实践</a>的核心内容。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>Flash 写入陷阱</strong>：写 Flash 时 CPU 不能从同一 Flash Bank 取指（会被阻塞或需要从 RAM 执行写入函数）。IAP（在应用编程）必须注意：写 Flash 时中断必须禁用或中断处理函数位于 RAM 中，否则会 HardFault。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>Cache 简介</strong>：高端 MCU（Cortex-M7）配备指令 Cache（I-Cache）和数据 Cache（D-Cache），用 SRAM 缓存 Flash 的热点数据，消除 Flash 访问等待。Cache 命中时 0 等待，未命中时需从 Flash 加载（延迟 5~8 周期）。DMA 传输时需要注意 Cache 一致性问题。</div></div>
+      ` },
+
+      { id: 'emb-04', title: 'GPIO 与中断系统', desc: '端口配置、中断向量、优先级、NVIC', icon: '🔘', tags: ['核心', '高频考点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">GPIO 与中断：嵌入式最基本的"手"和"耳"</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">GPIO（通用输入输出）是最基本的外设——控制 LED、读取按键、驱动继电器，都是通过 GPIO 完成。中断系统使 CPU 能够及时响应外部事件（按键、定时器溢出、数据到达），而不用忙等。掌握 GPIO 寄存器配置和中断优先级管理，是嵌入式编程的第一步。</p>
+
+        <h4 class="font-medium mt-6 mb-2">GPIO 工作模式</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>模式</th><th>方向</th><th>特性</th><th>典型应用</th></tr></thead><tbody><tr><td class="font-medium">推挽输出</td><td>输出</td><td>可输出高低电平，驱动能力强</td><td>LED、蜂鸣器</td></tr><tr><td class="font-medium">开漏输出</td><td>输出</td><td>只能拉低，需外部上拉</td><td>I²C 总线、电平转换</td></tr><tr><td class="font-medium">浮空输入</td><td>输入</td><td>高阻态，电平不确定</td><td>外部已有上/下拉</td></tr><tr><td class="font-medium">上拉/下拉输入</td><td>输入</td><td>内部电阻拉至确定电平</td><td>按键检测</td></tr><tr><td class="font-medium">复用功能</td><td>由外设控制</td><td>引脚交由 UART/SPI/PWM 等</td><td>通信接口、定时器输出</td></tr><tr><td class="font-medium">模拟输入</td><td>模拟</td><td>断开数字通路，直连 ADC</td><td>ADC 采样</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">GPIO 寄存器（STM32 示例）</h4>
+        <div class="formula-block">GPIO 端口配置寄存器：<br><strong>MODER</strong>（模式寄存器）：每 2 位控制 1 个引脚的模式（00=输入，01=输出，10=复用，11=模拟）<br><strong>ODR</strong>（输出数据寄存器）：写 1 输出高，写 0 输出低（读-改-写非原子操作）<br><strong>BSRR</strong>（位设置/清除寄存器）：低 16 位置 1，高 16 位清 0（原子操作）<br><strong>IDR</strong>（输入数据寄存器）：读取引脚电平<div class="text-sm text-gray-500 mt-2">推荐使用 BSRR 而非 ODR 进行原子位操作，避免中断导致的竞态条件</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">中断系统架构</h4>
+        <div class="formula-block">Cortex-M 中断模型：<br>支持 240 个外部中断（IRQn）+ 16 个系统异常<br>中断向量表：位于 Flash 起始地址，每个入口 4 字节（函数指针）<br>响应延迟：<strong>12 个时钟周期</strong>（入栈 8 + 取向量 1 + 寄存器调整 3）<div class="text-sm text-gray-500 mt-2">Cortex-M 中断入栈由硬件自动完成（压入 R0-R3, R12, LR, PC, xPSR），无需软件保存</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">NVIC 优先级管理</h4>
+        <div class="formula-block">优先级寄存器（4~8 位实现，STM32 用 4 位 = 16 级）：<br>优先级值越小，优先级越高（0 最高）<br>分为<strong>抢占优先级</strong>（preempt）和<strong>子优先级</strong>（sub-priority）<br>抢占优先级高的中断可打断低优先级中断（嵌套中断）<br>同级抢占优先级之间不能打断，子优先级用于同级仲裁<div class="text-sm text-gray-500 mt-2">优先级分组由 AIRCR 寄存器的 PRIGROUP 位决定（如 Group 4: 4 位全为抢占，Group 0: 全为子优先级）</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">外部中断（EXTI）配置步骤</h4>
+        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>配置 GPIO 为输入模式</strong><br>设置 MODER 为输入（00），选择上拉/下拉</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>选择 EXTI 线路</strong><br>AFIO 或 SYSCFG 寄存器将 GPIO 引脚映射到对应 EXTI 线（如 PA0/PB0/PC0 → EXTI0）</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>配置 EXTI 触发条件</strong><br>上升沿/下降沿/双边沿触发（FTSR/RTSR 寄存器），使能中断（IMR 寄存器）</div></div><div class="step"><span class="step-num">4</span><div class="step-content"><strong>配置 NVIC 并编写 ISR</strong><br>设置优先级，使能 IRQ，在中断服务函数中清除中断标志（PR 寄存器）</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>跨节互链</strong>：GPIO 是 <a href="javascript:void(0)" onclick="App.loadDetail('emb-05')">定时器</a>和 <a href="javascript:void(0)" onclick="App.loadDetail('emb-06')">通信接口</a>的物理引脚基础。中断优先级管理是 <a href="javascript:void(0)" onclick="App.loadDetail('emb-08')">RTOS 任务调度</a>的硬件基础。GPIO 也用于驱动 <a href="javascript:void(0)" onclick="App.loadDetail('dig-14')">数字电路</a>外设。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>忘记清除中断标志</strong>：ISR 中必须手动清除 EXTI_PR 寄存器的对应位，否则出 ISR 后立即再次进入——死循环中断。这是嵌入式初学者最常见的 Bug 之一。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>按键消抖</strong>：机械按键按下时有 5~20ms 的抖动。硬件消抖：加 RC 滤波或施密特触发器。软件消抖：EXTI 中检测到边沿后延时 20ms 再确认，或用定时器采样 + 多次确认。推荐使用定时器中断方式消抖，避免阻塞 CPU。</div></div>
+      ` },
+
+      { id: 'emb-05', title: '定时器与 PWM', desc: '定时器原理、输入捕获、PWM 波形生成', icon: '⏱️', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">定时器：嵌入式系统的"心脏节拍"</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">定时器是嵌入式系统中最灵活的外设——它不仅能精确计时，还能生成 PWM 波形（电机控制、LED 调光）、测量输入信号频率和脉宽（输入捕获）、触发 ADC 采样。STM32 的通用定时器功能极其丰富，是工程应用中使用频率最高的外设之一。</p>
+
+        <h4 class="font-medium mt-6 mb-2">定时器基本原理</h4>
+        <div class="formula-block">定时器核心：16/32 位计数器 + 预分频器（PSC）+ 自动重载寄存器（ARR）<br>定时周期：$T = \frac{(PSC+1) \times (ARR+1)}{f_{timer}}$<br>计数模式：向上计数、向下计数、中央对齐（向上-向下）<br>溢出事件：计数器达到 ARR 值时产生更新事件（UEV）<div class="text-sm text-gray-500 mt-2">STM32F103 通用定时器时钟为 72MHz，PSC=7199 时每 0.1ms 计数一次</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">PWM 输出</h4>
+        <div class="formula-block">PWM 波形生成：<br>$\text{占空比} = \frac{CCR}{ARR+1} \times 100\%$<br>CCR（捕获/比较寄存器）决定高电平持续时间<br>PWM 频率：$f_{PWM} = \frac{f_{timer}}{(PSC+1)(ARR+1)}$<br>分辨率：$\frac{1}{ARR+1}$（如 ARR=999 则 0.1% 分辨率）<div class="text-sm text-gray-500 mt-2">改变 CCR 即可改变占空比——用于电机调速（需 <a href="javascript:void(0)" onclick="App.loadDetail('act-14')">PID 控制</a>）、LED 调光、DAC 替代</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">定时器功能模式</h4>
+        <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
+          <li><strong>定时中断</strong>：定时溢出产生中断，用于周期性任务（如 1ms 系统时钟）</li>
+          <li><strong>输出比较</strong>：计数器与 CCR 比较，匹配时翻转输出引脚——精确时序输出</li>
+          <li><strong>PWM 输出</strong>：输出比较的特殊模式，自动产生 PWM 波形</li>
+          <li><strong>输入捕获</strong>：记录信号边沿到达时的计数值，测量脉宽和频率</li>
+          <li><strong>编码器接口</strong>：硬件解码正交编码器信号，自动计数位置（无需 CPU 干预）</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">定时器类型（STM32）</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>定时器</th><th>位数</th><th>通道</th><th>特点</th><th>典型用途</th></tr></thead><tbody><tr><td class="font-medium">高级定时器 (TIM1)</td><td>16 位</td><td>4+互补</td><td>死区插入、刹车</td><td>三相电机驱动</td></tr><tr><td class="font-medium">通用定时器 (TIM2-5)</td><td>16 位</td><td>4</td><td>功能最全面</td><td>PWM、输入捕获</td></tr><tr><td class="font-medium">基本定时器 (TIM6-7)</td><td>16 位</td><td>0</td><td>仅定时/DAC触发</td><td>DAC 触发源</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：生成 1kHz、50% 占空比 PWM</h4>
+        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>确定参数</strong><br>定时器时钟 72MHz，目标频率 1kHz → $ARR+PSC$ 组合：PSC=71, ARR=999</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>配置寄存器</strong><br>PSC=71（分频 72），ARR=999（计数 1000），CCR=500（50% 占空比）</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>设置 PWM 模式</strong><br>CCMR 寄存器选择 PWM 模式 1（CNT &lt; CCR 时输出有效），CCER 使能输出</div></div><div class="step"><span class="step-num">4</span><div class="step-content"><strong>使能定时器</strong><br>CR1 寄存器使能计数器（CEN=1），GPIO 配置为复用推挽输出</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>跨节互链</strong>：PWM 是电机驱动的基础——<a href="javascript:void(0)" onclick="App.loadDetail('act-14')">PID 控制器</a>的输出通过 PWM 驱动电机。输入捕获可用于超声波测距（测回波脉宽）。编码器接口与 <a href="javascript:void(0)" onclick="App.loadDetail('sns-07')">运动传感器</a>配合做位置/速度闭环。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>定时器中断中的延迟</strong>：不要在定时器 ISR 中做耗时操作（如 printf、浮点运算）。ISR 应尽可能短——设置标志位或发送信号量，让主循环或 RTOS 任务处理。耗时操作阻塞 ISR 会导致后续中断丢失。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>中心对齐 PWM</strong>：电机控制通常使用中心对齐模式（向上-向下计数），输出的 PWM 谐波更少，EMI 更低。高级定时器 TIM1 还支持死区插入（防止上下桥臂直通）和刹车功能（过流保护紧急关断）。</div></div>
+      ` },
+
+      { id: 'emb-06', title: '通信接口协议', desc: 'UART/SPI/I²C 协议对比与应用', icon: '🔗', tags: ['高频考点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">通信接口：嵌入式系统的"神经系统"</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">嵌入式系统需要与传感器、显示器、存储器、上位机等外部设备通信。UART、SPI、I²C 是三种最基本的串行通信协议，各有优缺点。掌握它们的时序特征、配置方法和适用场景，是嵌入式工程师的核心技能。实际项目中，一个系统通常同时使用多种通信协议。</p>
+
+        <h4 class="font-medium mt-6 mb-2">UART 串口通信</h4>
+        <div class="formula-block">UART（通用异步收发器）：点对点、全双工、异步通信<br>帧格式：起始位(1) + 数据位(5~9) + 校验位(0/1) + 停止位(1~2)<br>波特率：$Baud = \frac{f_{clk}}{16 \times \text{BRR}}$<br>常用波特率：9600、115200 bps<div class="text-sm text-gray-500 mt-2">无需时钟线，双方约定波特率即可通信。TTL 电平（3.3V/5V），长距离需转 RS-232/RS-485</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">SPI 串行外设接口</h4>
+        <div class="formula-block">SPI：同步、全双工、主从架构<br>四线制：SCK（时钟）+ MOSI（主出从入）+ MISO（主入从出）+ CS（片选）<br>时钟极性 CPOL：0（空闲低）或 1（空闲高）<br>时钟相位 CPHA：0（第一个边沿采样）或 1（第二个边沿采样）<div class="text-sm text-gray-500 mt-2">速度可达数十 MHz（远快于 I²C/UART），适合 Flash、LCD、ADC 等高速器件</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">I²C 总线</h4>
+        <div class="formula-block">I²C（Inter-Integrated Circuit）：同步、半双工、多主多从<br>两线制：SCL（时钟）+ SDA（数据），均需上拉电阻<br>寻址：7 位地址（128 个设备）或 10 位地址（1024 个设备）<br>速率：标准 100kHz、快速 400kHz、高速 3.4MHz<div class="text-sm text-gray-500 mt-2">I²C 总线空闲时 SCL 和 SDA 均为高电平；起始条件：SCL 高时 SDA 下降沿</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">三种通信协议对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>特性</th><th>UART</th><th>SPI</th><th>I²C</th></tr></thead><tbody><tr><td class="font-medium">线数</td><td>2（TX/RX）</td><td>4（SCK/MOSI/MISO/CS）</td><td>2（SCL/SDA）</td></tr><tr><td class="font-medium">通信方式</td><td>全双工、异步</td><td>全双工、同步</td><td>半双工、同步</td></tr><tr><td class="font-medium">速率</td><td>≤ 1Mbps</td><td>≤ 50MHz</td><td>≤ 3.4MHz</td></tr><tr><td class="font-medium">多设备</td><td>点对点</td><td>一主多从（需 CS 线）</td><td>多主多从（地址寻址）</td></tr><tr><td class="font-medium">引脚数</td><td>最少</td><td>随从设备数增加</td><td>恒定 2 根</td></tr><tr><td class="font-medium">典型器件</td><td>GPS、蓝牙、调试口</td><td>Flash、LCD、SD 卡</td><td>传感器、EEPROM、RTC</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">I²C 通信时序步骤</h4>
+        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>起始条件（S）</strong><br>SCL 为高时，SDA 产生下降沿——总线进入忙状态</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>发送地址 + R/W</strong><br>7 位从机地址 + 1 位读写位，从机应答（ACK：SDA 拉低）</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>数据传输</strong><br>每字节 8 位，高位在前，每字节后跟 ACK/NACK 应答位</div></div><div class="step"><span class="step-num">4</span><div class="step-content"><strong>停止条件（P）</strong><br>SCL 为高时，SDA 产生上升沿——总线释放为空闲状态</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>跨节互链</strong>：I²C 和 SPI 是 <a href="javascript:void(0)" onclick="App.loadDetail('sns-07')">IMU 传感器</a>的标准接口（如 MPU6050 用 I²C，BMI270 用 SPI）。UART 常用于 <a href="javascript:void(0)" onclick="App.loadDetail('emb-10')">调试输出（printf 重定向）</a>和 GPS 模块通信。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>I²C 总线锁死</strong>：I²C 从机异常（如掉电重启）可能将 SDA 拉低不释放，导致总线锁死。解决方法：① 上电后发送 9 个 SCL 时钟脉冲释放 SDA；② 使用硬件超时检测；③ 设计复位电路确保从机同步复位。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>DMA 传输</strong>：UART/SPI 数据量大时，用 DMA（直接存储器访问）自动搬运数据，CPU 不参与逐字节传输，效率大幅提升。DMA 传输完成后触发中断通知 CPU 处理数据。详见 <a href="javascript:void(0)" onclick="App.loadDetail('emb-07')">ADC 与 DAC</a>中的 DMA 采样。</div></div>
+      ` },
+
+      { id: 'emb-07', title: 'ADC 与 DAC', desc: '采样原理、DMA 传输、分辨率与精度', icon: '📊', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">ADC/DAC：模拟世界与数字世界的桥梁</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">ADC（模数转换器）将传感器的模拟信号数字化，DAC（数模转换器）将数字信号还原为模拟量。MCU 内置的 ADC 通常为逐次逼近型（SAR），分辨率 10~16 位，采样率可达数 MSPS。配合 DMA 传输，可实现高速、连续的数据采集——这是数字信号处理和<a href="javascript:void(0)" onclick="App.loadDetail('act-14')">闭环控制</a>的基础。</p>
+
+        <h4 class="font-medium mt-6 mb-2">ADC 基本原理（逐次逼近型 SAR）</h4>
+        <div class="formula-block">SAR ADC 转换过程（$n$ 位分辨率）：<br>1. 采样保持电路捕获输入电压 $V_{in}$<br>2. 逐位比较：从 MSB 开始，DAC 输出 $V_{dac}$ 与 $V_{in}$ 比较<br>3. 若 $V_{in} \geq V_{dac}$，该位为 1；否则为 0<br>4. $n$ 个比较周期完成转换<br>转换时间：$T_{conv} = n \times T_{clk}$（如 12 位，14 周期）<div class="text-sm text-gray-500 mt-2">SAR ADC 在速度和精度之间取得良好平衡，是 MCU 内置 ADC 的主流架构</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">ADC 关键参数</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>参数</th><th>含义</th><th>STM32F103 ADC</th><th>工程影响</th></tr></thead><tbody><tr><td class="font-medium">分辨率</td><td>$V_{ref}/2^n$</td><td>12 位 → 0.8mV (3.3V)</td><td>可分辨最小信号</td></tr><tr><td class="font-medium">采样率</td><td>每秒转换次数</td><td>1 MSPS</td><td>可测信号最高频率</td></tr><tr><td class="font-medium">INL/DNL</td><td>积分/微分非线性</td><td>±2 LSB / ±1 LSB</td><td>转换精度上限</td></tr><tr><td class="font-medium">采样时间</td><td>采样保持时间</td><td>1.5~239.5 周期可选</td><td>源阻抗匹配</td></tr><tr><td class="font-medium">通道数</td><td>多路复用输入</td><td>16 外部 + 2 内部</td><td>可采集信号数量</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">DMA 传输</h4>
+        <div class="formula-block">DMA（直接存储器访问）：<br>外设（ADC）→ DMA 控制器 → 内存（SRAM），无需 CPU 逐字节搬运<br>传输模式：单次传输 / 循环传输（连续采集）<br>触发方式：ADC 转换完成 → DMA 请求 → 自动搬运一个数据<div class="text-sm text-gray-500 mt-2">DMA 循环模式：ADC 连续采样，DMA 自动覆盖缓冲区，CPU 只在需要时读取——不丢数据</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">ADC 架构对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>架构</th><th>速度</th><th>精度</th><th>功耗</th><th>典型应用</th></tr></thead><tbody><tr><td class="font-medium">SAR（逐次逼近）</td><td>中（MSPS）</td><td>12~16 位</td><td>中</td><td>MCU 内置 ADC</td></tr><tr><td class="font-medium">Σ-Δ（Sigma-Delta）</td><td>低（kSPS）</td><td>16~24 位</td><td>低</td><td>称重、温度</td></tr><tr><td class="font-medium">Flash（并行比较）</td><td>极快（GSPS）</td><td>6~8 位</td><td>高</td><td>示波器、通信</td></tr><tr><td class="font-medium">Pipeline（流水线）</td><td>快（百 MSPS）</td><td>10~14 位</td><td>中</td><td>视频、雷达</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：ADC + DMA 连续采样配置</h4>
+        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>配置 ADC</strong><br>选择通道、采样时间、触发源（定时器触发或软件触发）、连续/扫描模式</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>配置 DMA</strong><br>外设地址 = ADC_DR，内存地址 = 缓冲数组，传输长度，循环模式</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>启动采集</strong><br>使能 ADC DMA 请求 → 启动 ADC → DMA 自动搬运数据到数组</div></div><div class="step"><span class="step-num">4</span><div class="step-content"><strong>数据处理</strong><br>DMA 半传输/全传输中断通知 CPU：一半缓冲区已满，可安全处理另一半数据（双缓冲）</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>跨节互链</strong>：ADC 是 <a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">传感器信号调理</a>链路的最后一环。ADC 触发源常使用 <a href="javascript:void(0)" onclick="App.loadDetail('emb-05')">定时器</a>，确保等间隔采样。采样定理（$f_s \geq 2f_{max}$）在 <a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">信号调理与数据采集</a>中详细讨论。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>ADC 输入源阻抗</strong>：源阻抗过高时，采样电容来不及充电到稳态，造成转换误差。STM32 要求源阻抗 &lt; 10kΩ（最短采样时间 1.5 周期），若源阻抗较大需增大采样时间或加运放缓冲。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>过采样提高分辨率</strong>：每 $4^n$ 次采样取平均值，分辨率提升 $n$ 位（如 12 位 ADC 过采样 16 次 → 14 位有效分辨率）。代价是采样率降低。这是在不更换 ADC 的前提下提高精度的工程技巧。</div></div>
+      ` },
+
+      { id: 'emb-08', title: 'RTOS 基础', desc: '任务调度、信号量、消息队列、优先级反转', icon: '🔄', tags: ['难点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">RTOS：让嵌入式系统"多任务并行"</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">当嵌入式系统需要同时处理多个任务（读传感器 + 刷屏幕 + 收发网络数据 + 响应按键）时，裸机轮询架构力不从心。RTOS（实时操作系统）通过<strong>任务调度</strong>实现多任务"伪并行"（单核 CPU 上是时间片轮转），通过<strong>同步机制</strong>协调任务间协作，保证关键任务的实时性。</p>
+
+        <h4 class="font-medium mt-6 mb-2">RTOS 核心概念</h4>
+        <div class="formula-block">RTOS 三要素：<br><strong>任务（Task/Thread）</strong>：独立的执行流，有自己的栈和优先级<br><strong>调度器（Scheduler）</strong>：决定哪个任务运行（抢占式优先级调度）<br><strong>同步与通信</strong>：信号量、互斥锁、消息队列、事件标志<div class="text-sm text-gray-500 mt-2">常见 RTOS：FreeRTOS（最流行，开源）、RT-Thread、μC/OS、Zephyr</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">任务状态机</h4>
+        <div class="formula-block">任务有四种状态：<br><strong>就绪（Ready）</strong>：等待 CPU 执行<br><strong>运行（Running）</strong>：正在占用 CPU<br><strong>阻塞（Blocked）</strong>：等待事件（延时/信号量/消息）<br><strong>挂起（Suspended）</strong>：被强制暂停（不参与调度）<div class="text-sm text-gray-500 mt-2">调度器总是选择就绪态中优先级最高的任务运行</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">调度策略</h4>
+        <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
+          <li><strong>抢占式调度</strong>：高优先级任务就绪时立即抢占当前任务——实时性最好</li>
+          <li><strong>时间片轮转</strong>：同优先级任务轮流执行（如每个任务 10ms）——公平性</li>
+          <li><strong>协作式调度</strong>：任务主动让出 CPU（yield）——简单但实时性差</li>
+          <li><strong>混合式</strong>：FreeRTOS 默认抢占式 + 同优先级时间片轮转</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">同步机制</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>机制</th><th>用途</th><th>特点</th><th>典型场景</th></tr></thead><tbody><tr><td class="font-medium">二值信号量</td><td>任务同步/事件通知</td><td>0 或 1，类似标志位</td><td>ISR 通知任务处理数据</td></tr><tr><td class="font-medium">计数信号量</td><td>资源计数</td><td>可大于 1</td><td>缓冲区空位计数</td></tr><tr><td class="font-medium">互斥锁（Mutex）</td><td>互斥访问共享资源</td><td>支持优先级继承</td><td>保护共享变量</td></tr><tr><td class="font-medium">消息队列</td><td>任务间数据传递</td><td>FIFO，可设超时</td><td>传感器数据传给处理任务</td></tr><tr><td class="font-medium">事件标志</td><td>多条件组合等待</td><td>AND/OR 逻辑</td><td>等待多个事件同时发生</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">优先级反转问题</h4>
+        <div class="formula-block">优先级反转场景：<br>高优先级任务 H 等待低优先级任务 L 持有的 Mutex<br>中优先级任务 M 抢占 L → H 被 M 间接阻塞（优先级反转）<br><strong>解决方案</strong>：优先级继承（Priority Inheritance）<br>L 持有 Mutex 时临时提升到 H 的优先级，防止被 M 抢占<div class="text-sm text-gray-500 mt-2">FreeRTOS 的 Mutex 自动支持优先级继承，而信号量不支持——互斥保护用 Mutex 而非信号量</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>跨节互链</strong>：RTOS 的中断优先级配置需要理解 <a href="javascript:void(0)" onclick="App.loadDetail('emb-04')">NVIC 优先级管理</a>。RTOS 中使用 <a href="javascript:void(0)" onclick="App.loadDetail('emb-06')">消息队列传递 UART/SPI 数据</a>。控制任务通常以固定频率运行，由 <a href="javascript:void(0)" onclick="App.loadDetail('emb-05')">定时器</a>中断触发。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>栈溢出是 RTOS 头号杀手</strong>：每个任务有独立栈空间（通常 256~2048 字节），任务中局部变量过多或函数嵌套过深会导致栈溢出。FreeRTOS 提供 uxTaskGetStackHighWaterMark() 检测栈使用峰值，开发阶段必须监控。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>ISR 中不能使用阻塞 API</strong>：中断服务函数中不能调用 xQueueSend() 带阻塞超时的版本——ISR 不能阻塞。必须使用 xQueueSendFromISR() 或 xSemaphoreGiveFromISR() 等 FromISR 版本，并在退出前检查是否需要上下文切换。</div></div>
+      ` },
+
+      { id: 'emb-09', title: '低功耗设计', desc: '睡眠模式、时钟管理、功耗优化策略', icon: '🔋', tags: ['工程应用'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">低功耗设计：电池供电设备的生命线</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">物联网节点、可穿戴设备、无线传感器等电池供电系统，续航时间直接决定产品可用性。低功耗设计不是简单的"进睡眠"——它是系统级工程，涉及处理器模式选择、时钟树管理、外设电源域控制、软件架构优化等多个层面。一个优秀的低功耗设计可将电池寿命从几天延长到几年。</p>
+
+        <h4 class="font-medium mt-6 mb-2">STM32 电源模式</h4>
+        <div class="formula-block">功耗递减模式：<br><strong>运行模式（Run）</strong>：全速执行，全时钟，最高功耗<br><strong>睡眠模式（Sleep）</strong>：CPU 停止，外设继续运行，唤醒延迟最短（~μs）<br><strong>停止模式（Stop）</strong>：所有时钟停止，SRAM 保留，唤醒延迟较长（~μs~ms）<br><strong>待机模式（Standby）</strong>：最低功耗，仅 WKUP 引脚/RTC 唤醒，复位后重启<div class="text-sm text-gray-500 mt-2">STM32L4 系列停止模式功耗仅 3μA，待机模式 30nA</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">功耗组成分析</h4>
+        <div class="formula-block">总功耗 = 动态功耗 + 静态功耗<br>动态功耗：$P_{dynamic} = C \cdot V_{DD}^2 \cdot f$（$C$=负载电容，$V_{DD}$=供电电压，$f$=时钟频率）<br>静态功耗：$P_{static} = V_{DD} \cdot I_{leak}$（漏电流，随温度指数增长）<div class="text-sm text-gray-500 mt-2">降压是最有效的减功耗手段——$V_{DD}$ 从 3.3V 降到 1.8V，动态功耗降低 70%</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">低功耗设计策略</h4>
+        <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
+          <li><strong>降频</strong>：不需要高主频时降低系统时钟（如 72MHz → 8MHz），功耗线性降低</li>
+          <li><strong>降压</strong>：使用内置电压调节器降低核心电压（1.2V → 1.0V），功耗平方降低</li>
+          <li><strong>关时钟</strong>：不用的外设关闭时钟（RCC 寄存器），消除动态功耗</li>
+          <li><strong>关电源域</strong>：不用的模拟模块（ADC/DAC/比较器）断电</li>
+          <li><strong>GPIO 配置</strong>：未用引脚设为输出低或模拟输入，避免浮空输入的中间电平漏电</li>
+          <li><strong>中断驱动</strong>：消除轮询，CPU 大部分时间处于睡眠，事件驱动唤醒处理</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">功耗优化层次</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>层次</th><th>优化手段</th><th>效果</th><th>难度</th></tr></thead><tbody><tr><td class="font-medium">硬件层</td><td>低功耗 MCU、高效电源</td><td>根本性降低</td><td>选型时决定</td></tr><tr><td class="font-medium">时钟层</td><td>降频、关外设时钟</td><td>线性降低</td><td>低</td></tr><tr><td class="font-medium">电源层</td><td>睡眠模式、电源域控制</td><td>数量级降低</td><td>中</td></tr><tr><td class="font-medium">软件层</td><td>中断驱动、批量处理</td><td>显著降低 CPU 占用</td><td>中</td></tr><tr><td class="font-medium">协议层</td><td>减少通信频率、压缩数据</td><td>减少射频功耗</td><td>高</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：传感器节点低功耗方案</h4>
+        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>唤醒采集</strong><br>RTC 唤醒（每 60 秒）→ 切换到 8MHz → 开启传感器电源 → 等待稳定</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>数据采集处理</strong><br>ADC DMA 采样 100 点 → 滤波取均值 → 关闭传感器电源</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>无线发送</strong><br>唤醒射频模块 → 发送数据包 → 等待 ACK → 关闭射频模块</div></div><div class="step"><span class="step-num">4</span><div class="step-content"><strong>进入深度睡眠</strong><br>配置下次 RTC 唤醒 → 进入 Stop/Standby 模式，电流降至 μA 级</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>功耗预算公式</strong>：$电池寿命 = \frac{电池容量(mAh)}{平均电流(mA)}$。若传感器节点平均电流 100μA（大部分睡眠），200mAh 电池可工作 2000 小时 ≈ 83 天。优化到 10μA 则可工作 830 天（>2 年）。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>外设时钟门控</strong>：忘记关闭不用外设的时钟是最常见的功耗浪费。例如配置完 GPIO 后未关闭 AFIO 时钟，或调试口 SWD 未用但仍占用功耗。量产固件应禁用 SWD（PA13/PA14 改为 GPIO）并关闭所有未用外设时钟。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>能量采集</strong>：除了电池，还可以从环境中采集能量——太阳能（光伏）、振动能（压电，详见 <a href="javascript:void(0)" onclick="App.loadDetail('sns-04')">压电传感器</a>）、温差能（热电偶）、射频能。能量采集配合超级电容储能，可实现"永久"工作的无线传感器节点。</div></div>
+      ` },
+
+      { id: 'emb-10', title: '嵌入式开发实践', desc: '交叉编译、调试方法、Bootloader、固件更新', icon: '🛠️', tags: ['工程应用'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">开发实践：从代码到产品的最后一公里</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">嵌入式开发与 PC 编程的最大区别是<strong>交叉编译</strong>（在 PC 编译，在 MCU 运行）和<strong>硬件调试</strong>（通过 JTAG/SWD 调试器）。此外，产品级嵌入式软件还需要 Bootloader 实现固件更新（OTA）、完善的错误处理和看门狗保护。这些工程实践是将"能跑"的原型变成"可靠"的产品的关键。</p>
+
+        <h4 class="font-medium mt-6 mb-2">交叉编译工具链</h4>
+        <div class="formula-block">交叉编译：宿主机（PC，x86）→ 目标机（MCU，ARM）<br>工具链：arm-none-eabi-gcc（开源）/ Keil MDK（商业）/ IAR（商业）<br>编译流程：源码(.c) → 预处理 → 编译 → 汇编(.s) → 链接 → 可执行文件(.elf)<br>生成固件：arm-none-eabi-objcopy → .bin（裸二进制）或 .hex（Intel HEX）<div class="text-sm text-gray-500 mt-2">链接脚本（.ld）定义 Flash/SRAM 布局，是编译的关键配置文件</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">调试方法</h4>
+        <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
+          <li><strong>SWD/JTAG 调试</strong>：通过 ST-Link/J-Link 连接，支持断点、单步、变量监视、内存查看</li>
+          <li><strong>串口打印</strong>：printf 重定向到 UART，实时查看变量和日志（最简单有效）</li>
+          <li><strong>逻辑分析仪</strong>：分析 I²C/SPI/UART 时序，定位通信问题</li>
+          <li><strong>示波器</strong>：测量 PWM 波形、ADC 采样信号、电源纹波等模拟信号</li>
+          <li><strong>HardFault 分析</strong>：保存现场寄存器（LR/PC/xPSR），反汇编定位崩溃位置</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">Bootloader 架构</h4>
+        <div class="formula-block">两级引导架构：<br>Bootloader（Flash 前 16~64KB）→ 应用程序（Flash 后半部分）<br>上电流程：Bootloader 检查更新标志 → 有更新则刷写 Flash → 无更新则跳转应用<br>OTA 流程：新固件下载到 Flash 临时区 → 校验 CRC/SHA → 替换旧固件<div class="text-sm text-gray-500 mt-2">Bootloader 需要自己的中断向量表和栈，与应用程序完全独立</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">看门狗保护</h4>
+        <div class="formula-block">独立看门狗（IWDG）：独立时钟（LSI 40kHz），不受主时钟影响<br>窗口看门狗（WWDG）：必须在指定窗口内喂狗，防止"过快"喂狗<br>$T_{IWDG} = \frac{PR \times 4096}{f_{LSI}} \times RLR$（PR=预分频，RLR=重载值）<div class="text-sm text-gray-500 mt-2">看门狗是嵌入式系统的"最后防线"——程序跑飞/死锁时自动复位 MCU</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">开发流程完整步骤</h4>
+        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>环境搭建</strong><br>安装工具链 + IDE → 配置芯片型号 → 选择调试器 → 编译下载空工程验证</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>BSP 驱动开发</strong><br>GPIO/UART/SPI/ADC 驱动 → HAL 库或寄存器操作 → 逐个外设验证</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>系统集成</strong><br>RTOS 移植 → 任务划分 → 中间件（FatFS/LwIP/mbedTLS）集成</div></div><div class="step"><span class="step-num">4</span><div class="step-content"><strong>可靠性保障</strong><br>看门狗 → 异常处理 → 低功耗优化 → Bootloader + OTA → 量产测试</div></div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>跨节互链</strong>：链接脚本和启动代码基于 <a href="javascript:void(0)" onclick="App.loadDetail('emb-03')">存储系统</a>知识。中断向量表配置是 <a href="javascript:void(0)" onclick="App.loadDetail('emb-04')">GPIO 与中断</a>的工程落地。PID 控制算法的嵌入式实现需要 <a href="javascript:void(0)" onclick="App.loadDetail('act-14')">自动控制理论</a>配合。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>OTA 双区更新风险</strong>：如果在固件刷写过程中断电，新固件不完整导致无法启动。安全方案：① 双 Bank 架构（A/B 交替更新）；② 保持旧固件直到新固件校验通过；③ 必须有硬件 Recovery 模式（按键+上电恢复 Bootloader）。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>版本控制与 CI/CD</strong>：嵌入式项目应使用 Git 管理代码，Makefile/CMake 管理构建。高级做法：Jenkins/GitHub Actions 自动编译 + 单元测试 + 生成固件。固件版本号应包含 Git commit hash + 日期，便于追溯。</div></div>
+      ` },
+    ]
+  },
+
+
 };
 
 // 所有可统计进度的知识点 id 清单（用于进度统计）
 // 第 0 期只先放入板块分组入口，待各板块内容填充后这里会自动从 CourseData 派生
 const AllKnowledgeIds = (function () {
   const ids = [];
-  ['advanced-math', 'linear-algebra', 'circuit-basics', 'analog-circuit', 'digital-circuit', 'control', 'data-structure'].forEach(group => {
+  ['advanced-math', 'linear-algebra', 'circuit-basics', 'analog-circuit', 'digital-circuit', 'control', 'data-structure', 'modern-control', 'signals', 'sensor', 'embedded-sys'].forEach(group => {
     CourseData[group]?.sections?.forEach(s => ids.push(s.id));
   });
   return ids;
@@ -4908,6 +6782,48 @@ const KnowledgeDeps = {
   'ds-14': ['ds-02', 'ds-09'], // 排序 <- 线性表 + 堆
   'ds-15': ['ds-14'],       // 外排序 <- 排序
   'ds-16': ['ds-08', 'ds-11'], // 工程进阶 <- 红黑树 + 图
+
+  // === 现代控制理论内部链 ===
+  'mct-01': ['act-01'],       // 概述 <- 控制基本概念
+  'mct-02': ['mct-01', 'act-02'], // 建模 <- 概述 + 数学模型
+  'mct-03': ['mct-02'],       // 状态方程求解 <- 建模
+  'mct-04': ['mct-02'],       // 能控能观 <- 建模
+  'mct-05': ['mct-03', 'act-06'], // 稳定性 <- 求解 + 时域稳定性
+  'mct-06': ['mct-04'],       // 极点配置 <- 能控能观
+  'mct-07': ['mct-04'],       // 观测器 <- 能控能观
+  'mct-08': ['mct-06'],       // 最优控制 <- 极点配置
+  'mct-09': ['mct-07'],       // 卡尔曼滤波 <- 观测器
+  'mct-10': ['mct-03', 'act-13'], // 离散 <- 求解 + 离散系统
+
+  // === 信号与系统内部链 ===
+  'sig-02': ['sig-01'],       // LTI 系统 <- 概述
+  'sig-03': ['sig-02', 'hm-15'], // 傅里叶级数 <- LTI + 无穷级数
+  'sig-04': ['sig-03'],       // 傅里叶变换 <- 级数
+  'sig-05': ['sig-04', 'act-03'], // 拉氏变换 <- 傅里叶变换 + 自控拉氏
+  'sig-06': ['sig-02'],       // Z 变换 <- LTI
+  'sig-07': ['sig-05'],       // 频率响应 <- 拉氏变换
+  'sig-08': ['sig-04'],       // 采样定理 <- 傅里叶变换
+  'sig-09': ['sig-07', 'sig-08'], // 应用 <- 频率响应 + 采样
+
+  // === 传感器与检测内部链 ===
+  'sns-02': ['sns-01', 'circ-02'], // 电阻式 <- 基础 + 戴维南（电桥）
+  'sns-03': ['sns-01'],       // 电容电感 <- 基础
+  'sns-04': ['sns-01'],       // 压电磁电 <- 基础
+  'sns-05': ['sns-01'],       // 光电 <- 基础
+  'sns-06': ['sns-02'],       // 温度 <- 电阻式（热电阻）
+  'sns-07': ['sns-04'],       // 运动传感器 <- 压电（加速度计）
+  'sns-08': ['sns-01', 'ana-07'], // 信号调理 <- 基础 + 集成运放
+
+  // === 嵌入式系统内部链 ===
+  'emb-02': ['emb-01'],       // 处理器架构 <- 概述
+  'emb-03': ['emb-02'],       // 存储系统 <- 架构
+  'emb-04': ['emb-02', 'dig-07'], // GPIO 中断 <- 架构 + 触发器
+  'emb-05': ['emb-04'],       // 定时器 PWM <- GPIO
+  'emb-06': ['emb-04', 'dig-14'], // 通信接口 <- GPIO + Verilog
+  'emb-07': ['emb-04'],       // ADC/DAC <- GPIO
+  'emb-08': ['emb-02'],       // RTOS <- 架构
+  'emb-09': ['emb-03'],       // 低功耗 <- 存储（时钟管理）
+  'emb-10': ['emb-08'],       // 开发实践 <- RTOS
 };
 
 // 自测题库（按 section id 索引）。每节配 5-8 题，含概念/计算/陷阱三类。
