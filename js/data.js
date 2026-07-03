@@ -40,6 +40,9 @@ const CourseData = {
       children: [
         { id: 'data-structure', label: '数据结构' },
         { id: 'signals', label: '信号与系统' },
+        { id: 'cpp', label: 'C/C++ 程序设计' },
+        { id: 'os', label: '操作系统' },
+        { id: 'network', label: '计算机网络' },
       ]
     },
     { id: 'tools', label: '工具箱', icon: 'wrench', badge: '工具', badgeClass: 'badge-tool' },
@@ -65,14 +68,14 @@ const CourseData = {
     subtitle: '应试 + 工程双线并重，覆盖数学、电子、控制、嵌入式、计算机五大领域，系统化学习笔试考点与工程实战知识',
     intro: '本项目把分散在课本、视频、真题里的专业课知识，系统化、可视化、可交互地组织在一个网站里。数学基础侧重笔试考点与计算训练，电路/控制/嵌入式侧重工程应用与实战仿真，数据结构与信号处理兼顾统考大纲与工程面试。配合交互图表、公式可视化、自测练习，做到"看得懂、记得牢、用得上"。',
     features: [
-      { icon: '📚', label: '系统化知识', desc: '11 大板块、133 知识点按学习路径递进，应试与工程双标签筛选' },
+      { icon: '📚', label: '系统化知识', desc: '14 大板块、160 知识点按学习路径递进，应试与工程双标签筛选' },
       { icon: '🧮', label: '公式与计算', desc: 'KaTeX 渲染全部数学/控制公式，配套矩阵计算器、拉氏变换查表等工具' },
       { icon: '🎮', label: '交互可视化', desc: '伯德图、根轨迹、卡诺图、运放电路、排序算法等可交互原理图' },
       { icon: '✏️', label: '自测与真题', desc: '每节配自测题，数学/数电/模电含笔试真题模块，支持错题记录' },
     ],
     stats: [
-      { label: '知识板块', value: '11', color: 'blue' },
-      { label: '知识点', value: '133', color: 'green' },
+      { label: '知识板块', value: '14', color: 'blue' },
+      { label: '知识点', value: '160', color: 'green' },
       { label: '交互图表', value: '15+', color: 'purple' },
       { label: '计算工具', value: '9', color: 'orange' },
     ],
@@ -88,6 +91,9 @@ const CourseData = {
       { id: 'signals', title: '信号与系统', desc: '傅里叶/拉氏/Z 变换、LTI 系统、采样定理', icon: '📡', level: '应试+工程' },
       { id: 'embedded-sys', title: '嵌入式系统', desc: 'ARM 架构、GPIO/中断、RTOS、通信接口', icon: '🔩', level: '工程' },
       { id: 'sensor', title: '传感器与检测', desc: '传感器原理、信号调理、IMU/光电/温度检测', icon: '🌡️', level: '工程' },
+      { id: 'cpp', title: 'C/C++ 程序设计', desc: 'C 语言核心、指针/内存、C++ OOP/模板/STL', icon: '⌨️', level: '应试+工程' },
+      { id: 'os', title: '操作系统', desc: '进程/线程、内存管理、文件系统、死锁、RTOS', icon: '🖥️', level: '应试+工程' },
+      { id: 'network', title: '计算机网络', desc: 'TCP/IP 协议栈、路由交换、工业网络与 ROS 通信', icon: '🌐', level: '应试+工程' },
     ],
   },
 
@@ -6665,13 +6671,2103 @@ const CourseData = {
   },
 
 
+
+  // ========== C/C++ 程序设计 ==========
+  'cpp': {
+    title: 'C/C++ 程序设计',
+    subtitle: 'C 语言核心 + C++ 面向对象与泛型编程，嵌入式/ROS/系统开发的主力语言',
+    icon: '⌨️',
+    sections: [
+
+      // ========== cpp-01 C 语言基础 ==========
+      {
+        id: 'cpp-01', title: 'C 语言基础', desc: '数据类型、运算符、控制流、函数基础', icon: '📝',
+        tags: ['核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">为什么 C 语言是系统编程的基石</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          C 语言诞生于 1972 年的贝尔实验室，至今仍是操作系统内核、嵌入式固件和高性能计算的首选语言。它的设计哲学——"相信程序员"——赋予了开发者直接操作内存的能力，但也要求你对底层有清晰的认知。无论是理解 <a href="javascript:void(0)" onclick="App.loadDetail('emb-02')">处理器架构</a>中数据如何流动，还是编写 ROS 节点中的驱动代码，C 语言基础都是不可跳过的一步。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">基本数据类型与存储模型</h4>
+        <div class="formula-block">
+          <strong>C 语言基本类型大小（典型 32/64 位平台）</strong>
+          <div class="overflow-x-auto"><table class="compare-table">
+            <thead><tr><th>类型</th><th>关键字</th><th>字节数</th><th>范围</th></tr></thead>
+            <tbody>
+              <tr><td>字符型</td><td><code>char</code></td><td>1</td><td>-128 ~ 127</td></tr>
+              <tr><td>短整型</td><td><code>short</code></td><td>2</td><td>-32768 ~ 32767</td></tr>
+              <tr><td>整型</td><td><code>int</code></td><td>4</td><td>±21 亿</td></tr>
+              <tr><td>长整型</td><td><code>long long</code></td><td>8</td><td>±9.2×10¹⁸</td></tr>
+              <tr><td>单精度浮点</td><td><code>float</code></td><td>4</td><td>±3.4×10³⁸（6-7位有效数字）</td></tr>
+              <tr><td>双精度浮点</td><td><code>double</code></td><td>8</td><td>±1.7×10³⁰⁸（15-16位有效数字）</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>sizeof 陷阱</strong>：<code>sizeof(int)</code> 在不同平台可能返回 2 或 4。嵌入式开发中务必使用 <code>&lt;stdint.h&gt;</code> 中的固定宽度类型（<code>int32_t</code>、<code>uint16_t</code>），避免平台依赖。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">运算符优先级与类型转换</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>算术运算符</strong>：<code>+  -  *  /  %</code>，整数除法截断小数部分（<code>7/2=3</code>），浮点除法保留小数（<code>7.0/2=3.5</code>）</li>
+          <li><strong>关系与逻辑</strong>：<code>==  !=  &lt;  &gt;  &lt;=  &gt;=</code>，逻辑 <code>&amp;&amp;</code>（短路求值）、<code>||</code>、<code>!</code></li>
+          <li><strong>位运算符</strong>：<code>&amp;  |  ^  ~  &lt;&lt;  &gt;&gt;</code>，嵌入式寄存器操作的核心工具</li>
+          <li><strong>隐式类型转换</strong>：混合运算时"小类型"自动提升为"大类型"——<code>char + int</code> 结果为 <code>int</code>，<code>int + double</code> 结果为 <code>double</code></li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">控制流：if / switch / for / while</h4>
+        <div class="code-block"><span class="code-comment">// 用 switch 实现状态机（嵌入式常用模式）</span>
+<span class="code-keyword">enum</span> State { IDLE, RUNNING, ERROR };
+
+<span class="code-keyword">void</span> <span class="code-func">handle_event</span>(<span class="code-keyword">enum</span> State *st, <span class="code-keyword">int</span> event) {
+    <span class="code-keyword">switch</span> (*st) {
+        <span class="code-keyword">case</span> IDLE:
+            <span class="code-keyword">if</span> (event == <span class="code-number">1</span>) *st = RUNNING;
+            <span class="code-keyword">break</span>;
+        <span class="code-keyword">case</span> RUNNING:
+            <span class="code-keyword">if</span> (event == <span class="code-number">2</span>) *st = IDLE;
+            <span class="code-keyword">else if</span> (event == <span class="code-number">-1</span>) *st = ERROR;
+            <span class="code-keyword">break</span>;
+        <span class="code-keyword">case</span> ERROR:
+            <span class="code-keyword">if</span> (event == <span class="code-number">0</span>) *st = IDLE;
+            <span class="code-keyword">break</span>;
+    }
+}</div>
+
+        <h4 class="font-medium mt-6 mb-2">函数基础：声明、定义与作用域</h4>
+        <div class="formula-block">
+          <strong>函数原型</strong>：<code>返回类型 函数名(参数列表);</code><br>
+          <strong>传值 vs 传址</strong>：C 语言默认传值拷贝，要修改实参必须传指针
+        </div>
+        <div class="code-block"><span class="code-comment">// 交换两个整数——传指针才能真正交换</span>
+<span class="code-keyword">void</span> <span class="code-func">swap</span>(<span class="code-keyword">int</span> *a, <span class="code-keyword">int</span> *b) {
+    <span class="code-keyword">int</span> temp = *a;
+    *a = *b;
+    *b = temp;
+}</div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：函数参数的传指针模式是理解 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-02')">指针与数组</a>的起点。数组名退化为首元素指针后，函数可原地修改数组，这与 <a href="javascript:void(0)" onclick="App.loadDetail('ds-02')">线性表</a>的顺序存储密切相关。</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>递归与栈帧</strong>：每次函数调用在栈上分配一个栈帧（局部变量 + 参数 + 返回地址）。递归深度过大会栈溢出——这在 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-03')">内存管理</a>中会详细分析。</div>
+        </div>
+
+        <div class="step-list">
+          <div class="step-item"><div><strong>步骤 1：声明原型</strong><br>在文件顶部或头文件中声明 <code>int add(int, int);</code>，让编译器知道函数签名。</div></div>
+          <div class="step-item"><div><strong>步骤 2：定义函数体</strong><br>在文件下方实现 <code>int add(int a, int b) { return a + b; }</code>。</div></div>
+          <div class="step-item"><div><strong>步骤 3：调用</strong><br>在 <code>main()</code> 中 <code>int r = add(3, 5);</code>，参数按值拷贝。</div></div>
+          <div class="step-item"><div><strong>步骤 4：检查返回</strong><br>确认返回值类型匹配，避免隐式截断（如 <code>double</code> 返回给 <code>int</code>）。</div></div>
+        </div>
+        <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead><tr><th>特性</th><th>传值调用</th><th>传址调用（指针）</th></tr></thead>
+          <tbody>
+            <tr><td><strong>参数传递</strong></td><td>拷贝实参副本</td><td>传递地址，通过指针访问原始数据</td></tr>
+            <tr><td><strong>能否修改实参</strong></td><td>否</td><td>是（解引用后写入）</td></tr>
+            <tr><td><strong>内存开销</strong></td><td>小（仅拷贝参数大小）</td><td>小（仅拷贝地址，通常 4/8 字节）</td></tr>
+            <tr><td><strong>典型用途</strong></td><td>只读参数、小型结构体</td><td>需要修改原数据、大结构体避免拷贝</td></tr>
+          </tbody>
+        </table></div>
+      ` },
+
+      // ========== cpp-02 指针与数组 ==========
+      {
+        id: 'cpp-02', title: '指针与数组', desc: '指针运算、数组与指针关系、多级指针', icon: '🔗',
+        tags: ['核心', '高频考点'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">指针：C 语言最强大的武器</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          指针是 C 语言的灵魂——它存储的不是值，而是值的<strong>内存地址</strong>。掌握指针意味着你能直接操控内存、实现动态数据结构、高效传递大型数据。然而指针也是 C 语言最容易出错的地方：野指针、空指针、越界访问都可能导致程序崩溃。本节建立正确的指针心智模型。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">指针的定义与解引用</h4>
+        <div class="formula-block">
+          <strong>指针声明语法</strong>：<code>类型 *变量名;</code><br>
+          <strong>取地址</strong>：<code>&amp;variable</code> 返回变量地址<br>
+          <strong>解引用</strong>：<code>*ptr</code> 访问指针所指内存的值<br>
+          $$\\text{指针变量存储的是地址：} \\texttt{ptr} = \\texttt{\&amp;x} \\Rightarrow *\\texttt{ptr} = \\texttt{x}$$
+        </div>
+        <div class="code-block"><span class="code-keyword">int</span> x = <span class="code-number">42</span>;
+<span class="code-keyword">int</span> *p = &amp;x;    <span class="code-comment">// p 指向 x，p 的值是 x 的地址</span>
+<span class="code-func">printf</span>(<span class="code-string">"%p\n"</span>, (<span class="code-keyword">void</span>*)p);  <span class="code-comment">// 输出 x 的内存地址</span>
+<span class="code-func">printf</span>(<span class="code-string">"%d\n"</span>, *p);      <span class="code-comment">// 解引用：输出 42</span>
+*p = <span class="code-number">99</span>;              <span class="code-comment">// 通过指针修改 x 的值</span>
+<span class="code-func">printf</span>(<span class="code-string">"%d\n"</span>, x);       <span class="code-comment">// 输出 99</span></div>
+
+        <h4 class="font-medium mt-6 mb-2">指针运算与数组的关系</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>数组名退化</strong>：数组名 <code>arr</code> 在表达式中自动退化为 <code>&amp;arr[0]</code>（首元素指针），但 <code>sizeof(arr)</code> 仍返回整个数组大小</li>
+          <li><strong>指针算术</strong>：<code>p + 1</code> 实际偏移 <code>sizeof(*p)</code> 字节，不是 1 字节。这使得指针可以按类型步进遍历数组</li>
+          <li><strong>下标等价</strong>：<code>arr[i]</code> 等价于 <code>*(arr + i)</code>，编译器会将下标访问转换为指针运算</li>
+          <li><strong>多级指针</strong>：<code>int **pp</code> 是指向指针的指针，常用于二维动态数组和函数修改指针本身</li>
+        </ul>
+        <div class="code-block"><span class="code-comment">// 数组与指针的等价关系</span>
+<span class="code-keyword">int</span> arr[<span class="code-number">5</span>] = {<span class="code-number">10</span>, <span class="code-number">20</span>, <span class="code-number">30</span>, <span class="code-number">40</span>, <span class="code-number">50</span>};
+<span class="code-keyword">int</span> *p = arr;       <span class="code-comment">// p 指向 arr[0]</span>
+
+<span class="code-comment">// 三种等价的访问方式</span>
+<span class="code-keyword">int</span> v1 = arr[<span class="code-number">2</span>];         <span class="code-comment">// 下标法</span>
+<span class="code-keyword">int</span> v2 = *(p + <span class="code-number">2</span>);       <span class="code-comment">// 指针偏移 + 解引用</span>
+<span class="code-keyword">int</span> v3 = *(arr + <span class="code-number">2</span>);     <span class="code-comment">// 数组名退化后同样适用</span>
+<span class="code-comment">// v1 == v2 == v3 == 30</span>
+
+<span class="code-comment">// 指针遍历</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">int</span> *it = arr; it &lt; arr + <span class="code-number">5</span>; it++) {
+    <span class="code-func">printf</span>(<span class="code-string">"%d "</span>, *it);
+}</div>
+
+        <h4 class="font-medium mt-6 mb-2">函数指针与回调</h4>
+        <div class="formula-block">
+          <strong>函数指针声明</strong>：<code>返回类型 (*指针名)(参数列表);</code><br>
+          函数指针是实现回调机制、策略模式和 C 语言多态的核心工具
+        </div>
+        <div class="code-block"><span class="code-comment">// 函数指针实现排序回调</span>
+<span class="code-keyword">typedef int</span> (*cmp_fn)(<span class="code-keyword">const void</span>*, <span class="code-keyword">const void</span>*);
+
+<span class="code-keyword">int</span> <span class="code-func">asc</span>(<span class="code-keyword">const void</span> *a, <span class="code-keyword">const void</span> *b) {
+    <span class="code-keyword">return</span> *(<span class="code-keyword">int</span>*)a - *(<span class="code-keyword">int</span>*)b;
+}
+
+<span class="code-keyword">int</span> <span class="code-func">main</span>() {
+    <span class="code-keyword">int</span> arr[] = {<span class="code-number">5</span>, <span class="code-number">2</span>, <span class="code-number">8</span>, <span class="code-number">1</span>};
+    <span class="code-func">qsort</span>(arr, <span class="code-number">4</span>, <span class="code-keyword">sizeof</span>(<span class="code-keyword">int</span>), asc);  <span class="code-comment">// 使用回调排序</span>
+    <span class="code-keyword">return</span> <span class="code-number">0</span>;
+}</div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>指针越界</strong>：访问 <code>arr[5]</code>（数组大小为 5，合法下标 0~4）是未定义行为（UB）。C 语言不检查数组边界，越界写入可能覆盖其他变量甚至返回地址，造成安全漏洞。</div>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：指针运算的底层与 <a href="javascript:void(0)" onclick="App.loadDetail('emb-02')">处理器架构</a>中的寻址模式直接相关。多级指针实现的动态数组将在 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-03')">内存管理</a>中深入讨论。</div>
+        </div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>步骤 1：声明指针</strong><br><code>int *p;</code> — 声明一个指向 int 的指针，此时未初始化（野指针！）。</div></div>
+          <div class="step-item"><div><strong>步骤 2：初始化</strong><br><code>p = &amp;x;</code> 或 <code>p = arr;</code> — 让指针指向有效内存。</div></div>
+          <div class="step-item"><div><strong>步骤 3：使用前检查</strong><br>对传入的指针判 <code>NULL</code> 后再解引用，避免空指针崩溃。</div></div>
+          <div class="step-item"><div><strong>步骤 4：释放后置 NULL</strong><br><code>free(p); p = NULL;</code> — 防止悬空指针（dangling pointer）被误用。</div></div>
+        </div>
+        <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead><tr><th>表达式</th><th>类型</th><th>值</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><code>arr</code></td><td><code>int*</code></td><td>首元素地址</td><td>数组名退化为首元素指针</td></tr>
+            <tr><td><code>&amp;arr</code></td><td><code>int(*)[5]</code></td><td>整个数组地址</td><td>值与 arr 相同，但类型不同</td></tr>
+            <tr><td><code>arr + 1</code></td><td><code>int*</code></td><td>偏移 4 字节</td><td>指向 arr[1]</td></tr>
+            <tr><td><code>&amp;arr + 1</code></td><td><code>int(*)[5]</code></td><td>偏移 20 字节</td><td>跳过整个数组</td></tr>
+          </tbody>
+        </table></div>
+      ` },
+
+      // ========== cpp-03 内存管理 ==========
+      {
+        id: 'cpp-03', title: '内存管理', desc: '栈/堆/全局区、malloc/free、内存泄漏', icon: '💾',
+        tags: ['核心', '难点'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">理解内存布局是写出健壮 C 程序的前提</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          C 程序的内存被划分为若干区域：全局区、栈、堆、代码区。不同区域的生命周期、大小限制和管理方式截然不同。在 <a href="javascript:void(0)" onclick="App.loadDetail('emb-02')">嵌入式系统</a>中，RAM 可能只有几十 KB，精确的内存管理直接决定程序能否正常运行。本节建立完整的内存心智模型。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">进程内存布局</h4>
+        <div class="formula-block">
+          <strong>C 程序内存区域（从低地址到高地址）</strong><br>
+          $$\\text{代码区(.text)} \\to \\text{只读数据(.rodata)} \\to \\text{全局/静态区(.data/.bss)} \\to \\text{堆(向上增长)} \\to \\text{栈(向下增长)}$$
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>区域</th><th>存放内容</th><th>生命周期</th><th>大小</th></tr></thead>
+          <tbody>
+            <tr><td><strong>代码区</strong></td><td>编译后的机器指令</td><td>程序运行期间</td><td>固定</td></tr>
+            <tr><td><strong>全局/静态区</strong></td><td>全局变量、static 变量</td><td>整个程序运行期</td><td>编译时确定</td></tr>
+            <tr><td><strong>堆</strong></td><td>malloc/calloc 分配的内存</td><td>手动管理（free）</td><td>很大（受物理内存限制）</td></tr>
+            <tr><td><strong>栈</strong></td><td>局部变量、函数参数、返回地址</td><td>函数返回时自动释放</td><td>通常 1~8 MB</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">动态内存分配：malloc / calloc / realloc / free</h4>
+        <div class="code-block"><span class="code-keyword">#include</span> <span class="code-string">&lt;stdlib.h&gt;</span>
+<span class="code-keyword">#include</span> <span class="code-string">&lt;string.h&gt;</span>
+
+<span class="code-keyword">int</span> <span class="code-func">main</span>() {
+    <span class="code-comment">// malloc：分配指定字节数，内容未初始化</span>
+    <span class="code-keyword">int</span> *arr = (<span class="code-keyword">int</span>*)<span class="code-func">malloc</span>(<span class="code-number">5</span> * <span class="code-keyword">sizeof</span>(<span class="code-keyword">int</span>));
+
+    <span class="code-comment">// calloc：分配并清零</span>
+    <span class="code-keyword">int</span> *zeroed = (<span class="code-keyword">int</span>*)<span class="code-func">calloc</span>(<span class="code-number">5</span>, <span class="code-keyword">sizeof</span>(<span class="code-keyword">int</span>));
+
+    <span class="code-comment">// realloc：调整已分配内存大小</span>
+    arr = (<span class="code-keyword">int</span>*)<span class="code-func">realloc</span>(arr, <span class="code-number">10</span> * <span class="code-keyword">sizeof</span>(<span class="code-keyword">int</span>));
+
+    <span class="code-comment">// free：释放内存，必须调用！</span>
+    <span class="code-func">free</span>(arr);     arr = <span class="code-number">NULL</span>;
+    <span class="code-func">free</span>(zeroed);  zeroed = <span class="code-number">NULL</span>;
+    <span class="code-keyword">return</span> <span class="code-number">0</span>;
+}</div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>三大内存错误</strong>：①<strong>内存泄漏</strong>：malloc 后未 free，长期运行程序内存持续增长；②<strong>悬空指针</strong>：free 后继续使用指针；③<strong>双重释放</strong>：对同一指针 free 两次，破坏堆管理结构。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">内存泄漏检测与防御</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>Valgrind</strong>（Linux/macOS）：运行 <code>valgrind --leak-check=full ./program</code>，检测所有未释放内存</li>
+          <li><strong>ASan</strong>（AddressSanitizer）：编译时加 <code>-fsanitize=address</code>，检测越界和悬空指针</li>
+          <li><strong>防御式编程</strong>：malloc 后立即判 NULL；free 后立即置 NULL；使用 goto 统一错误处理</li>
+        </ul>
+        <div class="code-block"><span class="code-comment">// 防御式 malloc + goto 错误处理（Linux 内核风格）</span>
+<span class="code-keyword">int</span> <span class="code-func">process_data</span>() {
+    <span class="code-keyword">int</span> *buf = <span class="code-number">NULL</span>, *tmp = <span class="code-number">NULL</span>;
+    buf = (<span class="code-keyword">int</span>*)<span class="code-func">malloc</span>(<span class="code-number">1024</span> * <span class="code-keyword">sizeof</span>(<span class="code-keyword">int</span>));
+    <span class="code-keyword">if</span> (!buf) <span class="code-keyword">goto</span> err1;
+    tmp = (<span class="code-keyword">int</span>*)<span class="code-func">malloc</span>(<span class="code-number">2048</span> * <span class="code-keyword">sizeof</span>(<span class="code-keyword">int</span>));
+    <span class="code-keyword">if</span> (!tmp) <span class="code-keyword">goto</span> err2;
+    <span class="code-comment">// ... 使用 buf 和 tmp ...</span>
+    <span class="code-func">free</span>(tmp);  tmp = <span class="code-number">NULL</span>;
+    <span class="code-func">free</span>(buf);  buf = <span class="code-number">NULL</span>;
+    <span class="code-keyword">return</span> <span class="code-number">0</span>;
+err2: <span class="code-func">free</span>(buf);  buf = <span class="code-number">NULL</span>;
+err1: <span class="code-keyword">return</span> -<span class="code-number">1</span>;
+}</div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：C 语言的 <code>malloc/free</code> 手动管理在 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-09')">智能指针与异常</a>中由 RAII 自动接管。<a href="javascript:void(0)" onclick="App.loadDetail('ds-02')">线性表</a>的动态顺序表实现正是 malloc/realloc 的典型应用。</div>
+        </div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>步骤 1：malloc 分配</strong><br><code>int *p = malloc(n * sizeof(int));</code>，返回值判 NULL。</div></div>
+          <div class="step-item"><div><strong>步骤 2：使用内存</strong><br>通过指针读写，注意不要越界。</div></div>
+          <div class="step-item"><div><strong>步骤 3：free 释放</strong><br><code>free(p); p = NULL;</code>，释放后置空。</div></div>
+          <div class="step-item"><div><strong>步骤 4：验证</strong><br>用 Valgrind 或 ASan 检测是否有泄漏和越界。</div></div>
+        </div>
+        <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead><tr><th>函数</th><th>分配方式</th><th>初始化</th><th>返回类型</th></tr></thead>
+          <tbody>
+            <tr><td><code>malloc</code></td><td>按字节数</td><td>不初始化（随机值）</td><td><code>void*</code></td></tr>
+            <tr><td><code>calloc</code></td><td>按元素数 × 大小</td><td>清零</td><td><code>void*</code></td></tr>
+            <tr><td><code>realloc</code></td><td>调整已有分配</td><td>保留原数据</td><td><code>void*</code></td></tr>
+          </tbody>
+        </table></div>
+      ` },
+
+      // ========== cpp-04 结构体与联合体 ==========
+      {
+        id: 'cpp-04', title: '结构体与联合体', desc: 'struct/union/enum、位域、内存对齐', icon: '📦',
+        tags: ['核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">结构体：C 语言的"类"</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          在 C 语言中没有 class，结构体（struct）就是你组织相关数据的核心手段。从寄存器映射到网络协议解析，从链表节点到 ROS 消息结构，结构体无处不在。理解内存对齐和位域更是嵌入式开发的必备技能——它直接决定结构体在内存中占多少字节。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">结构体定义与内存对齐</h4>
+        <div class="formula-block">
+          <strong>对齐规则</strong>：每个成员的起始地址必须是其类型大小的整数倍<br>
+          $$\\text{结构体总大小} = \\text{所有成员大小之和} + \\text{填充字节（对齐补齐）}$$
+        </div>
+        <div class="code-block"><span class="code-comment">// 结构体示例：注意内存对齐</span>
+<span class="code-keyword">struct</span> SensorData {
+    <span class="code-keyword">char</span>  id;       <span class="code-comment">// 1 字节 + 3 字节填充</span>
+    <span class="code-keyword">int</span>   value;    <span class="code-comment">// 4 字节（偏移 4）</span>
+    <span class="code-keyword">float</span> timestamp; <span class="code-comment">// 4 字节（偏移 8）</span>
+};  <span class="code-comment">// sizeof = 12，不是 9！</span>
+
+<span class="code-comment">// 使用 #pragma pack(1) 取消填充（紧凑排列）</span>
+<span class="code-keyword">#pragma</span> pack(push, <span class="code-number">1</span>)
+<span class="code-keyword">struct</span> PackedData {
+    <span class="code-keyword">char</span>  id;
+    <span class="code-keyword">int</span>   value;
+    <span class="code-keyword">float</span> timestamp;
+};  <span class="code-comment">// sizeof = 9（紧凑）</span>
+<span class="code-keyword">#pragma</span> pack(pop)</div>
+
+        <h4 class="font-medium mt-6 mb-2">联合体与位域</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>union</strong>：所有成员共享同一块内存，大小等于最大成员。常用于类型双关（type punning）和寄存器多义解读</li>
+          <li><strong>位域</strong>：在 struct 中指定成员占用的位数，用于精确控制位级布局，嵌入式寄存器映射和网络协议解析常用</li>
+          <li><strong>enum</strong>：命名整数常量集合，比 <code>#define</code> 更安全（类型检查 + 调试信息）</li>
+        </ul>
+        <div class="code-block"><span class="code-comment">// union：同一内存的不同解读</span>
+<span class="code-keyword">union</span> RegValue {
+    <span class="code-keyword">uint32_t</span> word;      <span class="code-comment">// 整体读写</span>
+    <span class="code-keyword">struct</span> {
+        <span class="code-keyword">uint8_t</span> low;     <span class="code-comment">// 低 8 位</span>
+        <span class="code-keyword">uint8_t</span> high;    <span class="code-comment">// 高 8 位</span>
+    } bytes;
+};  <span class="code-comment">// sizeof = 4（与 word 相同）</span>
+
+<span class="code-comment">// 位域：精确控制位级布局</span>
+<span class="code-keyword">struct</span> GPIO_Config {
+    <span class="code-keyword">uint32_t</span> mode   : <span class="code-number">2</span>;   <span class="code-comment">// bit[1:0]：模式</span>
+    <span class="code-keyword">uint32_t</span> pull   : <span class="code-number">2</span>;   <span class="code-comment">// bit[3:2]：上下拉</span>
+    <span class="code-keyword">uint32_t</span> speed  : <span class="code-number">2</span>;   <span class="code-comment">// bit[5:4]：速度</span>
+    <span class="code-keyword">uint32_t</span> _reserved : <span class="code-number">26</span>; <span class="code-comment">// bit[31:6]：保留</span>
+};</div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>位域陷阱</strong>：位域的布局（高低位顺序、跨字节边界行为）是<strong>编译器相关</strong>的，不同编译器/平台可能不同。用于跨平台通信时应使用手动位操作（<code>&amp;</code>、<code>|</code>、<code>&lt;&lt;</code>）代替位域。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">结构体指针与成员访问</h4>
+        <div class="code-block"><span class="code-keyword">struct</span> SensorData sensor = {<span class="code-number">1</span>, <span class="code-number">256</span>, <span class="code-number">3.14f</span>};
+<span class="code-keyword">struct</span> SensorData *ps = &amp;sensor;
+
+<span class="code-comment">// 两种等价的成员访问方式</span>
+ps-&gt;value       <span class="code-comment">// 指针用 -> </span>
+(*ps).value     <span class="code-comment">// 解引用后用 . （不推荐）</span>
+sensor.value    <span class="code-comment">// 直接访问</span></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：结构体是 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-06')">C++ 类与对象</a>的前身——C++ 的 class 本质上是默认私有、自带成员函数的结构体。结构体指针访问成员的 <code>-&gt;</code> 运算符在 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-02')">指针与数组</a>中已有铺垫。</div>
+        </div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>步骤 1：定义结构体</strong><br><code>struct Name { type member; ... };</code>，成员按声明顺序排列。</div></div>
+          <div class="step-item"><div><strong>步骤 2：声明变量</strong><br><code>struct Name var = {val1, val2};</code> 或动态分配 <code>malloc(sizeof(struct Name))</code>。</div></div>
+          <div class="step-item"><div><strong>步骤 3：检查对齐</strong><br>用 <code>sizeof</code> 和 <code>offsetof</code> 确认结构体布局符合预期。</div></div>
+          <div class="step-item"><div><strong>步骤 4：指针传递</strong><br>大结构体传指针而非拷贝：<code>void func(struct Name *p)</code>。</div></div>
+        </div>
+        <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead><tr><th>特性</th><th>struct</th><th>union</th><th>enum</th></tr></thead>
+          <tbody>
+            <tr><td><strong>内存模型</strong></td><td>成员顺序排列 + 填充</td><td>成员共享同一块内存</td><td>底层为 int</td></tr>
+            <tr><td><strong>sizeof</strong></td><td>所有成员之和 + 填充</td><td>最大成员的大小</td><td>通常为 4 字节</td></tr>
+            <tr><td><strong>同时使用</strong></td><td>所有成员可同时使用</td><td>同一时刻只有一个成员有效</td><td>存储一个命名常量</td></tr>
+            <tr><td><strong>典型用途</strong></td><td>数据聚合、协议结构</td><td>类型双关、寄存器访问</td><td>状态机、配置标志</td></tr>
+          </tbody>
+        </table></div>
+      ` },
+
+      // ========== cpp-05 文件与预处理 ==========
+      {
+        id: 'cpp-05', title: '文件与预处理', desc: '文件 I/O、宏定义、条件编译', icon: '📄',
+        tags: ['核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">预处理器和文件 I/O：工程化的基础设施</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          预处理器在编译之前对源代码进行文本替换和条件裁剪，是 C 语言实现跨平台、模块化和代码复用的关键工具。文件 I/O 则让程序能读写持久数据——从配置文件解析到日志记录，从传感器数据采集到固件升级，都离不开它。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">宏定义：对象式与函数式</h4>
+        <div class="formula-block">
+          <strong>对象式宏</strong>：<code>#define NAME value</code> — 简单文本替换<br>
+          <strong>函数式宏</strong>：<code>#define NAME(args) expression</code> — 带参数的文本替换<br>
+          <strong>⚠️</strong> 宏是编译前的纯文本操作，没有类型检查、没有作用域、不加括号可能产生优先级陷阱
+        </div>
+        <div class="code-block"><span class="code-comment">// 函数式宏的常见陷阱</span>
+<span class="code-keyword">#define</span> <span class="code-func">SQUARE</span>(x)  ((x) * (x))     <span class="code-comment">// ✅ 每个参数都加括号</span>
+<span class="code-keyword">#define</span> <span class="code-func">BAD_SQ</span>(x)   x * x             <span class="code-comment">// ❌ BAD_SQ(1+1) = 1+1*1+1 = 3</span>
+<span class="code-keyword">#define</span> <span class="code-func">MAX</span>(a, b)  ((a) &gt; (b) ? (a) : (b))
+<span class="code-keyword">#define</span> <span class="code-func">SWAP</span>(a, b)  <span class="code-keyword">do</span> { \         <span class="code-comment">// do { ... } while(0) 防止宏展开异常</span>
+    <span class="code-keyword">typeof</span>(a) _tmp = (a); \
+    (a) = (b); (b) = _tmp; \
+} <span class="code-keyword">while</span>(<span class="code-number">0</span>)
+
+<span class="code-comment">// # 和 ## 运算符</span>
+<span class="code-keyword">#define</span> <span class="code-func">STRINGIFY</span>(x)  #x          <span class="code-comment">// 将参数转为字符串字面量</span>
+<span class="code-keyword">#define</span> <span class="code-func">CONCAT</span>(a, b)   a##b        <span class="code-comment">// 拼接标识符</span></div>
+
+        <h4 class="font-medium mt-6 mb-2">条件编译与头文件保护</h4>
+        <div class="code-block"><span class="code-comment">// 头文件保护（Include Guard）—— 防止重复包含</span>
+<span class="code-keyword">#ifndef</span> SENSOR_H
+<span class="code-keyword">#define</span> SENSOR_H
+<span class="code-comment">// ... 头文件内容 ...</span>
+<span class="code-keyword">#endif</span> <span class="code-comment">// SENSOR_H</span>
+
+<span class="code-comment">// 跨平台条件编译</span>
+<span class="code-keyword">#if</span> defined(_WIN32)
+    <span class="code-func">windows_init</span>();
+<span class="code-keyword">#elif</span> defined(__linux__)
+    <span class="code-func">linux_init</span>();
+<span class="code-keyword">#else</span>
+    <span class="code-func">default_init</span>();
+<span class="code-keyword">#endif</span>
+
+<span class="code-comment">// 调试宏：编译时决定是否启用</span>
+<span class="code-keyword">#ifdef</span> DEBUG
+    <span class="code-func">printf</span>(<span class="code-string">"debug: x = %d\n"</span>, x);
+<span class="code-keyword">#endif</span></div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>C++ 替代方案</strong>：C++ 中用 <code>constexpr</code>、<code>inline</code>、<code>template</code> 替代函数式宏，用 <code>enum class</code> 替代常量宏。但头文件保护和条件编译在 C++ 中仍然广泛使用。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">文件 I/O：fopen / fread / fwrite / fprintf</h4>
+        <div class="code-block"><span class="code-keyword">#include</span> <span class="code-string">&lt;stdio.h&gt;</span>
+
+<span class="code-keyword">void</span> <span class="code-func">save_config</span>(<span class="code-keyword">const char</span> *path, <span class="code-keyword">int</span> speed, <span class="code-keyword">float</span> kp) {
+    FILE *fp = <span class="code-func">fopen</span>(path, <span class="code-string">"w"</span>);  <span class="code-comment">// 文本写入</span>
+    <span class="code-keyword">if</span> (!fp) <span class="code-keyword">return</span>;
+    <span class="code-func">fprintf</span>(fp, <span class="code-string">"speed=%d\nkp=%.2f\n"</span>, speed, kp);
+    <span class="code-func">fclose</span>(fp);
+}
+
+<span class="code-keyword">void</span> <span class="code-func">read_sensor_log</span>(<span class="code-keyword">const char</span> *path) {
+    FILE *fp = <span class="code-func">fopen</span>(path, <span class="code-string">"rb"</span>);  <span class="code-comment">// 二进制读取</span>
+    <span class="code-keyword">if</span> (!fp) <span class="code-keyword">return</span>;
+    <span class="code-keyword">int16_t</span> buf[<span class="code-number">64</span>];
+    <span class="code-keyword">size_t</span> n = <span class="code-func">fread</span>(buf, <span class="code-keyword">sizeof</span>(<span class="code-keyword">int16_t</span>), <span class="code-number">64</span>, fp);
+    <span class="code-func">printf</span>(<span class="code-string">"read %zu samples\n"</span>, n);
+    <span class="code-func">fclose</span>(fp);
+}</div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>fopen 必须判 NULL</strong>：文件不存在、路径错误、权限不足都会导致 fopen 返回 NULL。不判空直接使用会导致程序崩溃。每次操作后检查 <code>ferror(fp)</code>，结束时必须 <code>fclose</code>。</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：文件 I/O 在 <a href="javascript:void(0)" onclick="App.loadDetail('emb-08')">RTOS</a> 的嵌入式项目中较少使用（无文件系统），但在 PC 端开发和 ROS 节点中非常常见。预处理在 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-08')">模板与 STL</a>的 C++ 泛型编程中被模板取代。</div>
+        </div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>步骤 1：fopen 打开</strong><br>指定路径和模式（"r"读、"w"写、"a"追加、"rb"二进制读）。</div></div>
+          <div class="step-item"><div><strong>步骤 2：判空 + 错误处理</strong><br><code>if (!fp) { perror("open"); return; }</code></div></div>
+          <div class="step-item"><div><strong>步骤 3：读写操作</strong><br><code>fread</code>/<code>fwrite</code>（二进制）或 <code>fprintf</code>/<code>fscanf</code>（文本）。</div></div>
+          <div class="step-item"><div><strong>步骤 4：fclose 关闭</strong><br><code>fclose(fp);</code>，释放文件描述符资源。</div></div>
+        </div>
+        <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead><tr><th>模式</th><th>含义</th><th>文件不存在</th><th>写入位置</th></tr></thead>
+          <tbody>
+            <tr><td><code>"r"</code></td><td>只读</td><td>返回 NULL</td><td>-</td></tr>
+            <tr><td><code>"w"</code></td><td>只写（覆盖）</td><td>创建新文件</td><td>文件头</td></tr>
+            <tr><td><code>"a"</code></td><td>追加</td><td>创建新文件</td><td>文件尾</td></tr>
+            <tr><td><code>"r+"</code></td><td>读写</td><td>返回 NULL</td><td>文件头</td></tr>
+          </tbody>
+        </table></div>
+      ` },
+
+      // ========== cpp-06 C++ 类与对象 ==========
+      {
+        id: 'cpp-06', title: 'C++ 类与对象', desc: '类定义、构造/析构、this、拷贝控制', icon: '🏗️',
+        tags: ['核心', '高频考点'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">从 C 到 C++：面向对象的起点</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          C++ 的 class 在 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-04')">struct</a> 的基础上增加了访问控制、成员函数、构造/析构、运算符重载等特性，实现了封装和数据抽象。这是面向对象编程（OOP）三大支柱之一——封装——的直接体现。掌握类的生命周期管理是编写安全 C++ 代码的基础。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">类定义与访问控制</h4>
+        <div class="code-block"><span class="code-keyword">class</span> <span class="code-func">Motor</span> {
+<span class="code-keyword">private</span>:                          <span class="code-comment">// 仅类内可访问</span>
+    <span class="code-keyword">int</span> speed_;
+    <span class="code-keyword">bool</span> running_;
+<span class="code-keyword">protected</span>:                       <span class="code-comment">// 类内 + 子类可访问</span>
+    <span class="code-keyword">int</span> max_speed_;
+<span class="code-keyword">public</span>:                          <span class="code-comment">// 外部可访问</span>
+    <span class="code-func">Motor</span>(<span class="code-keyword">int</span> max_spd);          <span class="code-comment">// 构造函数</span>
+    ~<span class="code-func">Motor</span>();                    <span class="code-comment">// 析构函数</span>
+    <span class="code-keyword">void</span> <span class="code-func">set_speed</span>(<span class="code-keyword">int</span> sp);
+    <span class="code-keyword">int</span>  <span class="code-func">get_speed</span>() <span class="code-keyword">const</span>;     <span class="code-comment">// const 成员函数</span>
+};</div>
+
+        <h4 class="font-medium mt-6 mb-2">构造函数与析构函数的生命周期</h4>
+        <div class="formula-block">
+          <strong>构造顺序</strong>：基类构造 → 成员变量按声明顺序构造 → 构造函数体执行<br>
+          <strong>析构顺序</strong>：析构函数体执行 → 成员变量按声明<strong>逆序</strong>析构 → 基类析构<br>
+          $$\\text{构造顺序} \\neq \\text{初始化顺序（取决于声明顺序）}$$
+        </div>
+        <div class="code-block"><span class="code-keyword">class</span> <span class="code-func">PIDController</span> {
+    <span class="code-keyword">double</span> kp_, ki_, kd_;
+    <span class="code-keyword">double</span> integral_, prev_error_;
+<span class="code-keyword">public</span>:
+    <span class="code-comment">// 构造函数（支持初始化列表）</span>
+    <span class="code-func">PIDController</span>(<span class="code-keyword">double</span> kp, <span class="code-keyword">double</span> ki, <span class="code-keyword">double</span> kd)
+        : kp_(kp), ki_(ki), kd_(kd),      <span class="code-comment">// 初始化列表（推荐）</span>
+          integral_(<span class="code-number">0</span>), prev_error_(<span class="code-number">0</span>) {}
+
+    <span class="code-comment">// 拷贝构造函数</span>
+    <span class="code-func">PIDController</span>(<span class="code-keyword">const</span> PIDController &amp;other)
+        : kp_(other.kp_), ki_(other.ki_), kd_(other.kd_),
+          integral_(<span class="code-number">0</span>), prev_error_(<span class="code-number">0</span>) {}
+
+    ~<span class="code-func">PIDController</span>() {}  <span class="code-comment">// 析构（此处无资源需释放）</span>
+
+    <span class="code-keyword">double</span> <span class="code-func">compute</span>(<span class="code-keyword">double</span> error, <span class="code-keyword">double</span> dt) {
+        integral_ += error * dt;
+        <span class="code-keyword">double</span> derivative = (error - prev_error_) / dt;
+        prev_error_ = error;
+        <span class="code-keyword">return</span> kp_ * error + ki_ * integral_ + kd_ * derivative;
+    }
+};</div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>Rule of Three/Five</strong>：如果类管理动态资源（<a href="javascript:void(0)" onclick="App.loadDetail('cpp-03')">malloc/new</a> 分配的内存），必须同时定义：①析构函数 ②拷贝构造函数 ③拷贝赋值运算符。C++11 还需加上移动构造和移动赋值（Rule of Five）。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">this 指针与隐式参数</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>this</strong> 是一个隐式指针，指向调用成员函数的对象。成员变量 <code>speed_</code> 实际上是 <code>this-&gt;speed_</code></li>
+          <li><strong>const 成员函数</strong>：声明为 <code>const</code> 的成员函数不能修改成员变量，编译器会检查</li>
+          <li><strong>static 成员</strong>：属于类本身而非对象，无需 this 指针。用于计数器、单例模式等</li>
+        </ul>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：类的封装在 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-07')">继承与多态</a>中通过虚函数进一步扩展。拷贝控制与 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-09')">智能指针</a>的 RAII 机制密不可分。类的 <code>new/delete</code> 与 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-03')">内存管理</a>中的 <code>malloc/free</code> 对应。</div>
+        </div>
+        <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead><tr><th>构造方式</th><th>调用时机</th><th>典型用途</th></tr></thead>
+          <tbody>
+            <tr><td>默认构造</td><td><code>Motor m;</code></td><td>创建对象，使用默认值</td></tr>
+            <tr><td>参数构造</td><td><code>Motor m(100);</code></td><td>指定初始参数</td></tr>
+            <tr><td>拷贝构造</td><td><code>Motor m2(m1);</code></td><td>用已有对象初始化新对象</td></tr>
+            <tr><td>移动构造</td><td><code>Motor m2(std::move(m1));</code></td><td>高效"窃取"临时对象资源</td></tr>
+          </tbody>
+        </table></div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>步骤 1：设计接口</strong><br>确定 public 方法（API）和 private 成员（内部状态），遵循最小暴露原则。</div></div>
+          <div class="step-item"><div><strong>步骤 2：实现构造/析构</strong><br>构造函数分配资源（如有），析构函数释放。用初始化列表初始化成员。</div></div>
+          <div class="step-item"><div><strong>步骤 3：处理拷贝</strong><br>若类管理资源，实现深拷贝（拷贝构造 + 拷贝赋值），或禁用拷贝。</div></div>
+          <div class="step-item"><div><strong>步骤 4：const 正确性</strong><br>不修改成员的函数标记为 const，参数使用 const 引用避免不必要拷贝。</div></div>
+        </div>
+      ` },
+
+      // ========== cpp-07 继承与多态 ==========
+      {
+        id: 'cpp-07', title: '继承与多态', desc: '虚函数、动态绑定、抽象类、菱形继承', icon: '🎭',
+        tags: ['高频考点', '难点'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">多态：用统一接口处理不同类型的对象</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          继承让你复用代码，多态让你写"对扩展开放、对修改关闭"的代码。在 ROS 开发中，不同类型的传感器驱动都实现同一个 <code>Sensor</code> 接口；在游戏引擎中，不同角色都继承自 <code>Entity</code> 基类。虚函数和动态绑定是实现这一切的核心机制。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">继承体系与虚函数</h4>
+        <div class="code-block"><span class="code-keyword">class</span> <span class="code-func">Sensor</span> {                      <span class="code-comment">// 基类</span>
+<span class="code-keyword">protected</span>:
+    <span class="code-keyword">double</span> value_;
+<span class="code-keyword">public</span>:
+    <span class="code-keyword">virtual</span> ~<span class="code-func">Sensor</span>() {}             <span class="code-comment">// 虚析构！（关键）</span>
+    <span class="code-keyword">virtual</span> <span class="code-keyword">double</span> <span class="code-func">read</span>() = <span class="code-number">0</span>;      <span class="code-comment">// 纯虚函数 → 抽象类</span>
+    <span class="code-keyword">virtual</span> <span class="code-keyword">const char</span>* <span class="code-func">type</span>() <span class="code-keyword">const</span> { <span class="code-keyword">return</span> <span class="code-string">"generic"</span>; }
+};
+
+<span class="code-keyword">class</span> <span class="code-func">TempSensor</span> : <span class="code-keyword">public</span> Sensor {  <span class="code-comment">// 派生类</span>
+<span class="code-keyword">public</span>:
+    <span class="code-keyword">double</span> <span class="code-func">read</span>() <span class="code-keyword">override</span> { <span class="code-keyword">return</span> <span class="code-number">25.5</span>; }
+    <span class="code-keyword">const char</span>* <span class="code-func">type</span>() <span class="code-keyword">const override</span> { <span class="code-keyword">return</span> <span class="code-string">"temperature"</span>; }
+};</div>
+
+        <h4 class="font-medium mt-6 mb-2">虚函数表（vtable）与动态绑定</h4>
+        <div class="formula-block">
+          <strong>动态绑定机制</strong>：编译器为含虚函数的类生成一张虚函数表（vtable），对象头部存储指向 vtable 的指针（vptr）。调用虚函数时通过 vptr 查表跳转，实现运行时多态。<br>
+          $$\\text{调用} \\to \\text{读取 vptr} \\to \\text{查 vtable[offset]} \\to \\text{跳转到实际函数}$$
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>override</strong>（C++11）：显式声明覆盖基类虚函数，编译器检查签名是否匹配</li>
+          <li><strong>final</strong>（C++11）：阻止进一步覆盖或继承，编译器可优化（去掉 vtable 查表）</li>
+          <li><strong>纯虚函数</strong>：<code>virtual void f() = 0;</code> 使类成为抽象类，不能实例化</li>
+          <li><strong>虚析构函数</strong>：基类指针删除派生类对象时，非虚析构导致派生类析构不被调用→内存泄漏</li>
+        </ul>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>菱形继承</strong>：当 B 和 C 都继承 A，D 同时继承 B 和 C 时，D 中会存在两份 A 的数据。解决方法：<code>class B : virtual public A</code>（虚继承），使 A 只有一份。虚继承有运行时开销，应尽量用组合替代。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">多态的实际应用：传感器接口</h4>
+        <div class="code-block"><span class="code-comment">// 多态：统一接口处理不同类型传感器</span>
+<span class="code-keyword">void</span> <span class="code-func">poll_sensors</span>(<span class="code-keyword">const</span> std::vector&lt;Sensor*&gt; &amp;sensors) {
+    <span class="code-keyword">for</span> (<span class="code-keyword">auto</span> *s : sensors) {
+        <span class="code-comment">// 运行时根据实际类型调用正确的 read()</span>
+        std::cout &lt;&lt; s-&gt;<span class="code-func">type</span>() &lt;&lt; <span class="code-string">": "</span> &lt;&lt; s-&gt;<span class="code-func">read</span>() &lt;&lt; std::endl;
+    }
+}</div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：多态是 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-08')">模板与 STL</a>中泛型编程的对立面——多态在运行时决定调用哪个函数（动态绑定），模板在编译时生成具体代码（静态绑定），两者各有适用场景。</div>
+        </div>
+        <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead><tr><th>特性</th><th>继承 + 虚函数</th><th>模板（泛型）</th></tr></thead>
+          <tbody>
+            <tr><td><strong>绑定时机</strong></td><td>运行时（动态绑定）</td><td>编译时（静态绑定）</td></tr>
+            <tr><td><strong>性能</strong></td><td>vtable 查表开销</td><td>零开销（内联优化）</td></tr>
+            <tr><td><strong>类型检查</strong></td><td>基类指针，运行时类型安全</td><td>编译时检查，类型推导</td></tr>
+            <tr><td><strong>二进制大小</strong></td><td>较小（共享 vtable）</td><td>可能膨胀（每种类型一份代码）</td></tr>
+            <tr><td><strong>典型场景</strong></td><td>插件系统、接口抽象</td><td>容器、算法、数值计算</td></tr>
+          </tbody>
+        </table></div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>步骤 1：设计基类</strong><br>定义纯虚函数接口，加虚析构函数。基类只描述"做什么"。</div></div>
+          <div class="step-item"><div><strong>步骤 2：实现派生类</strong><br>用 <code>override</code> 覆盖基类虚函数，实现具体行为。</div></div>
+          <div class="step-item"><div><strong>步骤 3：使用基类指针/引用</strong><br>通过 <code>Sensor*</code> 或 <code>Sensor&amp;</code> 操作派生类对象，触发多态。</div></div>
+          <div class="step-item"><div><strong>步骤 4：验证虚析构</strong><br>用 <code>delete</code> 基类指针，确认派生类析构函数被正确调用。</div></div>
+        </div>
+      ` },
+
+      // ========== cpp-08 模板与 STL ==========
+      {
+        id: 'cpp-08', title: '模板与 STL', desc: '函数模板、类模板、容器/迭代器/算法', icon: '🧰',
+        tags: ['核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">泛型编程：一次编写，类型无关</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          模板让编译器根据实际类型自动生成代码，实现了"类型无关"的泛型编程。STL（标准模板库）基于模板构建了一套完整的容器、迭代器和算法体系，是 C++ 工程效率的核心来源。从 <a href="javascript:void(0)" onclick="App.loadDetail('ds-02')">线性表</a>到排序算法，STL 都有开箱即用的实现。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">函数模板与类模板</h4>
+        <div class="code-block"><span class="code-comment">// 函数模板：编译器根据调用推导 T</span>
+<span class="code-keyword">template</span> &lt;<span class="code-keyword">typename</span> T&gt;
+T <span class="code-func">max_of</span>(<span class="code-keyword">const</span> T &amp;a, <span class="code-keyword">const</span> T &amp;b) {
+    <span class="code-keyword">return</span> (a &gt; b) ? a : b;
+}
+
+<span class="code-comment">// 类模板：通用栈</span>
+<span class="code-keyword">template</span> &lt;<span class="code-keyword">typename</span> T, <span class="code-keyword">size_t</span> MaxSize&gt;
+<span class="code-keyword">class</span> <span class="code-func">FixedStack</span> {
+    T data_[MaxSize];
+    <span class="code-keyword">size_t</span> top_ = <span class="code-number">0</span>;
+<span class="code-keyword">public</span>:
+    <span class="code-keyword">void</span> <span class="code-func">push</span>(<span class="code-keyword">const</span> T &amp;val) { <span class="code-keyword">if</span> (top_ &lt; MaxSize) data_[top_++] = val; }
+    T <span class="code-func">pop</span>() { <span class="code-keyword">return</span> data_[--top_]; }
+    <span class="code-keyword">bool</span> <span class="code-func">empty</span>() <span class="code-keyword">const</span> { <span class="code-keyword">return</span> top_ == <span class="code-number">0</span>; }
+};</div>
+
+        <h4 class="font-medium mt-6 mb-2">STL 三大组件：容器、迭代器、算法</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>容器类型</th><th>代表</th><th>随机访问</th><th>插入/删除</th><th>适用场景</th></tr></thead>
+          <tbody>
+            <tr><td><strong>序列容器</strong></td><td><code>vector</code>, <code>deque</code>, <code>list</code></td><td>vector O(1)</td><td>list O(1)</td><td>按顺序存储元素</td></tr>
+            <tr><td><strong>关联容器</strong></td><td><code>set</code>, <code>map</code></td><td>O(log n)</td><td>O(log n)</td><td>自动排序 + 快速查找</td></tr>
+            <tr><td><strong>无序容器</strong></td><td><code>unordered_map</code></td><td>N/A</td><td>均摊 O(1)</td><td>最快查找（哈希表）</td></tr>
+            <tr><td><strong>适配器</strong></td><td><code>stack</code>, <code>queue</code>, <code>priority_queue</code></td><td>N/A</td><td>顶层 O(1)</td><td>受限接口</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">迭代器与算法</h4>
+        <div class="code-block"><span class="code-keyword">#include</span> <span class="code-string">&lt;algorithm&gt;</span>
+<span class="code-keyword">#include</span> <span class="code-string">&lt;vector&gt;</span>
+
+std::vector&lt;<span class="code-keyword">int</span>&gt; nums = {<span class="code-number">3</span>, <span class="code-number">1</span>, <span class="code-number">4</span>, <span class="code-number">1</span>, <span class="code-number">5</span>, <span class="code-number">9</span>};
+
+<span class="code-comment">// 排序（O(n log n)）</span>
+std::sort(nums.begin(), nums.end());
+
+<span class="code-comment">// 查找（二分，O(log n)）—— 要求已排序</span>
+<span class="code-keyword">auto</span> it = std::lower_bound(nums.begin(), nums.end(), <span class="code-number">4</span>);
+
+<span class="code-comment">// 遍历（lambda 表达式）</span>
+std::for_each(nums.begin(), nums.end(), [](<span class="code-keyword">int</span> x) {
+    std::cout &lt;&lt; x &lt;&lt; <span class="code-string">" "</span>;
+});
+
+<span class="code-comment">// 条件查找</span>
+<span class="code-keyword">auto</span> found = std::find_if(nums.begin(), nums.end(),
+    [](<span class="code-keyword">int</span> x) { <span class="code-keyword">return</span> x &gt; <span class="code-number">3</span>; });</div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：<code>std::vector</code> 是 <a href="javascript:void(0)" onclick="App.loadDetail('ds-02')">顺序表</a>的 STL 实现，<code>std::list</code> 对应双向链表。STL 算法如 <code>std::sort</code> 内部使用了 <a href="javascript:void(0)" onclick="App.loadDetail('ds-02')">排序算法</a>（IntroSort：快排 + 堆排 + 插入排序混合）。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>迭代器失效</strong>：<code>vector</code> 插入/删除可能导致重新分配内存，使所有迭代器失效。删除元素后 <code>erase</code> 返回新迭代器。使用 <code>insert/erase</code> 时务必更新迭代器，否则崩溃。</div>
+        </div>
+        <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead><tr><th>容器</th><th>底层</th><th>查找</th><th>插入末尾</th><th>插入中间</th><th>内存连续</th></tr></thead>
+          <tbody>
+            <tr><td><code>vector</code></td><td>动态数组</td><td>O(n)</td><td>均摊 O(1)</td><td>O(n)</td><td>✅</td></tr>
+            <tr><td><code>deque</code></td><td>分段数组</td><td>O(n)</td><td>O(1)</td><td>O(n)</td><td>分段连续</td></tr>
+            <tr><td><code>list</code></td><td>双向链表</td><td>O(n)</td><td>O(1)</td><td>O(1)*</td><td>❌</td></tr>
+            <tr><td><code>map</code></td><td>红黑树</td><td>O(log n)</td><td>O(log n)</td><td>O(log n)</td><td>❌</td></tr>
+            <tr><td><code>unordered_map</code></td><td>哈希表</td><td>均摊 O(1)</td><td>均摊 O(1)</td><td>均摊 O(1)</td><td>❌</td></tr>
+          </tbody>
+        </table></div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>步骤 1：选容器</strong><br>随机访问多 → vector；频繁中间插入 → list；快速查找 → unordered_map/map。</div></div>
+          <div class="step-item"><div><strong>步骤 2：包含头文件</strong><br><code>#include &lt;vector&gt;</code>, <code>&lt;map&gt;</code>, <code>&lt;algorithm&gt;</code> 等。</div></div>
+          <div class="step-item"><div><strong>步骤 3：用迭代器操作</strong><br><code>begin()</code>/<code>end()</code> 定义范围，<code>std::for_each</code>/<code>std::transform</code> 操作。</div></div>
+          <div class="step-item"><div><strong>步骤 4：注意性能</strong><br>vector 预分配 <code>reserve()</code>，避免频繁重分配；map 用 <code>emplace</code> 代替 <code>insert</code> 避免临时对象。</div></div>
+        </div>
+      ` },
+
+      // ========== cpp-09 智能指针与异常 ==========
+      {
+        id: 'cpp-09', title: '智能指针与异常', desc: 'unique_ptr/shared_ptr、RAII', icon: '🛡️',
+        tags: ['难点'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">告别手动内存管理</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          <a href="javascript:void(0)" onclick="App.loadDetail('cpp-03')">C 语言</a>的 <code>malloc/free</code> 手动管理极易出错——忘记释放、重复释放、异常路径遗漏。C++11 引入的智能指针通过 RAII（资源获取即初始化）机制，让编译器在对象销毁时自动释放资源，从根本上消除内存泄漏。这是现代 C++ 编程的基石。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">RAII 原则</h4>
+        <div class="formula-block">
+          <strong>RAII = Resource Acquisition Is Initialization</strong><br>
+          资源在构造函数中获取，在析构函数中释放。对象离开作用域时自动析构，资源自动回收。<br>
+          $$\\text{构造} \\xrightarrow{\\text{获取资源}} \\text{使用} \\xrightarrow{\\text{离开作用域}} \\text{析构} \\xrightarrow{\\text{释放资源}}$$
+        </div>
+        <div class="code-block"><span class="code-comment">// RAII 文件封装：构造打开，析构关闭</span>
+<span class="code-keyword">class</span> <span class="code-func">FileGuard</span> {
+    FILE *fp_;
+<span class="code-keyword">public</span>:
+    <span class="code-func">FileGuard</span>(<span class="code-keyword">const char</span> *path, <span class="code-keyword">const char</span> *mode)
+        : fp_(<span class="code-func">fopen</span>(path, mode)) {}
+    ~<span class="code-func">FileGuard</span>() { <span class="code-keyword">if</span> (fp_) <span class="code-func">fclose</span>(fp_); }
+    FILE* <span class="code-func">get</span>() <span class="code-keyword">const</span> { <span class="code-keyword">return</span> fp_; }
+    <span class="code-keyword">explicit operator bool</span>() <span class="code-keyword">const</span> { <span class="code-keyword">return</span> fp_ != <span class="code-number">nullptr</span>; }
+};</div>
+
+        <h4 class="font-medium mt-6 mb-2">三种智能指针</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>类型</th><th>所有权</th><th>引用计数</th><th>典型用途</th></tr></thead>
+          <tbody>
+            <tr><td><code>unique_ptr</code></td><td>独占（唯一所有者）</td><td>无</td><td>大多数场景首选，零开销</td></tr>
+            <tr><td><code>shared_ptr</code></td><td>共享（多个所有者）</td><td>✅ 自动计数</td><td>对象生命周期需多方管理</td></tr>
+            <tr><td><code>weak_ptr</code></td><td>观察（不拥有）</td><td>不增加计数</td><td>打破循环引用、缓存</td></tr>
+          </tbody>
+        </table></div>
+        <div class="code-block"><span class="code-keyword">#include</span> <span class="code-string">&lt;memory&gt;</span>
+
+<span class="code-comment">// unique_ptr：独占所有权，最常用</span>
+<span class="code-keyword">auto</span> motor = std::make_unique&lt;Motor&gt;(<span class="code-number">100</span>);
+<span class="code-comment">// auto copy = motor;  // ❌ 编译错误：不可拷贝</span>
+<span class="code-keyword">auto</span> moved = std::move(motor);  <span class="code-comment">// ✅ 所有权转移</span>
+
+<span class="code-comment">// shared_ptr：共享所有权（引用计数）</span>
+<span class="code-keyword">auto</span> shared = std::make_shared&lt;Sensor&gt;();
+<span class="code-keyword">auto</span> alias = shared;  <span class="code-comment">// 引用计数 +1</span>
+<span class="code-comment">// shared 和 alias 都有效，最后一个销毁时释放内存</span>
+
+<span class="code-comment">// weak_ptr：观察 shared_ptr，不增加引用计数</span>
+std::weak_ptr&lt;Sensor&gt; weak = shared;
+<span class="code-keyword">if</span> (<span class="code-keyword">auto</span> locked = weak.lock()) {
+    <span class="code-comment">// locked 是 shared_ptr，对象仍存活</span>
+    locked-&gt;read();
+} <span class="code-comment">// 对象可能已销毁，lock() 返回空</span></div>
+
+        <h4 class="font-medium mt-6 mb-2">异常处理：try / catch / throw</h4>
+        <div class="code-block"><span class="code-keyword">#include</span> <span class="code-string">&lt;stdexcept&gt;</span>
+
+<span class="code-keyword">double</span> <span class="code-func">safe_divide</span>(<span class="code-keyword">double</span> a, <span class="code-keyword">double</span> b) {
+    <span class="code-keyword">if</span> (b == <span class="code-number">0.0</span>) <span class="code-keyword">throw</span> std::invalid_argument(<span class="code-string">"division by zero"</span>);
+    <span class="code-keyword">return</span> a / b;
+}
+
+<span class="code-keyword">try</span> {
+    <span class="code-keyword">double</span> r = safe_divide(<span class="code-number">10.0</span>, <span class="code-number">0.0</span>);
+} <span class="code-keyword">catch</span> (<span class="code-keyword">const</span> std::invalid_argument &amp;e) {
+    std::cerr &lt;&lt; <span class="code-string">"Error: "</span> &lt;&lt; e.what() &lt;&lt; std::endl;
+}</div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" "currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>异常安全等级</strong>：①<strong>基本保证</strong>：异常后程序有效且不泄漏；②<strong>强保证</strong>：操作要么成功，要么状态不变（事务性）；③<strong>不抛保证</strong>：函数保证不抛异常（析构函数、swap 等）。RAII 是实现强保证的关键工具。</div>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：RAII 是对 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-03')">malloc/free</a> 手动管理的终极替代。智能指针的移动语义依赖 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-10')">C++11 新特性</a>中的右值引用。<a href="javascript:void(0)" onclick="App.loadDetail('cpp-06')">拷贝控制</a>中的 Rule of Five 正是为了正确实现 RAII。</div>
+        </div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>步骤 1：首选 unique_ptr</strong><br>不需要共享所有权时，<code>unique_ptr</code> 零开销，性能等同裸指针。</div></div>
+          <div class="step-item"><div><strong>步骤 2：需要共享时用 shared_ptr</strong><br>多个对象需共享同一资源时用 <code>shared_ptr</code>，注意避免循环引用。</div></div>
+          <div class="step-item"><div><strong>步骤 3：打破循环引用</strong><br>循环引用中一方用 <code>weak_ptr</code>，使用时 <code>lock()</code> 检查有效性。</div></div>
+          <div class="step-item"><div><strong>步骤 4：异常安全</strong><br>构造函数中获取资源，析构函数中释放。异常路径由 RAII 自动清理。</div></div>
+        </div>
+      ` },
+
+      // ========== cpp-10 C++11/14 新特性 ==========
+      {
+        id: 'cpp-10', title: 'C++11/14 新特性', desc: 'auto、lambda、移动语义、右值引用', icon: '🚀',
+        tags: ['工程应用'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">现代 C++ 的分水岭</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          C++11 被称为"现代 C++"的起点，引入了移动语义、lambda 表达式、自动类型推导、范围 for 循环等革命性特性。C++14 在此基础上进一步简化。这些特性让 C++ 的表达力和工程效率大幅提升，也是 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-09')">智能指针</a>和 STL 现代用法的基础。掌握它们是编写现代 C++ 代码的前提。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">auto 与类型推导</h4>
+        <div class="formula-block">
+          <strong>auto</strong>：让编译器根据初始化表达式自动推导类型<br>
+          <strong>decltype</strong>：获取表达式的类型而不求值<br>
+          $$\\texttt{auto x = expr;} \\Rightarrow \\texttt{typeof(expr) x = expr;}$$
+        </div>
+        <div class="code-block"><span class="code-keyword">auto</span> i = <span class="code-number">42</span>;          <span class="code-comment">// int</span>
+<span class="code-keyword">auto</span> d = <span class="code-number">3.14</span>;        <span class="code-comment">// double</span>
+<span class="code-keyword">auto</span> s = std::string(<span class="code-string">"hello"</span>);  <span class="code-comment">// std::string</span>
+
+<span class="code-comment">// 范围 for 循环（C++11）</span>
+std::vector&lt;<span class="code-keyword">int</span>&gt; v = {<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">4</span>};
+<span class="code-keyword">for</span> (<span class="code-keyword">auto</span> &amp;x : v) {     <span class="code-comment">// 引用避免拷贝，可修改</span>
+    x *= <span class="code-number">2</span>;
+}
+<span class="code-keyword">for</span> (<span class="code-keyword">const auto</span> &amp;x : v) { <span class="code-comment">// const 引用：只读 + 零拷贝</span>
+    std::cout &lt;&lt; x &lt;&lt; <span class="code-string">" "</span>;
+}
+
+<span class="code-comment">// decltype：获取类型</span>
+<span class="code-keyword">decltype</span>(d) d2 = <span class="code-number">1.0</span>;  <span class="code-comment">// double</span></div>
+
+        <h4 class="font-medium mt-6 mb-2">Lambda 表达式</h4>
+        <div class="formula-block">
+          <strong>Lambda 语法</strong>：<code>[捕获列表](参数列表) -&gt; 返回类型 { 函数体 }</code><br>
+          捕获方式：<code>[]</code> 无捕获、<code>[=]</code> 值捕获、<code>[&amp;]</code> 引用捕获、<code>[this]</code> 捕获 this
+        </div>
+        <div class="code-block"><span class="code-comment">// 基本 lambda</span>
+<span class="code-keyword">auto</span> add = [](<span class="code-keyword">int</span> a, <span class="code-keyword">int</span> b) -&gt; <span class="code-keyword">int</span> { <span class="code-keyword">return</span> a + b; };
+
+<span class="code-comment">// 捕获外部变量</span>
+<span class="code-keyword">int</span> threshold = <span class="code-number">10</span>;
+<span class="code-keyword">auto</span> filter = [threshold](<span class="code-keyword">int</span> x) {
+    <span class="code-keyword">return</span> x &gt; threshold;
+};
+
+<span class="code-comment">// 作为 STL 算法的回调</span>
+std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="code-number">3</span>, <span class="code-number">1</span>, <span class="code-number">4</span>, <span class="code-number">1</span>, <span class="code-number">5</span>};
+<span class="code-keyword">auto</span> it = std::find_if(data.begin(), data.end(),
+    [threshold](<span class="code-keyword">int</span> x) { <span class="code-keyword">return</span> x &gt; threshold; });
+
+<span class="code-comment">// 捕获列表详解</span>
+[=]     <span class="code-comment">// 值捕获所有外部变量（只读）</span>
+[&amp;]     <span class="code-comment">// 引用捕获所有外部变量（可修改，注意生命周期）</span>
+[x, &amp;y] <span class="code-comment">// x 值捕获，y 引用捕获</span>
+[<span class="code-keyword">this</span>]  <span class="code-comment">// 捕获 this 指针（访问成员变量）</span></div>
+
+        <h4 class="font-medium mt-6 mb-2">移动语义与右值引用</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>左值</strong>：有名字的、可取地址的对象（变量）</li>
+          <li><strong>右值</strong>：临时对象、字面量、<code>std::move()</code> 的结果——无名字、不可取地址</li>
+          <li><strong>右值引用</strong> <code>T&amp;&amp;</code>：绑定到右值，允许"窃取"临时对象的资源，避免深拷贝</li>
+          <li><strong>std::move</strong>：将左值转换为右值引用（不移动任何东西，只是类型转换）</li>
+        </ul>
+        <div class="code-block"><span class="code-comment">// 移动构造函数：窃取资源而非拷贝</span>
+<span class="code-keyword">class</span> <span class="code-func">Buffer</span> {
+    <span class="code-keyword">int</span> *data_;
+    <span class="code-keyword">size_t</span> size_;
+<span class="code-keyword">public</span>:
+    <span class="code-comment">// 移动构造函数</span>
+    <span class="code-func">Buffer</span>(Buffer &amp;&amp;other) <span class="code-keyword">noexcept</span>
+        : data_(other.data_), size_(other.size_) {
+        other.data_ = <span class="code-number">nullptr</span>;  <span class="code-comment">// 源对象置空，防止释放</span>
+        other.size_ = <span class="code-number">0</span>;
+    }
+
+    <span class="code-comment">// 移动赋值运算符</span>
+    Buffer &amp;<span class="code-keyword">operator</span>=(Buffer &amp;&amp;other) <span class="code-keyword">noexcept</span> {
+        <span class="code-keyword">if</span> (<span class="code-keyword">this</span> != &amp;other) {
+            <span class="code-keyword">delete</span>[] data_;         <span class="code-comment">// 释放旧资源</span>
+            data_ = other.data_;   <span class="code-comment">// 窃取新资源</span>
+            size_ = other.size_;
+            other.data_ = <span class="code-number">nullptr</span>;
+            other.size_ = <span class="code-number">0</span>;
+        }
+        <span class="code-keyword">return</span> *<span class="code-keyword">this</span>;
+    }
+};</div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>C++14 补充</strong>：泛型 lambda（参数用 <code>auto</code>）、返回类型自动推导、<code>std::make_unique</code>。C++17 进一步引入 <code>std::optional</code>、<code>std::variant</code>、结构化绑定（<code>auto [k,v]</code>）。</div>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：移动语义是 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-09')">智能指针</a>实现的基石。<code>unique_ptr</code> 通过移动语义转移所有权。Lambda 表达式替代了 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-02')">函数指针</a>的回调模式，在 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-08')">STL 算法</a>中大量使用。</div>
+        </div>
+        <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead><tr><th>特性</th><th>C++98/03</th><th>C++11/14</th></tr></thead>
+          <tbody>
+            <tr><td><strong>类型声明</strong></td><td>必须显式写类型</td><td><code>auto</code> 自动推导</td></tr>
+            <tr><td><strong>遍历容器</strong></td><td>迭代器 + 下标</td><td>范围 <code>for (auto : v)</code></td></tr>
+            <tr><td><strong>回调</strong></td><td>函数指针 / <a href="javascript:void(0)" onclick="App.loadDetail('cpp-02')">函数对象</a></td><td>Lambda 表达式</td></tr>
+            <tr><td><strong>内存管理</strong></td><td><code>new/delete</code> 手动管理</td><td><code>unique_ptr/shared_ptr</code></td></tr>
+            <tr><td><strong>拷贝优化</strong></td><td>深拷贝（昂贵）</td><td>移动语义（窃取资源）</td></tr>
+          </tbody>
+        </table></div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>步骤 1：启用 C++11+</strong><br>编译时加 <code>-std=c++14</code>（或更高），启用所有现代特性。</div></div>
+          <div class="step-item"><div><strong>步骤 2：用 auto 简化声明</strong><br>复杂类型用 auto，保持可读性。避免在长函数中过度使用。</div></div>
+          <div class="step-item"><div><strong>步骤 3：用 lambda 替代函数指针</strong><br>STL 算法、回调、排序比较器都用 lambda，代码更内聚。</div></div>
+          <div class="step-item"><div><strong>步骤 4：实现移动构造</strong><br>管理资源的类实现移动构造/赋值，标记 <code>noexcept</code>，让容器高效移动。</div></div>
+        </div>
+      ` },
+
+    ] // sections end
+  }, // cpp course end
+
+  // ========== 操作系统 ==========
+  'os': {
+    title: '操作系统',
+    subtitle: '进程管理、内存管理、文件系统与 I/O，计算机系统核心与 RTOS 基础',
+    icon: '🖥️',
+    sections: [
+
+      // ==================== os-01 ====================
+      { id: 'os-01', title: '操作系统概述', desc: 'OS 定义、发展历史、内核结构、系统调用', icon: '🎯', tags: ['核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">操作系统概述：计算机系统的灵魂</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          操作系统（Operating System）是管理计算机硬件与软件资源的系统软件，是用户与硬件之间的桥梁。它为应用程序提供统一的抽象接口，使复杂的硬件细节对用户透明。从批处理系统到分时系统、从单任务到多任务，操作系统的发展史就是计算机科学的发展史。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">操作系统的定义与目标</h4>
+        <div class="formula-block">
+          操作系统 = 资源管理者 + 用户接口<br><br>
+          核心目标：<strong>方便性</strong>（降低使用门槛）&nbsp;|&nbsp;<strong>有效性</strong>（提高资源利用率）<br>
+          扩展目标：<strong>可扩充性</strong>（模块化设计）&nbsp;|&nbsp;<strong>开放性</strong>（兼容标准接口）
+          <div class="text-sm text-gray-500 mt-2">现代 OS 还需关注安全性、实时性和能效比</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">操作系统的发展历程</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>手工操作阶段</strong>：无 OS，程序员直接操作硬件（打孔卡片），CPU 利用率极低。</li>
+          <li><strong>批处理系统</strong>：脱机/联机批处理，引入监督程序（Monitor），自动调度作业。CPU 利用率提升但仍有人工干预。</li>
+          <li><strong>分时系统</strong>：多用户共享一台计算机，通过时间片轮转实现"同时"响应。CTSS、UNIX 是经典代表。</li>
+          <li><strong>实时系统</strong>：对外部事件在规定时间内做出响应。分为硬实时（绝对时限）和软实时（允许偶尔超时）。见 <a href="javascript:void(0)" onclick="App.loadDetail('emb-08')">嵌入式·RTOS</a>。</li>
+          <li><strong>现代 OS</strong>：多核、分布式、虚拟化、容器化并行发展。Linux、Windows、macOS、Android 各有侧重。</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">内核结构对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>结构</th><th>特点</th><th>代表系统</th><th>优缺点</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">宏内核</td><td>所有核心模块运行在内核态</td><td>Linux、Windows</td><td>性能高，但模块耦合度高、故障影响大</td></tr>
+            <tr><td class="font-medium">微内核</td><td>仅保留最小内核，服务运行在用户态</td><td>QNX、Minix、seL4</td><td>可靠性高、易扩展，但 IPC 开销大</td></tr>
+            <tr><td class="font-medium">混合内核</td><td>宏内核+微内核折中</td><td>Windows NT、macOS (XNU)</td><td>兼顾性能与模块化</td></tr>
+            <tr><td class="font-medium">外核</td><td>内核只做资源绑定，策略完全由应用决定</td><td>MIT Exokernel（研究）</td><td>极致灵活性，但编程复杂度高</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">系统调用与用户态/内核态</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>用户态 vs 内核态</strong>：CPU 的两种特权级别。用户态程序不能直接访问硬件和内核数据结构，必须通过系统调用陷入内核态执行。</div></div>
+          <div class="step-item"><div><strong>系统调用过程</strong>：用户程序调用库函数（如 printf）-&gt; 库函数执行 trap 指令（如 int 0x80/syscall）-&gt; CPU 切换到内核态 -&gt; 内核执行对应处理函数 -&gt; 返回用户态。</div></div>
+          <div class="step-item"><div><strong>系统调用分类</strong>：进程控制（fork/exec）、文件管理（open/read/write）、设备管理（ioctl）、信息维护（getpid）、通信（pipe/shmget）。</div></div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>考试要点</strong>：系统调用是 OS 概述的高频考点。区分"系统调用"与"库函数"——前者陷入内核态（如 read/write），后者在用户态执行（如 strlen/memcpy）。系统调用是操作系统提供给用户的唯一入口。</div>
+        </div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>易混概念</strong>：中断（Interrupt）是外部事件触发（如 I/O 完成），异常（Exception/Trap）是 CPU 内部事件触发（如除零、系统调用）。两者都会导致 CPU 从用户态切换到内核态，但触发源和处理方式不同。</div>
+        </div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：系统调用的 trap 机制与 <a href="javascript:void(0)" onclick="App.loadDetail('os-07')">I/O 系统·中断处理</a> 密切相关。微内核设计思路在 <a href="javascript:void(0)" onclick="App.loadDetail('os-09')">分布式与现代 OS</a> 中有更深入的讨论。<a href="javascript:void(0)" onclick="App.loadDetail('emb-08')">嵌入式·RTOS</a> 的内核结构是实时操作系统的典型实现。</div>
+        </div>
+      ` },
+
+      // ==================== os-02 ====================
+      { id: 'os-02', title: '进程与线程', desc: '进程模型、PCB、线程、协程、上下文切换', icon: '🔄', tags: ['核心','高频考点'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">进程与线程：并发的基石</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          进程是操作系统进行资源分配和调度的基本单位，线程是 CPU 调度的基本单位。一个进程可以包含多个线程，线程共享进程的地址空间但拥有独立的栈和寄存器。理解进程与线程的区别，是掌握并发编程和操作系统调度机制的关键。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">进程的定义与 PCB</h4>
+        <div class="formula-block">
+          进程 = 程序 + 数据 + PCB（进程控制块）<br><br>
+          PCB 是操作系统感知进程存在的唯一标志，包含：<br>
+          <strong>pid</strong>（进程标识）| <strong>进程状态</strong> | <strong>程序计数器 PC</strong> | <strong>寄存器值</strong><br>
+          <strong>内存管理信息</strong>（页表基址等）| <strong>I/O 状态</strong> | <strong>调度信息</strong>（优先级等）
+          <div class="text-sm text-gray-500 mt-2">PCB 常组织为链表或索引表：就绪队列、阻塞队列、运行队列</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">进程状态转换</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>五状态模型</strong>：新建 -&gt; 就绪 -&gt; 运行 -&gt; 阻塞 -&gt; 终止。就绪态等待 CPU，运行态占有 CPU，阻塞态等待事件（如 I/O 完成）。</div></div>
+          <div class="step-item"><div><strong>就绪 -&gt; 运行</strong>：被调度程序选中（进程调度，见 <a href="javascript:void(0)" onclick="App.loadDetail('os-04')">处理器调度</a>）。</div></div>
+          <div class="step-item"><div><strong>运行 -&gt; 阻塞</strong>：进程主动请求资源（如等待 I/O），是进程自身的行为，不能由调度程序强制。</div></div>
+          <div class="step-item"><div><strong>阻塞 -&gt; 就绪</strong>：等待的事件发生（如 I/O 完成中断），由操作系统被动唤醒。</div></div>
+          <div class="step-item"><div><strong>运行 -&gt; 就绪</strong>：时间片用完或被高优先级进程抢占，是被动行为。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">进程 vs 线程 vs 协程</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>进程</th><th>线程</th><th>协程</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">调度单位</td><td>资源分配</td><td>CPU 调度</td><td>用户态调度</td></tr>
+            <tr><td class="font-medium">地址空间</td><td>独立</td><td>共享所属进程</td><td>共享所属线程</td></tr>
+            <tr><td class="font-medium">切换开销</td><td>大（切换页表+TLB）</td><td>中（切换栈+寄存器）</td><td>小（仅切栈指针）</td></tr>
+            <tr><td class="font-medium">通信方式</td><td>IPC（管道/共享内存等）</td><td>共享变量（需同步）</td><td>直接函数调用</td></tr>
+            <tr><td class="font-medium">典型实现</td><td>fork()、CreateProcess</td><td>pthread、std::thread</td><td>Go goroutine、Python asyncio</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">上下文切换（Context Switch）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          上下文切换是 CPU 从一个进程/线程切换到另一个的过程。操作系统必须保存当前进程的寄存器状态到 PCB，再从新进程的 PCB 恢复寄存器。这个过程是纯开销——切换期间 CPU 不执行任何有用的用户代码。
+        </p>
+        <div class="formula-block">
+          $$\\text{上下文切换时间} \\approx 1\\text{-}10\\,\\mu s \\quad (\\text{取决于硬件和 OS 实现})$$
+          $$\\text{切换次数} \\uparrow \\;\\Rightarrow\\; \\text{有效 CPU 利用率} \\downarrow$$
+          <div class="text-sm text-gray-500 mt-2">Linux 内核 5.x 的上下文切换约 1-2 μs；线程切换比进程切换快 2-5 倍</div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>考试要点</strong>：进程与线程的区别是必考题。记住三个维度：①资源分配 vs CPU 调度 ②独立地址空间 vs 共享 ③进程间通信 vs 共享变量。线程共享的资源：代码段、数据段、堆、打开的文件。线程独享的：栈、寄存器、程序计数器。</div>
+        </div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>陷阱区分</strong>："运行 -&gt; 就绪"是被动的（时间片到/被抢占），"运行 -&gt; 阻塞"是主动的（请求资源）。考试常问"进程能否从就绪态直接转为阻塞态？"——答案是<strong>不能</strong>，就绪态意味着不缺资源、只缺 CPU。</div>
+        </div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：线程共享地址空间的设计与 <a href="javascript:void(0)" onclick="App.loadDetail('os-05')">内存管理·页表</a> 紧密关联。线程同步问题在 <a href="javascript:void(0)" onclick="App.loadDetail('os-03')">进程同步与通信</a> 中详解。协程与 <a href="javascript:void(0)" onclick="App.loadDetail('ds-02')">数据结构·栈</a> 的调用栈概念一脉相承。</div>
+        </div>
+      ` },
+
+      // ==================== os-03 ====================
+      { id: 'os-03', title: '进程同步与通信', desc: '互斥、信号量、管程、死锁、IPC', icon: '🔒', tags: ['高频考点','难点'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">进程同步与通信：并发世界的秩序</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          当多个进程/线程并发访问共享资源时，必须有同步机制保证数据一致性。进程同步解决"执行顺序"问题，进程通信解决"数据交换"问题。信号量、管程、互斥锁是经典的同步原语，而管道、消息队列、共享内存是常用的 IPC 方式。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">临界区与互斥</h4>
+        <div class="formula-block">
+          临界区（Critical Section）：访问共享资源的代码段<br><br>
+          互斥的四个条件：<br>
+          <strong>空闲让进</strong> | <strong>忙则等待</strong> | <strong>有限等待</strong> | <strong>让权等待</strong>
+          <div class="text-sm text-gray-500 mt-2">Peterson 算法是纯软件实现互斥的经典方案（适用于双进程）</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">信号量（Semaphore）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          信号量由 Dijkstra 提出，是一个整型变量 + 两个原子操作（P/V 操作）。它是解决同步和互斥问题的通用工具。
+        </p>
+        <div class="formula-block">
+          $$S \\geq 0: \\text{可用资源数} \\qquad S &lt; 0: \\text{|S| 个进程在等待队列中}$$
+          <strong>P 操作（wait/down）</strong>：$S = S - 1$，若 $S &lt; 0$ 则阻塞当前进程<br>
+          <strong>V 操作（signal/up）</strong>：$S = S + 1$，若 $S \\leq 0$ 则唤醒一个等待进程
+        </div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>互斥信号量</strong>：$S = 1$（二值信号量），进入临界区前 P(S)，离开时 V(S)。等价于互斥锁（Mutex）。</div></div>
+          <div class="step-item"><div><strong>同步信号量</strong>：$S = 0$，用于控制执行顺序。若要求 A 先于 B 执行，则 B 中 P(S)、A 中 V(S)。</div></div>
+          <div class="step-item"><div><strong>资源计数信号量</strong>：$S = N$（N 为资源数量），如缓冲区空位数。生产者-消费者问题的经典解法。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">经典同步问题</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>问题</th><th>核心</th><th>信号量设置</th><th>关键约束</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">生产者-消费者</td><td>有限缓冲区同步</td><td>mutex=1, empty=N, full=0</td><td>先 P(empty/full) 再 P(mutex)</td></tr>
+            <tr><td class="font-medium">读者-写者</td><td>读并发、写互斥</td><td>rw=1, mutex=1, count</td><td>写者优先 or 读者优先</td></tr>
+            <tr><td class="font-medium">哲学家就餐</td><td>避免死锁的互斥</td><td>chopstick[5]={1,1,1,1,1}</td><td>限制同时就餐人数/奇偶策略</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">管程（Monitor）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          管程是比信号量更高层的同步抽象：将共享数据和操作封装在一个模块中，同一时刻只有一个进程能进入管程。Java 的 synchronized 关键字本质上就是管程机制。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">进程间通信（IPC）方式</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>IPC 方式</th><th>原理</th><th>适用场景</th><th>性能</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">管道（Pipe）</td><td>内核缓冲区，单向字节流</td><td>父子进程通信</td><td>中等，需内核拷贝</td></tr>
+            <tr><td class="font-medium">消息队列</td><td>内核中的链表，按消息类型读取</td><td>异步、结构化通信</td><td>中等</td></tr>
+            <tr><td class="font-medium">共享内存</td><td>映射同一物理页到多个进程</td><td>大数据量、高性能</td><td>最快（零拷贝）</td></tr>
+            <tr><td class="font-medium">信号（Signal）</td><td>异步通知机制</td><td>通知异常/事件</td><td>仅传递信号编号</td></tr>
+            <tr><td class="font-medium">Socket</td><td>网络/本地通信套接字</td><td>跨机器通信</td><td>取决于协议</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>考试要点</strong>：信号量 PV 操作是大题必考。记住口诀："互斥 P 在同步 P 之后"——生产者-消费者中，先 P(empty) 再 P(mutex)，否则会死锁。信号量的初值决定了它是互斥型（=1）还是同步型（=0）还是计数型（=N）。</div>
+        </div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>PV 操作顺序错误</strong>：若把生产者写成 P(mutex) -&gt; P(empty)，当 empty=0 时，进程在持有 mutex 的情况下阻塞，导致死锁。正确顺序：P(empty) -&gt; P(mutex) -&gt; 临界区 -&gt; V(mutex) -&gt; V(full)。</div>
+        </div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：共享内存 IPC 与 <a href="javascript:void(0)" onclick="App.loadDetail('os-05')">内存管理·页表映射</a> 直接相关。哲学家就餐问题是 <a href="javascript:void(0)" onclick="App.loadDetail('os-08')">死锁</a> 的经典案例。管程机制在 <a href="javascript:void(0)" onclick="App.loadDetail('emb-08')">嵌入式·RTOS</a> 中有轻量级实现（如 FreeRTOS 的 mutex/semaphore）。</div>
+        </div>
+      ` },
+
+      // ==================== os-04 ====================
+      { id: 'os-04', title: '处理器调度', desc: '调度算法、实时调度、多核调度', icon: '⚖️', tags: ['核心','高频考点'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">处理器调度：CPU 时间的分配艺术</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          处理器调度决定"下一个获得 CPU 的进程是谁"。调度算法直接影响系统的吞吐量、响应时间和公平性。从简单的先来先服务到复杂的时间片轮转、多级反馈队列，每种算法都有其适用场景。实时系统和多核系统对调度提出了更高的要求。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">调度层次</h4>
+        <div class="formula-block">
+          <strong>高级调度（作业调度）</strong>：从外存选作业调入内存，频率低（秒/分钟级）<br>
+          <strong>中级调度（内存调度）</strong>：将进程换出到外存（挂起），缓解内存压力<br>
+          <strong>低级调度（进程调度）</strong>：从就绪队列选进程分配 CPU，频率高（毫秒级）
+          <div class="text-sm text-gray-500 mt-2">低级调度是 OS 调度的核心，本节重点讨论</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">调度算法评价指标</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>指标</th><th>定义</th><th>优化目标</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">CPU 利用率</td><td>CPU 忙碌时间占比</td><td>越高越好（&gt; 40% 合理）</td></tr>
+            <tr><td class="font-medium">系统吞吐量</td><td>单位时间完成的作业数</td><td>越高越好</td></tr>
+            <tr><td class="font-medium">周转时间</td><td>作业完成时间 - 到达时间</td><td>越短越好</td></tr>
+            <tr><td class="font-medium">等待时间</td><td>进程在就绪队列中等待的总时间</td><td>越短越好</td></tr>
+            <tr><td class="font-medium">响应时间</td><td>从提交请求到首次响应的时间</td><td>越短越好（交互系统关键）</td></tr>
+          </tbody>
+        </table></div>
+        <div class="formula-block">
+          $$\\text{周转时间} = \\text{完成时间} - \\text{到达时间} \\qquad \\text{带权周转时间} = \\frac{\\text{周转时间}}{\\text{服务时间}}$$
+          <div class="text-sm text-gray-500 mt-2">带权周转时间 &ge; 1，越接近 1 说明等待越少</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">经典调度算法</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>FCFS（先来先服务）</strong>：按到达顺序执行。非抢占式，简单公平，但对短作业不友好（"护航效应"——短作业被长作业阻塞）。</div></div>
+          <div class="step-item"><div><strong>SJF（短作业优先）</strong>：选服务时间最短的进程。平均等待时间最优（理论证明），但可能导致长作业"饥饿"。非抢占式 SJF 和抢占式 SRTF（最短剩余时间优先）两种变体。</div></div>
+          <div class="step-item"><div><strong>RR（时间片轮转）</strong>：每个进程运行一个时间片后切换。抢占式，响应时间好，适合交互系统。时间片太大退化为 FCFS，太小则上下文切换开销过大。</div></div>
+          <div class="step-item"><div><strong>优先级调度</strong>：按优先级选进程。静态优先级简单但可能饥饿，动态优先级（如老化机制）可缓解。Linux 使用 CFS（完全公平调度器）基于虚拟运行时间。</div></div>
+          <div class="step-item"><div><strong>MFQ（多级反馈队列）</strong>：多个就绪队列，优先级从高到低，时间片从小到大。新进程进入最高级队列，用完时间片则降级。兼顾响应时间和吞吐量，是 UNIX/Linux 的经典策略。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">实时调度与多核调度</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>实时调度</strong>：分为静态（速率单调 RM：周期越短优先级越高）和动态（最早截止期优先 EDF：截止期越近优先级越高）。RM 可调度性条件：$\\sum \\frac{C_i}{T_i} \\leq n(2^{1/n}-1)$。详见 <a href="javascript:void(0)" onclick="App.loadDetail('emb-08')">嵌入式·RTOS</a>。</li>
+          <li><strong>多核调度</strong>：分为 SMP（对称多处理，所有核共享调度队列）和 NUMA（非统一内存访问）。负载均衡策略：工作窃取（work stealing）、处理器亲和性（affinity）。</li>
+        </ul>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>考试要点</strong>：调度算法计算题是必考。手工模拟 SJF/RR/MFQ 调度过程，画甘特图，计算周转时间和带权周转时间。记住：SJF 平均等待时间最小，RR 适合交互系统，MFQ 综合最优。</div>
+        </div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>SJF vs SRTF</strong>：SJF 是非抢占式（进程开始后运行到完），SRTF 是抢占式（新进程到达时比较剩余时间）。SRTF 平均等待时间更小，但切换开销更大。考试中要仔细看题目条件。</div>
+        </div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：上下文切换开销在 <a href="javascript:void(0)" onclick="App.loadDetail('os-02')">进程与线程</a> 中讨论。时间片大小的选择与 <a href="javascript:void(0)" onclick="App.loadDetail('os-05')">内存管理·TLB</a> 的刷新频率相关。实时调度策略在 <a href="javascript:void(0)" onclick="App.loadDetail('emb-08')">嵌入式·RTOS</a> 中有工程实现。</div>
+        </div>
+      ` },
+
+      // ==================== os-05 ====================
+      { id: 'os-05', title: '内存管理', desc: '分页、分段、虚拟内存、页面置换', icon: '💾', tags: ['核心','高频考点'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">内存管理：让有限内存服务无限需求</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          内存管理是操作系统最核心的功能之一。它负责将有限的物理内存高效地分配给多个进程，并通过虚拟内存技术让每个进程都拥有独立的、连续的地址空间。分页和分段是两种基本的内存管理方式，页面置换算法决定了虚拟内存的性能。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">地址空间概念</h4>
+        <div class="formula-block">
+          <strong>逻辑地址（虚拟地址）</strong>：程序看到的地址，从 0 开始编址<br>
+          <strong>物理地址</strong>：实际内存条上的地址<br>
+          <strong>地址转换</strong>：$\\text{物理地址} = \\text{基址寄存器} + \\text{逻辑地址}$（重定位）
+          <div class="text-sm text-gray-500 mt-2">MMU（内存管理单元）负责地址转换，是 CPU 的硬件组件</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">分页 vs 分段</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>分页</th><th>分段</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">划分方式</td><td>物理划分，页大小固定（如 4KB）</td><td>逻辑划分，段长不等</td></tr>
+            <tr><td class="font-medium">地址结构</td><td>页号 + 页内偏移</td><td>段号 + 段内偏移</td></tr>
+            <tr><td class="font-medium">碎片问题</td><td>无外部碎片，有内部碎片（最后一页）</td><td>有外部碎片，无内部碎片</td></tr>
+            <tr><td class="font-medium">共享与保护</td><td>按页共享，粒度粗</td><td>按段共享（如代码段），符合逻辑</td></tr>
+            <tr><td class="font-medium">代表系统</td><td>Linux、Windows</td><td>Intel x86（段页式结合）</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">页表与 TLB</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>页表（Page Table）</strong>：每个进程一张，记录虚拟页号到物理页框号的映射。x86-64 使用 4 级页表（PGD -&gt; PUD -&gt; PMD -&gt; PTE）。与 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-03')">C++ 内存管理</a> 中的堆栈分配密切相关。</div></div>
+          <div class="step-item"><div><strong>TLB（快表）</strong>：页表的高速缓存，集成在 MMU 中。TLB 命中率通常 &gt; 99%。有效访问时间 = $\\alpha \\times (t_{TLB} + t_{mem}) + (1-\\alpha) \\times (t_{TLB} + 2t_{mem})$。</div></div>
+          <div class="step-item"><div><strong>多级页表</strong>：避免单级页表占用过多内存。以 4KB 页、48 位地址为例：$2^{36}$ 个页表项 × 8B = 512GB，不可接受。4 级页表只为实际使用的地址空间分配页表页。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">虚拟内存与页面置换</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          虚拟内存让程序不必全部装入内存即可运行。当访问的页面不在内存中时，发生<strong>缺页中断</strong>，操作系统将所需页面从外存（磁盘）调入内存。若内存已满，则需要先置换出一个页面。
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>算法</th><th>策略</th><th>最优性</th><th>特点</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">OPT</td><td>置换最长时间不会被访问的页</td><td>理论最优</td><td>无法实现（需预知未来），仅作基准</td></tr>
+            <tr><td class="font-medium">FIFO</td><td>置换最早进入内存的页</td><td>差</td><td>Belady 异常：增加页框数反而缺页率上升</td></tr>
+            <tr><td class="font-medium">LRU</td><td>置换最长时间未使用的页</td><td>接近 OPT</td><td>硬件支持（计数器/栈），开销较大</td></tr>
+            <tr><td class="font-medium">Clock</td><td>LRU 近似，使用访问位 + 环形扫描</td><td>良好</td><td>Linux 实际采用的近似 LRU 策略</td></tr>
+          </tbody>
+        </table></div>
+        <div class="formula-block">
+          $$\\text{缺页率} = \\frac{\\text{缺页次数}}{\\text{总访问次数}} \\qquad \\text{有效访问时间} = (1-p) \\times t_{mem} + p \\times t_{page}$$
+          <div class="text-sm text-gray-500 mt-2">p 为缺页率，$t_{page}$ 为缺页处理时间（约 5-10 ms，含磁盘 I/O）</div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>考试要点</strong>：页面置换的手工模拟是必考大题。给定页面访问序列和页框数，逐个判断是否缺页，画出置换过程。特别注意 FIFO 的 Belady 异常——页框数从 3 增到 4，缺页率反而上升！LRU 不会有此异常。</div>
+        </div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>抖动（Thrashing）</strong>：当进程频繁缺页，CPU 大部分时间用于页面置换而非执行有用代码。原因：分配给进程的页框数小于其工作集大小。解决方案：工作集模型、缺页率反馈控制。</div>
+        </div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：内存管理与 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-03')">C++ 内存管理（堆栈）</a> 紧密相关——理解虚拟地址空间布局有助于掌握 new/delete 的底层机制。页面置换算法的思想与 <a href="javascript:void(0)" onclick="App.loadDetail('ds-02')">数据结构·LRU 缓存</a> 的实现完全一致。</div>
+        </div>
+      ` },
+
+      // ==================== os-06 ====================
+      { id: 'os-06', title: '文件系统', desc: '文件组织、目录结构、磁盘调度、inode', icon: '📁', tags: ['核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">文件系统：数据持久化的基石</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          文件系统是操作系统中负责管理持久化数据的子系统。它将磁盘上的物理扇区抽象为用户友好的文件和目录，提供"按名存取"的接口。文件的逻辑组织（连续/链接/索引分配）、目录结构、磁盘调度算法是本节的三大核心。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">文件的逻辑结构</h4>
+        <div class="formula-block">
+          文件 = 有名字的、有序的信息集合<br><br>
+          <strong>按结构分类</strong>：无结构文件（流式文件，如 .txt）| 有结构文件（记录式文件，如数据库表）<br>
+          <strong>按存取方式</strong>：顺序存取 | 随机存取（按偏移）| 索引存取（按键值）
+          <div class="text-sm text-gray-500 mt-2">UNIX/Linux 中一切皆文件（Everything is a file）</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">磁盘空间分配方式</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>分配方式</th><th>原理</th><th>优点</th><th>缺点</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">连续分配</td><td>文件占连续磁盘块</td><td>顺序/随机读取都快</td><td>外部碎片，文件难以扩展</td></tr>
+            <tr><td class="font-medium">链接分配</td><td>每个块指向下一个块</td><td>无外部碎片，动态扩展</td><td>仅支持顺序访问，指针占空间</td></tr>
+            <tr><td class="font-medium">FAT</td><td>链接分配的改进，链接表集中存放</td><td>随机访问（查 FAT 表）</td><td>FAT 表占用内存（Windows 使用）</td></tr>
+            <tr><td class="font-medium">索引分配</td><td>索引块集中存储所有块指针</td><td>支持随机访问和扩展</td><td>索引块占用空间，大文件需多级索引</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">UNIX inode 结构</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>inode（索引节点）</strong>：存储文件元数据（大小、权限、时间戳、所有者），但<strong>不包含文件名</strong>。文件名存储在目录项中，目录项是 (文件名, inode号) 的映射。</div></div>
+          <div class="step-item"><div><strong>直接指针</strong>：inode 中 12 个直接指针，指向数据块。可表示 $12 \\times 4\\text{KB} = 48\\text{KB}$ 的小文件。</div></div>
+          <div class="step-item"><div><strong>间接指针</strong>：一级间接（指向 1024 个块指针）、二级间接（$1024^2$）、三级间接（$1024^3$）。EXT4 最大文件约 16TB。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">磁盘调度算法</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          磁盘 I/O 的主要耗时是寻道时间（磁头移动到目标磁道）。调度算法通过重排 I/O 请求顺序减少寻道距离。
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>算法</th><th>策略</th><th>特点</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">FCFS</td><td>按请求顺序服务</td><td>公平但寻道距离大</td></tr>
+            <tr><td class="font-medium">SSTF</td><td>选离当前磁头最近的请求</td><td>平均寻道短，但可能饥饿</td></tr>
+            <tr><td class="font-medium">SCAN（电梯）</td><td>单向扫描到底再折返</td><td>兼顾效率和公平</td></tr>
+            <tr><td class="font-medium">C-SCAN</td><td>单向扫描到底后直接回到起点</td><td>更均匀的等待时间</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>考试要点</strong>：inode 不包含文件名是高频考点！目录项 = (文件名, inode号)，inode = 元数据 + 块指针。硬链接 = 多个目录项指向同一 inode（共享 inode 号），软链接 = 新文件存储原文件路径。删除文件 = 释放 inode 和数据块，硬链接数归零才真正删除。</div>
+        </div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>SSTF 的饥饿问题</strong>：SSTF 虽然平均寻道距离短，但如果有持续的近距离请求，远处的请求可能永远得不到服务。SCAN 算法通过"电梯"式扫描避免了饥饿。</div>
+        </div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：磁盘调度与 <a href="javascript:void(0)" onclick="App.loadDetail('os-07')">I/O 系统·DMA</a> 中的磁盘 I/O 模型相关。索引分配的块指针结构类似 <a href="javascript:void(0)" onclick="App.loadDetail('ds-02')">数据结构·链表与树</a>。文件系统的日志机制（journaling）在 <a href="javascript:void(0)" onclick="App.loadDetail('os-09')">分布式与现代 OS</a> 中扩展到分布式文件系统。</div>
+        </div>
+      ` },
+
+      // ==================== os-07 ====================
+      { id: 'os-07', title: 'I/O 系统', desc: 'I/O 模型、设备驱动、DMA、中断处理', icon: '⚡', tags: ['核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">I/O 系统：连接 CPU 与外部世界</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          I/O 系统是操作系统中管理所有输入/输出设备的子系统。从键盘鼠标到磁盘网卡，每种设备都有不同的特性。操作系统通过设备驱动程序为上层提供统一接口，通过中断、DMA、缓冲等技术提高 I/O 效率。理解 I/O 控制方式是理解整个计算机系统的关键。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">I/O 控制方式演进</h4>
+        <div class="formula-block">
+          演进方向：<strong>减少 CPU 介入</strong>，提高 CPU 与 I/O 的并行度<br><br>
+          程序直接控制 -&gt; 中断驱动 -&gt; DMA -&gt; 通道<br>
+          CPU 占用：100%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;逐字节&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;逐块&nbsp;&nbsp;&nbsp;&nbsp;完全独立
+          <div class="text-sm text-gray-500 mt-2">现代系统普遍使用 DMA + 中断的组合方式</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">四种 I/O 控制方式</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>程序直接控制（轮询）</strong>：CPU 不断查询设备状态寄存器。优点是简单，缺点是 CPU 利用率极低（"忙等待"）。适用于嵌入式低速外设。</div></div>
+          <div class="step-item"><div><strong>中断驱动</strong>：CPU 发出 I/O 命令后去执行其他进程，设备完成时发中断通知 CPU。CPU 以字节/字为单位介入。中断处理流程见 <a href="javascript:void(0)" onclick="App.loadDetail('emb-08')">嵌入式·中断系统</a>。</div></div>
+          <div class="step-item"><div><strong>DMA（直接内存访问）</strong>：DMA 控制器接管总线，直接在设备和内存之间传输数据块。CPU 仅在传输开始和结束时介入。传输单位是"块"而非字节。</div></div>
+          <div class="step-item"><div><strong>通道</strong>：专用处理器执行通道程序（I/O 指令序列），完全解放 CPU。通道可执行条件分支、循环等复杂 I/O 操作。大型机使用。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">DMA 工作原理</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>步骤</th><th>CPU 行为</th><th>DMA 控制器行为</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">1. 初始化</td><td>设置 DMA 寄存器（内存地址、传输字节数、方向）</td><td>等待启动</td></tr>
+            <tr><td class="font-medium">2. 传输</td><td>执行其他进程（释放总线）</td><td>接管总线，逐块传输数据到内存</td></tr>
+            <tr><td class="font-medium">3. 完成</td><td>响应 DMA 中断，检查传输结果</td><td>传输完成，发送中断信号</td></tr>
+          </tbody>
+        </table></div>
+        <div class="formula-block">
+          $$\\text{DMA 传输时间} = \\frac{\\text{数据量 (B)}}{\\text{总线带宽 (B/s)}} \\qquad \\text{CPU 占用} \\approx \\frac{\\text{初始化时间}}{\\text{传输时间}} \\ll 1\\%$$
+          <div class="text-sm text-gray-500 mt-2">现代 NVMe SSD 的 DMA 传输速度可达 7 GB/s（PCIe 4.0 x4）</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">SPOOLing 技术</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          SPOOLing（假脱机技术）将独占设备改造为共享设备。经典案例：打印机 SPOOLing——进程将输出先写入磁盘缓冲区，SPOOLing 守护进程依次将缓冲区内容送打印机。这样多个进程可以"同时"提交打印任务。
+        </p>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>考试要点</strong>：四种 I/O 控制方式的区别是选择题高频考点。关键对比维度：①CPU 介入粒度（字节/块/无）②是否需要 CPU 等待 ③适用场景。DMA 与中断的区别：中断是逐字节通知 CPU，DMA 是整块传输完成后才通知。</div>
+        </div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>DMA 与 Cache 一致性</strong>：DMA 直接写内存会绕过 Cache，导致 Cache 中的数据与内存不一致。解决方案：①DMA 区域标记为 non-cacheable ②软件主动 flush/invalidate Cache。</div>
+        </div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：中断处理流程与 <a href="javascript:void(0)" onclick="App.loadDetail('os-01')">OS 概述·系统调用</a> 的 trap 机制共享同一套中断向量表。DMA 控制器在 <a href="javascript:void(0)" onclick="App.loadDetail('emb-08')">嵌入式·DMA</a> 中有具体的寄存器配置示例。设备驱动程序的分层架构与 <a href="javascript:void(0)" onclick="App.loadDetail('os-09')">现代 OS·微内核</a> 的设计思想相关。</div>
+        </div>
+      ` },
+
+      // ==================== os-08 ====================
+      { id: 'os-08', title: '死锁', desc: '死锁条件、预防/避免/检测/恢复', icon: '🔐', tags: ['高频考点','难点'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">死锁：并发系统的永恒难题</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          死锁是指两个或多个进程因竞争资源而互相等待，导致所有进程都无法继续执行的状态。它是并发系统中最棘手的问题之一。理解死锁的四个必要条件是解决死锁问题的理论基础，而银行家算法是最经典的死锁避免方法。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">死锁的四个必要条件</h4>
+        <div class="formula-block">
+          死锁发生必须<strong>同时</strong>满足以下四个条件（缺一不可）：<br><br>
+          <strong>互斥条件</strong>：资源一次只能被一个进程使用<br>
+          <strong>请求与保持</strong>：进程持有资源的同时请求新资源<br>
+          <strong>不可剥夺</strong>：已获得的资源不能被强行回收<br>
+          <strong>循环等待</strong>：存在进程的循环等待链 $P_1 \\to P_2 \\to \\cdots \\to P_n \\to P_1$
+          <div class="text-sm text-gray-500 mt-2">破坏任何一个条件即可预防死锁</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">死锁处理策略</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>策略</th><th>方法</th><th>代价</th><th>适用场景</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">预防</th><td>破坏四个条件之一（静态策略）</td><td>资源利用率低</td><td>嵌入式/安全关键系统</td></tr>
+            <tr><td class="font-medium">避免</th><td>银行家算法（动态检查安全性）</td><td>需预知最大需求</td><td>资源类型少的系统</td></tr>
+            <tr><td class="font-medium">检测</th><td>资源分配图 + 死锁检测算法</td><td>检测开销</td><td>允许死锁偶尔发生</td></tr>
+            <tr><td class="font-medium">恢复</th><td>终止进程 / 资源剥夺 / 回滚</td><td>可能损失工作</td><td>通用 OS（如 Linux）</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">银行家算法</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>数据结构</strong>：Available（可用资源向量）、Max（最大需求矩阵）、Allocation（已分配矩阵）、Need（还需要矩阵，$Need = Max - Allocation$）。</div></div>
+          <div class="step-item"><div><strong>安全性检查</strong>：找一个安全序列 $&lt;P_1, P_2, \\ldots, P_n&gt;$，使得每个 $P_i$ 的 Need 都能被当前 Available 满足。若存在安全序列则系统安全，否则不安全。</div></div>
+          <div class="step-item"><div><strong>资源请求处理</strong>：$P_i$ 请求 $Request_i$，若 $Request_i \\leq Need_i$ 且 $Request_i \\leq Available$，则试探性分配，再做安全性检查。安全则正式分配，不安全则回滚。</div></div>
+        </div>
+        <div class="formula-block">
+          $$\\text{安全性算法时间复杂度} = O(m \\times n^2)$$
+          <div class="text-sm text-gray-500 mt-2">m 为资源类型数，n 为进程数。实际系统中很少直接使用银行家算法</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">资源分配图</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          资源分配图是描述死锁的直观工具。二分图中：圆节点 = 进程，方节点 = 资源（圆点 = 资源实例）。请求边：$P_i \\to R_j$（进程请求资源），分配边：$R_j \\to P_i$（资源已分配给进程）。若图中存在环路，且每种资源只有一个实例，则一定死锁。
+        </p>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>考试要点</strong>：银行家算法手算安全序列是必考大题。步骤：①检查 Request &le; Need ②检查 Request &le; Available ③试探性分配 ④运行安全性算法找安全序列。口诀："能完成的先完成，归还资源再考虑下一个。"</div>
+        </div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>死锁 vs 饥饿 vs 活锁</strong>：死锁是互相等待、永远阻塞；饥饿是某进程长期得不到资源（如 SJF 中的长作业）；活锁是进程不断改变状态但没有实质进展（如两个避让的人反复左右晃动）。三者不要混淆。</div>
+        </div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：哲学家就餐问题在 <a href="javascript:void(0)" onclick="App.loadDetail('os-03')">进程同步与通信</a> 中给出了多种解法，本质都是避免死锁。资源分配图与 <a href="javascript:void(0)" onclick="App.loadDetail('ds-02')">数据结构·图</a> 中的拓扑排序概念相通——检测环路。</div>
+        </div>
+      ` },
+
+      // ==================== os-09 ====================
+      { id: 'os-09', title: '分布式与现代 OS', desc: '微内核、容器化、RTOS、虚拟化', icon: '🌐', tags: ['工程应用'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">分布式与现代 OS：从单机到云原生</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          现代操作系统已远超传统单机内核的范畴。微内核架构提高了系统可靠性，虚拟化技术让一台物理机运行多个 OS 实例，容器化实现了轻量级的资源隔离，RTOS 满足了工业控制的实时性需求。这些技术共同构成了云原生和工业互联网的基础。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">微内核 vs 宏内核</h4>
+        <div class="formula-block">
+          <strong>宏内核</strong>（Linux）：所有系统服务（文件系统、设备驱动、网络协议栈）运行在内核态<br>
+          <strong>微内核</strong>（QNX、seL4）：内核仅保留进程管理、内存管理、IPC，其余服务运行在用户态<br>
+          通信方式：宏内核 = 函数调用 | 微内核 = 消息传递（IPC）
+          <div class="text-sm text-gray-500 mt-2">微内核 IPC 开销是性能瓶颈，L4 微内核将 IPC 开销优化到了 ~1 μs</div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>宏内核</th><th>微内核</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">性能</td><td>高（函数调用零开销）</td><td>较低（IPC 消息传递开销）</td></tr>
+            <tr><td class="font-medium">可靠性</td><td>一个模块崩溃可拖垮整个内核</td><td>服务崩溃可独立重启</td></tr>
+            <tr><td class="font-medium">安全性</td><td>攻击面大（内核态代码多）</td><td>攻击面小（最小特权原则）</td></tr>
+            <tr><td class="font-medium">代表</td><td>Linux、传统 UNIX</td><td>QNX、seL4、Fuchsia（Google）</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">虚拟化技术</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>Type-1（裸金属）</strong>：Hypervisor 直接运行在硬件上，管理多个 Guest OS。VMware ESXi、Xen、KVM。性能接近原生，是云计算的基础。</div></div>
+          <div class="step-item"><div><strong>Type-2（托管型）</strong>：Hypervisor 作为应用程序运行在宿主 OS 上。VirtualBox、VMware Workstation。适合开发测试。</div></div>
+          <div class="step-item"><div><strong>硬件辅助虚拟化</strong>：Intel VT-x / AMD-V 扩展，让 Guest OS 内核态指令直接在 CPU 上执行，避免了"二进制翻译"的开销。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">容器化 vs 虚拟机</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>虚拟机</th><th>容器</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">隔离级别</td><td>硬件级（独立 OS 内核）</td><td>进程级（共享宿主内核）</td></tr>
+            <tr><td class="font-medium">启动时间</td><td>分钟级</td><td>秒级</td></tr>
+            <tr><td class="font-medium">资源开销</td><td>大（每个 VM 完整 OS）</td><td>小（仅应用+依赖库）</td></tr>
+            <tr><td class="font-medium">核心技术</td><td>Hypervisor（VT-x/AMD-V）</td><td>Namespace + Cgroups（Linux）</td></tr>
+            <tr><td class="font-medium">代表产品</td><td>VMware、KVM</td><td>Docker、Kubernetes</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">RTOS 实时操作系统</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          RTOS 的核心特征是<strong>确定性</strong>——任务必须在规定时间内完成。与通用 OS 不同，RTOS 优先保证实时性而非吞吐量。详见 <a href="javascript:void(0)" onclick="App.loadDetail('emb-08')">嵌入式·RTOS 任务管理</a>。
+        </p>
+        <div class="formula-block">
+          <strong>硬实时</strong>：错过截止期 = 系统失败（如汽车 ABS 刹车控制）<br>
+          <strong>软实时</strong>：偶尔错过截止期可接受（如视频播放丢帧）<br><br>
+          典型 RTOS：FreeRTOS（开源，MCU 级）| RT-Linux（通用 Linux 补丁）| VxWorks（航天/军工）| QNX（汽车/医疗）
+          <div class="text-sm text-gray-500 mt-2">FreeRTOS 任务切换时间 &lt; 1 μs（Cortex-M4 @ 168 MHz）</div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>容器核心技术</strong>：Namespace 实现资源隔离（PID、网络、文件系统、用户等 6 种命名空间），Cgroups 实现资源限制（CPU、内存、I/O 带宽）。Docker = Namespace + Cgroups + 镜像分层（UnionFS）。Kubernetes 是容器编排的事实标准。</div>
+        </div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>容器安全</strong>：容器共享宿主内核，隔离性不如虚拟机。特权容器（--privileged）可逃逸到宿主。安全加固：最小权限、只读根文件系统、Seccomp/AppArmor 限制系统调用、镜像扫描。</div>
+        </div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：RTOS 的任务调度与 <a href="javascript:void(0)" onclick="App.loadDetail('os-04')">处理器调度·实时调度</a> 直接对应。虚拟化的内存管理涉及 <a href="javascript:void(0)" onclick="App.loadDetail('os-05')">内存管理·页表</a> 中的影子页表/EPT 技术。微内核的 IPC 机制是 <a href="javascript:void(0)" onclick="App.loadDetail('os-03')">进程同步与通信</a> 的工程实现。</div>
+        </div>
+      ` },
+
+    ],
+  },
+
+  // ========== 计算机网络 ==========
+  'network': {
+    title: '计算机网络',
+    subtitle: 'TCP/IP 协议栈、路由交换、应用层协议，ROS 通信与工业网络基础',
+    icon: '🌐',
+    sections: [
+
+      // ==================== net-01 ====================
+      { id: 'net-01', title: '计算机网络概述', desc: 'OSI/TCP-IP 模型、性能指标、网络拓扑', icon: '🌐', tags: ['核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">计算机网络概述：万物互联的基础</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          计算机网络是将地理位置不同的多台计算机通过通信设备和线路连接起来，实现资源共享和信息传递的系统。理解网络分层模型是学习所有网络协议的起点——OSI 七层模型是理论框架，TCP/IP 四层模型是实际标准。本节从两大模型出发，建立网络知识的整体地图。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">OSI 七层模型 vs TCP/IP 四层模型</h4>
+        <div class="formula-block">
+          OSI 七层（自上而下）：<strong>应用层 → 表示层 → 会话层 → 传输层 → 网络层 → 数据链路层 → 物理层</strong><br>
+          TCP/IP 四层（自上而下）：<strong>应用层 → 传输层 → 网际层 → 网络接口层</strong><br><br>
+          核心对应关系：OSI 的应用层/表示层/会话层 ≈ TCP/IP 的应用层<br>
+          OSI 的数据链路层 + 物理层 ≈ TCP/IP 的网络接口层
+          <div class="text-sm text-gray-500 mt-2">实际工业界采用 TCP/IP 模型；OSI 模型主要用于教学和理论分析</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">各层功能与协议速查</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>OSI 层</th><th>功能</th><th>典型协议/设备</th><th>PDU 名称</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">应用层</td><td>用户接口、网络服务</td><td>HTTP、DNS、SMTP、FTP、MQTT</td><td>数据（Data）</td></tr>
+            <tr><td class="font-medium">表示层</td><td>数据格式转换、加密压缩</td><td>SSL/TLS、JPEG、ASCII</td><td>数据</td></tr>
+            <tr><td class="font-medium">会话层</td><td>建立/管理/终止会话</td><td>RPC、NetBIOS</td><td>数据</td></tr>
+            <tr><td class="font-medium">传输层</td><td>端到端可靠传输、流量控制</td><td>TCP、UDP</td><td>段/报文段（Segment）</td></tr>
+            <tr><td class="font-medium">网络层</td><td>路由选择、逻辑寻址</td><td>IP、ICMP、ARP、OSPF</td><td>分组/包（Packet）</td></tr>
+            <tr><td class="font-medium">数据链路层</td><td>帧封装、差错检测、MAC 寻址</td><td>以太网、PPP、VLAN</td><td>帧（Frame）</td></tr>
+            <tr><td class="font-medium">物理层</td><td>比特流传输、电气/光信号</td><td>RJ45、光纤、WiFi 物理层</td><td>比特（Bit）</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">网络性能关键指标</h4>
+        <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
+          <li><strong>带宽（Bandwidth）</strong>：链路的最大数据传输速率，单位 bps（bit/s）。如千兆以太网带宽为 $1 \\text{ Gbps} = 10^9 \\text{ bps}$。</li>
+          <li><strong>时延（Delay）</strong>：数据从源到目的的总耗时 = 发送时延 + 传播时延 + 处理时延 + 排队时延。</li>
+          <li><strong>吞吐量（Throughput）</strong>：单位时间内实际通过链路的数据量，受瓶颈链路限制。</li>
+          <li><strong>往返时间 RTT</strong>：从发送数据到收到确认的时间，TCP 拥塞控制的关键参数。</li>
+        </ul>
+        <div class="formula-block">
+          $$\\text{发送时延} = \\frac{\\text{数据长度 (bit)}}{\\text{带宽 (bps)}} \\qquad \\text{传播时延} = \\frac{\\text{距离 (m)}}{\\text{信号传播速率 (m/s)}}$$
+          <div class="text-sm text-gray-500 mt-2">电磁波在铜缆中约 $2 \\times 10^8$ m/s，光纤中约 $2.3 \\times 10^8$ m/s</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">网络拓扑结构</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>星型拓扑</strong>：所有节点连接到中心交换机/集线器。优点是易管理、故障隔离好；缺点是中心节点单点故障。以太网 LAN 最常用。</div></div>
+          <div class="step-item"><div><strong>总线型拓扑</strong>：所有节点共享一条总线。早期以太网（10Base5/10Base2）使用，现已淘汰。冲突域大，带宽共享。</div></div>
+          <div class="step-item"><div><strong>环型拓扑</strong>：节点首尾相连成环。令牌环网使用，令牌沿环传递，无冲突。工业现场仍有应用。</div></div>
+          <div class="step-item"><div><strong>网状拓扑</strong>：节点间有多条路径。可靠性高，Internet 骨干网采用部分网状拓扑，成本较高。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">数据封装与解封装过程</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          数据从应用层向下传递时，每层添加本层头部（封装）；接收端从下向上传递时逐层剥离头部（解封装）。这个过程类似"套信封"——每经过一层协议就加一个信封，到达对端再逐层拆开。
+        </p>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>考试要点</strong>：OSI vs TCP/IP 的层次对应关系是选择题高频考点。记住"物数网传会表应"口诀（自下而上），以及每层的 PDU 名称——特别是网络层叫"分组"、传输层叫"段"、链路层叫"帧"。</div>
+        </div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>易混概念</strong>：集线器（Hub）工作在物理层，所有端口共享带宽（同一冲突域）；交换机（Switch）工作在数据链路层，每个端口独立冲突域。集线器已基本被交换机取代。</div>
+        </div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：物理层的信号编码与 <a href="javascript:void(0)" onclick="App.loadDetail('sig-08')">信号与系统·采样定理</a> 密切相关——数字通信的基础是将模拟信号采样量化后编码传输。数据链路层的帧同步涉及 <a href="javascript:void(0)" onclick="App.loadDetail('emb-06')">嵌入式·通信接口 UART/SPI</a> 中的串行通信原理。</div>
+        </div>
+      ` },
+
+      // ==================== net-02 ====================
+      { id: 'net-02', title: '物理层与数据链路层', desc: '编码、差错控制、MAC、以太网、交换机', icon: '🔌', tags: ['核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">物理层与数据链路层：网络的底层基石</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          物理层解决"如何在介质上传输比特"——编码方式、信号调制、传输介质；数据链路层解决"如何在相邻节点间可靠传输帧"——差错检测、介质访问控制、MAC 寻址。这两层共同构成局域网（LAN）的技术基础，以太网是最典型的实现。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">物理层编码方式</h4>
+        <div class="formula-block">
+          常见数字编码（以二进制序列 10110 为例）：<br>
+          <strong>NRZ（不归零编码）</strong>：高电平=1，低电平=0，无法自同步<br>
+          <strong>曼彻斯特编码</strong>：每个比特周期中间有跳变，低→高=0，高→低=1<br>
+          <strong>差分曼彻斯特编码</strong>：比特开始处有/无跳变表示 0/1，中间必有跳变<br>
+          <strong>4B/5B 编码</strong>：每 4 位数据编码为 5 位，确保足够跳变用于同步（100BASE-FX 使用）
+          <div class="text-sm text-gray-500 mt-2">以太网（10BASE-T）使用曼彻斯特编码，100BASE-TX 使用 4B/5B + MLT-3</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">差错控制方法</h4>
+        <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
+          <li><strong>奇偶校验</strong>：附加 1 位使数据中 1 的个数为奇/偶数。只能检测奇数位错误，无法纠错。</li>
+          <li><strong>CRC 循环冗余校验</strong>：数据链路层最常用。发送方用生成多项式 $G(x)$ 做模 2 除法，余数作为 FCS 附加到帧尾。接收方重做除法，余数为 0 则无误。</li>
+          <li><strong>海明码</strong>：能检 2 位错、纠 1 位错。校验位数 $r$ 满足 $2^r \\geq m + r + 1$（$m$ 为数据位数）。</li>
+        </ul>
+        <div class="formula-block">
+          $$\\text{CRC 校验：} \\frac{D(x) \\cdot x^r}{G(x)} = Q(x) \\cdots R(x) \\quad \\Rightarrow \\quad \\text{发送 } D(x) \\cdot x^r + R(x)$$
+          <div class="text-sm text-gray-500 mt-2">CRC-32 用于以太网帧校验，CRC-CCITT 用于 USB、X.25</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">MAC 地址与以太网帧</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>MAC 地址结构</strong>：48 位（6 字节），前 24 位为厂商标识（OUI），后 24 位为设备编号。如 00:1A:2B:3C:4D:5E。</div></div>
+          <div class="step-item"><div><strong>以太网帧格式（Ethernet V2）</strong>：目的 MAC(6B) + 源 MAC(6B) + 类型(2B) + 数据(46~1500B) + FCS(4B)。最小帧长 64 字节，最大 1518 字节。</div></div>
+          <div class="step-item"><div><strong>CSMA/CD 协议</strong>：载波侦听多路访问/冲突检测。发送前先听（载波侦听），边发边听（冲突检测），冲突后停止发送并发送 Jam 信号，退避后重试。</div></div>
+          <div class="step-item"><div><strong>最小帧长与冲突域</strong>：以太网最小帧长 64 字节（512 bit），确保在最大网络直径内能检测到冲突。$\\text{最小帧长} = 2 \\times \\text{传播时延} \\times \\text{带宽}$。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">交换机工作原理</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          以太网交换机基于 <strong>MAC 地址表</strong> 转发帧：收到帧后学习源 MAC 与端口的映射，查目的 MAC 转发到对应端口（单播）或泛洪到所有端口（未知单播/广播）。交换机的每个端口是一个独立冲突域，但所有端口共享广播域。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">VLAN 虚拟局域网</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">作用</td><td>逻辑隔离广播域，同一交换机上划分多个虚拟网络</td></tr>
+            <tr><td class="font-medium">实现</td><td>IEEE 802.1Q 帧标记：在以太网帧中插入 4 字节 VLAN Tag（VLAN ID 12 bit）</td></tr>
+            <tr><td class="font-medium">端口类型</td><td>Access（接入端口，只属于一个 VLAN）、Trunk（干道端口，承载多个 VLAN）</td></tr>
+            <tr><td class="font-medium">优势</td><td>减小广播域、提高安全性、灵活组网（不受物理位置限制）</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>CRC 计算技巧</strong>：考试常考 CRC 计算步骤。口诀："数据后补 r 个 0，模 2 除法用异或，余数就是 FCS"。注意模 2 除法中减法 = 加法 = 异或（XOR），没有借位。</div>
+        </div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>冲突域 vs 广播域</strong>：交换机隔离冲突域（每个端口一个冲突域），路由器隔离广播域（每个接口一个广播域）。VLAN 可以在不增加路由器的情况下隔离广播域。Hub 的所有端口在同一冲突域中。</div>
+        </div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：CRC 校验的本质是多项式除法，与 <a href="javascript:void(0)" onclick="App.loadDetail('emb-06')">嵌入式·通信接口</a> 中 UART 的奇偶校验原理一脉相承。物理层编码与 <a href="javascript:void(0)" onclick="App.loadDetail('sig-08')">信号与系统·采样定理</a> 中的 PCM 编码密切相关。</div>
+        </div>
+      ` },
+
+      // ==================== net-03 ====================
+      { id: 'net-03', title: '网络层与 IP 协议', desc: 'IP 地址、子网划分、路由算法、NAT', icon: '📦', tags: ['核心', '高频考点'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">网络层：互联网的"邮政系统"</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          网络层的核心任务是将数据分组从源主机跨越多个网络送达目的主机，类似邮政系统——IP 地址是"门牌号"，路由器是"邮局"，路由表是"邮路规划"。IP 协议提供尽力而为（Best-Effort）的无连接服务，不保证可靠传输，可靠性由上层 TCP 负责。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">IPv4 地址分类与子网划分</h4>
+        <div class="formula-block">
+          IPv4 地址 = 32 位，点分十进制表示（如 192.168.1.1）<br><br>
+          <strong>传统分类</strong>：<br>
+          A 类：$0.0.0.0 \\sim 127.255.255.255$（$/8$，大型网络）<br>
+          B 类：$128.0.0.0 \\sim 191.255.255.255$（$/16$，中型网络）<br>
+          C 类：$192.0.0.0 \\sim 223.255.255.255$（$/24$，小型网络）<br>
+          D 类：$224.0.0.0 \\sim 239.255.255.255$（组播）<br><br>
+          <strong>私有地址范围</strong>（RFC 1918）：<br>
+          10.0.0.0/8、172.16.0.0/12、192.168.0.0/16
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">CIDR 与子网划分</h4>
+        <div class="formula-block">
+          CIDR（无类别域间路由）：用"IP/前缀长度"表示网络，如 $192.168.1.0/24$<br><br>
+          子网掩码：前 $n$ 位为 1，后 $32-n$ 位为 0<br>
+          网络地址 = IP AND 子网掩码<br>
+          广播地址 = 网络地址 OR (NOT 子网掩码)<br>
+          可用主机数 $= 2^{32-n} - 2$（减去网络地址和广播地址）
+          <div class="text-sm text-gray-500 mt-2">例：192.168.1.0/26 划分为 4 个子网，每个子网 62 台主机</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">子网划分实例</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>已知</strong>：某公司分配到 172.16.0.0/16，需要划分 50 个子网，每个子网至少 500 台主机。</div></div>
+          <div class="step-item"><div><strong>确定主机位</strong>：$2^h - 2 \\geq 500 \\Rightarrow h = 9$（510 台可用主机）。因此子网掩码前缀为 $32 - 9 = 23$ 位。</div></div>
+          <div class="step-item"><div><strong>确定子网数</strong>：从原 /16 到 /23，借了 7 位，可划分 $2^7 = 128$ 个子网，满足 50 个的要求。</div></div>
+          <div class="step-item"><div><strong>子网分配</strong>：第 1 个子网 172.16.0.0/23（主机范围 .0.1~.1.254），第 2 个 172.16.2.0/23，依此类推。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">路由算法</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>算法</th><th>类型</th><th>核心思想</th><th>协议</th><th>适用场景</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">距离向量</td><td>分布式</td><td>每个路由器只知道邻居信息，逐步收敛（Bellman-Ford）</td><td>RIP</td><td>小型网络</td></tr>
+            <tr><td class="font-medium">链路状态</td><td>全局</td><td>每个路由器知道全网拓扑，用 Dijkstra 计算最短路径</td><td>OSPF</td><td>大型企业网</td></tr>
+            <tr><td class="font-medium">路径向量</td><td>策略</td><td>记录 AS 路径，基于策略选择路由</td><td>BGP</td><td>Internet 骨干</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">NAT 网络地址转换</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          NAT 将私有 IP 转换为公有 IP，解决 IPv4 地址不足问题。最常见的是 NAPT（网络地址端口转换），用"IP + 端口"映射多个内网主机到一个公网 IP。
+        </p>
+        <div class="formula-block">
+          NAPT 映射表项：$\\{\\text{内网 IP:端口}, \\text{协议}\\} \\leftrightarrow \\{\\text{公网 IP:端口}\\}$<br>
+          例：$192.168.1.10:5000 \\leftrightarrow 203.0.113.1:40001$
+          <div class="text-sm text-gray-500 mt-2">NAT 穿透（NAT Traversal）是 P2P 通信和 VoIP 的核心技术难题</div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>子网划分口诀</strong>："借 n 位得 $2^n$ 子网，留 m 位得 $2^m - 2$ 主机"。考试中常考"给定 IP 和子网掩码，求网络地址/广播地址/可用主机范围"，务必熟练掌握 AND 运算。</div>
+        </div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>IP 分片与重组</strong>：当 IP 数据报长度超过链路 MTU（以太网 MTU=1500B）时需要分片。分片在目的主机重组（中间路由器不重组）。片偏移以 8 字节为单位，MF 标志位=1 表示还有后续分片。</div>
+        </div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：ARP 协议将 IP 地址解析为 MAC 地址，连接了网络层和数据链路层（<a href="javascript:void(0)" onclick="App.loadDetail('net-02')">net-02 物理层与数据链路层</a>）。ICMP 协议用于网络诊断（ping、traceroute），是网络层的重要辅助协议。<a href="javascript:void(0)" onclick="App.loadDetail('net-04')">传输层</a> 的 TCP/UDP 复用网络层 IP 服务。</div>
+        </div>
+      ` },
+
+      // ==================== net-04 ====================
+      { id: 'net-04', title: '传输层', desc: 'TCP/UDP、三次握手、流量控制、拥塞控制', icon: '🚀', tags: ['核心', '高频考点'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">传输层：端到端的可靠通信</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          传输层是网络体系中最复杂的一层——TCP 提供可靠、有序、无重复的字节流服务，通过三次握手建立连接、滑动窗口实现流量控制、多种算法应对网络拥塞。UDP 则提供轻量级无连接服务，适合实时应用。理解 TCP 的工作机制是网络学习的核心难点。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">TCP vs UDP 对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>TCP</th><th>UDP</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">连接性</td><td>面向连接（三次握手）</td><td>无连接</td></tr>
+            <tr><td class="font-medium">可靠性</td><td>可靠（确认、重传、排序）</td><td>不可靠（尽力交付）</td></tr>
+            <tr><td class="font-medium">流量控制</td><td>滑动窗口</td><td>无</td></tr>
+            <tr><td class="font-medium">拥塞控制</td><td>慢启动、拥塞避免、快重传、快恢复</td><td>无</td></tr>
+            <tr><td class="font-medium">首部大小</td><td>20~60 字节</td><td>8 字节</td></tr>
+            <tr><td class="font-medium">传输模式</td><td>字节流</td><td>报文</td></tr>
+            <tr><td class="font-medium">典型应用</td><td>HTTP、FTP、SMTP、SSH</td><td>DNS、DHCP、RTP、游戏</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">TCP 三次握手与四次挥手</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>三次握手（建立连接）</strong><br>
+            ① 客户端 → 服务器：SYN=1, seq=x（客户端进入 SYN_SENT）<br>
+            ② 服务器 → 客户端：SYN=1, ACK=1, seq=y, ack=x+1（服务器进入 SYN_RCVD）<br>
+            ③ 客户端 → 服务器：ACK=1, seq=x+1, ack=y+1（双方进入 ESTABLISHED）</div></div>
+          <div class="step-item"><div><strong>四次挥手（释放连接）</strong><br>
+            ① 主动方 → 被动方：FIN=1, seq=u（主动方进入 FIN_WAIT_1）<br>
+            ② 被动方 → 主动方：ACK=1, ack=u+1（被动方进入 CLOSE_WAIT，主动方进入 FIN_WAIT_2）<br>
+            ③ 被动方 → 主动方：FIN=1, seq=w（被动方进入 LAST_ACK）<br>
+            ④ 主动方 → 被动方：ACK=1, ack=w+1（主动方进入 TIME_WAIT，等待 2MSL 后关闭）</div></div>
+        </div>
+        <div class="formula-block">
+          $$\\text{为什么需要三次握手？}$$
+          防止已失效的连接请求报文到达服务器，导致错误连接。若只有两次握手，服务器收到迟到的 SYN 会误以为是新请求并分配资源。
+          <div class="text-sm text-gray-500 mt-2">TIME_WAIT 等待 2MSL（$2 \\times 60\\text{s}$）：确保最后的 ACK 到达 + 让旧连接的报文在网络中消亡</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">滑动窗口与流量控制</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          TCP 用<strong>滑动窗口</strong>实现流量控制，接收方通过 ACK 中的 <strong>窗口字段（rwnd）</strong> 告知发送方"我还能接收多少数据"。发送方的发送窗口 $\\leq$ 接收方通告的窗口值。
+        </p>
+        <div class="formula-block">
+          $$\\text{有效窗口} = \\min(\\text{发送窗口}, \\text{接收窗口 rwnd})$$
+          $$\\text{发送速率} \\leq \\frac{\\text{有效窗口}}{\\text{RTT}}$$
+          <div class="text-sm text-gray-500 mt-2">零窗口探测：当 rwnd=0 时，发送方定期发送 1 字节探测报文</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">拥塞控制四大算法</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>算法</th><th>阶段</th><th>核心机制</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">慢启动</td><td>连接初期</td><td>拥塞窗口 $cwnd$ 从 1 MSS 指数增长（每 RTT 翻倍），直到 $cwnd \\geq ssthresh$</td></tr>
+            <tr><td class="font-medium">拥塞避免</td><td>$cwnd \\geq ssthresh$</td><td>$cwnd$ 线性增长（每 RTT +1 MSS），直到检测到丢包</td></tr>
+            <tr><td class="font-medium">快重传</td><td>收到 3 个重复 ACK</td><td>立即重传丢失报文段，不必等待超时</td></tr>
+            <tr><td class="font-medium">快恢复</td><td>快重传之后</td><td>$ssthresh = cwnd/2$，$cwnd = ssthresh$（跳过慢启动，直接进入拥塞避免）</td></tr>
+          </tbody>
+        </table></div>
+        <div class="formula-block">
+          超时丢包后：$ssthresh = cwnd / 2$，$cwnd = 1 \\text{ MSS}$（回到慢启动）<br>
+          快重传/快恢复后：$ssthresh = cwnd / 2$，$cwnd = ssthresh$（保持在拥塞避免阶段）
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>三次握手高频考法</strong>：(1) 为什么不能两次？答：防止历史连接。(2) SYN Flood 攻击原理？答：攻击者伪造大量 SYN 而不完成握手，耗尽服务器半连接队列。(3) ISN 为什么随机？答：防止伪造旧连接的报文。</div>
+        </div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>流量控制 vs 拥塞控制</strong>：流量控制是点对点的——接收方告诉发送方"别发太快"；拥塞控制是全局性的——防止网络整体过载。两者同时起作用，发送窗口取 $\\min(rwnd, cwnd)$。</div>
+        </div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：TCP 端口号标识了 <a href="javascript:void(0)" onclick="App.loadDetail('net-05')">应用层协议</a>（HTTP=80, HTTPS=443, SSH=22）。拥塞控制中的 AIMD 策略与 <a href="javascript:void(0)" onclick="App.loadDetail('act-14')">控制理论·PID 控制</a> 中的反馈控制思想相通——都是基于误差的负反馈调节。</div>
+        </div>
+      ` },
+
+      // ==================== net-05 ====================
+      { id: 'net-05', title: '应用层协议', desc: 'HTTP/DNS/DHCP/SMTP、Socket 编程', icon: '📡', tags: ['核心'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">应用层：网络服务的直接提供者</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          应用层是用户与网络交互的接口——浏览器通过 HTTP 获取网页，邮箱通过 SMTP/POP3/IMAP 收发邮件，域名通过 DNS 解析为 IP 地址。Socket 编程则是应用层直接使用传输层服务的编程接口，是网络应用开发的核心 API。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">HTTP 协议</h4>
+        <div class="formula-block">
+          HTTP 请求格式：$\\text{方法 URL HTTP/版本} \\quad \\text{Header} \\quad \\text{Body}$<br>
+          HTTP 响应格式：$\\text{HTTP/版本 状态码 描述} \\quad \\text{Header} \\quad \\text{Body}$
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>方法</th><th>语义</th><th>幂等</th><th>典型场景</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">GET</td><td>获取资源</td><td>是</td><td>网页浏览、API 查询</td></tr>
+            <tr><td class="font-medium">POST</td><td>提交数据</td><td>否</td><td>表单提交、文件上传</td></tr>
+            <tr><td class="font-medium">PUT</td><td>更新资源</td><td>是</td><td>更新用户信息</td></tr>
+            <tr><td class="font-medium">DELETE</td><td>删除资源</td><td>是</td><td>删除文章</td></tr>
+            <tr><td class="font-medium">HEAD</td><td>只获取响应头</td><td>是</td><td>检查资源是否存在</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          <strong>HTTP/1.1 vs HTTP/2 vs HTTP/3</strong>：1.1 引入持久连接和管线化；2.0 引入多路复用和头部压缩；3.0 基于 QUIC（UDP），解决队头阻塞。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">DNS 域名解析</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>解析流程</strong>：浏览器缓存 → OS 缓存 → 本地 DNS 服务器 → 根域名服务器 → 顶级域名服务器 → 权威域名服务器</div></div>
+          <div class="step-item"><div><strong>递归查询 vs 迭代查询</strong>：客户端到本地 DNS 通常是递归查询（"全权代理"）；本地 DNS 到各级域名服务器是迭代查询（"一步一步问"）</div></div>
+          <div class="step-item"><div><strong>DNS 记录类型</strong>：A 记录（域名→IPv4）、AAAA（域名→IPv6）、CNAME（别名）、MX（邮件服务器）、NS（域名服务器）、PTR（IP→域名，反向解析）</div></div>
+        </div>
+        <div class="formula-block">
+          $$\\text{DNS 查询耗时} = \\text{本地缓存命中} (0\\text{ms}) \\mid \\text{迭代解析} (RTT_1 + RTT_2 + \\cdots + RTT_n)$$
+          <div class="text-sm text-gray-500 mt-2">浏览器通常同时使用 DNS 预解析（dns-prefetch）来减少延迟</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">Socket 编程模型</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>TCP Socket 流程</strong><br>
+            服务器：socket() → bind() → listen() → accept() → recv()/send() → close()<br>
+            客户端：socket() → connect() → send()/recv() → close()</div></div>
+          <div class="step-item"><div><strong>UDP Socket 流程</strong><br>
+            服务器：socket() → bind() → recvfrom()/sendto() → close()<br>
+            客户端：socket() → sendto()/recvfrom() → close()</div></div>
+          <div class="step-item"><div><strong>关键参数</strong>：socket 类型（SOCK_STREAM=TCP, SOCK_DGRAM=UDP）、地址族（AF_INET=IPv4）、端口号（16 bit，0~65535）</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">其他重要应用层协议</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>协议</th><th>端口</th><th>传输层</th><th>功能</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">SMTP</td><td>25/587</td><td>TCP</td><td>发送邮件（推模式）</td></tr>
+            <tr><td class="font-medium">POP3</td><td>110</td><td>TCP</td><td>接收邮件（下载后删除）</td></tr>
+            <tr><td class="font-medium">IMAP</td><td>143</td><td>TCP</td><td>接收邮件（服务器保留副本）</td></tr>
+            <tr><td class="font-medium">DHCP</td><td>67/68</td><td>UDP</td><td>自动分配 IP 地址（DORA 流程）</td></tr>
+            <tr><td class="font-medium">FTP</td><td>20/21</td><td>TCP</td><td>文件传输（21=控制, 20=数据）</td></tr>
+            <tr><td class="font-medium">SSH</td><td>22</td><td>TCP</td><td>安全远程登录</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>DHCP DORA 流程</strong>：Discover（广播"谁有 IP 给我？"）→ Offer（DHCP 服务器"我有 IP 给你"）→ Request（客户端"我要这个 IP"）→ ACK（服务器"确认给你"）。四步都是 UDP 广播。</div>
+        </div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>HTTP 状态码分类</strong>：1xx=信息、2xx=成功（200 OK）、3xx=重定向（301 永久, 302 临时）、4xx=客户端错误（404 未找到, 403 禁止）、5xx=服务器错误（500 内部错误, 503 服务不可用）。考试选择题常考。</div>
+        </div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：Socket 编程与 <a href="javascript:void(0)" onclick="App.loadDetail('os-07')">操作系统·I/O 系统</a> 中的文件描述符和 I/O 多路复用（select/poll/epoll）紧密相关。MQTT 协议（<a href="javascript:void(0)" onclick="App.loadDetail('net-07')">net-07 无线与物联网网络</a>）也是基于 Socket 的应用层协议。</div>
+        </div>
+      ` },
+
+      // ==================== net-06 ====================
+      { id: 'net-06', title: '网络安全基础', desc: '对称/非对称加密、数字证书、TLS/SSL', icon: '🔐', tags: ['工程应用'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">网络安全：保护数据的机密性、完整性与可用性</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          网络安全的三大目标（CIA 三元组）：机密性（Confidentiality）——只有授权方能读取数据；完整性（Integrity）——数据未被篡改；可用性（Availability）——服务持续可用。本节聚焦密码学基础、密钥管理、数字证书和 TLS 安全通信协议。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">对称加密 vs 非对称加密</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>对称加密</th><th>非对称加密</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">密钥</td><td>加密解密用同一密钥</td><td>公钥加密，私钥解密（或反过来签名）</td></tr>
+            <tr><td class="font-medium">速度</td><td>快（硬件加速可达 Gbps 级）</td><td>慢（比对称加密慢 100~1000 倍）</td></tr>
+            <tr><td class="font-medium">密钥分发</td><td>困难（需要安全通道共享密钥）</td><td>简单（公钥可公开分发）</td></tr>
+            <tr><td class="font-medium">典型算法</td><td>AES（128/192/256 bit）、DES、3DES</td><td>RSA（2048 bit）、ECC、DSA</td></tr>
+            <tr><td class="font-medium">适用场景</td><td>大量数据加密（文件、通信）</td><td>密钥交换、数字签名、少量数据加密</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">RSA 算法核心步骤</h4>
+        <div class="formula-block">
+          <strong>密钥生成</strong>：<br>
+          ① 选两个大素数 $p, q$，计算 $n = p \\times q$<br>
+          ② 计算 $\\varphi(n) = (p-1)(q-1)$<br>
+          ③ 选 $e$ 使得 $1 < e < \\varphi(n)$ 且 $\\gcd(e, \\varphi(n)) = 1$<br>
+          ④ 求 $d$ 使得 $e \\times d \\equiv 1 \\pmod{\\varphi(n)}$<br>
+          ⑤ 公钥 $(e, n)$，私钥 $(d, n)$<br><br>
+          <strong>加密</strong>：$C = M^e \\bmod n$<br>
+          <strong>解密</strong>：$M = C^d \\bmod n$
+          <div class="text-sm text-gray-500 mt-2">安全性基于大数分解困难：已知 $n$ 求 $p, q$ 在计算上不可行（2048 bit 以上）</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">消息摘要与数字签名</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>消息摘要（Hash）</strong>：任意长度输入 → 固定长度输出（摘要/指纹）。常用算法：SHA-256（256 bit）、MD5（128 bit，已不安全）。单向不可逆，抗碰撞。</div></div>
+          <div class="step-item"><div><strong>数字签名过程</strong>：发送方用 Hash 算法对消息生成摘要，再用<strong>私钥</strong>加密摘要 = 签名。接收方用<strong>公钥</strong>解密签名得到摘要，再独立计算消息的 Hash，两者比对一致则验证通过。</div></div>
+          <div class="step-item"><div><strong>数字签名的作用</strong>：身份认证（确认发送方）+ 数据完整性（检测篡改）+ 不可否认（发送方不能抵赖）</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">数字证书与 CA 体系</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          数字证书是公钥的"身份证"，由权威机构 <strong>CA（证书颁发机构）</strong> 签发。X.509 标准定义了证书格式，包含：证书版本、序列号、签名算法、颁发者、有效期、持有者信息、持有者公钥、CA 签名。
+        </p>
+        <div class="formula-block">
+          证书信任链：$\\text{根 CA} \\rightarrow \\text{中间 CA} \\rightarrow \\text{终端实体证书}$<br>
+          验证过程：逐级验证 CA 签名，直到根 CA（浏览器/OS 内置信任的根证书）
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">TLS/SSL 握手过程</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>Client Hello</strong>：客户端发送支持的 TLS 版本、加密套件列表、随机数 $R_c$</div></div>
+          <div class="step-item"><div><strong>Server Hello + Certificate</strong>：服务器选定加密套件，发送证书和随机数 $R_s$</div></div>
+          <div class="step-item"><div><strong>密钥交换</strong>：客户端验证证书，生成预主密钥（Pre-Master Secret），用服务器公钥加密发送</div></div>
+          <div class="step-item"><div><strong>生成会话密钥</strong>：双方用 $R_c + R_s + PMS$ 计算出相同的对称会话密钥（Master Secret），后续通信使用对称加密</div></div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>混合加密思想</strong>：TLS 巧妙结合了两种加密——用非对称加密安全交换对称密钥（慢但安全），再用对称密钥加密实际数据（快）。这是工程实践中最常见的加密架构。</div>
+        </div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>中间人攻击（MITM）</strong>：攻击者截获通信双方的公钥并替换为自己的，从而解密和篡改消息。防御手段是使用数字证书验证公钥真实性——这正是 CA 体系存在的意义。</div>
+        </div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：HTTPS = HTTP + TLS，工作在 <a href="javascript:void(0)" onclick="App.loadDetail('net-05')">应用层 HTTP</a> 和 <a href="javascript:void(0)" onclick="App.loadDetail('net-04')">传输层 TCP</a> 之间。物联网设备（<a href="javascript:void(0)" onclick="App.loadDetail('net-07')">net-07</a>）使用轻量级加密（如 AES-128-CCM）保护 MQTT 通信。</div>
+        </div>
+      ` },
+
+      // ==================== net-07 ====================
+      { id: 'net-07', title: '无线与物联网网络', desc: 'WiFi/ZigBee/LoRa/NB-IoT、MQTT 协议', icon: '📶', tags: ['工程应用'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">无线与物联网网络：万物互联的通信基础</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          物联网（IoT）将传感器、嵌入式设备和云计算连接在一起，构成"感知层—网络层—应用层"的三层架构。无线通信技术是 IoT 的"神经纤维"——从短距离的 WiFi/蓝牙/ZigBee，到长距离的 LoRa/NB-IoT，不同技术适用于不同场景。MQTT 是物联网最常用的消息协议。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">无线通信技术对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>技术</th><th>频段</th><th>速率</th><th>距离</th><th>功耗</th><th>典型应用</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">WiFi (802.11ac)</td><td>2.4/5 GHz</td><td>~Gbps</td><td>~100m</td><td>高</td><td>家庭/办公 LAN</td></tr>
+            <tr><td class="font-medium">BLE 5.0</td><td>2.4 GHz</td><td>~2 Mbps</td><td>~100m</td><td>极低</td><td>穿戴设备、Beacon</td></tr>
+            <tr><td class="font-medium">ZigBee (802.15.4)</td><td>2.4 GHz</td><td>250 kbps</td><td>~100m</td><td>低</td><td>智能家居、工业传感</td></tr>
+            <tr><td class="font-medium">LoRa</td><td>Sub-GHz</td><td>~50 kbps</td><td>~15 km</td><td>极低</td><td>农业、环境监测</td></tr>
+            <tr><td class="font-medium">NB-IoT</td><td>授权频段</td><td>~250 kbps</td><td>~10 km</td><td>极低</td><td>智能抄表、智慧城市</td></tr>
+            <tr><td class="font-medium">5G NR</td><td>Sub-6/mmWave</td><td>~20 Gbps</td><td>~数 km</td><td>中</td><td>自动驾驶、远程手术</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">WiFi 802.11 协议族</h4>
+        <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
+          <li><strong>802.11n (WiFi 4)</strong>：MIMO 技术，最高速率 600 Mbps，2.4/5 GHz 双频</li>
+          <li><strong>802.11ac (WiFi 5)</strong>：MU-MIMO、波束成形，最高速率 6.9 Gbps，仅 5 GHz</li>
+          <li><strong>802.11ax (WiFi 6)</strong>：OFDMA、BSS Coloring，高密度接入优化，目标速率 9.6 Gbps</li>
+          <li><strong>CSMA/CA</strong>：WiFi 使用带冲突避免的载波侦听（不同于有线的 CSMA/CD），通过 RTS/CTS 和 ACK 实现</li>
+        </ul>
+        <div class="formula-block">
+          WiFi 信道访问：$\\text{DIFS} + \\text{随机退避} + \\text{数据发送} + \\text{SIFS} + \\text{ACK}$<br>
+          DIFS > SIFS：优先保证 ACK 不被抢占，提高可靠性
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">LoRa 与 NB-IoT 技术特点</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>LoRa（Long Range）</strong>：扩频调制（CSS），接收灵敏度高达 -148 dBm。非授权频段，私有部署灵活。星型拓扑，网关汇聚数据。适合低速率、长距离、电池供电的场景（10 年电池寿命）。</div></div>
+          <div class="step-item"><div><strong>NB-IoT</strong>：基于蜂窝网络的 LPWAN 技术，使用授权频段。运营商部署，覆盖广（利用现有基站）。支持海量连接（5 万/小区），适合智慧城市基础设施（路灯、垃圾桶、烟感）。</div></div>
+          <div class="step-item"><div><strong>选型建议</strong>：室内短距选 WiFi/BLE，室内组网选 ZigBee/Matter，户外远距私有选 LoRa，户外远距运营选 NB-IoT。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">MQTT 协议</h4>
+        <div class="formula-block">
+          MQTT（Message Queuing Telemetry Transport）：<br>
+          基于 <strong>发布/订阅</strong> 模型，客户端通过 Broker（代理服务器）交换消息<br>
+          主题（Topic）：消息的逻辑通道，支持通配符（$+$ 单层、$\\#$ 多层）<br>
+          QoS 等级：0（最多一次）、1（至少一次）、2（恰好一次）
+          <div class="text-sm text-gray-500 mt-2">MQTT 运行在 TCP 之上（默认端口 1883），MQTT-SN 可运行在 UDP/ZigBee 上</div>
+        </div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>MQTT 通信流程</strong>：① 客户端 TCP 连接 Broker → ② CONNECT 报文认证 → ③ CONNACK 确认 → ④ SUBSCRIBE 订阅主题 → ⑤ PUBLISH 发布消息 → ⑥ Broker 转发给所有订阅者</div></div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>MQTT 选型要点</strong>：QoS 0 适合传感器周期性上报（丢一两条无妨），QoS 1 适合告警消息（不能丢但可重复），QoS 2 适合金融交易（既不能丢也不能重复）。大多数 IoT 场景用 QoS 1 即可。</div>
+        </div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>LoRa vs NB-IoT 选型陷阱</strong>：LoRa 的优点是非授权频段、私有部署灵活，但上行速率低且无法利用运营商覆盖。NB-IoT 覆盖广但需支付流量费。工程选型时必须综合考虑部署环境、成本和通信需求。</div>
+        </div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：MQTT 基于 <a href="javascript:void(0)" onclick="App.loadDetail('net-05')">应用层 Socket</a> 的 TCP 连接。ZigBee 的物理层采用 IEEE 802.15.4 标准，与 <a href="javascript:void(0)" onclick="App.loadDetail('net-02')">物理层与数据链路层</a> 的 MAC 协议原理一致。LoRa 的扩频技术涉及 <a href="javascript:void(0)" onclick="App.loadDetail('sig-08')">信号与系统·采样定理</a> 中的频谱分析。</div>
+        </div>
+      ` },
+
+      // ==================== net-08 ====================
+      { id: 'net-08', title: '工业网络与 ROS 通信', desc: 'CAN/EtherCAT、ROS2 DDS、实时网络', icon: '🏭', tags: ['工程应用'], goals: { exam: true, eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">工业网络与 ROS 通信：智能制造的神经网络</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          工业网络要求高实时性（μs 级确定性延迟）、高可靠性（容错冗余）和强同步性（多轴协调）。CAN 总线是汽车和工业控制的事实标准，EtherCAT 是高性能工业以太网的代表。ROS2 采用 DDS 中间件实现分布式机器人通信，是机器人领域的标准框架。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">CAN 总线</h4>
+        <div class="formula-block">
+          CAN（Controller Area Network）特点：<br>
+          <strong>多主结构</strong>：任何节点都可主动发送，通过<strong>非破坏性仲裁</strong>解决冲突<br>
+          <strong>差分信号</strong>：CAN_H 和 CAN_L 两根线，抗共模干扰强（适合车载/工业环境）<br>
+          <strong>位速率</strong>：经典 CAN 最高 1 Mbps，CAN FD 最高 8 Mbps（数据段加速）<br>
+          <strong>帧类型</strong>：数据帧、远程帧、错误帧、过载帧
+          <div class="text-sm text-gray-500 mt-2">仲裁规则：ID 值越小优先级越高（显性电平 0 仲裁获胜）</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">CAN 仲裁与帧格式</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>非破坏性仲裁</strong>：多个节点同时发送时，逐位比较仲裁段 ID。ID 数值小的节点发送显性位（0），覆盖隐性位（1），优先级高的节点继续发送，低优先级节点自动退出。整个过程不破坏高优先级帧。</div></div>
+          <div class="step-item"><div><strong>数据帧结构</strong>：帧起始(1bit) → 仲裁段(11/29bit ID) → 控制段(6bit) → 数据段(0~64bit) → CRC段(16bit) → ACK段(2bit) → 帧结束(7bit)</div></div>
+          <div class="step-item"><div><strong>CAN FD 升级</strong>：数据段从 8 字节扩展到 64 字节，数据段可切换更高速率，大幅提高带宽利用率。向下兼容经典 CAN。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">工业网络协议对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>协议</th><th>底层</th><th>实时性</th><th>拓扑</th><th>典型应用</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">CAN/CAN FD</td><td>差分总线</td><td>ms 级</td><td>总线型</td><td>汽车、工业控制</td></tr>
+            <tr><td class="font-medium">EtherCAT</td><td>以太网</td><td>μs 级</td><td>菊花链/星型</td><td>运动控制、CNC</td></tr>
+            <tr><td class="font-medium">PROFINET IRT</td><td>以太网</td><td>μs 级</td><td>星型/环型</td><td>西门子自动化</td></tr>
+            <tr><td class="font-medium">Modbus TCP</td><td>以太网</td><td>ms 级</td><td>主从</td><td>PLC、HMI</td></tr>
+            <tr><td class="font-medium">EtherNet/IP</td><td>以太网</td><td>ms 级</td><td>星型</td><td>罗克韦尔自动化</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">EtherCAT 原理</h4>
+        <div class="formula-block">
+          EtherCAT（Ethernet for Control Automation Technology）：<br>
+          <strong>"飞速传输"原理</strong>：主站发出的以太网帧在经过每个从站时，从站硬件实时提取/插入数据（$< 1\\mu s$ 延迟），帧回到主站时已完成所有数据交换<br>
+          <strong>拓扑</strong>：菊花链（最常用）、星型、树型<br>
+          <strong>同步精度</strong>：分布式时钟（DC）同步精度 $< 1\\mu s$<br>
+          <strong>带宽利用率</strong>：$> 90\\%$（远高于传统以太网的 5~10%）
+          <div class="text-sm text-gray-500 mt-2">单个 EtherCAT 段可管理数千个 I/O 点，刷新周期可达 100 μs</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">ROS2 与 DDS 通信</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>ROS2 架构</strong>：ROS2 去掉了 ROS1 的 master 节点，采用去中心化架构。通信中间件层使用 <strong>DDS（Data Distribution Service）</strong>，由 OMG 标准化。</div></div>
+          <div class="step-item"><div><strong>DDS 核心概念</strong>：以数据为中心的发布/订阅（DCPS）模型。Domain（域）隔离不同系统，Topic（主题）分类消息，QoS 策略（可靠性、持久性、Deadline）精细控制通信行为。</div></div>
+          <div class="step-item"><div><strong>ROS2 通信类型</strong>：Topic（异步发布/订阅，如传感器数据）、Service（同步请求/响应，如查询状态）、Action（长时任务，如导航目标，支持反馈和取消）</div></div>
+          <div class="step-item"><div><strong>QoS 策略</strong>：RELIABLE（可靠，类似 TCP）vs BEST_EFFORT（尽力，类似 UDP）；KEEP_LAST（保留最近 N 条）vs KEEP_ALL（保留全部）；DEADLINE（超时告警）</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">实时网络需求分析</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>实时等级</th><th>延迟要求</th><th>典型场景</th><th>适用协议</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">硬实时</td><td>$< 1\\text{ms}$，确定性</td><td>多轴运动控制、安全联锁</td><td>EtherCAT、PROFINET IRT</td></tr>
+            <tr><td class="font-medium">软实时</td><td>$< 10\\text{ms}$，统计性</td><td>机器人 SLAM、视觉伺服</td><td>ROS2 DDS (RELIABLE)</td></tr>
+            <tr><td class="font-medium">非实时</td><td>$< 100\\text{ms}$</td><td>日志上报、参数配置</td><td>MQTT、HTTP</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>ROS2 DDS 选型</strong>：Fast DDS（eProsima，默认）适合通用开发；Cyclone DDS（Eclipse）性能优秀；Connext DDS（RTI）工业级支持完善。嵌入式平台（STM32 等）可用 micro-ROS 运行在 FreeRTOS 上。</div>
+        </div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>CAN 总线常见故障</strong>：总线短路（CAN_H 与 CAN_L 短接）导致所有节点通信中断；终端电阻缺失（120Ω）导致信号反射，误码率升高。调试工具：CAN 分析仪、示波器观察差分波形。</div>
+        </div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：CAN 控制器通过 <a href="javascript:void(0)" onclick="App.loadDetail('emb-06')">嵌入式·通信接口 SPI</a> 与 MCU 通信。ROS2 的 <a href="javascript:void(0)" onclick="App.loadDetail('os-07')">I/O 多路复用</a> 机制用于高效处理多传感器数据流。<a href="javascript:void(0)" onclick="App.loadDetail('net-06')">网络安全</a> 在工业网络中同样重要——ICS/SCADA 系统需要防火墙和加密保护。</div>
+        </div>
+      ` },
+
+    ],
+  },
+
 };
 
 // 所有可统计进度的知识点 id 清单（用于进度统计）
 // 第 0 期只先放入板块分组入口，待各板块内容填充后这里会自动从 CourseData 派生
 const AllKnowledgeIds = (function () {
   const ids = [];
-  ['advanced-math', 'linear-algebra', 'circuit-basics', 'analog-circuit', 'digital-circuit', 'control', 'data-structure', 'modern-control', 'signals', 'sensor', 'embedded-sys'].forEach(group => {
+  ['advanced-math', 'linear-algebra', 'circuit-basics', 'analog-circuit', 'digital-circuit', 'control', 'data-structure', 'modern-control', 'signals', 'sensor', 'embedded-sys', 'cpp', 'os', 'network'].forEach(group => {
     CourseData[group]?.sections?.forEach(s => ids.push(s.id));
   });
   return ids;
@@ -6824,6 +8920,36 @@ const KnowledgeDeps = {
   'emb-08': ['emb-02'],       // RTOS <- 架构
   'emb-09': ['emb-03'],       // 低功耗 <- 存储（时钟管理）
   'emb-10': ['emb-08'],       // 开发实践 <- RTOS
+
+  // === C/C++ 程序设计内部链 ===
+  'cpp-02': ['cpp-01', 'ds-02'], // 指针与数组 <- C 基础 + 线性表
+  'cpp-03': ['cpp-02', 'emb-03'], // 内存管理 <- 指针 + 存储系统
+  'cpp-04': ['cpp-01'],       // 结构体 <- C 基础
+  'cpp-05': ['cpp-01'],       // 文件与预处理 <- C 基础
+  'cpp-06': ['cpp-01'],       // 类与对象 <- C 基础（转入 C++）
+  'cpp-07': ['cpp-06'],       // 继承多态 <- 类与对象
+  'cpp-08': ['cpp-06'],       // 模板 STL <- 类与对象
+  'cpp-09': ['cpp-03', 'cpp-06'], // 智能指针 <- 内存管理 + 类
+  'cpp-10': ['cpp-06'],       // C++11 新特性 <- 类与对象
+
+  // === 操作系统内部链 ===
+  'os-02': ['os-01', 'emb-08'], // 进程 <- 概述 + RTOS
+  'os-03': ['os-02'],         // 同步通信 <- 进程
+  'os-04': ['os-02'],         // 处理器调度 <- 进程
+  'os-05': ['os-01', 'emb-03'], // 内存管理 <- 概述 + 存储系统
+  'os-06': ['os-01'],         // 文件系统 <- 概述
+  'os-07': ['os-01'],         // I/O 系统 <- 概述
+  'os-08': ['os-02', 'os-03'], // 死锁 <- 进程 + 同步
+  'os-09': ['os-02', 'os-05'], // 分布式 <- 进程 + 内存
+
+  // === 计算机网络内部链 ===
+  'net-02': ['net-01'],       // 链路层 <- 概述
+  'net-03': ['net-02'],       // 网络层 <- 链路层
+  'net-04': ['net-03'],       // 传输层 <- 网络层
+  'net-05': ['net-04'],       // 应用层 <- 传输层
+  'net-06': ['net-04', 'net-05'], // 安全 <- 传输层 + 应用层
+  'net-07': ['net-02'],       // 无线物联 <- 链路层
+  'net-08': ['net-03', 'net-04', 'emb-06', 'os-07'] // 工业网络 <- 网络层 + 传输 + 通信接口 + I/O
 };
 
 // 自测题库（按 section id 索引）。每节配 5-8 题，含概念/计算/陷阱三类。
