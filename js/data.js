@@ -2348,6 +2348,13 @@ const CourseData = {
         <h4 class="font-medium mt-6 mb-2">三个工作区</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>工作区</th><th>电压条件</th><th>电流特性</th><th>等效模型</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">正向导通区</td><td>$U > U_{on}$（硅 0.7V）</td><td>指数增长</td><td>0.7V 恒压源</td><td>整流、钳位</td></tr><tr><td class="font-medium">反向截止区</td><td>$U_{BR} < U < 0$</td><td>微小 $I_S$</td><td>断路</td><td>隔离、检波</td></tr><tr><td class="font-medium">反向击穿区</td><td>$U < U_{BR}$</td><td>剧增（可控）</td><td>稳压源</td><td>稳压管</td></tr></tbody></table></div>
 
+        <h4 class="font-medium mt-6 mb-2">击穿机制</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>雪崩击穿</strong>：反向电压增大→电场加速载流子→碰撞电离→链式反应。温度系数为正（温度升高，击穿电压增大），发生在掺杂浓度较低的 PN 结中</li>
+          <li><strong>齐纳击穿</strong>：强电场直接将价电子拉出共价键（场致激发）。温度系数为负，发生在高掺杂的窄结中</li>
+          <li><strong>热击穿</strong>：功率过大→温度升高→电流增大→正反馈→永久损坏。这是不可逆的破坏性击穿，必须避免</li>
+        </ul>
+
         <h4 class="font-medium mt-6 mb-2">等效电路模型</h4>
         <div class="step-list"><div class="step-item"><div><strong>理想模型</strong>：正向导通视为短路，反向截止视为断路。用于粗略分析。</div></div><div class="step-item"><div><strong>恒压降模型</strong>：正向导通视为 0.7V 恒压源（硅管），反向截止视为断路。最常用。</div></div><div class="step-item"><div><strong>小信号模型</strong>：在静态工作点附近，二极管等效为动态电阻 $r_d=\\frac{U_T}{I_Q}$。用于交流分析。</div></div></div>
 
@@ -2392,6 +2399,9 @@ const CourseData = {
 
         <h4 class="font-medium mt-6 mb-2">BJT 的结构与符号</h4>
         <div class="formula-block">BJT 由两个 PN 结组成（NPN 或 PNP）：<br>NPN：基极 P 型，集电极和发射极 N 型<br>PNP：基极 N 型，集电极和发射极 P 型<div class="text-sm text-gray-500 mt-2">箭头方向表示发射结正向偏置方向（NPN 箭头向外，PNP 箭头向内）</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          BJT 的三个电极中，基极很薄（微米级）且掺杂浓度低，这是实现电流放大的关键结构特征。发射极掺杂浓度最高，负责注入载流子；集电极面积最大，负责收集载流子。
+        </p>
 
         <h4 class="font-medium mt-6 mb-2">电流关系</h4>
         <div class="formula-block">三种电流关系：<br>$I_C = \\beta I_B$（集电极电流 = 放大系数 × 基极电流）<br>$I_E = I_B + I_C = (1+\\beta)I_B$<br>$\\alpha = \\frac{\\beta}{1+\\beta}$（共基电流放大系数，接近 1）<div class="text-sm text-gray-500 mt-2">$\\beta$（共射电流放大系数）通常 50~300，是 BJT 最重要的参数</div></div>
@@ -2472,6 +2482,9 @@ const CourseData = {
 
         <h4 class="font-medium mt-6 mb-2">级联增益计算</h4>
         <div class="formula-block">多级放大器总增益：<br>$A_v = A_{v1} \\cdot A_{v2} \\cdot A_{v3} \\cdots$<br>关键：<strong>后级输入电阻是前级负载</strong><br>$A_{v1}$ 必须用 $R_{i2}$（后级输入电阻）作为负载计算<div class="text-sm text-gray-500 mt-2">不能简单相乘空载增益！必须考虑级间负载效应</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          多级放大的总输入电阻等于第一级的输入电阻，总输出电阻等于最后一级的输出电阻。因此第一级应选高输入电阻组态（如共集），末级应选低输出电阻组态（如共集），中间级用共射提供主要增益。
+        </p>
 
         <h4 class="font-medium mt-6 mb-2">实例计算：两级放大器</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">两级共射放大器级联：第一级 $R_{C1}=3k\\Omega$，$r_{be1}=1k\\Omega$，$\\beta_1=100$；第二级 $R_{C2}=2k\\Omega$，$r_{be2}=800\\Omega$，$\\beta_2=80$。求总电压增益。</p>
@@ -2628,6 +2641,9 @@ const CourseData = {
 
         <h4 class="font-medium mt-6 mb-2">互补对称功率放大器</h4>
         <div class="step-list"><div class="step-item"><div><strong>乙类互补对称</strong>：NPN 和 PNP 两管轮流导通，各放大半周信号。优点是效率高，缺点是有交越失真。</div></div><div class="step-item"><div><strong>甲乙类改进</strong>：用二极管或 $U_{BE}$ 倍增器给两管加微小偏置（约 1.2~1.4V），使其在过零时微微导通，消除交越失真。</div></div><div class="step-item"><div><strong>输出级结构</strong>：OCL（无输出电容）用双电源（$\\pm V_{CC}$），OTL（无输出变压器）用单电源 + 大输出电容。</div></div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          甲乙类功放的偏置电压由 $U_{BE}$ 倍增器（一个三极管+两个电阻）提供，可精确调整为 $1.2 \\sim 1.4V$。实际设计中还需加入负反馈（从输出引回输入端）来降低非线性失真，改善频率响应。
+        </p>
 
         <h4 class="font-medium mt-6 mb-2">实例计算：OCL 功率放大器</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">已知 OCL 功放：$V_{CC}=\\pm 15V$，$R_L=8\\Omega$。求最大输出功率和效率。</p>
@@ -3142,10 +3158,22 @@ const CourseData = {
           牛顿第二定律：$m\\ddot{x} + b\\dot{x} + kx = f(t)$
           <div class="text-sm text-gray-500 mt-2">这是一个二阶常系数线性微分方程，m、b、k 分别是惯性、阻尼、弹性参数</div>
         </div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：RLC 电路</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          串联 RLC 电路中，以电容电压 $u_C$ 为输出，外加电压 $u(t)$ 为输入，由基尔霍夫定律得：
+        </p>
+        <div class="formula-block">$$LC\\ddot{u}_C + RC\\dot{u}_C + u_C = u(t)$$</div>
         <div class="info-box info">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <div><strong>类比</strong>：RLC 电路 $L\\ddot{q}+R\\dot{q}+\\frac{1}{C}q=u(t)$，形式完全相同——m↔L，b↔R，k↔1/C。这种"力-电压类比"在工程中很常用，一个领域的解法可以直接搬到另一个领域。</div>
+          <div><strong>力-电压类比</strong>：RLC 电路与弹簧-阻尼-质量系统形式完全相同——m↔L，b↔R，k↔1/C。这种类比在工程中很常用，一个领域的解法可以直接搬到另一个领域。</div>
         </div>
+
+        <h4 class="font-medium mt-6 mb-2">从微分方程到传递函数</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          对微分方程取零初始条件下的拉普拉斯变换，可直接得到传递函数。以上述弹簧系统为例：
+        </p>
+        <div class="formula-block">$$ms^2X(s) + bsX(s) + kX(s) = F(s) \\Rightarrow G(s) = \\frac{X(s)}{F(s)} = \\frac{1}{ms^2+bs+k}$$</div>
 
         <h4 class="font-medium mt-6 mb-2">小偏差线性化（工程中最重要的近似）</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
@@ -4195,6 +4223,17 @@ const CourseData = {
           <div class="text-sm text-gray-500 mt-2">空间从 $n^2$ 降到 $\\frac{n(n+1)}{2}$，约节省一半</div>
         </div>
 
+        <h4 class="font-medium mt-6 mb-2">特殊矩阵的压缩汇总</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>矩阵类型</th><th>压缩策略</th><th>空间</th></tr></thead>
+          <tbody>
+            <tr><td><strong>对称矩阵</strong></td><td>只存下三角，映射到一维数组</td><td>$n(n+1)/2$</td></tr>
+            <tr><td><strong>三角矩阵</strong></td><td>只存三角部分 + 常数</td><td>$n(n+1)/2+1$</td></tr>
+            <tr><td><strong>对角矩阵</strong></td><td>只存主对角线及相邻对角线</td><td>$3n-2$（三对角）</td></tr>
+            <tr><td><strong>稀疏矩阵</strong></td><td>三元组(行,列,值)</td><td>$3t$（t为非零元数）</td></tr>
+          </tbody>
+        </table></div>
+
         <h4 class="font-medium mt-6 mb-2">稀疏矩阵的三元组存储</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
           非零元素很少（如 $\\ll 30\\%$）的矩阵，只存非零元素的<strong>(行, 列, 值)</strong>三元组：
@@ -4446,6 +4485,14 @@ const CourseData = {
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <div><strong>求前 K 大的元素</strong>：用<strong>小顶堆</strong>，大小 K。遍历数据：比堆顶大则替换堆顶并调整。最终堆中就是 Top-K。复杂度 $O(n\\log K)$，远优于排序后取前 K 的 $O(n\\log n)$。求前 K 小用大顶堆同理。</div>
         </div>
+
+        <h4 class="font-medium mt-6 mb-2">堆的其他工程应用</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>Dijkstra 最短路</strong>：用小顶堆存待处理节点的距离，每次取最小距离节点扩展，复杂度从 $O(n^2)$ 降到 $O((n+e)\\log n)$</li>
+          <li><strong>任务调度器</strong>：操作系统用最小堆管理就绪队列，按优先级调度；GPU 渲染用堆管理绘制顺序（画家算法）</li>
+          <li><strong>中位数维护</strong>：用一个大顶堆存较小一半，一个小顶堆存较大一半，动态中位数始终在两个堆顶，$O(\\log n)$ 插入</li>
+          <li><strong>合并 K 个有序链表</strong>：用大小为 K 的小顶堆，每次取最小元素输出，复杂度 $O(n\\log K)$</li>
+        </ul>
       ` },
       { id: 'ds-10', title: '哈夫曼树与并查集', desc: '哈夫曼编码、Union-Find', icon: '🌲', tags: ['高频'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">哈夫曼树与并查集：两个高频考点</h3>
@@ -4463,6 +4510,9 @@ const CourseData = {
           <div class="step-item"><div><strong>性质</strong>：n 个叶子节点的哈夫曼树有 2n-1 个节点，没有度为 1 的节点。</div></div>
           <div class="step-item"><div><strong>哈夫曼编码</strong>：左分支标 0、右分支标 1，从根到叶子的路径就是该字符的编码。频率高的字符编码短，频率低的编码长→压缩。</div></div>
         </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          哈夫曼编码是<strong>前缀码</strong>（任何编码都不是另一个的前缀），因此解码时无需分隔符，从左到右扫描即可唯一确定。实际应用中，ZIP 压缩、JPEG 图像、MP3 音频都使用了哈夫曼编码（或其变种）作为最后一步无损压缩。
+        </p>
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <div><strong>前缀码</strong>：哈夫曼编码是前缀码（任何编码都不是另一个的前缀），所以解码时无需分隔符，从左到右扫描即可唯一确定。这是哈夫曼编码能正确解码的根本保证。</div>
@@ -4635,6 +4685,9 @@ const CourseData = {
           散列函数 $H(key)$：把关键字映射到存储地址<br>
           理想情况：查找/插入/删除均 $O(1)$（平均），最坏 $O(n)$（冲突严重时）
         </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          散列表是空间换时间的典型代表。Java 的 HashMap、Python 的 dict、Redis 的键值存储底层都是散列表。设计好的散列表需要选择合适的散列函数、控制装填因子、选择冲突解决策略。
+        </p>
         <h4 class="font-medium mt-6 mb-2">散列函数构造</h4>
         <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
           <li><strong>直接定址法</strong>：$H(key)=a \\cdot key + b$（关键字分布连续时）</li>
@@ -4758,8 +4811,33 @@ const CourseData = {
 
         <h4 class="font-medium mt-6 mb-2">置换-选择排序（生成长归并段）</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
-          朴素方法生成的归并段长度 = 内存容量。置换-选择排序利用内存中的小顶堆，能生成<strong>平均长度 2 倍内存</strong>的归并段，减少归并段数量和趟数。
+          朴素方法生成的归并段长度 = 内存容量。置换-选择排序利用内存中的小顶堆，能生成<strong>平均长度 2 倍内存</strong>的归并段，减少归并段数量和趟数。其核心思想是：当堆中最小值大于已输出的最大值时，该元素可以继续留在堆中参与后续归并段的生成，从而突破内存容量的限制。
         </p>
+        <div class="formula-block">
+          置换-选择排序步骤：<br>
+          ① 读入内存满，建小顶堆<br>
+          ② 输出堆顶（当前归并段的最小值），记录为 last<br>
+          ③ 从外存读入下一个元素替换堆顶：若新元素 ≥ last，调整堆；否则标记该元素为"下一段"，堆大小减 1<br>
+          ④ 重复直到堆空，当前归并段结束。重新读入填满堆，开始下一段
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">外排序方法对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>方法</th><th>归并段长度</th><th>每趟 I/O</th><th>总趟数</th><th>适用场景</th></tr></thead>
+          <tbody>
+            <tr><td><strong>简单多路归并</strong></td><td>内存容量</td><td>$2kN$ 次读写</td><td>$\\lceil\\log_k r\\rceil$</td><td>数据量不太大</td></tr>
+            <tr><td><strong>置换-选择</strong></td><td>平均 2×内存</td><td>$2kN$ 次读写</td><td>$\\lceil\\log_k (r/2)\\rceil$</td><td>数据量大</td></tr>
+            <tr><td><strong>最佳归并树</strong></td><td>不等长</td><td>最小化</td><td>最少</td><td>归并段长度差异大</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">文件组织与访问方式</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>顺序文件</strong>：记录按关键字物理顺序排列，适合批量顺序处理，插入删除代价高</li>
+          <li><strong>索引文件</strong>：建立关键字→物理地址的索引（如 B+ 树），支持高效随机访问</li>
+          <li><strong>散列文件</strong>：按哈希函数直接定位磁盘块，适合等值查询，不支持范围查询</li>
+          <li><strong>倒排文件</strong>：建立"词项→文档列表"的倒排索引，搜索引擎的核心数据结构</li>
+        </ul>
         <div class="info-box warning">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
           <div><strong>最佳归并树</strong>：归并段长度不同时，用哈夫曼树思想——短段先合并（多用 I/O 少的短段参与多次归并）。这能最小化总 I/O 次数。这与 <a href="javascript:void(0)" onclick="App.loadDetail('ds-10')">哈夫曼树</a> 的构造完全一致。</div>
