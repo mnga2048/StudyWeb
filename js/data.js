@@ -1971,7 +1971,7 @@ const CourseData = {
 
         <h4 class="font-medium mt-6 mb-2">网孔电流法：平面电路的捷径</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">网孔电流法以各独立网孔的假想环流为未知量，对每个网孔列写 KVL 方程。仅适用于<strong>平面电路</strong>（可画在平面上且支路不交叉）。设电路有 m 个独立网孔，则需列写 m 个方程。</p>
-        <div class="formula-block">网孔电流法标准形式（两网孔）：<br>$$(R_{11}+R_{12})I_1 - R_{12}I_2 = V_{s1}$$$$-R_{12}I_1 + (R_{22}+R_{12})I_2 = V_{s2}$$<div class="text-sm text-gray-500 mt-2">$R_{kk}$：第 k 个网孔的自阻（网孔内所有电阻之和）；$R_{jk}$：网孔 j 和 k 的互阻（公共支路电阻）；$V_{sk}$：第 k 个网孔的等效电压源</div></div>
+        <div class="formula-block">网孔电流法标准形式（两网孔）：<br>$$(R_{11}+R_{12})I_1 - R_{12}I_2 = V_{s1}$$<br>$$-R_{12}I_1 + (R_{22}+R_{12})I_2 = V_{s2}$$<div class="text-sm text-gray-500 mt-2">$R_{kk}$：第 k 个网孔的自阻（网孔内所有电阻之和）；$R_{jk}$：网孔 j 和 k 的互阻（公共支路电阻）；$V_{sk}$：第 k 个网孔的等效电压源</div></div>
 
         <h4 class="font-medium mt-6 mb-2">节点法 vs 网孔法：如何选择</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>对比维度</th><th>节点电压法</th><th>网孔电流法</th></tr></thead><tbody><tr><td class="font-medium">未知量</td><td>节点对地电压 $V_k$</td><td>网孔环流 $I_k$</td></tr><tr><td class="font-medium">方程数</td><td>n-1（n 为节点数）</td><td>m（m 为独立网孔数）</td></tr><tr><td class="font-medium">适用场景</td><td>节点少、并联多、含电流源</td><td>网孔少、串联多、含电压源</td></tr><tr><td class="font-medium">方程类型</td><td>KCL 方程（电流求和）</td><td>KVL 方程（电压求和）</td></tr><tr><td class="font-medium">优势</td><td>处理并联电路方便</td><td>处理串联电路方便</td></tr></tbody></table></div>
@@ -4858,8 +4858,16 @@ const CourseData = {
         <h4 class="font-medium mt-6 mb-2">从状态空间到传递函数</h4>
         <div class="formula-block">$$G(s) = C(sI - A)^{-1}B + D = \\frac{\\text{adj}(sI-A)B}{\\det(sI-A)} + D$$</div>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
-          分母 $\\det(sI-A)$ 即为系统的特征多项式，其根为 $A$ 的特征值，也就是系统的极点。
+          分母 $\\det(sI-A)$ 即为系统的特征多项式，其根为 $A$ 的特征值，也就是系统的极点。值得注意的是，状态空间实现的维数 $n$ 可能大于传递函数的阶数——当存在零极点对消时，传递函数"丢失"了部分内部模态信息。
         </p>
+
+        <h4 class="font-medium mt-6 mb-2">状态空间的独特优势</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>揭示内部结构</strong>：传递函数只能看到输入输出，状态空间能看到每个状态变量的演化过程</li>
+          <li><strong>处理初始条件</strong>：非零初态响应 $\\mathbf{x}(t)=e^{At}\\mathbf{x}(0)$ 直接给出，传递函数需要额外处理</li>
+          <li><strong>系统互联</strong>：两个子系统的串联、并联、反馈连接只需矩阵运算即可组合</li>
+          <li><strong>计算机实现</strong>：状态方程 $\\dot{\\mathbf{x}}=A\\mathbf{x}+B\\mathbf{u}$ 天然适合数值积分求解</li>
+        </ul>
 
         <table class="compare-table">
           <thead><tr><th>比较维度</th><th>经典控制（传递函数）</th><th>现代控制（状态空间）</th></tr></thead>
@@ -4898,6 +4906,15 @@ const CourseData = {
         <div class="formula-block">$$A_o = A_c^T, \\quad C_o = \\begin{bmatrix} 0 & 0 & \\cdots & 1 \\end{bmatrix}$$</div>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">能观标准形是能控标准形的转置对偶，信息集中在 $C$ 向量。</p>
 
+        <h4 class="font-medium mt-6 mb-2">物理系统建模实例</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          以弹簧-质量-阻尼器系统为例，运动方程为 $m\\ddot{y}+c\\dot{y}+ky=F$。选取状态变量 $x_1=y$（位移），$x_2=\\dot{y}$（速度），则状态方程为：
+        </p>
+        <div class="formula-block">$$\\dot{\\mathbf{x}} = \\begin{bmatrix} 0 & 1 \\\\ -k/m & -c/m \\end{bmatrix}\\mathbf{x} + \\begin{bmatrix} 0 \\\\ 1/m \\end{bmatrix}F$$</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          同理，RLC 电路取电容电压和电感电流为状态变量，机械-电气系统的状态变量选取原则一致：选所有独立储能元件的储能变量。
+        </p>
+
         <h4 class="font-medium mt-6 mb-2">建模方法总结</h4>
         <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
           <li><strong>直接法</strong>：从高阶微分方程引入状态变量 $x_i = y^{(i-1)}$，逐阶展开</li>
@@ -4906,6 +4923,11 @@ const CourseData = {
           <li><strong>物理机理法</strong>：选取储能元件的状态（位移/速度、电压/电流、温度等）</li>
           <li><strong>最小实现</strong>：传递函数的所有极点都出现、不含零极点对消的最简实现</li>
         </ul>
+
+        <h4 class="font-medium mt-6 mb-2">相似变换与标准形</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          令 $\\bar{\\mathbf{x}}=T\\mathbf{x}$（$T$ 可逆），则新坐标下的系统为 $\\dot{\\bar{\\mathbf{x}}}=\\bar{A}\\bar{\\mathbf{x}}+\\bar{B}\\mathbf{u}$，其中 $\\bar{A}=TAT^{-1}$，$\\bar{B}=TB$。相似变换不改变系统的特征值、能控性、能观性等本质特性，但可以选择合适的 $T$ 将系统变换为便于分析的标准形。
+        </p>
 
         <table class="compare-table">
           <thead><tr><th>特性</th><th>能控标准形</th><th>能观标准形</th><th>对角标准形</th></tr></thead>
@@ -4952,7 +4974,15 @@ const CourseData = {
 
         <h4 class="font-medium mt-6 mb-2">$e^{At}$ 的计算方法</h4>
         <div class="formula-block">$$e^{At} = \\mathcal{L}^{-1}\\left\\{(sI-A)^{-1}\\right\\}$$</div>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">这是最实用的方法：先求 $(sI-A)^{-1}$，再对每个元素取拉普拉斯反变换。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">这是最实用的方法：先求 $(sI-A)^{-1}$，再对每个元素取拉普拉斯反变换。当 $A$ 可对角化时，$e^{At}=Te^{\\Lambda t}T^{-1}$，其中 $\\Lambda$ 为特征值对角阵，$T$ 为特征向量矩阵，计算大幅简化。</p>
+
+        <h4 class="font-medium mt-6 mb-2">状态转移矩阵的性质</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>半群性</strong>：$\\Phi(t_1+t_2)=\\Phi(t_1)\\Phi(t_2)$，系统从 $t_2$ 时刻的状态转移到 $t_1+t_2$ 时刻等价于先转 $t_1$ 再转 $t_2$</li>
+          <li><strong>可逆性</strong>：$\\Phi^{-1}(t)=\\Phi(-t)=e^{-At}$，时间可以"倒流"</li>
+          <li><strong>组合性</strong>：$\\Phi(t_2-t_0)=\\Phi(t_2-t_1)\\Phi(t_1-t_0)$，分段转移等于连续转移</li>
+          <li><strong>导数关系</strong>：$\\dot{\\Phi}(t)=A\\Phi(t)=\\Phi(t)A$，状态转移满足原系统方程</li>
+        </ul>
 
         <table class="compare-table">
           <thead><tr><th>方法</th><th>适用条件</th><th>计算量</th><th>特点</th></tr></thead>
@@ -4991,11 +5021,16 @@ const CourseData = {
 
         <h4 class="font-medium mt-6 mb-2">对偶原理</h4>
         <div class="formula-block">$$\\Sigma=(A,B,C) \\text{ 能控} \\iff \\Sigma^*=(A^T,C^T,B^T) \\text{ 能观}$$</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          对偶原理建立了能控性与能观性之间的深刻联系：一个系统能控，当且仅当其对偶系统能观。这意味着能观性判据无需另起炉灶，只需将 $(A,B,C)$ 替换为 $(A^T,C^T,B^T)$ 后用能控性判据即可。
+        </p>
 
+        <h4 class="font-medium mt-6 mb-2">能控性判据详解</h4>
         <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
-          <li><strong>PBH 秩判据</strong>：$\\text{rank}[sI-A \\; B]=n,\\;\\forall s\\in\\mathbb{C}$（能控）</li>
+          <li><strong>PBH 秩判据</strong>：$\\text{rank}[sI-A \\; B]=n,\\;\\forall s\\in\\mathbb{C}$——对每个特征值 $\\lambda_i$ 逐一检验，$\\text{rank}[\\lambda_i I-A \\; B]=n$</li>
+          <li><strong>PBH 向量判据</strong>：$A$ 的每个左特征向量 $\\mathbf{v}_i^T$ 满足 $\\mathbf{v}_i^T B \\neq 0$，则对应模态能控</li>
           <li><strong>模态判据</strong>：$A$ 的同一特征值对应的 Jordan 块在 $B$ 中对应行不全为零</li>
-          <li><strong>Kalman 分解</strong>：将系统同时按能控/能观分解为四个子空间</li>
+          <li><strong>Kalman 分解</strong>：通过状态变换将系统分为四个子空间：$(\\mathcal{C}\\cap\\mathcal{O},\\;\\mathcal{C}\\cap\\bar{\\mathcal{O}},\\;\\bar{\\mathcal{C}}\\cap\\mathcal{O},\\;\\bar{\\mathcal{C}}\\cap\\bar{\\mathcal{O}})$</li>
           <li><strong>零极点对消</strong>：发生对消时，被对消的极点对应的模态是不能控或不能观的</li>
         </ul>
 
@@ -5031,7 +5066,15 @@ const CourseData = {
         <div class="formula-block">$$\\text{渐近稳定：Lyapunov 稳定} + \\lim_{t \\to \\infty}\\mathbf{x}(t)=\\mathbf{0}$$</div>
 
         <h4 class="font-medium mt-6 mb-2">Lyapunov 第二方法（直接法）</h4>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">若存在正定函数 $V(\\mathbf{x})>0$ 使得 $\\dot{V}(\\mathbf{x}) \\leq 0$，则平衡点是 Lyapunov 稳定的；若 $\\dot{V}(\\mathbf{x})<0$（严格负定），则渐近稳定。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">若存在正定函数 $V(\\mathbf{x})>0$ 使得 $\\dot{V}(\\mathbf{x}) \\leq 0$，则平衡点是 Lyapunov 稳定的；若 $\\dot{V}(\\mathbf{x})<0$（严格负定），则渐近稳定。直接法的精妙之处在于无需显式求解微分方程，只需找到合适的"能量函数" $V$。</p>
+
+        <h4 class="font-medium mt-6 mb-2">$V$ 函数的构造方法</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>二次型法</strong>：对线性系统 $\\dot{\\mathbf{x}}=A\\mathbf{x}$，取 $V=\\mathbf{x}^TP\\mathbf{x}$，解 Lyapunov 方程 $A^TP+PA=-Q$ 得 $P$</li>
+          <li><strong>能量法</strong>：对机械系统，$V$ 取动能+势能；对电路系统，$V$ 取电容储能+电感储能</li>
+          <li><strong>Krasovskii 法</strong>：取 $V=\\mathbf{x}^T P \\mathbf{x}$ 或 $V=f(\\mathbf{x})^T f(\\mathbf{x})$，利用雅可比矩阵性质</li>
+          <li><strong>变量梯度法</strong>：设 $\\nabla V=g(\\mathbf{x})$，通过积分构造 $V$，要求 $\\dot{V}$ 负定</li>
+        </ul>
 
         <h4 class="font-medium mt-6 mb-2">线性系统的 Lyapunov 方程</h4>
         <div class="formula-block">$$A^T P + PA = -Q$$</div>
@@ -8418,7 +8461,7 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
         <div class="formula-block">
           $$\\text{为什么需要三次握手？}$$
           防止已失效的连接请求报文到达服务器，导致错误连接。若只有两次握手，服务器收到迟到的 SYN 会误以为是新请求并分配资源。
-          <div class="text-sm text-gray-500 mt-2">TIME_WAIT 等待 2MSL（$2 \\times 60\\text{s}$）：确保最后的 ACK 到达 + 让旧连接的报文在网络中消亡</div>
+          <div class="text-sm text-gray-500 mt-2">TIME_WAIT 等待 2MSL：RFC 793 建议 MSL = 2 分钟，故 2MSL ≈ 4 分钟；Linux 默认约 60 秒。目的：确保最后的 ACK 到达 + 让旧连接的报文在网络中消亡</div>
         </div>
 
         <h4 class="font-medium mt-6 mb-2">滑动窗口与流量控制</h4>
@@ -8426,7 +8469,7 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           TCP 用<strong>滑动窗口</strong>实现流量控制，接收方通过 ACK 中的 <strong>窗口字段（rwnd）</strong> 告知发送方"我还能接收多少数据"。发送方的发送窗口 $\\leq$ 接收方通告的窗口值。
         </p>
         <div class="formula-block">
-          $$\\text{有效窗口} = \\min(\\text{发送窗口}, \\text{接收窗口 rwnd})$$
+          $$\\text{有效窗口} = \\min(\\text{拥塞窗口 cwnd}, \\text{接收窗口 rwnd})$$
           $$\\text{发送速率} \\leq \\frac{\\text{有效窗口}}{\\text{RTT}}$$
           <div class="text-sm text-gray-500 mt-2">零窗口探测：当 rwnd=0 时，发送方定期发送 1 字节探测报文</div>
         </div>
