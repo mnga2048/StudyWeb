@@ -5122,7 +5122,12 @@ const CourseData = {
 
         <h4 class="font-medium mt-6 mb-2">Ackermann 公式</h4>
         <div class="formula-block">$$K = \\begin{bmatrix} 0 & 0 & \\cdots & 1 \\end{bmatrix} \\mathcal{C}^{-1} \\alpha_d(A)$$</div>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">其中 $\\mathcal{C}$ 为能控性矩阵，$\\alpha_d(A)$ 为将期望特征多项式中的 $s$ 替换为 $A$。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">其中 $\\mathcal{C}$ 为能控性矩阵，$\\alpha_d(A)$ 为将期望特征多项式中的 $s$ 替换为 $A$。Ackermann 公式的本质是：先通过 $\\mathcal{C}^{-1}$ 将系统变换到能控标准形，再用期望系数直接构造增益。</p>
+
+        <h4 class="font-medium mt-6 mb-2">多输入系统的极点配置</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          对于多输入系统（$B$ 为 $n \\times m$ 矩阵，$m>1$），Ackermann 公式不再直接适用。此时需要将系统分解为 $m$ 个单输入子系统，逐个配置；或使用基于 QR 分解的通用算法。极点配置的自由度增加——同一组期望极点可以对应无穷多组增益矩阵 $K$。
+        </p>
 
         <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
           <li><strong>Step 1</strong>：验证系统完全能控（$\\text{rank}\\,\\mathcal{C}=n$）</li>
@@ -5167,7 +5172,9 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2"><strong>分离原理</strong>：控制器增益 $K$ 和观测器增益 $L$ 可以独立设计，互不影响。</p>
 
         <h4 class="font-medium mt-6 mb-2">降阶观测器</h4>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">若 $p$ 个输出可直接测量，则只需要估计 $n-p$ 个状态，降低计算量和实现复杂度。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">若 $p$ 个输出可直接测量，则只需要估计 $n-p$ 个状态，降低计算量和实现复杂度。降阶观测器将状态分为可直接测量部分 $\\mathbf{x}_a=C\\mathbf{y}$ 和不可测量部分 $\\mathbf{x}_b$，仅对 $\\mathbf{x}_b$ 设计观测器。</p>
+        <div class="formula-block">$$\\dot{\\hat{\\mathbf{x}}}_b = \\bar{A}_{22}\\hat{\\mathbf{x}}_b + \\bar{A}_{21}\\mathbf{y} + \\bar{B}_2\\mathbf{u} + L(\\dot{\\mathbf{y}} - \\bar{A}_{11}\\mathbf{y} - \\bar{A}_{12}\\hat{\\mathbf{x}}_b - \\bar{B}_1\\mathbf{u})$$</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">注意降阶观测器需要输出的导数 $\\dot{\\mathbf{y}}$，工程中可通过近似微分或状态变换避免。</p>
 
         <table class="compare-table">
           <thead><tr><th>比较维度</th><th>全阶观测器</th><th>降阶观测器</th></tr></thead>
@@ -5208,6 +5215,12 @@ const CourseData = {
 
         <h4 class="font-medium mt-6 mb-2">连续时间代数 Riccati 方程（CARE）</h4>
         <div class="formula-block">$$A^TP + PA - PBR^{-1}B^TP + Q = 0$$</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">这是一个关于 $P$ 的非线性矩阵方程。求解方法包括：</p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>Hamilton 矩阵法</strong>：构造 $\\mathcal{H}=\\begin{bmatrix}A & -BR^{-1}B^T \\\\ -Q & -A^T\\end{bmatrix}$，$P$ 为稳定不变子空间的投影</li>
+          <li><strong>迭代法</strong>：从 $P_0=0$ 开始，$P_{i+1}=(A^TP_i+P_iA-Q_d-P_iBR^{-1}B^TP_i)$ 的 Riccati 迭代</li>
+          <li><strong>Schur 分解法</strong>：数值计算中最常用，通过有序 Schur 分解提取稳定子空间</li>
+        </ul>
 
         <h4 class="font-medium mt-6 mb-2">最优控制律</h4>
         <div class="formula-block">$$\\mathbf{u}^*(t) = -K\\mathbf{x}(t), \\quad K = R^{-1}B^TP$$</div>
@@ -5279,6 +5292,11 @@ const CourseData = {
         <div class="info-box warning">⚠️ <strong>工程陷阱</strong>：$Q_n$ 和 $R_n$ 的选择对滤波性能影响巨大。$Q_n$ 设太小会导致滤波器"过度信任模型"；$R_n$ 设太小会放大噪声。实际中常通过实验调试来整定。</div>
         <div class="info-box info">📘 <strong>稳态 Kalman 滤波</strong>：当时不变系统满足能控能观条件时，$P_k$ 收敛到稳态值，Kalman 增益为常值，滤波器退化为固定增益的最优 Luenberger 观测器。</div>
 
+        <h4 class="font-medium mt-6 mb-2">扩展卡尔曼滤波（EKF）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          对于非线性系统 $\\dot{\\mathbf{x}}=f(\\mathbf{x},\\mathbf{u})$，EKF 通过在当前估计点线性化（计算雅可比矩阵 $F=\\frac{\\partial f}{\\partial \\mathbf{x}}$，$H=\\frac{\\partial h}{\\partial \\mathbf{x}}$），然后套用标准 Kalman 滤波公式。EKF 是自动驾驶、机器人定位中最常用的状态估计算法。
+        </p>
+
         <div class="step-list">
           <div class="step"><span class="step-num">1</span><div class="step-content"><strong>简化问题</strong><br>估计常量 $x$，测量 $y_k=x+v_k$，$A=C=1$</div></div>
           <div class="step"><span class="step-num">2</span><div class="step-content"><strong>初始化</strong><br>$\\hat{x}_0=0, P_0=100$（大不确定性）</div></div>
@@ -5295,6 +5313,9 @@ const CourseData = {
         <h4 class="font-medium mt-6 mb-2">连续到离散的转化（零阶保持器法）</h4>
         <div class="formula-block">$$G = e^{AT_s}, \\quad H = A^{-1}(G-I)B$$</div>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">其中 $T_s$ 为采样周期。离散状态方程：$\\mathbf{x}_{k+1} = G\\mathbf{x}_k + H\\mathbf{u}_k$</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          推导思路：在 $[kT_s, (k+1)T_s)$ 区间内假设 $\\mathbf{u}(t)=\\mathbf{u}_k$（常值），对连续状态方程积分得 $\\mathbf{x}((k+1)T_s)=e^{AT_s}\\mathbf{x}(kT_s)+\\int_0^{T_s}e^{A\\tau}Bd\\tau \\cdot \\mathbf{u}_k$。当 $A$ 可逆时，$\\int_0^{T_s}e^{A\\tau}Bd\\tau=A^{-1}(e^{AT_s}-I)B$。
+        </p>
 
         <h4 class="font-medium mt-6 mb-2">离散系统的基本解</h4>
         <div class="formula-block">$$\\mathbf{x}_k = G^k\\mathbf{x}_0 + \\sum_{i=0}^{k-1}G^{k-1-i}H\\mathbf{u}_i$$</div>
