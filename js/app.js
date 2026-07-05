@@ -92,9 +92,9 @@
     const iconHtml = CourseData.icons[section.icon] || '';
     const badge = section.badge ? `<span class="nav-badge ${section.badgeClass}">${section.badge}</span>` : '';
 
-    let html = `<div class="nav-section ${isOpen ? 'open' : ''}" onclick="toggleSectionGroup('${section.id}', this)">
-      <span class="nav-section-label">${iconHtml} ${section.label} ${badge}</span>
-      ${hasSections ? `<span class="flex items-center gap-1">
+    let html = `<div class="nav-section ${isOpen ? 'open' : ''}">
+      <span class="nav-section-label" onclick="navigateTo('${section.id}');event.stopPropagation();">${iconHtml} ${section.label} ${badge}</span>
+      ${hasSections ? `<span class="flex items-center gap-1" onclick="toggleSectionGroup('${section.id}', this.parentElement);event.stopPropagation();">
         <span class="nav-section-count">${data.sections.length}节</span>
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
       </span>` : ''}
