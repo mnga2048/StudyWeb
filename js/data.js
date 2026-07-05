@@ -33,6 +33,7 @@ const CourseData = {
       children: [
         { id: 'embedded-sys', label: '嵌入式系统' },
         { id: 'sensor', label: '传感器与检测' },
+        { id: 'robotics', label: '机器人学导论' },
       ]
     },
     {
@@ -94,6 +95,7 @@ const CourseData = {
       { id: 'cpp', title: 'C/C++ 程序设计', desc: 'C 语言核心、指针/内存、C++ OOP/模板/STL', icon: '⌨️', level: '应试+工程' },
       { id: 'os', title: '操作系统', desc: '进程/线程、内存管理、文件系统、死锁、RTOS', icon: '🖥️', level: '应试+工程' },
       { id: 'network', title: '计算机网络', desc: 'TCP/IP 协议栈、路由交换、工业网络与 ROS 通信', icon: '🌐', level: '应试+工程' },
+      { id: 'robotics', title: '机器人学导论', desc: 'DH 参数、正/逆运动学、雅可比、动力学、轨迹规划、力控制', icon: '🤖', level: '工程' },
     ],
   },
 
@@ -8903,13 +8905,815 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
     ],
   },
 
+  // ========== 机器人学导论 robo-01~robo-10 ==========
+  'robotics': {
+    title: '机器人学导论',
+    subtitle: '从运动学到动力学，从轨迹规划到力控制，系统掌握机器人学核心理论与工程方法',
+    icon: '🤖',
+    sections: [
+      // ===== robo-01 机器人学概述 =====
+      { id: 'robo-01', title: '机器人学概述', desc: '机器人定义、分类、自由度与坐标系基础', icon: '🤖', tags: ['核心', '入门'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">什么是机器人？</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          国际标准化组织（ISO）将工业机器人定义为：<strong>自动控制的、可重复编程的、多用途的、三轴或更多轴的操作机</strong>，能够通过编程完成搬运、焊接、装配等任务。更广义地说，机器人是能够感知环境、做出决策并执行动作的智能系统。本节建立机器人学的基本概念框架：分类体系、自由度分析、坐标系约定，为后续运动学和动力学的学习奠定基础。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">机器人的分类体系</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          从运动学结构角度，工业机器人主要分为以下几类，每类具有不同的工作空间形状和运动特性：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>类型</th><th>关节配置</th><th>工作空间</th><th>典型应用</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">关节型（Articulated）</td><td>6R（旋转关节串联）</td><td>球形/近球形</td><td>焊接、喷涂、装配</td></tr>
+            <tr><td class="font-medium">SCARA</td><td>RRP（两旋转+一平移）</td><td>圆柱形（水平面内）</td><td>装配、搬运</td></tr>
+            <tr><td class="font-medium">直角坐标型</td><td>PPP（三平移）</td><td>矩形</td><td>龙门加工、3D 打印</td></tr>
+            <tr><td class="font-medium">圆柱坐标型</td><td>RPP（旋转+两平移）</td><td>圆柱形</td><td>搬运、上下料</td></tr>
+            <tr><td class="font-medium">并联型（Delta）</td><td>3-RRR 等并联机构</td><td>倒锥形</td><td>高速分拣、包装</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">自由度（Degrees of Freedom）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          自由度是机器人学最基本的概念。一个刚体在三维空间中有 <strong>6 个自由度</strong>——3 个平移（沿 x、y、z 轴）和 3 个旋转（绕 x、y、z 轴），分别称为<strong>位置</strong>和<strong>姿态</strong>。工业机器人通常需要 6 个自由度才能使末端执行器到达任意位姿（位置+姿态）。
+        </p>
+        <div class="formula-block">
+          $$n_{dof} = \\sum_{i=1}^{k} f_i - \\text{约束数}$$
+          <div class="text-sm text-gray-500 mt-2">其中 $f_i$ 为第 $i$ 个关节的自由度（旋转关节 $f_i=1$，平移关节 $f_i=1$），$k$ 为关节数。无冗余约束时 $n_{dof} = k$。</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>冗余自由度</strong>：当 $n_{dof} > 6$ 时称为冗余机器人（如 7 轴协作机器人）。多余的自由度可用于避障、关节极限回避、优化灵巧度等，但逆运动学求解更复杂。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">坐标系与位姿描述</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          机器人学中需要描述物体的<strong>位置</strong>和<strong>姿态</strong>。位置用三维向量 $\\mathbf{p} = [p_x, p_y, p_z]^T$ 表示，姿态则需要一个旋转矩阵 $R \\in SO(3)$ 来描述。两者合称为<strong>位姿（Pose）</strong>，用齐次变换矩阵表示：
+        </p>
+        <div class="formula-block">
+          $$T = \\begin{bmatrix} R & \\mathbf{p} \\\\ \\mathbf{0}^T & 1 \\end{bmatrix} \\in SE(3)$$
+          <div class="text-sm text-gray-500 mt-2">$SE(3) = \\{T \\in \\mathbb{R}^{4\\times4} \\mid R^TR = I, \\det(R)=1\\}$ 是特殊欧氏群，包含所有刚体变换</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>旋转矩阵 R</strong>：$3 \\times 3$ 正交矩阵，满足 $R^TR = RR^T = I$，$\\det(R)=1$。3 列分别是基坐标系各轴在参考坐标系中的表示</li>
+          <li><strong>位置向量 p</strong>：从参考坐标系原点到物体坐标系原点的向量</li>
+          <li><strong>欧拉角</strong>：Roll-Pitch-Yaw（RPY）角、ZYZ 欧拉角等，用 3 个角度参数化姿态。注意存在万向节锁（Gimbal Lock）问题</li>
+          <li><strong>四元数</strong>：$q = [q_w, q_x, q_y, q_z]^T$，无万向节锁，计算效率高，常用于机器人姿态表示和插值</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">旋转的表示方法对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>表示方法</th><th>参数数量</th><th>优点</th><th>缺点</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">旋转矩阵 R</td><td>9（实际 3）</td><td>直观，组合方便</td><td>冗余，约束多</td></tr>
+            <tr><td class="font-medium">欧拉角</td><td>3</td><td>直观，易于理解</td><td>万向节锁，插值困难</td></tr>
+            <tr><td class="font-medium">轴角（Axis-Angle）</td><td>3</td><td>紧凑，无冗余</td><td>存在 $2\\pi$ 周期性</td></tr>
+            <tr><td class="font-medium">四元数</td><td>4</td><td>无锁、插值平滑、计算快</td><td>不直观，需归一化</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">机器人学的核心问题</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          机器人学的核心问题可以归纳为以下几个层次，从几何到动力再到智能：
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>运动学（Kinematics）</strong>：已知关节角，求末端位姿（<a href="javascript:void(0)" onclick="App.loadDetail('robo-03')">正运动学</a>）；或反之（<a href="javascript:void(0)" onclick="App.loadDetail('robo-04')">逆运动学</a>）。不涉及力和力矩</li>
+          <li><strong>动力学（Dynamics）</strong>：研究关节力矩与运动之间的关系，是<a href="javascript:void(0)" onclick="App.loadDetail('robo-07')">轨迹规划</a>和控制的基础</li>
+          <li><strong>轨迹规划（Trajectory Planning）</strong>：规划末端执行器或关节从起点到终点的运动路径</li>
+          <li><strong>控制（Control）</strong>：设计控制律使机器人按照期望轨迹运动，包括位置控制、<a href="javascript:void(0)" onclick="App.loadDetail('robo-09')">力控制</a>、混合控制</li>
+          <li><strong>感知与规划（Perception & Planning）</strong>：利用传感器获取环境信息，进行路径规划和决策</li>
+        </ul>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>学习路线</strong>：建议按"运动学 → 动力学 → 轨迹规划 → 控制"的顺序学习。运动学是后续所有内容的数学基础，务必先掌握 <a href="javascript:void(0)" onclick="App.loadDetail('robo-02')">DH 参数</a>和齐次变换。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>坐标系约定</strong>：不同教材的 DH 参数约定可能不同（标准 DH vs 改进 DH）。本书采用<strong>标准 DH 约定</strong>（Craig 版），注意连杆坐标系的 z 轴方向与关节轴对齐。</div>
+        </div>
+      ` },
+
+      // ===== robo-02 DH参数与齐次变换 =====
+      { id: 'robo-02', title: 'DH参数与齐次变换', desc: 'Denavit-Hartenberg 约定、连杆参数、齐次变换矩阵推导', icon: '📐', tags: ['核心', '高频考点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">用四个参数描述串联机构</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          串联机器人的运动学建模核心问题是：如何系统地描述相邻连杆之间的几何关系？1955 年，Denavit 和 Hartenberg 提出了一种标准化方法——<strong>DH 约定</strong>，只需 4 个参数即可完整描述相邻连杆坐标系之间的齐次变换。这是机器人运动学建模的基石，掌握 DH 参数是理解后续正/逆运动学的前提。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">标准 DH 约定的四个参数</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          对于相邻的两个关节轴 $z_{i-1}$ 和 $z_i$，四个 DH 参数定义如下：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>参数</th><th>符号</th><th>定义</th><th>类型</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">连杆长度</td><td>$a_i$</td><td>沿 $x_i$ 轴，从 $z_{i-1}$ 到 $z_i$ 的距离</td><td>常量</td></tr>
+            <tr><td class="font-medium">连杆扭角</td><td>$\\alpha_i$</td><td>绕 $x_i$ 轴，从 $z_{i-1}$ 到 $z_i$ 的角度</td><td>常量</td></tr>
+            <tr><td class="font-medium">连杆偏距</td><td>$d_i$</td><td>沿 $z_{i-1}$ 轴，从 $x_{i-1}$ 到 $x_i$ 的距离</td><td>关节变量（平移）</td></tr>
+            <tr><td class="font-medium">关节角度</td><td>$\\theta_i$</td><td>绕 $z_{i-1}$ 轴，从 $x_{i-1}$ 到 $x_i$ 的角度</td><td>关节变量（旋转）</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>标准 DH vs 改进 DH</strong>：标准 DH（Craig）的变换顺序为 $z$ 轴旋转 → $z$ 轴平移 → $x$ 轴平移 → $x$ 轴旋转；改进 DH（Spong）则先 $x$ 后 $z$。两者最终结果等价，但参数分配不同，使用时务必统一。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">DH 变换矩阵推导</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          从坐标系 $\\{i-1\\}$ 到坐标系 $\\{i\\}$ 的齐次变换由四步基本变换组成：
+        </p>
+        <div class="formula-block">
+          $$^{i-1}T_i = \\text{Rot}(z, \\theta_i) \\cdot \\text{Trans}(z, d_i) \\cdot \\text{Trans}(x, a_i) \\cdot \\text{Rot}(x, \\alpha_i)$$
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          展开后得到标准 DH 变换矩阵：
+        </p>
+        <div class="formula-block">
+          $$^{i-1}T_i = \\begin{bmatrix} c\\theta_i & -s\\theta_i c\\alpha_i & s\\theta_i s\\alpha_i & a_i c\\theta_i \\\\ s\\theta_i & c\\theta_i c\\alpha_i & -c\\theta_i s\\alpha_i & a_i s\\theta_i \\\\ 0 & s\\alpha_i & c\\alpha_i & d_i \\\\ 0 & 0 & 0 & 1 \\end{bmatrix}$$
+          <div class="text-sm text-gray-500 mt-2">简写：$c\\theta_i = \\cos\\theta_i$，$s\\theta_i = \\sin\\theta_i$，$c\\alpha_i = \\cos\\alpha_i$，$s\\alpha_i = \\sin\\alpha_i$</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>易错点</strong>：变换顺序<strong>不能</strong>调换！先旋转 $z$ 轴（$\\theta_i$），再沿 $z$ 轴平移（$d_i$），然后沿 $x$ 轴平移（$a_i$），最后旋转 $x$ 轴（$\\alpha_i$）。顺序错误会导致变换矩阵完全不对。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">DH 坐标系建立步骤</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          为串联机器人建立 DH 坐标系的标准化流程：
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：确定关节轴</strong>。标记所有关节轴 $z_0, z_1, \\ldots, z_{n-1}$。旋转关节的 $z$ 轴沿旋转轴方向。</div></div>
+          <div class="step-item"><div><strong>第二步：确定原点</strong>。坐标系 $\\{i\\}$ 的原点在关节轴 $z_i$ 与公垂线 $a_i$ 的交点上。若两轴相交，则原点在交点处。</div></div>
+          <div class="step-item"><div><strong>第三步：确定 $x_i$ 轴</strong>。沿公垂线方向，从 $z_{i-1}$ 指向 $z_i$。若两轴平行，$x_i$ 选择使 $d_i=0$ 的位置。</div></div>
+          <div class="step-item"><div><strong>第四步：确定 $y_i$ 轴</strong>。按右手法则 $y_i = z_i \\times x_i$。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：平面 2R 机械臂</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          考虑一个平面 2R 机械臂，两个连杆长度分别为 $a_1$ 和 $a_2$，两个旋转关节。DH 参数表如下：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>连杆 $i$</th><th>$\\alpha_i$</th><th>$a_i$</th><th>$d_i$</th><th>$\\theta_i$</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">1</td><td>$0$</td><td>$a_1$</td><td>$0$</td><td>$\\theta_1$</td></tr>
+            <tr><td class="font-medium">2</td><td>$0$</td><td>$a_2$</td><td>$0$</td><td>$\\theta_2$</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          代入 DH 变换矩阵（$\\alpha_i=0$ 时 $c\\alpha_i=1, s\\alpha_i=0$），简化为：
+        </p>
+        <div class="formula-block">
+          $$^0T_1 = \\begin{bmatrix} c_1 & -s_1 & 0 & a_1 c_1 \\\\ s_1 & c_1 & 0 & a_1 s_1 \\\\ 0 & 0 & 1 & 0 \\\\ 0 & 0 & 0 & 1 \\end{bmatrix}, \\quad ^1T_2 = \\begin{bmatrix} c_2 & -s_2 & 0 & a_2 c_2 \\\\ s_2 & c_2 & 0 & a_2 s_2 \\\\ 0 & 0 & 1 & 0 \\\\ 0 & 0 & 0 & 1 \\end{bmatrix}$$
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">齐次变换的性质</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>链式法则</strong>：$^0T_n = \\,^0T_1 \\cdot \,^1T_2 \\cdots \,^{n-1}T_n$，即从基座到末端的所有变换依次相乘</li>
+          <li><strong>逆变换</strong>：$T^{-1} = \\begin{bmatrix} R^T & -R^T\\mathbf{p} \\\\ \\mathbf{0}^T & 1 \\end{bmatrix}$，旋转部分取转置，平移部分取负</li>
+          <li><strong>变换的物理含义</strong>：$^{i-1}T_i$ 描述的是坐标系 $\\{i\\}$ 相对于坐标系 $\\{i-1\\}$ 的位姿</li>
+        </ul>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>记忆技巧</strong>：DH 矩阵的 4 列依次是"旋转列、旋转列、$z$ 轴方向列、位置列"。第 4 列 $[a_i c\\theta_i, a_i s\\theta_i, d_i, 1]^T$ 就是坐标系 $\\{i\\}$ 原点在 $\\{i-1\\}$ 中的坐标。</div>
+        </div>
+      ` },
+
+      // ===== robo-03 正运动学 =====
+      { id: 'robo-03', title: '正运动学', desc: '从关节空间到笛卡尔空间的映射，位姿计算实例', icon: '🎯', tags: ['核心', '高频考点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">正运动学：关节角 → 末端位姿</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          正运动学（Forward Kinematics, FK）是机器人运动学的起点。给定所有关节变量 $\\theta_1, \\theta_2, \\ldots, \\theta_n$ 的值，正运动学计算末端执行器相对于基座坐标系的位姿 $^0T_n$。这是机器人控制的基础——只有知道当前位置，才能规划如何到达目标位置。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">正运动学的数学本质</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          正运动学的核心就是将所有连杆的 DH 变换矩阵连乘：
+        </p>
+        <div class="formula-block">
+          $$^0T_n(\\theta_1, \\ldots, \\theta_n) = \\,^0T_1(\\theta_1) \\cdot \,^1T_2(\\theta_2) \\cdots \,^{n-1}T_n(\\theta_n)$$
+          <div class="text-sm text-gray-500 mt-2">结果是 $4\\times4$ 齐次变换矩阵，其中旋转部分 $R \\in SO(3)$ 描述姿态，平移部分 $\\mathbf{p} \\in \\mathbb{R}^3$ 描述位置</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          因此，正运动学是关节空间 $\\mathbb{R}^n$ 到笛卡尔空间 $SE(3)$ 的映射：
+        </p>
+        <div class="formula-block">
+          $$\\text{FK}: \\theta = [\\theta_1, \\ldots, \\theta_n]^T \\mapsto T = \\begin{bmatrix} R(\\theta) & \\mathbf{p}(\\theta) \\\\ \\mathbf{0}^T & 1 \\end{bmatrix}$$
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">完整计算实例：平面 2R 机械臂</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          对于<a href="javascript:void(0)" onclick="App.loadDetail('robo-02')">上节</a>的 2R 机械臂，末端位姿为：
+        </p>
+        <div class="formula-block">
+          $$^0T_2 = \\,^0T_1 \\cdot \,^1T_2 = \\begin{bmatrix} c_{12} & -s_{12} & 0 & a_1 c_1 + a_2 c_{12} \\\\ s_{12} & c_{12} & 0 & a_1 s_1 + a_2 s_{12} \\\\ 0 & 0 & 1 & 0 \\\\ 0 & 0 & 0 & 1 \\end{bmatrix}$$
+          <div class="text-sm text-gray-500 mt-2">其中 $c_{12} = \\cos(\\theta_1 + \\theta_2)$，$s_{12} = \\sin(\\theta_1 + \\theta_2)$</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          末端位置（前两行第 4 列）：
+        </p>
+        <div class="formula-block">
+          $$p_x = a_1 c_1 + a_2 c_{12}, \\quad p_y = a_1 s_1 + a_2 s_{12}$$
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          末端姿态角为 $\\phi = \\theta_1 + \\theta_2$（末端连杆相对于基座的旋转角度）。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">数值计算实例</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          设 $a_1 = 1.0\\text{m}$，$a_2 = 0.8\\text{m}$，$\\theta_1 = 30°$，$\\theta_2 = 45°$。计算末端位置：
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：计算三角函数值</strong>。$c_1 = \\cos 30° = 0.866$，$s_1 = \\sin 30° = 0.5$，$c_{12} = \\cos 75° = 0.259$，$s_{12} = \\sin 75° = 0.966$</div></div>
+          <div class="step-item"><div><strong>第二步：代入位置公式</strong>。$p_x = 1.0 \\times 0.866 + 0.8 \\times 0.259 = 0.866 + 0.207 = 1.073\\text{m}$</div></div>
+          <div class="step-item"><div><strong>第三步：代入位置公式</strong>。$p_y = 1.0 \\times 0.5 + 0.8 \\times 0.966 = 0.5 + 0.773 = 1.273\\text{m}$</div></div>
+          <div class="step-item"><div><strong>第四步：结果</strong>。末端位置 $\\mathbf{p} = [1.073, 1.273, 0]^T$ m，末端姿态角 $\\phi = 75°$。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">多关节串联的递推算法</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          对于 $n$ 自由度机器人，直接计算 $n$ 个矩阵相乘效率较低。实际编程中采用<strong>递推方法</strong>：
+        </p>
+        <div class="formula-block">
+          $$^0T_i = \\,^0T_{i-1} \\cdot \,^{i-1}T_i, \\quad i = 1, 2, \\ldots, n$$
+          <div class="text-sm text-gray-500 mt-2">每步只需一次 $4\\times4$ 矩阵乘法，总计算量 $O(n)$，比直接连乘 $n$ 个矩阵更高效</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">正运动学的性质与工作空间</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>确定性</strong>：给定一组关节角，末端位姿唯一确定（正运动学函数是确定的）</li>
+          <li><strong>非线性</strong>：FK 是关节角的非线性函数（三角函数嵌套）</li>
+          <li><strong>工作空间</strong>：所有关节角取遍可能值时，末端能到达的位置集合。$n \\ge 3$ 的机器人工作空间通常是三维体积</li>
+          <li><strong>灵巧工作空间</strong>：末端能以任意姿态到达的位置子集，通常小于全工作空间</li>
+        </ul>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>工程应用</strong>：正运动学是机器人示教器的基础——电机编码器读取关节角，FK 实时计算末端在笛卡尔空间的位置。ABB RobotStudio、ROS MoveIt 等工具都内置了 FK 模块。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>数值精度</strong>：递推计算时注意浮点误差累积。对于 $n > 6$ 的串联机器人，误差可能显著。建议使用双精度浮点数，并在关键步骤进行正交化修正。</div>
+        </div>
+      ` },
+
+      // ===== robo-04 逆运动学 =====
+      { id: 'robo-04', title: '逆运动学', desc: '解析法与数值法、多解问题、可达性判断', icon: '🔄', tags: ['核心', '高频考点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">逆运动学：末端位姿 → 关节角</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          逆运动学（Inverse Kinematics, IK）是机器人学中最核心也最困难的问题。给定期望的末端位姿 $T_{des}$，求解所有关节变量 $\\theta_1, \\ldots, \\theta_n$ 使得 $^0T_n(\\theta) = T_{des}$。与正运动学的"一键计算"不同，逆运动学涉及<strong>多解性、奇异性、可达性</strong>三大挑战。掌握 IK 是实现机器人路径规划和精确控制的前提。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">逆运动学的核心困难</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>非线性方程组</strong>：FK 是三角函数的非线性映射，逆映射没有通用解析解</li>
+          <li><strong>多解性</strong>：同一末端位姿可能对应多组关节角解（如肘部上/下两种构型）</li>
+          <li><strong>奇异性</strong>：在某些位形处，雅可比矩阵奇异，IK 无解或有无穷多解</li>
+          <li><strong>无解情况</strong>：目标位姿超出工作空间时无解</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">解析法（封闭解）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          对满足<strong>Pieper 准则</strong>的机器人（6 自由度、后三轴交于一点），可以用代数方法求得封闭解。关键技巧是利用几何关系分步求解：
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：求手腕中心</strong>。6R 机器人的后三个关节轴交于手腕中心点 $\\mathbf{p}_w$。已知末端位姿 $T$，手腕中心位置为 $\\mathbf{p}_w = \\mathbf{p}_{ee} - d_6 \\cdot \\mathbf{z}_6$。</div></div>
+          <div class="step-item"><div><strong>第二步：求前三个关节角</strong>（位置问题）。利用 $\\mathbf{p}_w$ 与 $\\theta_1, \\theta_2, \\theta_3$ 的几何关系求解。通常 $\\theta_1$ 可由 $\\text{atan2}(p_{wy}, p_{wx})$ 直接求得，$\\theta_2, \\theta_3$ 由余弦定理求得。</div></div>
+          <div class="step-item"><div><strong>第三步：求后三个关节角</strong>（姿态问题）。已知前三关节角后，计算 $^0T_3$，然后 $^3T_6 = (^0T_3)^{-1} \\cdot ^0T_6$。从 $^3T_6$ 中提取 $\\theta_4, \\theta_5, \\theta_6$（欧拉角分解）。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：平面 2R 机械臂的逆运动学</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          已知末端位置 $[p_x, p_y]^T$，求 $\\theta_1, \\theta_2$。由<a href="javascript:void(0)" onclick="App.loadDetail('robo-03')">正运动学</a>：
+        </p>
+        <div class="formula-block">
+          $$p_x = a_1 c_1 + a_2 c_{12}, \\quad p_y = a_1 s_1 + a_2 s_{12}$$
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          两端平方相加，利用 $c_{12}^2 + s_{12}^2 = 1$：
+        </p>
+        <div class="formula-block">
+          $$p_x^2 + p_y^2 = a_1^2 + a_2^2 + 2a_1 a_2 \\cos\\theta_2$$
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          解出 $\\theta_2$：
+        </p>
+        <div class="formula-block">
+          $$\\cos\\theta_2 = \\frac{p_x^2 + p_y^2 - a_1^2 - a_2^2}{2a_1 a_2} = D$$
+          $$\\theta_2 = \\pm \\arccos(D) \\quad (\\text{两个解：肘上/肘下})$$
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>可达性判断</strong>：$|D| > 1$ 时无解（目标点超出工作空间），$|D| = 1$ 时恰好一个解（工作空间边界），$|D| < 1$ 时两个解。解的存在条件为 $|p_x^2+p_y^2 - a_1^2 - a_2^2| \\le 2a_1 a_2$。</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          求得 $\\theta_2$ 后，$\\theta_1$ 为：
+        </p>
+        <div class="formula-block">
+          $$\\theta_1 = \\text{atan2}(p_y, p_x) - \\text{atan2}(a_2 s_2, a_1 + a_2 c_2)$$
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">数值法（迭代解）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          当机器人不满足 Pieper 准则或需要通用解时，采用基于<a href="javascript:void(0)" onclick="App.loadDetail('robo-05')">雅可比矩阵</a>的数值迭代法。最常用的是<strong>阻尼最小二乘法（DLS）</strong>：
+        </p>
+        <div class="formula-block">
+          $$\\Delta\\theta = J^T(JJ^T + \\lambda^2 I)^{-1} \\mathbf{e}$$
+          <div class="text-sm text-gray-500 mt-2">$J$ 为雅可比矩阵，$\\mathbf{e}$ 为位姿误差，$\\lambda$ 为阻尼因子（避免奇异性附近数值爆炸）</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">多解选择策略</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>策略</th><th>原理</th><th>适用场景</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">最近关节角</td><td>选择与当前关节角差值最小的解</td><td>连续运动控制</td></tr>
+            <tr><td class="font-medium">避障</td><td>检查各解对应构型是否碰撞</td><td>复杂环境作业</td></tr>
+            <tr><td class="font-medium">关节极限回避</td><td>选择远离关节限位的解</td><td>提高灵活性</td></tr>
+            <tr><td class="font-medium">灵巧度优化</td><td>选择条件数最小的解</td><td>精密装配</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>Pieper 准则</strong>：6 自由度机器人后三轴（手腕）交于一点时，位置问题和姿态问题可以分离求解。大多数工业机器人（UR、KUKA、ABB）都满足此准则。不满足时只能用数值法。</div>
+        </div>
+      ` },
+
+      // ===== robo-05 雅可比矩阵与奇异性 =====
+      { id: 'robo-05', title: '雅可比矩阵与奇异性', desc: '速度映射、奇异位形分析、灵巧度指标', icon: '📊', tags: ['核心', '高频考点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">雅可比矩阵：关节速度到末端速度的桥梁</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          雅可比矩阵（Jacobian Matrix）是连接关节空间速度和笛卡尔空间速度的线性映射。它不仅在速度分析中不可或缺，还是<a href="javascript:void(0)" onclick="App.loadDetail('robo-04')">逆运动学</a>数值解法、<a href="javascript:void(0)" onclick="App.loadDetail('robo-09')">力控制</a>和奇异性分析的核心工具。理解雅可比矩阵的结构和性质，是深入机器人学的关键一步。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">雅可比矩阵的定义</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          对于 $n$ 自由度机器人，末端执行器的广义速度 $\\mathbf{\\dot{x}} \\in \\mathbb{R}^6$（3 线速度 + 3 角速度）与关节速度 $\\dot{\\theta} \\in \\mathbb{R}^n$ 的关系为：
+        </p>
+        <div class="formula-block">
+          $$\\mathbf{\\dot{x}} = J(\\theta) \\, \\dot{\\theta}$$
+          <div class="text-sm text-gray-500 mt-2">$J \\in \\mathbb{R}^{6 \\times n}$ 为雅可比矩阵，$J$ 的元素是 $\\theta$ 的函数，随位形变化</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          对于旋转关节 $i$，雅可比矩阵第 $i$ 列为：
+        </p>
+        <div class="formula-block">
+          $$J_i = \\begin{bmatrix} \\mathbf{z}_{i-1} \\times (\\mathbf{p}_n - \\mathbf{p}_{i-1}) \\\\ \\mathbf{z}_{i-1} \\end{bmatrix} \\quad (\\text{旋转关节})$$
+          <div class="text-sm text-gray-500 mt-2">$\\mathbf{z}_{i-1}$：关节 $i$ 的旋转轴方向，$\\mathbf{p}_{i-1}$：关节 $i$ 原点位置，$\\mathbf{p}_n$：末端位置</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          对于平移关节 $i$：
+        </p>
+        <div class="formula-block">
+          $$J_i = \\begin{bmatrix} \\mathbf{z}_{i-1} \\\\ \\mathbf{0} \\end{bmatrix} \\quad (\\text{平移关节})$$
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">雅可比矩阵的物理含义</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>第 $i$ 列</strong>：仅第 $i$ 个关节运动（其他关节锁定）时，末端的广义速度</li>
+          <li><strong>第 $i$ 行</strong>：所有关节运动对末端第 $i$ 个速度分量的贡献</li>
+          <li><strong>线速度部分</strong>（前 3 行）：描述末端线速度 $\\mathbf{v} = J_v \\dot{\\theta}$</li>
+          <li><strong>角速度部分</strong>（后 3 行）：描述末端角速度 $\\omega = J_\\omega \\dot{\\theta}$</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">奇异位形（Singularity）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          当雅可比矩阵 $J$ 的秩小于 $\\min(6, n)$ 时，机器人处于<strong>奇异位形</strong>。此时机器人在某些笛卡尔方向上失去运动能力，逆运动学可能出现无穷多解或无解。
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>奇异类型</th><th>条件</th><th>物理含义</th><th>实例</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">边界奇异</td><td>手臂完全伸展或完全折叠</td><td>径向方向无法运动</td><td>2R 机械臂完全伸直</td></tr>
+            <tr><td class="font-medium">内部奇异</td><td>关节轴共线或平行</td><td>某些方向失去自由度</td><td>手腕三轴共线（万向节锁）</td></tr>
+            <tr><td class="font-medium">构型奇异</td><td>特定关节角组合</td><td>方向退化</td><td>两关节轴平行时</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>工程危害</strong>：奇异位形处，有限的末端力/力矩可能需要无限大的关节力矩（$\\tau = J^T F$）。机器人控制器在奇异位形附近可能产生剧烈振动甚至失控。路径规划必须避免穿越奇异位形。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">奇异性的代数判据</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          奇异性等价于 $\\det(JJ^T) = 0$（方阵情况）或 $JJ^T$ 的最小特征值趋于零。对于非方阵（$n \\ne 6$），用 $\\text{rank}(J) < \\min(6,n)$ 判断。
+        </p>
+        <div class="formula-block">
+          $$\\text{det}(J) = 0 \\iff \\text{奇异位形}$$
+          <div class="text-sm text-gray-500 mt-2">对于 $n < 6$ 的欠驱动机器人（如 3R），$J$ 是 $6 \\times 3$ 矩阵，用 $J^TJ$ 的行列式判断</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">灵巧度指标</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          为了量化机器人在当前位形下的运动能力，引入灵巧度指标。最常用的是<strong>条件数</strong>：
+        </p>
+        <div class="formula-block">
+          $$\\kappa(J) = \\|J\\| \\cdot \\|J^{-1}\\| = \\frac{\\sigma_{max}}{\\sigma_{min}}$$
+          <div class="text-sm text-gray-500 mt-2">$\\sigma_{max}, \\sigma_{min}$ 为 $J$ 的最大/最小奇异值。$\\kappa = 1$ 时最灵巧（各方向运动能力均匀），$\\kappa \\to \\infty$ 时趋于奇异</div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：雅可比矩阵的奇异性分析与<a href="javascript:void(0)" onclick="App.loadDetail('mct-04')">现代控制理论中的能控性</a>有深刻联系——两者都描述系统在某一点的"能力丧失"。条件数在<a href="javascript:void(0)" onclick="App.loadDetail('la-06')">线性代数特征值</a>分析中有广泛应用。</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>力的映射</strong>：由虚功原理，末端广义力 $\\mathbf{F}$ 与关节力矩 $\\tau$ 的关系为 $\\tau = J^T \\mathbf{F}$。这是力控制的理论基础——见<a href="javascript:void(0)" onclick="App.loadDetail('robo-09')">力控制与阻抗控制</a>。</div>
+        </div>
+      ` },
+
+      // ===== robo-06 机器人动力学基础 =====
+      { id: 'robo-06', title: '机器人动力学基础', desc: '牛顿-欧拉法、递推动力学、力矩计算', icon: '⚡', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">动力学：力矩与运动的关系</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          机器人动力学研究关节力矩 $\\tau$ 与关节运动 $\\theta, \\dot{\\theta}, \\ddot{\\theta}$ 之间的关系。与<a href="javascript:void(0)" onclick="App.loadDetail('robo-03')">运动学</a>只关心"几何位置"不同，动力学关注"需要多大力才能产生这个运动"。动力学模型是<a href="javascript:void(0)" onclick="App.loadDetail('robo-10')">机器人控制器设计</a>和仿真验证的数学基础。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">动力学方程的一般形式</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          $n$ 自由度机器人的动力学方程可以写成如下紧凑形式：
+        </p>
+        <div class="formula-block">
+          $$\\tau = M(\\theta)\\ddot{\\theta} + C(\\theta, \\dot{\\theta})\\dot{\\theta} + G(\\theta) + F(\\dot{\\theta})$$
+          <div class="text-sm text-gray-500 mt-2">$M(\\theta)$：惯量矩阵（$n \\times n$ 正定），$C(\\theta,\\dot{\\theta})$：科氏力与离心力矩阵，$G(\\theta)$：重力项，$F(\\dot{\\theta})$：摩擦力项</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>惯量矩阵 $M(\\theta)$</strong>：描述系统的惯性特性，对称正定。$M_{ij}$ 表示关节 $j$ 的加速度对关节 $i$ 力矩的贡献</li>
+          <li><strong>科氏力与离心力 $C(\\theta,\\dot{\\theta})$</strong>：描述关节运动产生的耦合力。科氏力与速度乘积成正比，离心力与速度平方成正比</li>
+          <li><strong>重力项 $G(\\theta)$</strong>：各关节克服重力所需的静态力矩</li>
+          <li><strong>摩擦力 $F(\\dot{\\theta})$</strong>：通常建模为库仑摩擦 + 粘性摩擦 $F = F_c \\text{sgn}(\\dot{\\theta}) + F_v \\dot{\\theta}$</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">牛顿-欧拉递推法</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          牛顿-欧拉法是一种<strong>递推</strong>算法，从基座到末端（外推）计算速度和加速度，再从末端到基座（内推）计算力和力矩。计算复杂度 $O(n)$，是最高效的动力学算法。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>外推（从基座到末端）$i = 1 \\to n$</strong>：递推计算每个连杆的角速度 $\\omega_i$、线加速度 $\\dot{v}_i$、质心加速度 $\\dot{v}_{c_i}$。利用递推公式，每步只涉及当前连杆和上一连杆的量。</div></div>
+          <div class="step-item"><div><strong>计算惯性力</strong>：利用牛顿方程 $f_i = m_i \\dot{v}_{c_i}$ 和欧拉方程 $n_i = I_i \\dot{\\omega}_i + \\omega_i \\times I_i \\omega_i$，计算每个连杆的惯性力和力矩。</div></div>
+          <div class="step-item"><div><strong>内推（从末端到基座）$i = n \\to 1$</strong>：递推计算关节力 $f_i$ 和关节力矩 $n_i$，最终得到关节力矩 $\\tau_i = n_i^T z_{i-1}$（旋转关节）或 $\\tau_i = f_i^T z_{i-1}$（平移关节）。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">递推公式详解</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          外推步骤中，连杆 $i$ 的角速度和加速度递推关系：
+        </p>
+        <div class="formula-block">
+          $$\\omega_i = \,^{i-1}R_i^T \\omega_{i-1} + \\dot{\\theta}_i \\mathbf{z}_0$$
+          $$\\dot{\\omega}_i = \,^{i-1}R_i^T \\dot{\\omega}_{i-1} + \,^{i-1}R_i^T \\omega_{i-1} \\times \\dot{\\theta}_i \\mathbf{z}_0 + \\ddot{\\theta}_i \\mathbf{z}_0$$
+          $$\\dot{v}_i = \,^{i-1}R_i^T (\\dot{v}_{i-1} + \\dot{\\omega}_{i-1} \\times \,^{i-1}p_i + \\omega_{i-1} \\times (\\omega_{i-1} \\times \,^{i-1}p_i))$$
+          <div class="text-sm text-gray-500 mt-2">$^{i-1}R_i$：相邻连杆坐标系的旋转矩阵，$^{i-1}p_i$：坐标系原点偏移，$\\mathbf{z}_0 = [0,0,1]^T$</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>计算效率对比</strong>：拉格朗日法（见<a href="javascript:void(0)" onclick="App.loadDetail('robo-07')">拉格朗日动力学</a>）计算量 $O(n^4)$（直接展开），而牛顿-欧拉递推法仅 $O(n)$。对于 6 轴工业机器人，NE 法快约 100 倍，是实时控制的首选。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">动力学方程的关键性质</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>正定性</strong>：$M(\\theta)$ 始终对称正定（物理意义：惯性永远为正）</li>
+          <li><strong>反对称性</strong>：$\\dot{M} - 2C$ 是反对称矩阵（$\\mathbf{x}^T(\\dot{M}-2C)\\mathbf{x} = 0$），这一性质在稳定性证明中至关重要</li>
+          <li><strong>有界性</strong>：$M(\\theta)$ 的特征值在紧集上有上下界，$0 < \\lambda_{min} I \\le M(\\theta) \\le \\lambda_{max} I$</li>
+          <li><strong>线性参数化</strong>：动力学方程可以写成 $\\tau = Y(\\theta,\\dot{\\theta},\\ddot{\\theta}) \\, \\mathbf{p}$，其中 $Y$ 为回归矩阵，$\\mathbf{p}$ 为惯性参数向量。这是自适应控制的基础</li>
+        </ul>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：动力学方程中的惯量矩阵 $M(\\theta)$ 与<a href="javascript:void(0)" onclick="App.loadDetail('la-06')">线性代数中的特征值分析</a>密切相关——$M$ 的特征值决定了各方向的惯性大小。$\\dot{M} - 2C$ 的反对称性在<a href="javascript:void(0)" onclick="App.loadDetail('mct-05')">现代控制稳定性分析</a>中也有应用。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>建模注意事项</strong>：实际机器人还需考虑关节柔性（减速器弹性）、齿隙、传感器噪声等因素。简化模型（忽略摩擦、假设刚性连杆）在高速运动时误差显著，需要摩擦补偿和柔性补偿。</div>
+        </div>
+      ` },
+
+      // ===== robo-07 拉格朗日动力学 =====
+      { id: 'robo-07', title: '拉格朗日动力学', desc: '能量法建模、拉格朗日方程、二连杆实例', icon: '🔋', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">能量法：从标量函数推导动力学方程</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          拉格朗日力学提供了一种优雅的动力学建模方法——通过系统的<strong>动能</strong>和<strong>势能</strong>标量函数推导运动方程，无需分析每个连杆的约束力。拉格朗日方程是分析力学的核心成果，在机器人动力学建模中具有重要的理论价值，虽然计算效率不如<a href="javascript:void(0)" onclick="App.loadDetail('robo-06')">牛顿-欧拉递推法</a>，但其解析形式对控制器设计和稳定性分析非常有用。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">拉格朗日方程</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          定义<strong>拉格朗日函数</strong> $L = T - V$（动能减势能），则 $n$ 自由度机器人的运动方程为：
+        </p>
+        <div class="formula-block">
+          $$\\frac{d}{dt}\\frac{\\partial L}{\\partial \\dot{\\theta}_i} - \\frac{\\partial L}{\\partial \\theta_i} = \\tau_i, \\quad i = 1, 2, \\ldots, n$$
+          <div class="text-sm text-gray-500 mt-2">$T$：系统总动能，$V$：系统总势能，$\\tau_i$：第 $i$ 个关节的广义力（力矩）</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          这 $n$ 个方程联立就是完整的动力学方程。关键在于正确计算动能 $T$ 和势能 $V$。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">动能与势能的计算</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          第 $i$ 个连杆的动能包括平动和转动两部分：
+        </p>
+        <div class="formula-block">
+          $$T_i = \\frac{1}{2} m_i \\mathbf{v}_{c_i}^T \\mathbf{v}_{c_i} + \\frac{1}{2} \\omega_i^T I_i \\omega_i$$
+          <div class="text-sm text-gray-500 mt-2">$m_i$：连杆质量，$\\mathbf{v}_{c_i}$：质心速度，$I_i$：连杆 $i$ 关于质心的惯量矩阵，$\\omega_i$：角速度</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          质心速度 $\\mathbf{v}_{c_i}$ 和角速度 $\\omega_i$ 都是关节速度 $\\dot{\\theta}$ 的函数（通过<a href="javascript:void(0)" onclick="App.loadDetail('robo-05')">雅可比矩阵</a>），因此动能可以整理为：
+        </p>
+        <div class="formula-block">
+          $$T = \\frac{1}{2} \\dot{\\theta}^T M(\\theta) \\dot{\\theta}$$
+          <div class="text-sm text-gray-500 mt-2">$M(\\theta)$ 就是<a href="javascript:void(0)" onclick="App.loadDetail('robo-06')">动力学方程</a>中的惯量矩阵，是所有连杆动能贡献的总和</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          势能（仅考虑重力）：
+        </p>
+        <div class="formula-block">
+          $$V = \\sum_{i=1}^{n} m_i \\mathbf{g}^T \\mathbf{p}_{c_i}$$
+          <div class="text-sm text-gray-500 mt-2">$\\mathbf{g}$：重力加速度向量，$\\mathbf{p}_{c_i}$：连杆 $i$ 质心位置</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：平面 2R 机械臂</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          设两个连杆质量分别为 $m_1, m_2$，长度 $l_1, l_2$，质心在连杆中点，绕质心的转动惯量 $I_1, I_2$。系统动能为：
+        </p>
+        <div class="formula-block">
+          $$T = \\frac{1}{2}(m_1 l_{c1}^2 + I_1 + m_2(l_1^2 + l_{c2}^2 + 2l_1 l_{c2} c_2) + I_2)\\dot{\\theta}_1^2 + \\frac{1}{2}(m_2 l_{c2}^2 + I_2)\\dot{\\theta}_2^2 + (m_2 l_1 l_{c2} c_2 + m_2 l_{c2}^2 + I_2)\\dot{\\theta}_1\\dot{\\theta}_2$$
+          <div class="text-sm text-gray-500 mt-2">$l_{c1}, l_{c2}$：各连杆质心到关节的距离，$c_2 = \\cos\\theta_2$</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          代入拉格朗日方程，得到惯量矩阵：
+        </p>
+        <div class="formula-block">
+          $$M_{11} = m_1 l_{c1}^2 + m_2(l_1^2 + l_{c2}^2 + 2l_1 l_{c2} c_2) + I_1 + I_2$$
+          $$M_{12} = M_{21} = m_2(l_{c2}^2 + l_1 l_{c2} c_2) + I_2$$
+          $$M_{22} = m_2 l_{c2}^2 + I_2$$
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          注意 $M_{11}$ 和 $M_{12}$ 都含有 $\\cos\\theta_2$ 项——惯量矩阵随位形变化，体现了机器人的非线性特性。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">科氏力与离心力</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          对动能求偏导并代入拉格朗日方程，科氏力与离心力矩阵的元素为：
+        </p>
+        <div class="formula-block">
+          $$c_{ijk} = \\frac{1}{2}\\left(\\frac{\\partial M_{kj}}{\\partial \\theta_i} + \\frac{\\partial M_{ki}}{\\partial \\theta_j} - \\frac{\\partial M_{ij}}{\\partial \\theta_k}\\right)$$
+          <div class="text-sm text-gray-500 mt-2">$c_{ijk}$ 称为 Christoffel 符号，$C_{kj} = \\sum_i c_{ijk} \\dot{\\theta}_i$</div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>拉格朗日法 vs 牛顿-欧拉法</strong>：拉格朗日法得到的是解析形式的方程（适合理论分析），NE 法得到的是数值递推算法（适合实时计算）。控制器设计通常用拉格朗日形式，实时控制用 NE 算法。</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>线性参数化</strong>：拉格朗日法的一个重要推论是动力学方程可以写成 $\\tau = Y \\mathbf{p}$，其中 $\\mathbf{p}$ 包含所有惯性参数（质量、惯量矩、质心位置等）。这在<a href="javascript:void(0)" onclick="App.loadDetail('robo-10')">自适应控制</a>中用于在线辨识惯性参数。</div>
+        </div>
+      ` },
+
+      // ===== robo-08 轨迹规划 =====
+      { id: 'robo-08', title: '轨迹规划', desc: '关节空间规划、笛卡尔空间规划、时间最优轨迹', icon: '📍', tags: ['核心', '高频考点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">轨迹规划：让机器人运动既平滑又高效</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          轨迹规划（Trajectory Planning）是在已知起点和终点的情况下，规划机器人运动的时间函数 $\\theta(t)$。好的轨迹应该满足：<strong>连续性</strong>（无突变）、<strong>平滑性</strong>（速度/加速度连续）、<strong>可达性</strong>（不超出关节限位）、<strong>最优性</strong>（时间最短或能耗最低）。轨迹规划是<a href="javascript:void(0)" onclick="App.loadDetail('robo-10')">机器人控制</a>的前置环节——控制器按照规划好的轨迹执行运动。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">关节空间 vs 笛卡尔空间规划</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>关节空间规划</th><th>笛卡尔空间规划</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">规划对象</td><td>关节角 $\\theta(t)$</td><td>末端位姿 $T(t)$</td></tr>
+            <tr><td class="font-medium">路径形状</td><td>不直观（关节空间曲线）</td><td>直观（直线/圆弧）</td></tr>
+            <tr><td class="font-medium">计算复杂度</td><td>低（直接插值）</td><td>高（需实时 IK 求解）</td></tr>
+            <tr><td class="font-medium">奇异性</td><td>不涉及</td><td>可能遇到奇异点</td></tr>
+            <tr><td class="font-medium">适用场景</td><td>点到点运动（PTP）</td><td>连续路径运动（CP）</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">三次多项式插值</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          最基本的关节空间轨迹规划方法。给定起点 $\\theta_0$、终点 $\\theta_f$、起止速度为零，用三次多项式：
+        </p>
+        <div class="formula-block">
+          $$\\theta(t) = a_0 + a_1 t + a_2 t^2 + a_3 t^3$$
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          四个边界条件 $\\theta(0)=\\theta_0$，$\\theta(t_f)=\\theta_f$，$\\dot{\\theta}(0)=0$，$\\dot{\\theta}(t_f)=0$ 唯一确定系数：
+        </p>
+        <div class="formula-block">
+          $$a_0 = \\theta_0, \\quad a_1 = 0, \\quad a_2 = \\frac{3(\\theta_f - \\theta_0)}{t_f^2}, \\quad a_3 = \\frac{-2(\\theta_f - \\theta_0)}{t_f^3}$$
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">五次多项式插值</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          当需要控制加速度连续（避免冲击）时，使用五次多项式。六个边界条件（起止位置、速度、加速度）：
+        </p>
+        <div class="formula-block">
+          $$\\theta(t) = a_0 + a_1 t + a_2 t^2 + a_3 t^3 + a_4 t^4 + a_5 t^5$$
+        </div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>边界条件</strong>：$\\theta(0)=\\theta_0$，$\\theta(t_f)=\\theta_f$，$\\dot{\\theta}(0)=\\dot{\\theta}_0$，$\\dot{\\theta}(t_f)=\\dot{\\theta}_f$，$\\ddot{\\theta}(0)=\\ddot{\\theta}_0$，$\\ddot{\\theta}(t_f)=\\ddot{\\theta}_f$</div></div>
+          <div class="step-item"><div><strong>求解</strong>：六个方程解六个未知数，得到唯一的五次多项式系数。MATLAB/Python 中可用矩阵求逆一次性计算。</div></div>
+          <div class="step-item"><div><strong>特点</strong>：加速度连续，运动无冲击。但计算量比三次多项式稍大。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">抛物线过渡线性插值（梯形速度曲线）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          工业机器人最常用的轨迹规划方法。运动分为三段：匀加速 → 匀速 → 匀减速，对应速度曲线为梯形：
+        </p>
+        <div class="formula-block">
+          $$\\text{加速段：} \\theta(t) = \\theta_0 + \\frac{1}{2} a_{max} t^2$$
+          $$\\text{匀速段：} \\theta(t) = \\theta_{acc} + v_{max}(t - t_{acc})$$
+          $$\\text{减速段：} \\theta(t) = \\theta_f - \\frac{1}{2} a_{max}(t_f - t)^2$$
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>梯形速度曲线</strong>：加速度恒定（加速段正、减速段负），匀速段加速度为零。优点：计算简单、速度可控。缺点：加速度不连续（有"拐点"），高速运动时产生振动。S 曲线（加加速度受限）可以解决此问题。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">笛卡尔空间直线插值</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          末端沿直线从 $T_{start}$ 运动到 $T_{end}$。位置用线性插值，姿态用四元数球面线性插值（SLERP）：
+        </p>
+        <div class="formula-block">
+          $$\\mathbf{p}(s) = (1-s)\\mathbf{p}_{start} + s \\cdot \\mathbf{p}_{end}, \\quad s \\in [0,1]$$
+          $$q(s) = \\frac{\\sin((1-s)\\Omega)}{\\sin\\Omega} q_{start} + \\frac{\\sin(s\\Omega)}{\\sin\\Omega} q_{end}$$
+          <div class="text-sm text-gray-500 mt-2">$s$ 为归一化时间参数，$\\Omega$ 为两四元数之间的夹角。SLERP 保证姿态插值匀速且无万向节锁</div>
+        </div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>避奇异策略</strong>：笛卡尔直线插值需要在每个时间步求解逆运动学。若路径经过奇异位形，需采用<a href="javascript:void(0)" onclick="App.loadDetail('robo-05')">阻尼最小二乘法</a>或路径扰动法避开奇异点。</div>
+        </div>
+      ` },
+
+      // ===== robo-09 力控制与阻抗控制 =====
+      { id: 'robo-09', title: '力控制与阻抗控制', desc: '力/位混合控制、阻抗模型、柔顺操作', icon: '🤲', tags: ['核心', '高频考点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">超越纯位置控制：机器人与环境的交互</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          传统的<a href="javascript:void(0)" onclick="App.loadDetail('robo-10')">位置控制</a>假设机器人在自由空间运动，不与环境接触。但在装配、打磨、医疗手术等应用中，机器人必须与环境产生力交互。纯位置控制在接触时会产生巨大的接触力，可能损坏工件或机器人。力控制和阻抗控制是解决这一问题的两大范式。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">力控制的基本原理</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          力控制的目标是使末端执行器施加期望的力 $F_d$。利用<a href="javascript:void(0)" onclick="App.loadDetail('robo-05')">雅可比矩阵</a>的力映射关系：
+        </p>
+        <div class="formula-block">
+          $$\\tau = J^T F_d + \\hat{\\tau}_{ff}$$
+          <div class="text-sm text-gray-500 mt-2">$J^T F_d$：将期望末端力映射为关节力矩，$\\hat{\\tau}_{ff}$：前馈力矩（补偿重力、摩擦等）</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          力误差通过力控制器（通常为 PI 控制器）修正：
+        </p>
+        <div class="formula-block">
+          $$F_e = F_d - F_{measured}, \\quad \\tau_{fb} = K_F F_e + K_I \\int F_e \\, dt$$
+          <div class="text-sm text-gray-500 mt-2">$K_F$：力增益，$K_I$：力积分增益。力传感器安装在末端执行器上，实时测量接触力</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">力/位混合控制</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          实际任务中，某些方向需要控制力（如沿接触面法线方向），某些方向需要控制位置（如沿接触面切线方向）。<strong>力/位混合控制</strong>将任务空间分为力控制子空间和位置控制子空间：
+        </p>
+        <div class="formula-block">
+          $$\\tau = J^T(S \\cdot F_d + (I - S) \\cdot K_p(x_d - x)) + \\hat{\\tau}_{ff}$$
+          <div class="text-sm text-gray-500 mt-2">$S$：选择矩阵（对角阵，1=力控制方向，0=位置控制方向），$K_p$：位置增益</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>典型应用</strong>：表面打磨——法线方向力控制（保持恒定接触力），切线方向位置控制（沿路径运动）。装配——插入方向力控制（避免卡死），径向位置控制。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">阻抗控制</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          阻抗控制不直接控制力或位置，而是控制机器人末端的<strong>动态行为</strong>——使其表现得像一个质量-弹簧-阻尼系统。给定期望阻抗模型：
+        </p>
+        <div class="formula-block">
+          $$M_d \\ddot{x} + B_d \\dot{x} + K_d(x - x_d) = F_{ext}$$
+          <div class="text-sm text-gray-500 mt-2">$M_d$：期望惯量，$B_d$：期望阻尼，$K_d$：期望刚度，$F_{ext}$：外部接触力</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          控制律设计为：
+        </p>
+        <div class="formula-block">
+          $$\\tau = M(\\theta)\\ddot{\\theta}_d + C\\dot{\\theta}_d + G + J^T(M_d^{-1}(F_{ext} - B_d \\dot{e} - K_d e))$$
+          <div class="text-sm text-gray-500 mt-2">其中 $e = x - x_d$ 为位姿误差。利用<a href="javascript:void(0)" onclick="App.loadDetail('robo-06')">动力学模型</a>计算前馈力矩，实现解耦</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">阻抗控制 vs 导纳控制</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>阻抗控制</th><th>导纳控制</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">输入</td><td>位置误差 → 输出力</td><td>测量力 → 输出位置</td></tr>
+            <tr><td class="font-medium">实现方式</td><td>力矩控制模式</td><td>位置控制模式</td></tr>
+            <tr><td class="font-medium">硬件要求</td><td>力矩可控的关节电机</td><td>力传感器 + 位置控制器</td></tr>
+            <tr><td class="font-medium">刚性环境</td><td>✅ 稳定</td><td>⚠️ 可能不稳定</td></tr>
+            <tr><td class="font-medium">柔性环境</td><td>⚠️ 可能不稳定</td><td>✅ 稳定</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>稳定性注意事项</strong>：阻抗控制的稳定性取决于环境刚度与控制器参数的匹配。环境刚度远大于 $K_d$ 时系统稳定；环境刚度与 $K_d$ 相当时可能出现振荡。实际调试中需根据环境特性调整 $M_d, B_d, K_d$。</div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：阻抗控制模型 $M_d \\ddot{x} + B_d \\dot{x} + K_d x = F$ 本质上是一个<a href="javascript:void(0)" onclick="App.loadDetail('circ-05')">二阶系统</a>，其阻尼比和自然频率决定了接触动态。$B_d = 2\\zeta\\sqrt{M_d K_d}$ 可以直接套用二阶系统的分析结论。</div>
+        </div>
+      ` },
+
+      // ===== robo-10 机器人控制系统设计 =====
+      { id: 'robo-10', title: '机器人控制系统设计', desc: 'PID 控制、计算力矩法、自适应控制', icon: '🎛️', tags: ['核心', '高频考点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">从理论到工程：机器人控制器设计</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          机器人控制系统的目标是使各关节精确跟踪期望轨迹 $\\theta_d(t)$。由于机器人动力学是高度非线性、强耦合的系统，简单的 PID 控制在高速运动时性能不足。本节介绍从独立关节 PID 到基于模型的计算力矩法，再到自适应控制的演进路线，覆盖工业机器人和协作机器人的主流控制策略。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">独立关节 PID 控制</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          最简单的机器人控制方法：将每个关节视为独立的单输入单输出系统，分别设计 PID 控制器：
+        </p>
+        <div class="formula-block">
+          $$\\tau_i = K_{p_i}(\\theta_{d_i} - \\theta_i) + K_{I_i} \\int(\\theta_{d_i} - \\theta_i)dt + K_{D_i}(\\dot{\\theta}_{d_i} - \\dot{\\theta}_i)$$
+          <div class="text-sm text-gray-500 mt-2">$K_{p_i}, K_{I_i}, K_{D_i}$ 为第 $i$ 个关节的 PID 增益，需要逐个整定</div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>优点</th><th>缺点</th></tr></thead>
+          <tbody>
+            <tr><td>实现简单，无需动力学模型</td><td>忽略关节间耦合，高速时跟踪误差大</td></tr>
+            <tr><td>工业机器人标配（低速段）</td><td>增益整定依赖经验，鲁棒性差</td></tr>
+            <tr><td>每个关节独立调试</td><td>无法保证全局稳定性</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">计算力矩法（Computed Torque Method）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          基于<a href="javascript:void(0)" onclick="App.loadDetail('robo-06')">动力学模型</a>的非线性反馈控制。核心思想：利用已知的动力学模型<strong>抵消非线性项</strong>，将系统简化为线性解耦系统，再用 PD 控制：
+        </p>
+        <div class="formula-block">
+          $$\\tau = M(\\theta)(\\ddot{\\theta}_d + K_D \\dot{e} + K_P e) + C(\\theta,\\dot{\\theta})\\dot{\\theta} + G(\\theta)$$
+          <div class="text-sm text-gray-500 mt-2">$e = \\theta_d - \\theta$ 为跟踪误差，$K_P, K_D$ 为正定增益矩阵</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          代入动力学方程后，闭环系统简化为：
+        </p>
+        <div class="formula-block">
+          $$\\ddot{e} + K_D \\dot{e} + K_P e = 0$$
+          <div class="text-sm text-gray-500 mt-2">这是线性解耦的二阶系统！$K_P, K_D$ 可以直接按<a href="javascript:void(0)" onclick="App.loadDetail('act-05')">二阶系统</a>的阻尼比和自然频率设计</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">计算力矩法的稳定性分析</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          选取 Lyapunov 函数 $V = \\frac{1}{2}e^T K_P e + \\frac{1}{2}\\dot{e}^T \\dot{e}$，可以证明：
+        </p>
+        <div class="formula-block">
+          $$\\dot{V} = -\\dot{e}^T K_D \\dot{e} \\le 0$$
+          <div class="text-sm text-gray-500 mt-2">$\\dot{V}$ 半负定，由 LaSalle 不变集原理可证全局渐近稳定（$e \\to 0$, $\\dot{e} \\to 0$）</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">鲁棒控制与自适应控制</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          计算法矩法依赖精确的动力学模型。当模型参数不确定时（如负载变化），需要鲁棒或自适应控制：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>方法</th><th>原理</th><th>优点</th><th>缺点</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">鲁棒控制</td><td>假设参数误差有界，设计控制律保证最坏情况稳定</td><td>无需在线辨识</td><td>保守（最坏情况设计）</td></tr>
+            <tr><td class="font-medium">自适应控制</td><td>在线辨识惯性参数，实时更新控制律</td><td>能处理参数变化</td><td>需持续激励条件</td></tr>
+            <tr><td class="font-medium">滑模控制</td><td>设计滑模面，使系统状态沿滑模面运动</td><td>对匹配不确定性鲁棒</td><td>抖振（chattering）</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">自适应控制的基本框架</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          利用<a href="javascript:void(0)" onclick="App.loadDetail('robo-07')">拉格朗日动力学</a>的线性参数化性质 $\\tau = Y(\\theta,\\dot{\\theta},\\ddot{\\theta})\\mathbf{p}$，设计参数更新律：
+        </p>
+        <div class="formula-block">
+          $$\\hat{\\mathbf{p}}(t) = \\hat{\\mathbf{p}}(0) - \\Gamma \\int_0^t Y^T(\\cdot) S \\, d\\tau$$
+          <div class="text-sm text-gray-500 mt-2">$\\hat{\\mathbf{p}}$：参数估计值，$\\Gamma$：正定自适应增益矩阵，$S$：滤波跟踪误差</div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>工程实践</strong>：工业机器人通常采用"前馈 + 反馈"架构：前馈用<a href="javascript:void(0)" onclick="App.loadDetail('robo-08')">轨迹规划</a>提供参考轨迹，计算力矩法提供前馈力矩，PID 提供反馈修正。协作机器人（UR、Franka）则更多采用阻抗控制实现力柔顺。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>模型不确定性</strong>：计算力矩法对模型精度敏感。惯量参数误差 10% 时跟踪误差可达数毫米。实际应用中需要精确辨识（如 <a href="javascript:void(0)" onclick="App.loadDetail('la-06')">最小二乘辨识</a>）或在线自适应。减速器齿隙和柔性也会引入额外误差。</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>前沿方向</strong>：深度强化学习（DRL）在机器人控制中的应用日益增多，特别是对难以建模的接触任务。Sim-to-Real 迁移、域随机化等技术使学习型控制器在真实机器人上也能工作。但可解释性和安全性仍是挑战。</div>
+        </div>
+      ` },
+
+    ],
+  },
+
 };
 
 // 所有可统计进度的知识点 id 清单（用于进度统计）
 // 第 0 期只先放入板块分组入口，待各板块内容填充后这里会自动从 CourseData 派生
 const AllKnowledgeIds = (function () {
   const ids = [];
-  ['advanced-math', 'linear-algebra', 'circuit-basics', 'analog-circuit', 'digital-circuit', 'control', 'data-structure', 'modern-control', 'signals', 'sensor', 'embedded-sys', 'cpp', 'os', 'network'].forEach(group => {
+  ['advanced-math', 'linear-algebra', 'circuit-basics', 'analog-circuit', 'digital-circuit', 'control', 'data-structure', 'modern-control', 'signals', 'sensor', 'embedded-sys', 'cpp', 'os', 'network', 'robotics'].forEach(group => {
     CourseData[group]?.sections?.forEach(s => ids.push(s.id));
   });
   return ids;
@@ -12082,7 +12886,365 @@ const QuizData = {
     },
   ],
 
+  // ========== 机器人学导论 robo-01~robo-10 ==========
+  'robo-01': [
+    {
+      question: '三维空间中一个刚体有几个自由度？',
+      options: ['3 个', '4 个', '5 个', '6 个'],
+      answer: 3,
+      explanation: '刚体在三维空间有 3 个平移自由度（沿 x、y、z 轴）和 3 个旋转自由度（绕 x、y、z 轴），共 6 个自由度。工业机器人通常需要 6 个关节才能使末端到达任意位姿。'
+    },
+    {
+      question: 'SCARA 机器人的关节配置是？',
+      options: ['6R（全旋转）', 'RRP（两旋转+一平移）', 'PPP（全平移）', '3-RRR（并联）'],
+      answer: 1,
+      explanation: 'SCARA（Selective Compliance Assembly Robot Arm）采用 RRP 配置：前两个关节旋转（在水平面内运动），第三个关节平移（垂直方向），适合装配和搬运任务。'
+    },
+    {
+      question: '以下哪种姿态表示方法不存在万向节锁（Gimbal Lock）问题？',
+      options: ['RPY 欧拉角', 'ZYZ 欧拉角', '四元数', '轴角表示'],
+      answer: 2,
+      explanation: '四元数用 4 个参数表示姿态，不存在万向节锁问题，且插值平滑、计算效率高。欧拉角（RPY、ZYZ）和轴角在某些构型下会遇到奇异性或双值性问题。'
+    },
+    {
+      question: '齐次变换矩阵 $T \\in SE(3)$ 的维度是？',
+      options: ['$3 \\times 3$', '$3 \\times 4$', '$4 \\times 4$', '$6 \\times 6$'],
+      answer: 2,
+      explanation: '齐次变换矩阵是 $4 \\times 4$ 矩阵，左上角 $3 \\times 3$ 为旋转矩阵 $R \\in SO(3)$，右上角 $3 \\times 1$ 为位置向量 $\\mathbf{p}$，最后一行为 $[0,0,0,1]$。'
+    },
+    {
+      question: '当机器人的自由度 $n_{dof} > 6$ 时，称为？',
+      options: ['欠驱动机器人', '冗余机器人', '并联机器人', '欠约束机器人'],
+      answer: 1,
+      explanation: '当自由度大于 6（三维空间的最大自由度）时，多余的自由度称为冗余自由度。冗余机器人可用于避障、关节极限回避和灵巧度优化，但逆运动学求解更复杂。'
+    },
+    {
+      question: '旋转矩阵 $R$ 必须满足的条件是？',
+      options: ['$R^TR = I$ 且 $\\det(R) = 1$', '$R^TR = I$ 且 $\\det(R) = -1$', '$R = R^T$', '$R^2 = I$'],
+      answer: 0,
+      explanation: '旋转矩阵是正交矩阵（$R^TR = RR^T = I$）且行列式为 +1（$\\det(R) = 1$）。行列式为 -1 的正交矩阵包含镜像变换，不是纯旋转。$SO(3)$ 是所有旋转矩阵的集合。'
+    },
+  ],
 
+  'robo-02': [
+    {
+      question: '标准 DH 约定中，连杆长度 $a_i$ 的定义是？',
+      options: ['沿 $z_{i-1}$ 轴的距离', '沿 $x_i$ 轴从 $z_{i-1}$ 到 $z_i$ 的距离', '绕 $x_i$ 轴的旋转角度', '沿 $z_i$ 轴的距离'],
+      answer: 1,
+      explanation: '连杆长度 $a_i$ 定义为沿 $x_i$ 轴（公垂线方向），从关节轴 $z_{i-1}$ 到关节轴 $z_i$ 的距离。这是 DH 四个参数之一，描述相邻关节轴之间的几何关系。'
+    },
+    {
+      question: 'DH 变换矩阵的四个基本变换顺序是？',
+      options: ['Rot(z)→Trans(z)→Trans(x)→Rot(x)', 'Rot(x)→Trans(x)→Rot(z)→Trans(z)', 'Trans(z)→Rot(z)→Rot(x)→Trans(x)', 'Trans(x)→Rot(x)→Trans(z)→Rot(z)'],
+      answer: 0,
+      explanation: '标准 DH 约定的变换顺序为：先绕 $z_{i-1}$ 轴旋转 $\\theta_i$，再沿 $z_{i-1}$ 轴平移 $d_i$，然后沿 $x_i$ 轴平移 $a_i$，最后绕 $x_i$ 轴旋转 $\\alpha_i$。顺序不可调换。'
+    },
+    {
+      question: '当两个相邻关节轴平行时，DH 参数 $d_i$ 如何选取？',
+      options: ['必须为零', '选择使 $d_i = 0$ 的位置', '取无穷大', '无法定义'],
+      answer: 1,
+      explanation: '当两轴平行时，公垂线不唯一。DH 约定中选择使 $d_i = 0$ 的位置作为 $x_i$ 轴方向，这样可以简化参数。这是坐标系建立的标准做法。'
+    },
+    {
+      question: '齐次变换矩阵的逆 $T^{-1}$ 的平移部分是？',
+      options: ['$\\mathbf{p}$', '$-\\mathbf{p}$', '$-R^T\\mathbf{p}$', '$R\\mathbf{p}$'],
+      answer: 2,
+      explanation: '齐次变换矩阵 $T = \\begin{bmatrix} R & \\mathbf{p} \\\\ 0 & 1 \\end{bmatrix}$ 的逆为 $T^{-1} = \\begin{bmatrix} R^T & -R^T\\mathbf{p} \\\\ 0 & 1 \\end{bmatrix}$。旋转部分取转置，平移部分取负并左乘 $R^T$。'
+    },
+    {
+      question: '标准 DH 与改进 DH 的主要区别是？',
+      options: ['参数数量不同', '变换顺序不同（先 x 后 z vs 先 z 后 x）', '适用的机器人类型不同', '最终结果不同'],
+      answer: 1,
+      explanation: '标准 DH（Craig）先沿 $z$ 轴变换再沿 $x$ 轴变换；改进 DH（Spong）先沿 $x$ 轴变换再沿 $z$ 轴变换。两者最终结果等价，但参数分配不同，使用时必须统一约定。'
+    },
+  ],
 
+  'robo-03': [
+    {
+      question: '正运动学的映射关系是？',
+      options: ['关节力矩 → 关节加速度', '关节角 → 末端位姿', '末端力 → 关节力矩', '末端速度 → 关节速度'],
+      answer: 1,
+      explanation: '正运动学（Forward Kinematics）给定所有关节变量 $\\theta_1, \\ldots, \\theta_n$，计算末端执行器相对于基座的位姿 $^0T_n$。这是关节空间到笛卡尔空间的映射。'
+    },
+    {
+      question: '对于平面 2R 机械臂，末端位置 $p_x$ 的表达式是？',
+      options: ['$a_1 c_1 + a_2 c_2$', '$a_1 c_1 + a_2 c_{12}$', '$a_1 s_1 + a_2 s_2$', '$a_1 c_{12} + a_2 c_1$'],
+      answer: 1,
+      explanation: '2R 机械臂的正运动学：$p_x = a_1 \\cos\\theta_1 + a_2 \\cos(\\theta_1 + \\theta_2) = a_1 c_1 + a_2 c_{12}$。注意 $c_{12} = \\cos(\\theta_1 + \\theta_2)$，不是 $\\cos\\theta_1 \\cos\\theta_2$。'
+    },
+    {
+      question: '正运动学的递推算法 $^0T_i = \\,^0T_{i-1} \\cdot \,^{i-1}T_i$ 的计算复杂度是？',
+      options: ['$O(n^2)$', '$O(n^3)$', '$O(n)$', '$O(2^n)$'],
+      answer: 2,
+      explanation: '递推法每步只需一次 $4\\times4$ 矩阵乘法（常数时间），共 $n$ 步，总计算量 $O(n)$。比直接展开 $n$ 个矩阵连乘的 $O(n^3)$ 高效得多。'
+    },
+    {
+      question: '以下关于正运动学的说法，错误的是？',
+      options: ['给定关节角，末端位姿唯一确定', '正运动学是关节角的非线性函数', '正运动学可能存在多解', '正运动学可用于示教器的位置显示'],
+      answer: 2,
+      explanation: '正运动学是确定性的——给定一组关节角，末端位姿唯一确定，不存在多解问题。多解是逆运动学的特征。正运动学的非线性来自三角函数嵌套。'
+    },
+    {
+      question: '机器人的工作空间是指？',
+      options: ['所有关节角取遍可能值时末端能到达的位置集合', '机器人控制器的计算能力', '末端执行器的最大速度范围', '关节力矩的饱和范围'],
+      answer: 0,
+      explanation: '工作空间（Workspace）是末端执行器能到达的所有位置的集合。全工作空间包含所有可达点，灵巧工作空间是能以任意姿态到达的位置子集。'
+    },
+  ],
+
+  'robo-04': [
+    {
+      question: '逆运动学的核心困难不包括？',
+      options: ['非线性方程组', '多解性', '奇异性', '计算速度太慢'],
+      answer: 3,
+      explanation: '逆运动学的三大核心困难是：非线性方程组（无通用解析解）、多解性（同一末端位姿对应多组关节角）、奇异性（某些位形处雅可比矩阵奇异）。计算速度不是 IK 的本质困难。'
+    },
+    {
+      question: '对于平面 2R 机械臂，$\\cos\\theta_2 = D$，当 $|D| > 1$ 时意味着？',
+      options: ['恰好一个解', '两个解', '无解（目标超出工作空间）', '无穷多解'],
+      answer: 2,
+      explanation: '$\\cos\\theta_2 = D$ 要求 $|D| \\le 1$。当 $|D| > 1$ 时，目标点超出机器人的工作空间，逆运动学无解。这是可达性判断的基本条件。'
+    },
+    {
+      question: 'Pieper 准则要求 6R 机器人的后三轴满足什么条件？',
+      options: ['互相平行', '交于一点', '两两垂直', '等间距分布'],
+      answer: 1,
+      explanation: 'Pieper 准则：6 自由度机器人的后三个关节轴（手腕）交于一点时，位置问题和姿态问题可以分离求解。大多数工业机器人（UR、KUKA、ABB）都满足此准则。'
+    },
+    {
+      question: '阻尼最小二乘法（DLS）中阻尼因子 $\\lambda$ 的作用是？',
+      options: ['加快收敛速度', '避免奇异性附近数值爆炸', '减少计算量', '增加解的精度'],
+      answer: 1,
+      explanation: 'DLS 公式 $\\Delta\\theta = J^T(JJ^T + \\lambda^2 I)^{-1} e$ 中，$\\lambda$ 在 $JJ^T$ 接近奇异时提供正则化，避免矩阵求逆的数值爆炸。代价是在奇异位形附近引入位置误差。'
+    },
+    {
+      question: '多解选择时，"最近关节角"策略的原理是？',
+      options: ['选择使末端速度最大的解', '选择与当前关节角差值最小的解', '选择能耗最低的解', '选择加速度最小的解'],
+      answer: 1,
+      explanation: '"最近关节角"策略选择与当前关节角差值最小的逆运动学解，保证关节运动量最小，避免大范围关节跳变。这是连续运动控制中最常用的多解选择策略。'
+    },
+    {
+      question: '以下哪个不是逆运动学的求解方法？',
+      options: ['解析法（封闭解）', '阻尼最小二乘迭代法', '牛顿-欧拉递推法', '几何法'],
+      answer: 2,
+      explanation: '牛顿-欧拉递推法是动力学算法（计算关节力矩），不是逆运动学方法。IK 的主要方法包括：解析法（Pieper 准则满足时）、数值迭代法（DLS）、几何法（利用几何关系分步求解）。'
+    },
+  ],
+
+  'robo-05': [
+    {
+      question: '雅可比矩阵 $J$ 描述的是什么关系？',
+      options: ['力矩与加速度的关系', '关节速度到末端速度的线性映射', '关节角到位姿的映射', '力与位移的关系'],
+      answer: 1,
+      explanation: '雅可比矩阵 $J \\in \\mathbb{R}^{6 \\times n}$ 满足 $\\dot{\\mathbf{x}} = J \\dot{\\theta}$，将关节速度 $\\dot{\\theta}$ 映射为末端广义速度 $\\dot{\\mathbf{x}}$（3 线速度 + 3 角速度）。它是速度分析和力分析的核心工具。'
+    },
+    {
+      question: '机器人处于奇异位形时，雅可比矩阵满足？',
+      options: ['$J = I$（单位矩阵）', '$\\det(J) = 0$（行列式为零）', '$J = J^T$（对称）', '$J^2 = 0$'],
+      answer: 1,
+      explanation: '奇异位形意味着雅可比矩阵的秩小于 $\\min(6,n)$，等价于 $\\det(JJ^T) = 0$（方阵情况）。此时机器人在某些笛卡尔方向上失去运动能力，逆运动学可能无解或有无穷多解。'
+    },
+    {
+      question: '条件数 $\\kappa(J) = 1$ 意味着？',
+      options: ['机器人处于奇异位形', '各方向运动能力均匀（最灵巧）', '末端速度最大', '关节力矩最小'],
+      answer: 1,
+      explanation: '条件数 $\\kappa = \\sigma_{max}/\\sigma_{min}$，$\\kappa = 1$ 时最大和最小奇异值相等，机器人在各方向的运动能力均匀，是最灵巧的位形。$\\kappa \\to \\infty$ 时趋于奇异。'
+    },
+    {
+      question: '旋转关节 $i$ 对应的雅可比矩阵列是？',
+      options: ['$[\\mathbf{z}_{i-1} \\times (\\mathbf{p}_n - \\mathbf{p}_{i-1}); \\mathbf{z}_{i-1}]$', '$[\\mathbf{z}_{i-1}; \\mathbf{0}]$', '$[\\mathbf{p}_n - \\mathbf{p}_{i-1}; \\mathbf{0}]$', '$[\\mathbf{0}; \\mathbf{z}_{i-1}]$'],
+      answer: 0,
+      explanation: '旋转关节的雅可比列：上半部分 $\\mathbf{z}_{i-1} \\times (\\mathbf{p}_n - \\mathbf{p}_{i-1})$ 为线速度贡献（叉积），下半部分 $\\mathbf{z}_{i-1}$ 为角速度贡献（旋转轴方向）。平移关节的雅可比列为 $[\\mathbf{z}_{i-1}; \\mathbf{0}]$。'
+    },
+    {
+      question: '由虚功原理，末端力 $\\mathbf{F}$ 与关节力矩 $\\tau$ 的关系是？',
+      options: ['$\\tau = J \\mathbf{F}$', '$\\tau = J^T \\mathbf{F}$', '$\\tau = J^{-1} \\mathbf{F}$', '$\\tau = J^T J \\mathbf{F}$'],
+      answer: 1,
+      explanation: '由虚功原理推导得 $\\tau = J^T \\mathbf{F}$，即关节力矩等于雅可比矩阵转置乘以末端广义力。这是力控制的理论基础——通过测量末端力，可以计算所需的关节力矩。'
+    },
+  ],
+
+  'robo-06': [
+    {
+      question: '机器人动力学方程 $\\tau = M(\\theta)\\ddot{\\theta} + C(\\theta,\\dot{\\theta})\\dot{\\theta} + G(\\theta)$ 中，$M(\\theta)$ 的性质是？',
+      options: ['对称负定', '对称正定', '反对称', '对角矩阵'],
+      answer: 1,
+      explanation: '惯量矩阵 $M(\\theta)$ 描述系统的惯性特性，始终对称正定（$M = M^T$，$\\mathbf{x}^T M \\mathbf{x} > 0$）。物理意义：惯性永远为正，系统的动能 $T = \\frac{1}{2}\\dot{\\theta}^T M \\dot{\\theta} \\ge 0$。'
+    },
+    {
+      question: '牛顿-欧拉递推法的计算复杂度是？',
+      options: ['$O(n^2)$', '$O(n^3)$', '$O(n)$', '$O(n^4)$'],
+      answer: 2,
+      explanation: '牛顿-欧拉法从基座到末端外推（$n$ 步）再从末端到基座内推（$n$ 步），每步计算量为常数，总复杂度 $O(n)$。这是最高效的动力学算法，适合实时控制。'
+    },
+    {
+      question: '$\\dot{M} - 2C$ 矩阵的反对称性意味着？',
+      options: ['$\\mathbf{x}^T(\\dot{M}-2C)\\mathbf{x} = 0$', '$\\det(\\dot{M}-2C) = 0$', '$\\dot{M} = 2C$', '$\\dot{M}-2C = I$'],
+      answer: 0,
+      explanation: '$\\dot{M} - 2C$ 的反对称性意味着 $\\mathbf{x}^T(\\dot{M}-2C)\\mathbf{x} = 0$ 对任意向量 $\\mathbf{x}$ 成立。这一性质在 Lyapunov 稳定性证明中至关重要，是机器人控制理论的基石之一。'
+    },
+    {
+      question: '科氏力与速度的关系是？',
+      options: ['与速度成正比', '与速度的平方成正比', '与速度的乘积成正比', '与速度无关'],
+      answer: 2,
+      explanation: '科氏力与两个关节速度的乘积成正比（$c_{ijk}\\dot{\\theta}_i\\dot{\\theta}_j$），离心力与单个关节速度的平方成正比（$c_{iik}\\dot{\\theta}_i^2$）。两者都包含在 $C(\\theta,\\dot{\\theta})\\dot{\\theta}$ 项中。'
+    },
+    {
+      question: '动力学方程的线性参数化形式 $\\tau = Y\\mathbf{p}$ 中，$\\mathbf{p}$ 包含的是？',
+      options: ['关节角', '关节速度', '惯性参数（质量、惯量等）', '控制增益'],
+      answer: 2,
+      explanation: '$\\mathbf{p}$ 包含所有惯性参数（各连杆质量、质心位置、惯量矩等），$Y$ 为回归矩阵（已知量）。这一性质是自适应控制的基础——可以通过在线辨识 $\\mathbf{p}$ 来补偿模型不确定性。'
+    },
+  ],
+
+  'robo-07': [
+    {
+      question: '拉格朗日函数的定义是？',
+      options: ['$L = T + V$', '$L = T - V$', '$L = T \\cdot V$', '$L = T / V$'],
+      answer: 1,
+      explanation: '拉格朗日函数定义为动能减势能：$L = T - V$。拉格朗日方程 $\\frac{d}{dt}\\frac{\\partial L}{\\partial \\dot{\\theta}_i} - \\frac{\\partial L}{\\partial \\theta_i} = \\tau_i$ 通过标量函数 $L$ 推导运动方程，无需分析约束力。'
+    },
+    {
+      question: '拉格朗日法与牛顿-欧拉法相比，主要优势是？',
+      options: ['计算速度快', '得到解析形式的方程（适合理论分析）', '不需要动力学模型', '直接计算关节力矩'],
+      answer: 1,
+      explanation: '拉格朗日法通过标量函数推导，得到解析形式的动力学方程，适合控制器设计和稳定性分析。NE 法是数值递推算法，计算更快（$O(n)$ vs $O(n^4)$），适合实时控制。'
+    },
+    {
+      question: '平面 2R 机械臂的惯量矩阵 $M_{11}$ 含有 $\\cos\\theta_2$ 项，这说明？',
+      options: ['系统是线性的', '惯量随位形变化（非线性特性）', '系统是时不变的', '关节间无耦合'],
+      answer: 1,
+      explanation: '$M_{11}$ 含有 $\\cos\\theta_2$ 项，说明惯量矩阵是关节角的函数，随位形变化。这是机器人动力学非线性的直接体现——不同位形下，系统的惯性特性不同。'
+    },
+    {
+      question: '拉格朗日方程中，$\\frac{\\partial L}{\\partial \\theta_i}$ 的物理含义是？',
+      options: ['第 $i$ 个关节的动能', '第 $i$ 个关节的势能', '广义力（保守力部分）', '惯量矩阵的第 $i$ 行'],
+      answer: 2,
+      explanation: '$\\frac{\\partial L}{\\partial \\theta_i}$ 对应保守力（重力、弹簧力等）的广义力分量。拉格朗日方程的左边 $\\frac{d}{dt}\\frac{\\partial L}{\\partial \\dot{\\theta}_i} - \\frac{\\partial L}{\\partial \\theta_i}$ 综合了惯性效应和保守力效应。'
+    },
+    {
+      question: '动能 $T = \\frac{1}{2}\\dot{\\theta}^T M(\\theta)\\dot{\\theta}$ 中，$M(\\theta)$ 是如何得到的？',
+      options: ['直接测量', '对每个连杆的平动和转动动能求和后整理', '由 DH 参数查表得到', '由实验辨识得到'],
+      answer: 1,
+      explanation: '$M(\\theta)$ 是将所有连杆的动能 $T_i = \\frac{1}{2}m_i v_{c_i}^2 + \\frac{1}{2}\\omega_i^T I_i \\omega_i$ 求和，利用雅可比矩阵将速度表示为 $\\dot{\\theta}$ 的函数，最终整理为二次型 $\\frac{1}{2}\\dot{\\theta}^T M \\dot{\\theta}$ 得到。'
+    },
+  ],
+
+  'robo-08': [
+    {
+      question: '关节空间轨迹规划与笛卡尔空间轨迹规划的主要区别是？',
+      options: ['计算速度不同', '规划对象不同（关节角 vs 末端位姿）', '使用的数学工具不同', '适用的机器人类型不同'],
+      answer: 1,
+      explanation: '关节空间规划直接对关节角 $\\theta(t)$ 插值，路径不直观但计算简单；笛卡尔空间规划对末端位姿 $T(t)$ 插值，路径直观（直线/圆弧）但需要实时逆运动学求解。'
+    },
+    {
+      question: '三次多项式插值需要几个边界条件？',
+      options: ['2 个', '3 个', '4 个', '6 个'],
+      answer: 2,
+      explanation: '三次多项式 $\\theta(t) = a_0 + a_1 t + a_2 t^2 + a_3 t^3$ 有 4 个系数，需要 4 个边界条件：起止位置和起止速度（通常设为零）。五次多项式需要 6 个条件（加上起止加速度）。'
+    },
+    {
+      question: '梯形速度曲线的三段运动分别是？',
+      options: ['匀速→加速→减速', '加速→匀速→减速', '加速→减速→匀速', '减速→匀速→加速'],
+      answer: 1,
+      explanation: '梯形速度曲线（抛物线过渡线性插值）分三段：匀加速（速度从 0 到 $v_{max}$）→ 匀速（$v_{max}$）→ 匀减速（速度从 $v_{max}$ 到 0）。速度曲线呈梯形。'
+    },
+    {
+      question: '笛卡尔空间姿态插值通常使用什么方法？',
+      options: ['线性插值', '三次多项式', '四元数球面线性插值（SLERP）', '欧拉角线性插值'],
+      answer: 2,
+      explanation: '姿态插值使用 SLERP（Spherical Linear Interpolation），在四元数空间中沿大圆弧插值。SLERP 保证姿态变化匀速，且无万向节锁问题。直接对欧拉角线性插值会导致角速度不均匀。'
+    },
+    {
+      question: '五次多项式相比三次多项式的优点是？',
+      options: ['计算更简单', '加速度连续（无冲击）', '速度更大', '路径更短'],
+      answer: 1,
+      explanation: '五次多项式可以控制起止加速度为零，保证加速度连续，运动无冲击。三次多项式只能控制起止速度，加速度在端点不连续，高速运动时可能产生振动。'
+    },
+    {
+      question: '笛卡尔直线插值中，位置和姿态分别用什么方法插值？',
+      options: ['都用线性插值', '位置线性插值，姿态 SLERP', '位置 SLERP，姿态线性插值', '都用 SLERP'],
+      answer: 1,
+      explanation: '笛卡尔直线插值：位置用线性插值（$\\mathbf{p}(s) = (1-s)\\mathbf{p}_{start} + s\\mathbf{p}_{end}$），姿态用四元数 SLERP。位置是欧氏空间的直线，姿态是球面上的大圆弧。'
+    },
+  ],
+
+  'robo-09': [
+    {
+      question: '纯位置控制在机器人与环境接触时的主要问题是？',
+      options: ['计算量太大', '可能产生巨大的接触力', '无法检测力', '响应太慢'],
+      answer: 1,
+      explanation: '纯位置控制假设机器人在自由空间运动。当与环境接触时，位置误差会产生巨大的接触力（因为控制器会"拼命"消除位置误差），可能损坏工件或机器人。力控制是解决此问题的关键。'
+    },
+    {
+      question: '力/位混合控制中，选择矩阵 $S$ 的作用是？',
+      options: ['选择控制算法', '区分力控制方向和位置控制方向', '选择传感器', '选择关节'],
+      answer: 1,
+      explanation: '选择矩阵 $S$ 是对角阵，$S_{ii}=1$ 表示第 $i$ 个方向采用力控制，$S_{ii}=0$ 表示采用位置控制。例如表面打磨：法线方向力控制（恒定接触力），切线方向位置控制（沿路径运动）。'
+    },
+    {
+      question: '阻抗控制的期望模型 $M_d \\ddot{x} + B_d \\dot{x} + K_d(x-x_d) = F_{ext}$ 本质上是？',
+      options: ['一阶系统', '二阶系统', '三阶系统', '非线性系统'],
+      answer: 1,
+      explanation: '阻抗模型是一个二阶线性系统（质量-弹簧-阻尼），其阻尼比 $\\zeta = B_d/(2\\sqrt{M_d K_d})$ 和自然频率 $\\omega_n = \\sqrt{K_d/M_d}$ 决定了接触动态。可直接套用二阶系统的分析结论。'
+    },
+    {
+      question: '导纳控制与阻抗控制的主要区别是？',
+      options: ['控制目标不同', '输入输出关系相反（力→位置 vs 位置→力）', '数学模型不同', '适用的机器人不同'],
+      answer: 1,
+      explanation: '阻抗控制：输入位置误差，输出力（力矩控制模式）。导纳控制：输入测量力，输出位置（位置控制模式）。导纳控制适用于位置可控但力不可直接控的机器人。'
+    },
+    {
+      question: '阻抗控制在什么环境条件下可能不稳定？',
+      options: ['真空环境', '环境刚度与 $K_d$ 相当时', '无重力环境', '低温环境'],
+      answer: 1,
+      explanation: '阻抗控制的稳定性取决于环境刚度与控制器参数的匹配。环境刚度远大于 $K_d$ 时稳定；环境刚度与 $K_d$ 相当时可能出现振荡。需要根据环境特性调整 $M_d, B_d, K_d$。'
+    },
+    {
+      question: '力传感器通常安装在机器人的什么位置？',
+      options: ['关节电机处', '基座处', '末端执行器处', '控制器内'],
+      answer: 2,
+      explanation: '力/力矩传感器（如 ATI、Robotiq）通常安装在机器人手腕和末端执行器之间，直接测量末端与环境的接触力。这是力控制和阻抗控制的感知基础。'
+    },
+  ],
+
+  'robo-10': [
+    {
+      question: '独立关节 PID 控制的主要缺点是？',
+      options: ['实现复杂', '忽略关节间耦合，高速时跟踪误差大', '需要力传感器', '只能用于协作机器人'],
+      answer: 1,
+      explanation: 'PID 控制将每个关节视为独立系统，忽略了关节间的动力学耦合（科氏力、离心力）。低速时耦合弱，PID 效果尚可；高速时耦合强，跟踪误差显著增大。'
+    },
+    {
+      question: '计算力矩法的核心思想是？',
+      options: ['增加 PID 增益', '利用动力学模型抵消非线性项，使系统线性化', '忽略动力学模型', '使用状态反馈'],
+      answer: 1,
+      explanation: '计算力矩法利用已知的 $M(\\theta), C(\\theta,\\dot{\\theta}), G(\\theta)$ 计算前馈力矩，抵消非线性项，将闭环系统简化为 $\\ddot{e} + K_D\\dot{e} + K_P e = 0$（线性解耦）。'
+    },
+    {
+      question: '计算力矩法闭环后的误差方程 $\\ddot{e} + K_D\\dot{e} + K_P e = 0$ 的稳定性证明通常用什么方法？',
+      options: ['劳斯判据', 'Lyapunov 稳定性理论', '根轨迹法', '奈奎斯特判据'],
+      answer: 1,
+      explanation: '选取 Lyapunov 函数 $V = \\frac{1}{2}e^T K_P e + \\frac{1}{2}\\dot{e}^T \\dot{e}$，证明 $\\dot{V} = -\\dot{e}^T K_D \\dot{e} \\le 0$（半负定），再由 LaSalle 不变集原理证全局渐近稳定。'
+    },
+    {
+      question: '自适应控制利用了动力学方程的什么性质？',
+      options: ['正定性', '反对称性', '线性参数化 $\\tau = Y\\mathbf{p}$', '有界性'],
+      answer: 2,
+      explanation: '自适应控制利用 $\\tau = Y(\\theta,\\dot{\\theta},\\ddot{\\theta})\\mathbf{p}$ 的线性参数化性质，在线辨识惯性参数 $\\mathbf{p}$，实时更新控制律。$Y$ 为已知的回归矩阵，$\\mathbf{p}$ 为待辨识参数。'
+    },
+    {
+      question: '工业机器人通常采用的控制架构是？',
+      options: ['纯 PID', '纯计算力矩法', '前馈（计算力矩）+ 反馈（PID）', '纯自适应控制'],
+      answer: 2,
+      explanation: '工业机器人标准架构：轨迹规划提供参考轨迹，计算力矩法提供前馈力矩（补偿非线性动力学），PID 提供反馈修正（补偿模型误差和扰动）。这种"前馈+反馈"架构兼顾精度和鲁棒性。'
+    },
+    {
+      question: '滑模控制的主要缺点是？',
+      options: ['计算量太大', '抖振（chattering）', '只能用于线性系统', '需要精确模型'],
+      answer: 1,
+      explanation: '滑模控制通过不连续的控制律（符号函数）使系统状态沿滑模面运动，对匹配不确定性鲁棒。但符号函数的切换导致控制信号高频抖振，可能激发未建模动态，实际中常用边界层法缓解。'
+    },
+  ],
 
 };
