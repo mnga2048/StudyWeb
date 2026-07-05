@@ -11,6 +11,7 @@ const CourseData = {
       children: [
         { id: 'advanced-math', label: '高等数学' },
         { id: 'linear-algebra', label: '线性代数' },
+        { id: 'probability', label: '概率论与数理统计' },
       ]
     },
     {
@@ -19,6 +20,8 @@ const CourseData = {
         { id: 'circuit-basics', label: '电路基础' },
         { id: 'analog-circuit', label: '模拟电路' },
         { id: 'digital-circuit', label: '数字电路' },
+        { id: 'power-electronics', label: '电力电子技术' },
+        { id: 'motor-drive', label: '电机与拖动' },
       ]
     },
     {
@@ -96,6 +99,9 @@ const CourseData = {
       { id: 'os', title: '操作系统', desc: '进程/线程、内存管理、文件系统、死锁、RTOS', icon: '🖥️', level: '应试+工程' },
       { id: 'network', title: '计算机网络', desc: 'TCP/IP 协议栈、路由交换、工业网络与 ROS 通信', icon: '🌐', level: '应试+工程' },
       { id: 'robotics', title: '机器人学导论', desc: 'DH 参数、正/逆运动学、雅可比、动力学、轨迹规划、力控制', icon: '🤖', level: '工程' },
+      { id: 'probability', title: '概率论与数理统计', desc: '随机变量、概率分布、大数定律、参数估计、假设检验', icon: '🎲', level: '应试+工程' },
+      { id: 'power-electronics', title: '电力电子技术', desc: '整流/逆变/斩波电路、PWM 控制、H 桥驱动', icon: '⚡', level: '工程' },
+      { id: 'motor-drive', title: '电机与拖动', desc: '直流/交流/PMSM/步进电机原理与调速控制', icon: '🔧', level: '工程' },
     ],
   },
 
@@ -9707,13 +9713,1333 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
     ],
   },
 
+  // ========== 电机与拖动 motor-01~motor-08 ==========
+  'motor-drive': {
+    title: '电机与拖动',
+    subtitle: '电机原理、数学模型、调速控制与伺服系统，机器人的动力之源',
+    icon: '🔧',
+    sections: [
+      // ===== motor-01 电机与拖动概述 =====
+      { id: 'motor-01', title: '电机与拖动概述', desc: '电机分类、能量转换、拖动系统组成', icon: '🔧', tags: ['核心', '入门'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">电机：电能与机械能的桥梁</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          电机是将电能转换为机械能（电动机）或将机械能转换为电能（发电机）的电磁装置。在机器人系统中，电机是执行机构的核心——<a href="javascript:void(0)" onclick="App.loadDetail('robo-01')">机器人的每个关节</a>都由电机驱动。理解电机的工作原理和特性，是设计高性能机器人伺服系统的前提。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">电机的基本分类</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>分类方式</th><th>类型</th><th>典型应用</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">按电流类型</td><td>直流电机（DC）、交流电机（AC）</td><td>DC：小型设备；AC：工业驱动</td></tr>
+            <tr><td class="font-medium">按结构</td><td>有刷、无刷（BLDC）、永磁同步（PMSM）</td><td>有刷：低成本；PMSM：高性能伺服</td></tr>
+            <tr><td class="font-medium">按控制方式</td><td>力矩电机、速度电机、步进电机</td><td>力矩：精密控制；步进：开环定位</td></tr>
+            <tr><td class="font-medium">按用途</td><td>驱动电机、伺服电机、力矩电机</td><td>驱动：恒速；伺服：精确跟踪</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">电机拖动系统的组成</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          一个完整的电机拖动系统由以下部分组成：
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>电机本体</strong>：将电能转换为机械能的执行元件（<a href="javascript:void(0)" onclick="App.loadDetail('motor-04')">PMSM</a>、<a href="javascript:void(0)" onclick="App.loadDetail('motor-05')">步进电机</a>等）</li>
+          <li><strong>功率变换器</strong>：将电网/电池电能转换为电机所需形式（<a href="javascript:void(0)" onclick="App.loadDetail('pwr-01')">电力电子</a>变换器、<a href="javascript:void(0)" onclick="App.loadDetail('pwr-06')">PWM</a> 驱动器）</li>
+          <li><strong>控制器</strong>：根据控制算法计算控制量（<a href="javascript:void(0)" onclick="App.loadDetail('motor-07')">PID 调速</a>、<a href="javascript:void(0)" onclick="App.loadDetail('motor-08')">伺服控制</a>）</li>
+          <li><strong>传感器</strong>：检测电机状态（编码器、电流传感器、温度传感器）</li>
+          <li><strong>机械负载</strong>：被驱动的机构（减速器、关节、末端执行器）</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">电机的机械特性</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          电机的机械特性描述转速 $n$ 与转矩 $T$ 的关系。关键参数包括：
+        </p>
+        <div class="formula-block">
+          $$P_{out} = T \\cdot \\omega = T \\cdot \\frac{2\\pi n}{60}$$
+          <div class="text-sm text-gray-500 mt-2">$P_{out}$：输出功率（W），$T$：转矩（N·m），$\\omega$：角速度（rad/s），$n$：转速（rpm）</div>
+        </div>
+        <div class="formula-block">
+          $$\\eta = \\frac{P_{out}}{P_{in}} \\times 100\\%$$
+          <div class="text-sm text-gray-500 mt-2">$\\eta$：效率。永磁同步电机效率可达 90% 以上，有刷直流电机约 70-80%</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">电机在机器人中的应用</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>关节驱动</strong>：协作机器人多用 PMSM + 谐波减速器，工业机器人用交流伺服</li>
+          <li><strong>移动底盘</strong>：轮式机器人用直流无刷电机或轮毂电机</li>
+          <li><strong>灵巧手</strong>：微型直流电机或定制力矩电机</li>
+          <li><strong>直驱关节</strong>：大力矩 PMSM 直接驱动，省去减速器（如<span class="font-medium">直驱机器人</span>）</li>
+        </ul>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>选型要点</strong>：机器人电机选型需考虑：①连续转矩和峰值转矩需求；②转速范围；③惯量匹配（电机转子惯量与负载惯量的比值，理想值 1:1~1:10）；④散热条件；⑤<a href="javascript:void(0)" onclick="App.loadDetail('robo-08')">轨迹规划</a>中的速度/加速度曲线。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>惯量匹配</strong>：负载惯量与电机转子惯量之比过大（>10:1）会导致响应慢、振荡；过小（<1:1）则电机能力浪费。工业伺服通常要求惯量比 5:1 以内。</div>
+        </div>
+      ` },
+
+      // ===== motor-02 直流电机原理 =====
+      { id: 'motor-02', title: '直流电机原理', desc: '有刷/无刷直流电机结构、工作原理、机械特性', icon: '🔋', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">直流电机：最直观的电动机</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          直流电机是最基本的电机类型，其工作原理基于<strong>载流导体在磁场中受力</strong>（洛伦兹力）。虽然工业伺服已转向交流永磁同步电机，但直流电机原理是理解所有电机的基础——交流电机的分析方法也建立在直流电机的物理直觉之上。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">直流电机的基本结构</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>定子（Stator）</strong>：提供主磁场。永磁式用永磁体，励磁式用励磁绕组通直流电</li>
+          <li><strong>转子（Rotor）</strong>：电枢绕组通电流，在磁场中受力旋转</li>
+          <li><strong>换向器（Commutator）</strong>：机械换向，保证转子电流方向在经过中性线时自动翻转（有刷电机特有）</li>
+          <li><strong>电刷（Brush）</strong>：将外部直流电引入旋转的电枢绕组</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">直流电机的基本方程</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          电枢回路的电压方程：
+        </p>
+        <div class="formula-block">
+          $$U_a = E + I_a R_a + L_a \\frac{dI_a}{dt}$$
+          <div class="text-sm text-gray-500 mt-2">$U_a$：电枢电压，$E$：反电动势，$I_a$：电枢电流，$R_a$：电枢电阻，$L_a$：电枢电感</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          反电动势与转速的关系：
+        </p>
+        <div class="formula-block">
+          $$E = K_e \\Phi n = C_e n$$
+          <div class="text-sm text-gray-500 mt-2">$K_e$：电动势常数，$\\Phi$：每极磁通，$n$：转速，$C_e = K_e\\Phi$ 为电动势系数</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          电磁转矩：
+        </p>
+        <div class="formula-block">
+          $$T = K_t \\Phi I_a = C_t I_a$$
+          <div class="text-sm text-gray-500 mt-2">$K_t$：转矩常数，$C_t = K_t\\Phi$ 为转矩系数。在 SI 单位制中 $C_e = C_t$</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">直流电机的调速方法</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          由稳态方程 $U_a = E + I_a R_a = C_e n + C_t I_a$，可得转速公式：
+        </p>
+        <div class="formula-block">
+          $$n = \\frac{U_a - I_a R_a}{C_e \\Phi}$$
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          三种调速方式：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>调速方式</th><th>参数</th><th>调速范围</th><th>特点</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">改变电枢电压 $U_a$</td><td>降压调速</td><td>宽（基速以下）</td><td>恒转矩调速，最常用</td></tr>
+            <tr><td class="font-medium">改变磁通 $\\Phi$</td><td>弱磁调速</td><td>窄（基速以上）</td><td>恒功率调速</td></tr>
+            <tr><td class="font-medium">改变电枢电阻 $R_a$</td><td>串电阻调速</td><td>窄</td><td>效率低，仅用于简单场合</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">无刷直流电机（BLDC）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          BLDC 电机用电子换向取代机械换向器和电刷，提高了可靠性和寿命。其本质是用<a href="javascript:void(0)" onclick="App.loadDetail('pwr-06')">PWM</a> 驱动的三相逆变器对永磁同步电机施加方波电流。
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>优点</strong>：无电刷磨损、效率高、维护少、EMI 低</li>
+          <li><strong>缺点</strong>：需要位置传感器（霍尔传感器）和电子换向电路</li>
+          <li><strong>反电动势波形</strong>：梯形波（区别于 PMSM 的正弦波）</li>
+        </ul>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：直流电机的调速原理是<a href="javascript:void(0)" onclick="App.loadDetail('motor-07')">电机调速控制</a>的基础。BLDC 的电子换向需要<a href="javascript:void(0)" onclick="App.loadDetail('pwr-05')">H 桥</a>或三相桥式逆变器驱动。电机的数学模型将在<a href="javascript:void(0)" onclick="App.loadDetail('motor-06')">电机数学模型</a>中详细推导。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>有刷电机的电刷火花</strong>：有刷直流电机在换向时产生电刷火花，限制了转速和功率，且需要定期更换电刷。在易燃易爆场合（如矿井）严禁使用有刷电机。</div>
+        </div>
+      ` },
+
+      // ===== motor-03 交流电机原理 =====
+      { id: 'motor-03', title: '交流电机原理', desc: '三相异步电机结构、旋转磁场、转差率', icon: '🌀', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">交流电机：旋转磁场的产物</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          交流电机利用三相交流电产生旋转磁场，驱动转子旋转。异步电机（感应电机）是工业中使用最广泛的电机，占全球电机总量的 70% 以上。理解旋转磁场和转差率的概念，是学习<a href="javascript:void(0)" onclick="App.loadDetail('motor-04')">永磁同步电机</a>的基础。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">旋转磁场的产生</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          三相定子绕组通以三相对称交流电，产生旋转磁场。设三相电流为：
+        </p>
+        <div class="formula-block">
+          $$i_A = I_m \\cos(\\omega t), \\quad i_B = I_m \\cos(\\omega t - 120°), \\quad i_C = I_m \\cos(\\omega t - 240°)$$
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          合成磁动势为幅值恒定、以同步转速 $n_s$ 旋转的旋转磁场：
+        </p>
+        <div class="formula-block">
+          $$n_s = \\frac{60f}{p}$$
+          <div class="text-sm text-gray-500 mt-2">$f$：电源频率（Hz），$p$：磁极对数。$f=50\\text{Hz}$，$p=1$ 时 $n_s = 3000\\text{rpm}$</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">异步电机的工作原理</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          旋转磁场切割转子导体，在转子中感应电流，转子电流与磁场作用产生电磁转矩。关键特征：转子转速 $n$ 永远小于同步转速 $n_s$（否则无相对运动，无感应电流），因此称为"异步"电机。
+        </p>
+        <div class="formula-block">
+          $$s = \\frac{n_s - n}{n_s} \\times 100\\%$$
+          <div class="text-sm text-gray-500 mt-2">$s$：转差率。$s=0$ 理想空载，$s=1$ 堵转。正常运行时 $s = 0.02 \\sim 0.06$（2%~6%）</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">异步电机的等效电路</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          异步电机可以用类似变压器的等效电路分析。转子电阻等效为 $R_2'/s$，其中 $R_2'$ 为折算到定子侧的转子电阻：
+        </p>
+        <div class="formula-block">
+          $$R_2'/s = R_2' + R_2'\\frac{1-s}{s}$$
+          <div class="text-sm text-gray-500 mt-2">$R_2'$：转子铜损电阻，$R_2'(1-s)/s$：等效机械负载电阻。转差率 $s$ 越小，等效负载电阻越大</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">交流电机的调速方法</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>方法</th><th>原理</th><th>调速范围</th><th>效率</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">变频调速（V/f）</td><td>改变 $f$ 和 $U$ 保持 $U/f$ 恒定</td><td>宽</td><td>高</td></tr>
+            <tr><td class="font-medium">变极调速</td><td>改变磁极对数 $p$</td><td>有级</td><td>高</td></tr>
+            <tr><td class="font-medium">转子串电阻</td><td>增大转子电阻降低转速</td><td>窄</td><td>低</td></tr>
+            <tr><td class="font-medium">矢量控制</td><td>解耦磁场和转矩电流</td><td>宽</td><td>高</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：变频调速需要<a href="javascript:void(0)" onclick="App.loadDetail('pwr-04')">逆变电路</a>将直流电转换为频率可调的交流电。矢量控制基于<a href="javascript:void(0)" onclick="App.loadDetail('motor-06')">电机数学模型</a>中的坐标变换（Clarke/Park 变换）。</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>同步电机 vs 异步电机</strong>：同步电机转速等于同步转速（$s=0$），需要外部励磁或永磁体。异步电机结构简单、成本低，但效率和功率因数较低。机器人伺服多用<a href="javascript:void(0)" onclick="App.loadDetail('motor-04')">永磁同步电机</a>（同步电机的一种）。</div>
+        </div>
+      ` },
+
+      // ===== motor-04 永磁同步电机(PMSM) =====
+      { id: 'motor-04', title: '永磁同步电机(PMSM)', desc: 'PMSM 结构、数学模型、矢量控制基础', icon: '🧲', tags: ['核心', '高频考点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">PMSM：机器人伺服的首选电机</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          永磁同步电机（Permanent Magnet Synchronous Motor, PMSM）用永磁体取代励磁绕组，转子磁场由永磁体提供。其反电动势为正弦波，配合正弦电流驱动可实现平滑转矩输出。PMSM 具有高功率密度、高效率、高动态响应等优点，是工业机器人和协作机器人关节驱动的首选。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">PMSM 的结构特点</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>转子</strong>：永磁体（钕铁硼 NdFeB）提供恒定磁场，无需励磁绕组和电刷</li>
+          <li><strong>定子</strong>：三相分布绕组，通正弦电流产生旋转磁场</li>
+          <li><strong>气隙磁场</strong>：正弦分布（区别于 BLDC 的梯形波）</li>
+          <li><strong>冷却</strong>：自然冷却或水冷，大功率时需要强制冷却</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">PMSM 的数学模型</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          在 dq 旋转坐标系下，PMSM 的电压方程为：
+        </p>
+        <div class="formula-block">
+          $$u_d = R_s i_d + L_d \\frac{di_d}{dt} - \\omega_e L_q i_q$$
+          $$u_q = R_s i_q + L_q \\frac{di_q}{dt} + \\omega_e L_d i_d + \\omega_e \\psi_f$$
+          <div class="text-sm text-gray-500 mt-2">$R_s$：定子电阻，$L_d, L_q$：d/q 轴电感，$\\omega_e$：电角速度，$\\psi_f$：永磁体磁链</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          电磁转矩：
+        </p>
+        <div class="formula-block">
+          $$T_e = \\frac{3}{2} p_n \\psi_f i_q + \\frac{3}{2} p_n (L_d - L_q) i_d i_q$$
+          <div class="text-sm text-gray-500 mt-2">$p_n$：极对数。第一项为永磁转矩，第二项为磁阻转矩（$L_d = L_q$ 时为零，即表贴式 PMSM）</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">矢量控制（FOC）原理</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          矢量控制（Field Oriented Control）的核心思想：通过坐标变换将三相交流量解耦为直流控制量。控制 $i_d = 0$（最大转矩/电流比），转矩仅与 $i_q$ 成正比：
+        </p>
+        <div class="formula-block">
+          $$T_e = \\frac{3}{2} p_n \\psi_f i_q = K_t i_q$$
+          <div class="text-sm text-gray-500 mt-2">$i_d=0$ 控制：$d$ 轴电流为零，所有电流用于产生转矩，效率最高</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          FOC 控制流程：
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：电流采样</strong>。测量三相电流 $i_A, i_B, i_C$（只需测两相，第三相由 $i_A+i_B+i_C=0$ 求得）。</div></div>
+          <div class="step-item"><div><strong>第二步：Clarke 变换</strong>。$\\alpha\\beta$ 坐标系：$i_\\alpha = i_A$，$i_\\beta = (i_A + 2i_B)/\\sqrt{3}$。</div></div>
+          <div class="step-item"><div><strong>第三步：Park 变换</strong>。dq 坐标系：$i_d = i_\\alpha \\cos\\theta + i_\\beta \\sin\\theta$，$i_q = -i_\\alpha \\sin\\theta + i_\\beta \\cos\\theta$。</div></div>
+          <div class="step-item"><div><strong>第四步：PI 调节</strong>。$i_d$、$i_q$ 分别由 PI 控制器调节，输出 $u_d, u_q$。</div></div>
+          <div class="step-item"><div><strong>第五步：逆 Park + SVPWM</strong>。将控制电压转换为三相 PWM 信号驱动逆变器。</div></div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：FOC 中的坐标变换基于<a href="javascript:void(0)" onclick="App.loadDetail('la-02')">线性代数的矩阵运算</a>。PI 控制器的设计需要理解<a href="javascript:void(0)" onclick="App.loadDetail('act-03')">传递函数</a>和<a href="javascript:void(0)" onclick="App.loadDetail('motor-07')">调速控制</a>。SVPWM 是<a href="javascript:void(0)" onclick="App.loadDetail('pwr-06')">PWM 控制</a>的高级形式。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>弱磁控制</strong>：当转速超过基速时，反电动势接近电源电压极限。通过注入负的 $i_d$（弱磁）降低气隙磁通，扩大调速范围。但弱磁运行时转矩下降，效率降低。</div>
+        </div>
+      ` },
+
+      // ===== motor-05 步进电机 =====
+      { id: 'motor-05', title: '步进电机', desc: '步进电机工作原理、细分驱动、矩频特性', icon: '⚙️', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">步进电机：开环精确位置控制</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          步进电机是一种将电脉冲转换为角位移的执行器——每输入一个脉冲，电机转动一个固定的角度（步距角）。无需反馈传感器即可实现精确位置控制，广泛应用于 3D 打印机、CNC、机器人辅助关节等场合。但步进电机在高速时转矩急剧下降，且存在丢步风险。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">步进电机的类型</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>类型</th><th>结构</th><th>特点</th><th>应用</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">反应式（VR）</td><td>定转子均为软磁材料</td><td>步距角小、转矩小、成本低</td><td>老式仪表</td></tr>
+            <tr><td class="font-medium">永磁式（PM）</td><td>转子为永磁体</td><td>步距角大（7.5°/15°）、转矩大</td><td>廉价定位</td></tr>
+            <tr><td class="font-medium">混合式（HB）</td><td>永磁+软磁混合</td><td>步距角小（1.8°）、转矩大、精度高</td><td>CNC、机器人</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">步进电机的关键参数</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>步距角</strong>：每步转过的角度。$\\theta_s = 360°/(N_r \\times m)$，$N_r$ 为转子齿数，$m$ 为相数。1.8° 步距角对应 200 步/转</li>
+          <li><strong>细分</strong>：将一步细分为多步（如 16 细分使 1.8° 变为 0.1125°），改善平滑性，但不提高精度</li>
+          <li><strong>保持转矩</strong>：电机通电但不转动时的最大保持力矩</li>
+          <li><strong>矩频特性</strong>：转矩随转速的变化曲线。步进电机高速时转矩急剧下降</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">步进电机的驱动方式</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          步进电机需要专门的驱动器将脉冲信号转换为电机绕组电流。主要驱动方式：
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>全步驱动</strong>：每步通电两相，步距角 1.8°</li>
+          <li><strong>半步驱动</strong>：交替通电一相和两相，步距角 0.9°，但转矩不均匀</li>
+          <li><strong>微步驱动</strong>：通过控制两相电流的正弦/余弦比例，实现细分。16 细分时步距角 0.1125°</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">步进电机 vs 伺服电机</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>步进电机</th><th>伺服电机（PMSM）</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">控制方式</td><td>开环（脉冲计数）</td><td>闭环（编码器反馈）</td></tr>
+            <tr><td class="font-medium">精度</td><td>步距角决定，无累积误差</td><td>编码器分辨率决定</td></tr>
+            <tr><td class="font-medium">高速转矩</td><td>急剧下降</td><td>恒转矩区宽</td></tr>
+            <tr><td class="font-medium">丢步风险</td><td>有（过载时）</td><td>无</td></tr>
+            <tr><td class="font-medium">成本</td><td>低</td><td>高</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>丢步问题</strong>：步进电机在过载或加速度过大时会丢步（实际转角小于指令转角），且无法检测。解决方法：①降低负载/加速度；②加装编码器改为闭环；③使用<a href="javascript:void(0)" onclick="App.loadDetail('motor-04')">伺服电机</a>替代。</div>
+        </div>
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>应用选择</strong>：低速（&lt;500rpm）、精度要求中等、成本敏感的场合选步进电机；高速、高精度、需要力矩控制的场合（如机器人关节）选<a href="javascript:void(0)" onclick="App.loadDetail('motor-04')">PMSM 伺服</a>。</div>
+        </div>
+      ` },
+
+      // ===== motor-06 电机数学模型 =====
+      { id: 'motor-06', title: '电机数学模型', desc: '坐标变换、dq 模型、电机统一理论', icon: '📊', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">统一框架：从三相到 dq 的坐标变换</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          交流电机的三相绕组产生的磁动势是时变的，直接分析非常复杂。通过<strong>坐标变换</strong>将三相静止坐标系转换为旋转坐标系，交流量变为直流量，大大简化了分析和控制。这是<a href="javascript:void(0)" onclick="App.loadDetail('motor-04')">矢量控制（FOC）</a>的数学基础。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">Clarke 变换（abc → αβ）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          将三相静止坐标系（a, b, c）转换为两相静止坐标系（α, β）：
+        </p>
+        <div class="formula-block">
+          $$\\begin{bmatrix} i_\\alpha \\\\ i_\\beta \\end{bmatrix} = \\frac{2}{3} \\begin{bmatrix} 1 & -\\frac{1}{2} & -\\frac{1}{2} \\\\ 0 & \\frac{\\sqrt{3}}{2} & -\\frac{\\sqrt{3}}{2} \\end{bmatrix} \\begin{bmatrix} i_A \\\\ i_B \\\\ i_C \\end{bmatrix}$$
+          <div class="text-sm text-gray-500 mt-2">系数 $2/3$ 为等幅值变换。$i_A + i_B + i_C = 0$ 时只需测量两相</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">Park 变换（αβ → dq）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          将两相静止坐标系（α, β）转换为旋转坐标系（d, q），旋转角度为转子电角度 $\\theta_e$：
+        </p>
+        <div class="formula-block">
+          $$\\begin{bmatrix} i_d \\\\ i_q \\end{bmatrix} = \\begin{bmatrix} \\cos\\theta_e & \\sin\\theta_e \\\\ -\\sin\\theta_e & \\cos\\theta_e \\end{bmatrix} \\begin{bmatrix} i_\\alpha \\\\ i_\\beta \\end{bmatrix}$$
+          <div class="text-sm text-gray-500 mt-2">$d$ 轴与转子磁链方向对齐，$q$ 轴超前 $d$ 轴 90°</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">直流电机的 dq 模型</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          直流电机在 dq 坐标系下天然就是解耦的：
+        </p>
+        <div class="formula-block">
+          $$u_d = R i_d + L \\frac{di_d}{dt} + e_d$$
+          $$u_q = R i_q + L \\frac{di_q}{dt} + e_q + K_e \\omega$$
+          <div class="text-sm text-gray-500 mt-2">$e_d, e_q$：反电动势 dq 分量，$K_e \\omega$：反电动势（仅 $q$ 轴有）</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          电磁转矩简化为：
+        </p>
+        <div class="formula-block">
+          $$T_e = K_t i_q$$
+          <div class="text-sm text-gray-500 mt-2">转矩仅与 $i_q$ 成正比，与 $i_d$ 解耦。这就是 FOC 的数学本质</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">坐标变换的物理意义</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>Clarke 变换</strong>：将三相合成磁动势等效为两相正交磁动势，减少变量数</li>
+          <li><strong>Park 变换</strong>：将静止坐标系中的正弦交流量转换为旋转坐标系中的直流量，便于用 PI 控制器调节</li>
+          <li><strong>逆变换</strong>：将 dq 控制量转换回三相 PWM 信号，驱动<a href="javascript:void(0)" onclick="App.loadDetail('pwr-04')">逆变器</a></li>
+        </ul>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：坐标变换的本质是<a href="javascript:void(0)" onclick="App.loadDetail('la-02')">线性代数的基变换</a>。Clarke/Park 变换矩阵都是正交矩阵（$T^{-1} = T^T$），保证变换前后功率不变。这与<a href="javascript:void(0)" onclick="App.loadDetail('robo-02')">机器人学中的齐次变换</a>有相似的数学结构。</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>PMSM vs BLDC 的 dq 模型</strong>：PMSM 的反电动势为正弦波，dq 模型中 $e_d=0$，$e_q=\\omega_e\\psi_f$。BLDC 的反电动势为梯形波，dq 模型中含有 6 次谐波，不适合用简单 PI 控制。这就是为什么 FOC 适用于 PMSM 而非 BLDC。</div>
+        </div>
+      ` },
+
+      // ===== motor-07 电机调速控制 =====
+      { id: 'motor-07', title: '电机调速控制', desc: 'PID 调速、双闭环控制、弱磁控制', icon: '🎛️', tags: ['核心', '高频考点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">从开环到闭环：电机调速控制策略</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          电机调速控制的目标是使电机转速精确跟踪期望值。从最简单的开环 V/f 控制到高性能的<a href="javascript:void(0)" onclick="App.loadDetail('motor-04')">矢量控制</a>，调速策略的复杂度和性能逐步提升。本节介绍工业中常用的调速方法及其设计要点。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">直流电机双闭环调速系统</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          工业直流调速的标准架构是<strong>转速-电流双闭环</strong>系统：
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>外环（转速环）</strong>：PI 调节器，输入为转速误差，输出为电流给定值</li>
+          <li><strong>内环（电流环）</strong>：PI 调节器，输入为电流误差，输出为电压/占空比</li>
+          <li><strong>优势</strong>：电流内环快速响应，限制最大电流保护电机；转速外环保证稳态精度</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">PI 调节器设计</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          PI 调节器的传递函数：
+        </p>
+        <div class="formula-block">
+          $$G_{PI}(s) = K_p + \\frac{K_i}{s} = K_p \\frac{\\tau_i s + 1}{\\tau_i s}$$
+          <div class="text-sm text-gray-500 mt-2">$K_p$：比例增益，$K_i$：积分增益，$\\tau_i = K_p/K_i$：积分时间常数</div>
+        </div>
+        <div class="step-list">
+          <div class="step-item"><div><strong>电流环整定</strong>：内环带宽设为采样频率的 1/10~1/5。按<a href="javascript:void(0)" onclick="App.loadDetail('act-12')">典型 I 型系统</a>设计，$\\tau_i = L_a/R_a$（对消电机电气时间常数）。</div></div>
+          <div class="step-item"><div><strong>转速环整定</strong>：外环带宽为内环的 1/5~1/10。按典型 II 型系统设计，保证足够的相角裕度（>45°）。</div></div>
+          <div class="step-item"><div><strong>抗饱和</strong>：积分项需加抗饱和（Anti-windup）处理，防止输出饱和时积分持续累积导致超调。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">交流电机 V/f 控制</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          最简单的交流电机调速方法。保持电压与频率之比恒定：
+        </p>
+        <div class="formula-block">
+          $$\\frac{U}{f} = \\text{const} \\implies \\Phi = \\text{const}$$
+          <div class="text-sm text-gray-500 mt-2">保持磁通恒定，避免磁路饱和或欠励磁。低频时需补偿定子电阻压降</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          V/f 控制的优缺点：
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>优点</strong>：简单、无需位置传感器、成本低</li>
+          <li><strong>缺点</strong>：动态响应慢、低速转矩脉动大、无法精确控制转矩</li>
+          <li><strong>适用</strong>：风机、水泵等对动态性能要求不高的场合</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">弱磁控制</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          当电机转速超过基速时，反电动势接近电压极限。通过注入负的 $i_d$ 抵消部分永磁磁通，扩大调速范围：
+        </p>
+        <div class="formula-block">
+          $$i_d = -\\frac{\\psi_f}{L_d} + \\sqrt{\\frac{u_{max}^2}{\\omega_e^2 L_q^2} - i_q^2}$$
+          <div class="text-sm text-gray-500 mt-2">弱磁区域：恒功率运行，转矩随转速反比下降。电压极限圆和电流极限圆限制了弱磁范围</div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：PI 调节器的整定方法与<a href="javascript:void(0)" onclick="App.loadDetail('act-12')">自动控制原理中的系统校正</a>一脉相承。双闭环架构本质上是<a href="javascript:void(0)" onclick="App.loadDetail('mct-02')">状态空间</a>中"内环快速、外环精确"的工程实现。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>PI 整定陷阱</strong>：$K_p$ 过大导致振荡，$K_i$ 过大导致超调和积分饱和。工程上先整定电流环（快），再整定转速环（慢），每步观察阶跃响应。</div>
+        </div>
+      ` },
+
+      // ===== motor-08 伺服系统设计 =====
+      { id: 'motor-08', title: '伺服系统设计', desc: '伺服系统架构、位置/速度/力矩控制模式', icon: '🎯', tags: ['核心', '高频考点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">伺服系统：精确跟踪的工程实现</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          伺服（Servo）源自拉丁语"奴隶"，意为"忠实跟随指令"。伺服系统是电机 + 驱动器 + 控制器 + 传感器的完整闭环系统，能够精确控制位置、速度或力矩。机器人每个关节都是一个伺服系统，理解其架构和模式是<a href="javascript:void(0)" onclick="App.loadDetail('robo-10')">机器人控制</a>的工程基础。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">伺服系统的三环架构</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          工业伺服的标准架构为<strong>位置-速度-电流三环</strong>串级控制：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>环路</th><th>输入</th><th>输出</th><th>传感器</th><th>带宽</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">电流环（最内）</td><td>电流给定</td><td>PWM 占空比</td><td>电流传感器</td><td>最高（~10kHz）</td></tr>
+            <tr><td class="font-medium">速度环（中间）</td><td>速度给定</td><td>电流给定</td><td>编码器微分</td><td>中等（~1kHz）</td></tr>
+            <tr><td class="font-medium">位置环（最外）</td><td>位置给定</td><td>速度给定</td><td>编码器</td><td>最低（~100Hz）</td></tr>
+          </tbody>
+        </table></div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>串级控制的优点</strong>：①内环快速抑制扰动（如电压波动、负载变化）；②外环只需处理慢动态；③电流环限制最大电流保护电机。设计时从内向外逐环整定。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">三种控制模式</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>模式</th><th>控制目标</th><th>应用场景</th><th>机器人应用</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">位置模式</td><td>精确到达目标位置</td><td>CNC、3D 打印</td><td>关节位置控制</td></tr>
+            <tr><td class="font-medium">速度模式</td><td>精确跟踪速度曲线</td><td>传送带、卷绕</td><td>移动底盘</td></tr>
+            <tr><td class="font-medium">力矩模式</td><td>精确输出力矩</td><td>张力控制、压装</td><td><a href="javascript:void(0)" onclick="App.loadDetail('robo-09')">力控制/阻抗控制</a></td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">伺服驱动器的关键功能</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>电流采样与控制</strong>：三相电流采样 + FOC 算法 + SVPWM 输出</li>
+          <li><strong>位置/速度环</strong>：编码器信号处理、位置/速度估算、环路控制</li>
+          <li><strong>保护功能</strong>：过流、过压、过温、超速、堵转保护</li>
+          <li><strong>通信接口</strong>：EtherCAT、CAN、RS485 等工业总线</li>
+          <li><strong>参数自整定</strong>：自动辨识电机参数，优化控制增益</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">伺服系统的性能指标</h4>
+        <div class="formula-block">
+          $$\\text{定位精度} = \\frac{\\text{编码器分辨率}}{\\text{减速比}}$$
+          <div class="text-sm text-gray-500 mt-2">17 位编码器（131072 脉冲/转）+ 100:1 谐波减速器 → 理论精度 $360°/(131072 \\times 100) \\approx 0.000028°$</div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：伺服系统的三环架构本质上是<a href="javascript:void(0)" onclick="App.loadDetail('mct-02')">状态空间控制</a>的工程简化版。位置环的 PI 参数整定可参考<a href="javascript:void(0)" onclick="App.loadDetail('act-12')">系统校正</a>方法。力矩模式是<a href="javascript:void(0)" onclick="App.loadDetail('robo-09')">阻抗控制</a>的硬件基础。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>调试顺序</strong>：必须从内到外逐环整定——先调电流环（最快），再调速度环，最后调位置环。跳过内环直接调外环会导致系统不稳定。</div>
+        </div>
+      ` },
+
+    ],
+  },
+
+  // ========== 概率论与数理统计 prob-01~prob-08 ==========
+  'probability': {
+    title: '概率论与数理统计',
+    subtitle: '随机事件、概率分布、大数定律、参数估计与假设检验，机器人感知与决策的数学基础',
+    icon: '🎲',
+    sections: [
+      // ===== prob-01 随机事件与概率 =====
+      { id: 'prob-01', title: '随机事件与概率', desc: '样本空间、事件运算、古典/几何概型', icon: '🎲', tags: ['核心', '入门'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">概率：不确定性的数学语言</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          现实世界充满了不确定性——传感器有噪声、电机有扰动、环境在变化。概率论提供了一套严格的数学框架来量化和处理不确定性。在机器人学中，<a href="javascript:void(0)" onclick="App.loadDetail('robo-06')">卡尔曼滤波</a>用概率描述状态估计的不确定性，SLAM 用概率地图描述环境的未知性。本节建立概率的基本概念。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">基本概念</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>随机试验 E</strong>：在相同条件下可重复、结果不确定、所有可能结果已知的试验</li>
+          <li><strong>样本空间 Ω</strong>：所有可能结果的集合。如掷骰子 $\\Omega = \\{1,2,3,4,5,6\\}$</li>
+          <li><strong>随机事件 A</strong>：样本空间的子集，如"掷出偶数" $A = \\{2,4,6\\}$</li>
+          <li><strong>必然事件 Ω 与不可能事件 ∅</strong>：一定发生与一定不发生的事件</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">概率的公理化定义</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          概率 $P$ 是定义在事件集合上的实值函数，满足三条公理：
+        </p>
+        <div class="formula-block">
+          $$\\text{①} \\; P(A) \\ge 0 \\quad \\text{②} \\; P(\\Omega) = 1 \\quad \\text{③} \\; P(A \\cup B) = P(A) + P(B) \\; (A \\cap B = \\emptyset)$$
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          由此推出的重要性质：
+        </p>
+        <div class="formula-block">
+          $$P(\\bar{A}) = 1 - P(A), \\quad P(A \\cup B) = P(A) + P(B) - P(A \\cap B)$$
+          $$P(A - B) = P(A) - P(A \\cap B), \\quad P(A) \\le 1$$
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">古典概型与几何概型</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>概型</th><th>条件</th><th>计算公式</th><th>典型例子</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">古典概型</td><td>有限、等可能</td><td>$P(A) = |A|/|\\Omega|$</td><td>掷骰子、抽签</td></tr>
+            <tr><td class="font-medium">几何概型</td><td>无限、等可能（长度/面积/体积）</td><td>$P(A) = \\mu(A)/\\mu(\\Omega)$</td><td>约会问题、蒲丰投针</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">事件的关系与运算</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>包含</strong>：$A \\subset B$ 表示 A 发生则 B 必发生</li>
+          <li><strong>互斥</strong>：$A \\cap B = \\emptyset$ 表示 A、B 不能同时发生</li>
+          <li><strong>对立</strong>：$B = \\bar{A}$ 表示 A 不发生就是 B 发生</li>
+          <li><strong>德摩根律</strong>：$\\overline{A \\cup B} = \\bar{A} \\cap \\bar{B}$，$\\overline{A \\cap B} = \\bar{A} \\cup \\bar{B}$</li>
+        </ul>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：概率论是<a href="javascript:void(0)" onclick="App.loadDetail('robo-09')">卡尔曼滤波</a>和<a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">最优状态估计</a>的数学基础。条件概率是贝叶斯推理的起点，详见<a href="javascript:void(0)" onclick="App.loadDetail('prob-02')">条件概率与贝叶斯</a>。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>易错点</strong>：$P(A \\cup B) = P(A) + P(B)$ 仅在 $A, B$ 互斥时成立。一般情况需减去 $P(A \\cap B)$。这是考试最常见的陷阱。</div>
+        </div>
+      ` },
+
+      // ===== prob-02 条件概率与贝叶斯 =====
+      { id: 'prob-02', title: '条件概率与贝叶斯', desc: '条件概率、全概率公式、贝叶斯公式', icon: '🔀', tags: ['核心', '高频考点'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">条件概率：信息如何改变判断</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          条件概率是概率论中最重要的概念之一。当我们获得新信息（如传感器观测），如何更新对事件发生的判断？<strong>贝叶斯公式</strong>给出了从"原因到结果"到"结果推原因"的数学工具。这是<a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">卡尔曼滤波</a>和机器人感知的核心推理框架。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">条件概率的定义</h4>
+        <div class="formula-block">
+          $$P(A|B) = \\frac{P(AB)}{P(B)}, \\quad P(B) > 0$$
+          <div class="text-sm text-gray-500 mt-2">$P(A|B)$：在事件 B 已发生的条件下，事件 A 发生的概率</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          乘法公式：$P(AB) = P(A|B)P(B) = P(B|A)P(A)$。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">全概率公式</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          若 $B_1, B_2, \\ldots, B_n$ 是样本空间的一个<strong>完备事件组</strong>（互斥且并集为 Ω），则对任意事件 A：
+        </p>
+        <div class="formula-block">
+          $$P(A) = \\sum_{i=1}^{n} P(A|B_i) P(B_i)$$
+          <div class="text-sm text-gray-500 mt-2">将复杂事件 A 的概率分解为在各种"原因"$B_i$ 下的条件概率的加权和</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">贝叶斯公式</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          全概率公式的"逆问题"——已知结果 A，推断原因 $B_i$ 的概率：
+        </p>
+        <div class="formula-block">
+          $$P(B_j|A) = \\frac{P(A|B_j)P(B_j)}{\\sum_{i=1}^{n} P(A|B_i)P(B_i)}$$
+          <div class="text-sm text-gray-500 mt-2">$P(B_j)$：先验概率（观测前），$P(B_j|A)$：后验概率（观测后），$P(A|B_j)$：似然函数</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>贝叶斯思维</strong>：后验 ∝ 先验 × 似然。观测数据（似然）越多，先验的影响越小，后验越集中在真实参数附近。这正是<a href="javascript:void(0)" onclick="App.loadDetail('prob-08')">参数估计</a>的理论基础。</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：传感器故障诊断</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          设某传感器故障率 1%（先验 $P(F)=0.01$），正常时读数偏差 &lt;0.1 的概率 95%（$P(D|\\bar{F})=0.95$），故障时偏差 &lt;0.1 的概率 30%（$P(D|F)=0.30$）。观测到偏差 &lt;0.1，求传感器正常的概率：
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：先验</strong>。$P(F)=0.01$，$P(\\bar{F})=0.99$</div></div>
+          <div class="step-item"><div><strong>第二步：似然</strong>。$P(D|F)=0.30$，$P(D|\\bar{F})=0.95$</div></div>
+          <div class="step-item"><div><strong>第三步：全概率</strong>。$P(D) = 0.30 \\times 0.01 + 0.95 \\times 0.99 = 0.9435$</div></div>
+          <div class="step-item"><div><strong>第四步：贝叶斯</strong>。$P(\\bar{F}|D) = \\frac{0.95 \\times 0.99}{0.9435} = 0.9958$</div></div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：贝叶斯公式是<a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">卡尔曼滤波</a>的预测-更新框架的数学原型。在 SLAM 中，贝叶斯推理用于从传感器观测更新地图和机器人位姿的联合后验分布。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>常见错误</strong>：混淆 $P(A|B)$ 和 $P(B|A)$。$P(\\text{患病}|\\text{阳性}) \\ne P(\\text{阳性}|\\text{患病})$。这就是为什么低概率疾病的阳性检测结果可能大部分是假阳性。</div>
+        </div>
+      ` },
+
+      // ===== prob-03 随机变量及其分布 =====
+      { id: 'prob-03', title: '随机变量及其分布', desc: '离散/连续分布、分布函数、密度函数', icon: '📈', tags: ['核心'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">随机变量：把随机结果变成数字</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          随机变量将随机事件的结果映射为实数，使我们可以用分析工具研究随机现象。在机器人学中，传感器噪声、电机扰动、环境不确定性都用随机变量描述。<a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">卡尔曼滤波</a>假设噪声服从高斯分布，正态分布是最核心的连续分布。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">离散型随机变量</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          取值为有限或可列个的随机变量。用<strong>分布律</strong>（概率质量函数 PMF）描述：
+        </p>
+        <div class="formula-block">
+          $$P(X = x_k) = p_k, \\quad k = 1, 2, \\ldots; \\quad \\sum_k p_k = 1, \\; p_k \\ge 0$$
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          常见离散分布：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>分布</th><th>记号</th><th>PMF</th><th>期望/方差</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">0-1 分布</td><td>$B(1,p)$</td><td>$P(X=1)=p$</td><td>$p$, $p(1-p)$</td></tr>
+            <tr><td class="font-medium">二项分布</td><td>$B(n,p)$</td><td>$C_n^k p^k (1-p)^{n-k}$</td><td>$np$, $np(1-p)$</td></tr>
+            <tr><td class="font-medium">泊松分布</td><td>$P(\\lambda)$</td><td>$\\frac{\\lambda^k e^{-\\lambda}}{k!}$</td><td>$\\lambda$, $\\lambda$</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">连续型随机变量</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          取值为连续区间的随机变量。用<strong>概率密度函数</strong>（PDF）描述：
+        </p>
+        <div class="formula-block">
+          $$P(a \\le X \\le b) = \\int_a^b f(x) dx, \\quad f(x) \\ge 0, \\quad \\int_{-\\infty}^{+\\infty} f(x) dx = 1$$
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">正态分布（高斯分布）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          最重要的连续分布，记为 $X \\sim N(\\mu, \\sigma^2)$：
+        </p>
+        <div class="formula-block">
+          $$f(x) = \\frac{1}{\\sqrt{2\\pi}\\sigma} e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}, \\quad -\\infty < x < +\\infty$$
+          <div class="text-sm text-gray-500 mt-2">$\\mu$：均值（位置参数），$\\sigma^2$：方差（尺度参数）。$\\mu=0,\\sigma=1$ 为标准正态分布</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          正态分布的性质：
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>3σ 原则</strong>：$P(\\mu-3\\sigma < X < \\mu+3\\sigma) \\approx 99.74\\%$</li>
+          <li><strong>标准化</strong>：$Z = (X-\\mu)/\\sigma \\sim N(0,1)$，利用标准正态分布表查概率</li>
+          <li><strong>线性组合</strong>：$X \\sim N(\\mu_1,\\sigma_1^2)$，$Y \\sim N(\\mu_2,\\sigma_2^2)$ 独立，则 $aX+bY \\sim N(a\\mu_1+b\\mu_2, a^2\\sigma_1^2+b^2\\sigma_2^2)$</li>
+        </ul>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：正态分布是<a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">卡尔曼滤波</a>的核心假设——过程噪声和观测噪声都假设为高斯分布。泊松分布描述单位时间内稀有事件的次数，可用于机器人碰撞概率建模。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>易错点</strong>：连续型随机变量取单点概率为零 $P(X=a)=0$，但密度函数 $f(a)$ 可以不为零。$f(x)$ 不是概率，而是概率密度。</div>
+        </div>
+      ` },
+
+      // ===== prob-04 多维随机变量 =====
+      { id: 'prob-04', title: '多维随机变量', desc: '联合分布、边缘分布、条件分布、独立性', icon: '📊', tags: ['核心'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">多维随机变量：描述变量间的依赖关系</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          实际问题中往往涉及多个随机变量——机器人的位姿 $(x, y, \\theta)$、传感器的多个测量值、电机的电流和转速。多维随机变量描述变量的<strong>联合行为</strong>和<strong>相互依赖</strong>关系。协方差矩阵是<a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">卡尔曼滤波</a>中描述不确定性的核心工具。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">联合分布</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          二维随机变量 $(X, Y)$ 的联合分布函数：
+        </p>
+        <div class="formula-block">
+          $$F(x, y) = P(X \\le x, Y \\le y)$$
+          <div class="text-sm text-gray-500 mt-2">联合密度函数：$f(x,y) = \\frac{\\partial^2 F}{\\partial x \\partial y}$，满足 $f(x,y) \\ge 0$，$\\iint f(x,y)dxdy = 1$</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">边缘分布</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          从联合分布中"消去"一个变量，得到单个变量的分布：
+        </p>
+        <div class="formula-block">
+          $$f_X(x) = \\int_{-\\infty}^{+\\infty} f(x,y) \\, dy, \\quad f_Y(y) = \\int_{-\\infty}^{+\\infty} f(x,y) \\, dx$$
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">条件分布与独立性</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          在 $X=x$ 的条件下 $Y$ 的条件密度：
+        </p>
+        <div class="formula-block">
+          $$f_{Y|X}(y|x) = \\frac{f(x,y)}{f_X(x)}, \\quad f_X(x) > 0$$
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          <strong>独立性</strong>：若 $f(x,y) = f_X(x) \\cdot f_Y(y)$ 对所有 $x,y$ 成立，则 $X$ 与 $Y$ 独立。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">二维正态分布</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          最重要的多维分布，记为 $(X,Y) \\sim N(\\mu_1, \\mu_2, \\sigma_1^2, \\sigma_2^2, \\rho)$：
+        </p>
+        <div class="formula-block">
+          $$\\begin{bmatrix} X \\\\ Y \\end{bmatrix} \\sim N\\left(\\begin{bmatrix} \\mu_1 \\\\ \\mu_2 \\end{bmatrix}, \\begin{bmatrix} \\sigma_1^2 & \\rho\\sigma_1\\sigma_2 \\\\ \\rho\\sigma_1\\sigma_2 & \\sigma_2^2 \\end{bmatrix}\\right)$$
+          <div class="text-sm text-gray-500 mt-2">$\\rho$：相关系数。$\\rho=0$ 时 $X, Y$ 独立（正态分布特有性质）</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          二维正态的重要性质：
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li>边缘分布仍为正态：$X \\sim N(\\mu_1, \\sigma_1^2)$</li>
+          <li>条件分布仍为正态：$Y|X=x \\sim N(\\mu_2 + \\rho\\frac{\\sigma_2}{\\sigma_1}(x-\\mu_1), \\sigma_2^2(1-\\rho^2))$</li>
+          <li>线性组合仍为正态：$aX+bY \\sim N(a\\mu_1+b\\mu_2, a^2\\sigma_1^2+b^2\\sigma_2^2+2ab\\rho\\sigma_1\\sigma_2)$</li>
+        </ul>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：二维正态分布的协方差矩阵是<a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">卡尔曼滤波</a>中状态协方差矩阵 $P$ 的数学基础。条件分布公式是卡尔曼增益推导的关键步骤。</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>协方差矩阵</strong>：$\\Sigma = \\begin{bmatrix} \\sigma_1^2 & \\rho\\sigma_1\\sigma_2 \\\\ \\rho\\sigma_1\\sigma_2 & \\sigma_2^2 \\end{bmatrix}$ 是半正定对称矩阵。对角线为各变量方差，非对角线为协方差。在<a href="javascript:void(0)" onclick="App.loadDetail('la-08')">二次型</a>分析中有重要应用。</div>
+        </div>
+      ` },
+
+      // ===== prob-05 数字特征 =====
+      { id: 'prob-05', title: '数字特征', desc: '期望、方差、协方差、矩', icon: '📐', tags: ['核心', '高频考点'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">数字特征：用几个数概括分布</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          分布函数完整描述了随机变量的统计规律，但实际中我们往往只需几个关键数字就能把握分布的主要特征。<strong>期望</strong>描述中心位置，<strong>方差</strong>描述离散程度，<strong>协方差</strong>描述变量间的线性相关性。这些数字特征是<a href="javascript:void(0)" onclick="App.loadDetail('prob-07')">参数估计</a>和<a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">卡尔曼滤波</a>的基础。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">数学期望</h4>
+        <div class="formula-block">
+          $$E(X) = \\begin{cases} \\sum_k x_k p_k & \\text{离散型} \\\\ \\int_{-\\infty}^{+\\infty} x f(x) dx & \\text{连续型} \\end{cases}$$
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          期望的性质：$E(aX+b) = aE(X)+b$，$E(X+Y) = E(X)+E(Y)$（无需独立），$E(XY) = E(X)E(Y)$（$X,Y$ 独立时）。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">方差与标准差</h4>
+        <div class="formula-block">
+          $$D(X) = E[(X-E(X))^2] = E(X^2) - [E(X)]^2$$
+          <div class="text-sm text-gray-500 mt-2">方差的计算公式：$D(X) = E(X^2) - (EX)^2$，标准差 $\\sigma = \\sqrt{D(X)}$</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          方差的性质：$D(aX+b) = a^2 D(X)$，$D(X \\pm Y) = D(X)+D(Y) \\pm 2\\text{Cov}(X,Y)$。$X,Y$ 独立时 $D(X+Y) = D(X)+D(Y)$。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">常见分布的数字特征</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>分布</th><th>期望 E(X)</th><th>方差 D(X)</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">$B(n,p)$ 二项</td><td>$np$</td><td>$np(1-p)$</td></tr>
+            <tr><td class="font-medium">$P(\\lambda)$ 泊松</td><td>$\\lambda$</td><td>$\\lambda$</td></tr>
+            <tr><td class="font-medium">$N(\\mu,\\sigma^2)$ 正态</td><td>$\\mu$</td><td>$\\sigma^2$</td></tr>
+            <tr><td class="font-medium">$U(a,b)$ 均匀</td><td>$(a+b)/2$</td><td>$(b-a)^2/12$</td></tr>
+            <tr><td class="font-medium">$E(\\lambda)$ 指数</td><td>$1/\\lambda$</td><td>$1/\\lambda^2$</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">协方差与相关系数</h4>
+        <div class="formula-block">
+          $$\\text{Cov}(X,Y) = E[(X-E(X))(Y-E(Y))] = E(XY) - E(X)E(Y)$$
+          $$\\rho_{XY} = \\frac{\\text{Cov}(X,Y)}{\\sqrt{D(X)D(Y)}}$$
+          <div class="text-sm text-gray-500 mt-2">$\\rho_{XY}$：相关系数，$|\\rho| \\le 1$。$\\rho=0$ 不相关，$|\\rho|=1$ 完全线性相关</div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：协方差矩阵是<a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">卡尔曼滤波</a>的核心数据结构。$\\text{Cov}(X,Y)=0$ 不一定独立（除非是正态分布），这是考试常考的易错点。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>易错点</strong>："不相关"≠"独立"。对于一般分布，不相关推不出独立。但对于二维正态分布，不相关与独立等价。考试中要区分这两种情况。</div>
+        </div>
+      ` },
+
+      // ===== prob-06 大数定律与中心极限定理 =====
+      { id: 'prob-06', title: '大数定律与中心极限定理', desc: '切比雪夫不等式、大数定律、CLT', icon: '🔔', tags: ['核心', '高频考点'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">从随机到确定：大数定律与中心极限定理</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          大数定律和中心极限定理是概率论的两大基石，揭示了随机现象中隐藏的确定性规律。大数定律说明<strong>大量重复实验的平均值趋近期望</strong>，中心极限定理说明<strong>大量独立随机变量之和近似正态分布</strong>。这两者是<a href="javascript:void(0)" onclick="App.loadDetail('prob-08')">参数估计</a>和<a href="javascript:void(0)" onclick="App.loadDetail('prob-07')">统计推断</a>的理论基础。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">切比雪夫不等式</h4>
+        <div class="formula-block">
+          $$P(|X - \\mu| \\ge \\varepsilon) \\le \\frac{\\sigma^2}{\\varepsilon^2}$$
+          <div class="text-sm text-gray-500 mt-2">对任意分布都成立。方差越小，偏离均值的概率越小</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">大数定律</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          设 $X_1, X_2, \\ldots$ 独立同分布（i.i.d.），$E(X_i)=\\mu$，则：
+        </p>
+        <div class="formula-block">
+          $$\\bar{X}_n = \\frac{1}{n}\\sum_{i=1}^{n} X_i \\xrightarrow{P} \\mu \\quad (n \\to \\infty)$$
+          <div class="text-sm text-gray-500 mt-2">样本均值依概率收敛于期望。$n$ 越大，样本均值越接近真实均值</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>弱大数定律</strong>：依概率收敛（上述形式）</li>
+          <li><strong>强大数定律</strong>：几乎必然收敛（更强的结论）</li>
+          <li><strong>应用</strong>：蒙特卡洛积分——用大量随机采样的平均值近似积分值</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">中心极限定理（CLT）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          设 $X_1, X_2, \\ldots$ 独立同分布，$E(X_i)=\\mu$，$D(X_i)=\\sigma^2$，则：
+        </p>
+        <div class="formula-block">
+          $$\\frac{\\bar{X}_n - \\mu}{\\sigma / \\sqrt{n}} \\xrightarrow{d} N(0, 1) \\quad (n \\to \\infty)$$
+          <div class="text-sm text-gray-500 mt-2">无论原始分布是什么形状，样本均值标准化后都趋近标准正态分布。$n \\ge 30$ 时近似已相当好</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">CLT 的直觉与应用</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>测量误差</strong>：多次测量的平均误差近似正态分布（无数微小误差之和）</li>
+          <li><strong>假设检验</strong>：样本均值的分布可用正态近似，构建检验统计量</li>
+          <li><strong>置信区间</strong>：利用正态近似构造参数的置信区间</li>
+        </ul>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：CLT 解释了为什么<a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">卡尔曼滤波</a>假设噪声为高斯分布是合理的——大量微小独立扰动之和近似正态。大数定律是<a href="javascript:void(0)" onclick="App.loadDetail('prob-08')">最大似然估计</a>一致性的理论基础。</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>泊松极限定理</strong>：$n$ 大、$p$ 小时，$B(n,p) \\approx P(np)$。这是泊松分布作为稀有事件模型的理论依据。</div>
+        </div>
+      ` },
+
+      // ===== prob-07 样本与抽样分布 =====
+      { id: 'prob-07', title: '样本与抽样分布', desc: '统计量、三大抽样分布（χ²/t/F）', icon: '📋', tags: ['核心', '高频考点'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">从总体到样本：统计推断的起点</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          我们无法观测总体的全部数据，只能通过<strong>样本</strong>来推断总体特征。样本是总体的子集，统计量是样本的函数。抽样分布描述统计量的概率分布，是<a href="javascript:void(0)" onclick="App.loadDetail('prob-08')">参数估计</a>和<a href="javascript:void(0)" onclick="App.loadDetail('prob-08')">假设检验</a>的理论基础。三大抽样分布（χ²、t、F）是统计学的核心工具。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">基本概念</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>总体</strong>：研究对象的全体（如所有某型号电机的转矩值）</li>
+          <li><strong>样本</strong>：从总体中随机抽取的 $n$ 个个体 $(X_1, X_2, \\ldots, X_n)$</li>
+          <li><strong>统计量</strong>：不含未知参数的样本函数，如 $\\bar{X} = \\frac{1}{n}\\sum X_i$，$S^2 = \\frac{1}{n-1}\\sum(X_i-\\bar{X})^2$</li>
+          <li><strong>抽样分布</strong>：统计量作为随机变量的概率分布</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">χ² 分布</h4>
+        <div class="formula-block">
+          $$\\chi^2(n): \\quad X = Z_1^2 + Z_2^2 + \\cdots + Z_n^2, \\quad Z_i \\sim N(0,1) \\text{ 独立}$$
+          <div class="text-sm text-gray-500 mt-2">$E(\\chi^2) = n$，$D(\\chi^2) = 2n$。可加性：$\\chi^2(m) + \\chi^2(n) \\sim \\chi^2(m+n)$</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">t 分布</h4>
+        <div class="formula-block">
+          $$t(n): \\quad T = \\frac{Z}{\\sqrt{\\chi^2(n)/n}}, \\quad Z \\sim N(0,1) \\text{ 与 } \\chi^2(n) \\text{ 独立}$$
+          <div class="text-sm text-gray-500 mt-2">$n$ 大时 $t(n) \\approx N(0,1)$。$t$ 分布比正态分布"厚尾"，小样本时差异显著</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">F 分布</h4>
+        <div class="formula-block">
+          $$F(m,n): \\quad F = \\frac{\\chi^2(m)/m}{\\chi^2(n)/n}, \\quad \\text{分子分母独立}$$
+          <div class="text-sm text-gray-500 mt-2">$1/F(m,n) \\sim F(n,m)$。用于方差分析（ANOVA）和回归检验</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">重要结论</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          设 $X_1, \\ldots, X_n \\sim N(\\mu, \\sigma^2)$，则：
+        </p>
+        <div class="formula-block">
+          $$\\frac{(n-1)S^2}{\\sigma^2} \\sim \\chi^2(n-1), \\quad \\frac{\\bar{X}-\\mu}{S/\\sqrt{n}} \\sim t(n-1)$$
+          <div class="text-sm text-gray-500 mt-2">$\\bar{X}$ 与 $S^2$ 独立（正态总体特有性质）</div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：χ² 分布与<a href="javascript:void(0)" onclick="App.loadDetail('la-08')">二次型</a>密切相关——$X^T A X$ 在 $X \\sim N(0,I)$ 时服从 χ² 分布。t 分布用于小样本下的<a href="javascript:void(0)" onclick="App.loadDetail('prob-08')">参数估计</a>和假设检验。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>易错点</strong>：χ² 分布的自由度是独立标准正态变量的个数。$(n-1)S^2/\\sigma^2 \\sim \\chi^2(n-1)$ 而非 $\\chi^2(n)$，因为 $S^2$ 用了 $\\bar{X}$ 估计 $\\mu$，损失了一个自由度。</div>
+        </div>
+      ` },
+
+      // ===== prob-08 参数估计与假设检验 =====
+      { id: 'prob-08', title: '参数估计与假设检验', desc: '点估计、区间估计、最大似然、假设检验', icon: '🎯', tags: ['核心', '高频考点'], goals: { exam: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">统计推断：从数据中提取知识</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          参数估计和假设检验是统计推断的两大核心任务。<strong>参数估计</strong>回答"参数的值是多少"（点估计和区间估计），<strong>假设检验</strong>回答"某个假设是否成立"。在机器人学中，电机参数辨识是参数估计，传感器故障检测是假设检验，<a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">卡尔曼滤波</a>本质上是在线参数估计。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">点估计</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          用样本统计量 $\\hat{\\theta} = g(X_1, \\ldots, X_n)$ 估计未知参数 $\\theta$。好的估计量应满足：
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>无偏性</strong>：$E(\\hat{\\theta}) = \\theta$（估计量的期望等于真值）</li>
+          <li><strong>有效性</strong>：在所有无偏估计中方差最小</li>
+          <li><strong>一致性</strong>：$n \\to \\infty$ 时 $\\hat{\\theta} \\xrightarrow{P} \\theta$（<a href="javascript:void(0)" onclick="App.loadDetail('prob-06')">大数定律</a>保证）</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">最大似然估计（MLE）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          选择使观测数据出现概率最大的参数值：
+        </p>
+        <div class="formula-block">
+          $$L(\\theta) = \\prod_{i=1}^{n} f(x_i; \\theta), \\quad \\hat{\\theta}_{MLE} = \\arg\\max_{\\theta} L(\\theta) = \\arg\\max_{\\theta} \\ln L(\\theta)$$
+          <div class="text-sm text-gray-500 mt-2">取对数将乘积变为求和，便于求导。正态总体：$\\hat{\\mu}_{MLE} = \\bar{X}$，$\\hat{\\sigma}^2_{MLE} = \\frac{1}{n}\\sum(X_i-\\bar{X})^2$</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">区间估计</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          正态总体均值 $\\mu$ 的置信区间（$\\sigma$ 已知）：
+        </p>
+        <div class="formula-block">
+          $$\\left(\\bar{X} - z_{\\alpha/2}\\frac{\\sigma}{\\sqrt{n}}, \\; \\bar{X} + z_{\\alpha/2}\\frac{\\sigma}{\\sqrt{n}}\\right)$$
+          <div class="text-sm text-gray-500 mt-2">$\\sigma$ 未知时用 $t$ 分布替换：$\\bar{X} \\pm t_{\\alpha/2}(n-1) \\cdot S/\\sqrt{n}$</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">假设检验的基本步骤</h4>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：建立假设</strong>。原假设 $H_0$（如 $\\mu = \\mu_0$），备择假设 $H_1$（如 $\\mu \\ne \\mu_0$）。</div></div>
+          <div class="step-item"><div><strong>第二步：选择检验统计量</strong>。根据已知条件选择 $z$、$t$、$\\chi^2$ 或 $F$ 统计量。</div></div>
+          <div class="step-item"><div><strong>第三步：确定拒绝域</strong>。给定显著性水平 $\\alpha$（通常 0.05），查表确定临界值。</div></div>
+          <div class="step-item"><div><strong>第四步：做出判断</strong>。统计量落入拒绝域则拒绝 $H_0$，否则不拒绝。</div></div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：MLE 是<a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">卡尔曼滤波</a>和<a href="javascript:void(0)" onclick="App.loadDetail('robo-10')">自适应控制</a>中参数辨识的数学基础。假设检验可用于<a href="javascript:void(0)" onclick="App.loadDetail('motor-08')">机器人伺服系统</a>的传感器故障检测。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>两类错误</strong>：第 I 类错误（弃真）概率为 $\\alpha$，第 II 类错误（取伪）概率为 $\\beta$。增大样本量 $n$ 可同时减小 $\\alpha$ 和 $\\beta$。$\\alpha$ 通常取 0.05 或 0.01。</div>
+        </div>
+      ` },
+
+    ],
+  },
+
+  // ========== 电力电子技术 pwr-01~pwr-06 ==========
+  'power-electronics': {
+    title: '电力电子技术',
+    subtitle: '整流、逆变、斩波电路与 PWM 控制，电机驱动的功率变换基础',
+    icon: '⚡',
+    sections: [
+      // ===== pwr-01 电力电子概述 =====
+      { id: 'pwr-01', title: '电力电子概述', desc: '电力电子技术定义、功率器件、应用领域', icon: '⚡', tags: ['核心', '入门'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">电力电子：电能变换的使能技术</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          电力电子技术是利用功率半导体器件实现电能变换（AC-DC、DC-AC、DC-DC、AC-AC）的技术。它是连接控制信号与大功率执行器的桥梁——在机器人系统中，<a href="javascript:void(0)" onclick="App.loadDetail('motor-04')">PMSM 电机</a>需要<a href="javascript:void(0)" onclick="App.loadDetail('pwr-04')">逆变器</a>驱动，<a href="javascript:void(0)" onclick="App.loadDetail('pwr-03')">DC-DC 变换器</a>为嵌入式系统供电。理解电力电子是设计电机驱动器的前提。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">电能变换的四种形式</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>变换类型</th><th>电路名称</th><th>典型应用</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">AC → DC</td><td>整流电路</td><td>电源适配器、充电器</td></tr>
+            <tr><td class="font-medium">DC → AC</td><td>逆变电路</td><td><a href="javascript:void(0)" onclick="App.loadDetail('motor-04')">电机驱动</a>、UPS</td></tr>
+            <tr><td class="font-medium">DC → DC</td><td>斩波电路</td><td>电池管理、LED 驱动</td></tr>
+            <tr><td class="font-medium">AC → AC</td><td>交交变频</td><td>大功率调速</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">核心功率器件</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>二极管（Diode）</strong>：单向导通，用于整流和续流。不可控器件</li>
+          <li><strong>晶闸管（SCR）</strong>：可控导通、不可控关断。用于大功率整流</li>
+          <li><strong>IGBT</strong>：绝缘栅双极型晶体管，可控导通和关断。中大功率逆变的主力</li>
+          <li><strong>MOSFET</strong>：金属氧化物场效应管，开关速度快。中小功率、高频应用</li>
+          <li><strong>GaN/SiC</strong>：宽禁带半导体，开关速度更快、损耗更低。新一代电力电子器件</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">器件选型关键参数</h4>
+        <div class="formula-block">
+          $$P_{loss} = P_{conduction} + P_{switching} = V_{on} \\cdot I_{load} + \\frac{1}{2} V_{bus} I_{load} (t_{on} + t_{off}) f_{sw}$$
+          <div class="text-sm text-gray-500 mt-2">$V_{on}$：导通压降，$f_{sw}$：开关频率。MOSFET 的 $V_{on}$ 与 $R_{DS(on)}$ 成正比，IGBT 有固定导通压降约 1.5-2.5V</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">电力电子在机器人中的应用</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>电机驱动器</strong>：<a href="javascript:void(0)" onclick="App.loadDetail('pwr-05')">H 桥</a>和三相桥式逆变器驱动<a href="javascript:void(0)" onclick="App.loadDetail('motor-04')">PMSM/BLDC</a></li>
+          <li><strong>电源管理</strong>：电池到 5V/12V/24V 的 DC-DC 变换</li>
+          <li><strong>再生制动</strong>：电机减速时将动能回馈到电池</li>
+          <li><strong>无线充电</strong>：谐振式无线电能传输</li>
+        </ul>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：电力电子是<a href="javascript:void(0)" onclick="App.loadDetail('motor-01')">电机拖动</a>的功率变换核心。IGBT/MOSFET 的开关特性决定了<a href="javascript:void(0)" onclick="App.loadDetail('pwr-06')">PWM 控制</a>的频率上限。散热设计需要理解<a href="javascript:void(0)" onclick="App.loadDetail('circ-04')">电路暂态</a>分析。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>安全警告</strong>：电力电子电路涉及高电压（几十至几百伏）和大电流（几至几百安），操作不当可能造成触电或火灾。调试时务必使用隔离探头，先低压测试再上高压。</div>
+        </div>
+      ` },
+
+      // ===== pwr-02 整流电路 =====
+      { id: 'pwr-02', title: '整流电路', desc: '单相/三相整流、滤波、功率因数', icon: '🔌', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">整流：从交流到直流</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          整流电路将交流电（AC）转换为直流电（DC），是所有电子设备电源的第一级。<a href="javascript:void(0)" onclick="App.loadDetail('ana-02')">模拟电路中的二极管整流</a>是基础，电力电子整流则处理更大功率并提供可控输出。本节介绍不可控整流和可控整流的基本原理。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">单相桥式整流电路</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          4 个二极管组成全桥，交流输入的正负半周都有电流流向负载：
+        </p>
+        <div class="formula-block">
+          $$U_{dc} = \\frac{2\\sqrt{2}}{\\pi} U_2 \\approx 0.9 U_2$$
+          <div class="text-sm text-gray-500 mt-2">$U_2$：交流输入有效值，$U_{dc}$：整流后直流平均值。加滤波电容后 $U_{dc} \\approx \\sqrt{2} U_2$</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          加电容滤波后的输出电压：
+        </p>
+        <div class="formula-block">
+          $$U_{dc} = \\sqrt{2} U_2 - \\frac{I_{dc}}{4fC}$$
+          <div class="text-sm text-gray-500 mt-2">$f$：电源频率，$C$：滤波电容，$I_{dc}$：负载电流。电容越大、负载越轻，纹波越小</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">三相桥式整流电路</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          工业大功率整流的标准方案。6 个二极管（或晶闸管）组成三相桥：
+        </p>
+        <div class="formula-block">
+          $$U_{dc} = \\frac{3\\sqrt{6}}{\\pi} U_2 \\approx 2.34 U_2$$
+          <div class="text-sm text-gray-500 mt-2">三相整流的直流电压更高、纹波更小（6 脉波），滤波更容易</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">可控整流（晶闸管整流）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          用晶闸管（SCR）取代二极管，通过控制触发角 $\\alpha$ 调节输出电压：
+        </p>
+        <div class="formula-block">
+          $$U_{dc} = U_{dc0} \\cos\\alpha$$
+          <div class="text-sm text-gray-500 mt-2">$U_{dc0}$：$\\alpha=0$ 时的输出电压（等同于二极管整流），$\\alpha$ 从 0 到 180° 可调</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">功率因数与谐波</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          整流电路从电网吸取非正弦电流，产生谐波污染。功率因数定义：
+        </p>
+        <div class="formula-block">
+          $$PF = \\frac{P}{S} = \\frac{V_{rms} I_{1,rms}}{V_{rms} I_{rms}} \\cdot \\cos\\varphi_1 = \\nu \\cdot \\cos\\varphi_1$$
+          <div class="text-sm text-gray-500 mt-2">$\\nu$：畸变因子（谐波影响），$\\cos\\varphi_1$：位移因子（基波功率因数）</div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：整流电路是<a href="javascript:void(0)" onclick="App.loadDetail('ana-02')">模拟电路二极管整流</a>的功率扩展。三相可控整流的触发角控制与<a href="javascript:void(0)" onclick="App.loadDetail('circ-06')">正弦稳态分析</a>中的相位概念相关。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>二极管选型</strong>：需考虑最大反向电压（PIV ≥ $\\sqrt{2}U_2$）、最大正向电流（≥ $I_{load}$）、反向恢复时间（高频时需快恢复二极管或肖特基二极管）。</div>
+        </div>
+      ` },
+
+      // ===== pwr-03 直流斩波电路 =====
+      { id: 'pwr-03', title: '直流斩波电路(DC-DC)', desc: 'Buck/Boost/Buck-Boost 变换器原理与设计', icon: '🔋', tags: ['核心', '高频考点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">DC-DC 变换：灵活的直流电压调节</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          直流斩波电路（DC-DC Converter）将一个直流电压转换为另一个可调的直流电压，是开关电源的核心。在机器人系统中，电池电压（如 24V/48V）需要降压到 5V/12V 为<a href="javascript:void(0)" onclick="App.loadDetail('emb-01')">嵌入式系统</a>供电，或升压驱动 LED、电机。Buck、Boost、Buck-Boost 是三种基本拓扑。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">Buck 变换器（降压）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          输出电压低于输入电压。开关管导通时电感储能，关断时电感释放能量：
+        </p>
+        <div class="formula-block">
+          $$V_{out} = D \\cdot V_{in}$$
+          <div class="text-sm text-gray-500 mt-2">$D$：占空比（$0 \\le D \\le 1$），$V_{in}$：输入电压。$D=0.5$ 时输出为输入的一半</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          电感电流连续模式（CCM）下的关键波形：
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li>开关管导通期间：电感电流线性上升，$\\Delta I_L = (V_{in}-V_{out})D/(f_{sw}L)$</li>
+          <li>开关管关断期间：电感电流线性下降，通过续流二极管续流</li>
+          <li>输出纹波：$\\Delta V_{out} = \\Delta I_L/(8f_{sw}C)$</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">Boost 变换器（升压）</h4>
+        <div class="formula-block">
+          $$V_{out} = \\frac{V_{in}}{1-D}$$
+          <div class="text-sm text-gray-500 mt-2">$D < 1$ 时 $V_{out} > V_{in}$。$D=0.5$ 时输出为输入的 2 倍</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          应用：电池升压驱动 LED、太阳能 MPPT、功率因数校正（PFC）。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">Buck-Boost 变换器（升降压）</h4>
+        <div class="formula-block">
+          $$V_{out} = \\frac{D}{1-D} V_{in}$$
+          <div class="text-sm text-gray-500 mt-2">$D < 0.5$ 时降压，$D > 0.5$ 时升压。输出极性与输入相反（反相）</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">三种拓扑对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>拓扑</th><th>输出范围</th><th>输出极性</th><th>效率</th><th>典型应用</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">Buck</td><td>$0 \\sim V_{in}$</td><td>同相</td><td>高（90%+）</td><td>电池降压、CPU 供电</td></tr>
+            <tr><td class="font-medium">Boost</td><td>$V_{in} \\sim \\infty$</td><td>同相</td><td>中高</td><td>LED 驱动、PFC</td></tr>
+            <tr><td class="font-medium">Buck-Boost</td><td>$0 \\sim \\infty$</td><td>反相</td><td>中</td><td>宽输入电压范围</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：DC-DC 变换器的控制环路设计需要<a href="javascript:void(0)" onclick="App.loadDetail('act-03')">传递函数</a>分析。占空比调节本质上是<a href="javascript:void(0)" onclick="App.loadDetail('pwr-06')">PWM 控制</a>。输出滤波器设计与<a href="javascript:void(0)" onclick="App.loadDetail('circ-07')">频率响应与滤波器</a>直接相关。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>CCM vs DCM</strong>：电感电流连续模式（CCM）下输出纹波小、控制简单；电流断续模式（DCM）下响应快但纹波大。轻载时易进入 DCM，需注意控制环路稳定性。</div>
+        </div>
+      ` },
+
+      // ===== pwr-04 逆变电路 =====
+      { id: 'pwr-04', title: '逆变电路', desc: '单相/三相逆变、SPWM、SVPWM', icon: '🔄', tags: ['核心', '高频考点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">逆变：从直流到交流</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          逆变电路将直流电转换为频率和幅值可调的交流电，是<a href="javascript:void(0)" onclick="App.loadDetail('motor-04')">PMSM 电机驱动</a>的核心。通过控制开关管的导通模式和占空比，可以生成正弦波输出。本节介绍逆变器的基本拓扑和调制方法。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">单相全桥逆变器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          4 个开关管（MOSFET/IGBT）组成全桥，通过交替导通对角管产生交流输出：
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>方波逆变</strong>：输出方波，含大量谐波。最简单但质量差</li>
+          <li><strong>SPWM</strong>：正弦脉宽调制，用正弦调制波与三角载波比较产生 PWM 脉冲</li>
+          <li><strong>双极性调制</strong>：同一桥臂上下管互补导通，输出在 $+V_{dc}$ 和 $-V_{dc}$ 间切换</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">三相桥式逆变器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          6 个开关管组成三相桥，是<a href="javascript:void(0)" onclick="App.loadDetail('motor-04')">FOC</a>驱动 PMSM 的功率级。三个桥臂（A、B、C）的开关状态组合产生 8 种基本电压矢量：
+        </p>
+        <div class="formula-block">
+          $$\\mathbf{V}_k = \\frac{2}{3} V_{dc} \\left(\\cos\\frac{k\\pi}{3} + j\\sin\\frac{k\\pi}{3}\\right), \\quad k = 0, 1, \\ldots, 7$$
+          <div class="text-sm text-gray-500 mt-2">6 个有效矢量（$V_1$~$V_6$）和 2 个零矢量（$V_0, V_7$），构成正六边形</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">SPWM 调制原理</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          将正弦调制波 $v_{control} = M\\sin(\\omega t)$ 与三角载波 $v_{tri}$ 比较：
+        </p>
+        <div class="formula-block">
+          $$M = \\frac{V_{control,peak}}{V_{tri,peak}}$$
+          <div class="text-sm text-gray-500 mt-2">$M$：调制比（$0 \\le M \\le 1$），输出基波幅值 $= M \\cdot V_{dc}/2$</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">SVPWM（空间矢量 PWM）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          SVPWM 比 SPWM 电压利用率高 15%，是<a href="javascript:void(0)" onclick="App.loadDetail('motor-04')">FOC</a>的标准调制方法。核心思想：用相邻两个有效矢量和零矢量的组合来合成任意参考电压矢量。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：判断扇区</strong>。根据参考电压矢量 $V_{ref}$ 的角度确定所在的扇区（I~VI）。</div></div>
+          <div class="step-item"><div><strong>第二步：计算作用时间</strong>。$T_1, T_2$ 为两个有效矢量的作用时间，$T_0$ 为零矢量时间。$T_1 + T_2 + T_0 = T_{sw}$。</div></div>
+          <div class="step-item"><div><strong>第三步：生成开关序列</strong>。按照七段式或五段式安排开关切换顺序，确保每次只切换一个开关管。</div></div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：逆变器是<a href="javascript:void(0)" onclick="App.loadDetail('motor-03')">交流电机变频调速</a>的硬件基础。SVPWM 生成的电压矢量对应<a href="javascript:void(0)" onclick="App.loadDetail('motor-06')">dq 坐标系</a>中的控制电压。死区时间补偿影响<a href="javascript:void(0)" onclick="App.loadDetail('motor-04')">FOC</a>的低速性能。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>死区时间</strong>：同一桥臂上下管不能同时导通（否则短路），必须插入死区时间（通常 0.5~2μs）。死区导致输出电压畸变，低速时影响显著，需要死区补偿。</div>
+        </div>
+      ` },
+
+      // ===== pwr-05 H桥驱动电路 =====
+      { id: 'pwr-05', title: 'H桥驱动电路', desc: 'H桥拓扑、驱动方式、死区控制', icon: '🌉', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">H桥：双向电机驱动的经典拓扑</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          H 桥是用 4 个开关管组成的电路，可以控制电机的正转、反转和制动。它是<a href="javascript:void(0)" onclick="App.loadDetail('motor-02')">直流电机</a>和<a href="javascript:void(0)" onclick="App.loadDetail('motor-05')">步进电机</a>驱动的基础拓扑，也是<a href="javascript:void(0)" onclick="App.loadDetail('pwr-04')">三相逆变器</a>的基本单元（三个 H 桥组成三相桥）。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">H桥基本结构</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          4 个开关管（Q1~Q4）组成"H"形，电机接在桥臂中点之间：
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>正转</strong>：Q1+Q4 导通，Q2+Q3 关断。电流：V+ → Q1 → 电机(→) → Q4 → GND</li>
+          <li><strong>反转</strong>：Q2+Q3 导通，Q1+Q4 关断。电流：V+ → Q3 → 电机(←) → Q2 → GND</li>
+          <li><strong>制动（短路制动）</strong>：Q1+Q3 或 Q2+Q4 同时导通，电机绕组短路</li>
+          <li><strong>惰行</strong>：全部关断，电机靠惯性自由旋转（通过体二极管续流）</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">PWM 调速控制</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          通过 PWM 控制对角管的导通占空比调节电机转速：
+        </p>
+        <div class="formula-block">
+          $$V_{avg} = D \\cdot V_{cc}$$
+          <div class="text-sm text-gray-500 mt-2">$D$：占空比，$V_{cc}$：电源电压。$D > 0.5$ 正转加速，$D < 0.5$ 正转减速</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          两种 PWM 模式：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>模式</th><th>方式</th><th>优点</th><th>缺点</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">单极性 PWM</td><td>一个桥臂 PWM，另一个恒通</td><td>开关损耗低</td><td>电流纹波大</td></tr>
+            <tr><td class="font-medium">双极性 PWM</td><td>对角管同时 PWM</td><td>电流纹波小</td><td>开关损耗高</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">死区控制</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          同一桥臂的上下管（如 Q1 和 Q2）不能同时导通，否则电源通过开关管直接短路（<strong>直通</strong>），烧毁器件。因此在切换时必须插入死区时间：
+        </p>
+        <div class="formula-block">
+          $$t_{dead} > t_{off,max} - t_{on,min} + t_{margin}$$
+          <div class="text-sm text-gray-500 mt-2">$t_{off,max}$：关断时间最大值，$t_{on,min}$：导通时间最小值，$t_{margin}$：安全裕量。通常 0.5~2μs</div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：H 桥的驱动芯片（如 IR2110、DRV8302）集成了自举电路和死区控制，简化了<a href="javascript:void(0)" onclick="App.loadDetail('motor-04')">PMSM 电机</a>驱动器设计。全桥逆变器（<a href="javascript:void(0)" onclick="App.loadDetail('pwr-04')">逆变电路</a>）本质上是三个 H 桥的组合。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>直通保护</strong>：硬件死区 + 软件死区双重保护。过流检测电路在电流超过阈值时立即关断所有开关管。栅极驱动电阻影响开关速度和 EMI，需要权衡。</div>
+        </div>
+      ` },
+
+      // ===== pwr-06 PWM控制技术 =====
+      { id: 'pwr-06', title: 'PWM控制技术', desc: 'PWM 原理、调制方式、数字实现', icon: '📐', tags: ['核心', '高频考点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">PWM：用脉冲宽度模拟连续信号</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          脉宽调制（Pulse Width Modulation, PWM）是电力电子的核心控制技术。通过调节方波脉冲的宽度，可以用数字开关信号模拟连续的电压/电流输出。几乎所有电力电子变换器（<a href="javascript:void(0)" onclick="App.loadDetail('pwr-03')">DC-DC</a>、<a href="javascript:void(0)" onclick="App.loadDetail('pwr-04')">逆变器</a>）都依赖 PWM 控制。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">PWM 的基本原理</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          面积等效原理：冲量相等而形状不同的窄脉冲加在惯性环节上时，效果基本相同。PWM 用等幅不等宽的脉冲序列等效正弦波：
+        </p>
+        <div class="formula-block">
+          $$V_{avg} = \\frac{1}{T}\\int_0^{T} v(t) dt = \\frac{t_{on}}{T} \\cdot V_{dc} = D \\cdot V_{dc}$$
+          <div class="text-sm text-gray-500 mt-2">$D = t_{on}/T$：占空比，$T$：开关周期，$f_{sw} = 1/T$：开关频率</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">自然采样法与规则采样法</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>方法</th><th>原理</th><th>优点</th><th>缺点</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">自然采样</td><td>调制波与载波直接比较</td><td>谐波性能最好</td><td>开关时刻不等间距，数字实现困难</td></tr>
+            <tr><td class="font-medium">规则采样</td><td>在载波顶/底点采样调制波</td><td>开关时刻可预测，易数字实现</td><td>谐波性能略差</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">SPWM 的谐波分析</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          SPWM 输出波形的频谱包含基波和开关频率附近的谐波族。主要谐波分量位于 $mf_{sw} \\pm nf_{1}$（$m, n$ 为整数）。滤波设计需关注：
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li>基波频率 $f_1$：需要的输出频率（如 50Hz 交流或直流分量）</li>
+          <li>最低次谐波：$f_{sw} - 2f_1$（双极性）或 $2f_{sw} \\pm f_1$（单极性）</li>
+          <li>开关频率越高，谐波越容易滤除，但<a href="javascript:void(0)" onclick="App.loadDetail('pwr-01')">开关损耗</a>越大</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">数字 PWM 的实现</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          微控制器（STM32、DSP）内置 PWM 定时器，配置方法：
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：设定时基</strong>。PWM 频率 $f_{sw} = f_{clk}/(ARR+1)$，$ARR$ 为自动重装载值。</div></div>
+          <div class="step-item"><div><strong>第二步：设定比较值</strong>。$CCR$ 为比较值，$CCR/ARR = D$（占空比）。</div></div>
+          <div class="step-item"><div><strong>第三步：设定死区</strong>。高级定时器支持硬件死区插入，配置 DTG 寄存器。</div></div>
+          <div class="step-item"><div><strong>第四步：配置互补输出</strong>。同一桥臂的上下管由互补 PWM 信号驱动。</div></div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>跨节互链</strong>：PWM 的开关频率选择需要权衡<a href="javascript:void(0)" onclick="App.loadDetail('pwr-01')">开关损耗</a>和<a href="javascript:void(0)" onclick="App.loadDetail('pwr-04')">输出谐波</a>。STM32 的高级定时器支持中心对齐 PWM 模式，与<a href="javascript:void(0)" onclick="App.loadDetail('motor-04')">FOC</a>配合实现 PMSM 驱动。</div>
+        </div>
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>开关频率选择</strong>：音频范围（20Hz~20kHz）的 PWM 会产生噪音。电机驱动通常选 10kHz~100kHz（人耳听不到且损耗可控）。DC-DC 变换器可达 1MHz+（GaN 器件）。</div>
+        </div>
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>EMI 问题</strong>：PWM 的快速电压跳变（dv/dt）产生电磁干扰。对策：①加 LC 滤波器；②使用屏蔽电缆；③合理布局 PCB 减小回路面积；④栅极电阻减缓开关速度。</div>
+        </div>
+      ` },
+
+    ],
+  },
+
 };
 
 // 所有可统计进度的知识点 id 清单（用于进度统计）
 // 第 0 期只先放入板块分组入口，待各板块内容填充后这里会自动从 CourseData 派生
 const AllKnowledgeIds = (function () {
   const ids = [];
-  ['advanced-math', 'linear-algebra', 'circuit-basics', 'analog-circuit', 'digital-circuit', 'control', 'data-structure', 'modern-control', 'signals', 'sensor', 'embedded-sys', 'cpp', 'os', 'network', 'robotics'].forEach(group => {
+  ['advanced-math', 'linear-algebra', 'circuit-basics', 'analog-circuit', 'digital-circuit', 'control', 'data-structure', 'modern-control', 'signals', 'sensor', 'embedded-sys', 'cpp', 'os', 'network', 'robotics', 'probability', 'power-electronics', 'motor-drive'].forEach(group => {
     CourseData[group]?.sections?.forEach(s => ids.push(s.id));
   });
   return ids;
@@ -13245,6 +14571,187 @@ const QuizData = {
       answer: 1,
       explanation: '滑模控制通过不连续的控制律（符号函数）使系统状态沿滑模面运动，对匹配不确定性鲁棒。但符号函数的切换导致控制信号高频抖振，可能激发未建模动态，实际中常用边界层法缓解。'
     },
+  ],
+
+  // ========== 电机与拖动 motor-01~motor-08 ==========
+  'motor-01': [
+    { question: '电机拖动系统中，将直流电转换为电机所需形式的部件是？', options: ['控制器', '功率变换器', '传感器', '减速器'], answer: 1, explanation: '功率变换器（如 H 桥、逆变器）将电网或电池的电能转换为电机所需的电压/电流形式。控制器计算控制算法，传感器检测状态。' },
+    { question: '输出功率 $P = T\\omega$ 中，若转矩 $T=10$ N·m，转速 $n=3000$ rpm，功率为？', options: ['314 W', '3140 W', '31.4 kW', '3140 kW'], answer: 1, explanation: '$\\omega = 2\\pi n/60 = 2\\pi \\times 3000/60 = 314.16$ rad/s，$P = T\\omega = 10 \\times 314.16 = 3141.6$ W ≈ 3140 W。' },
+    { question: '惯量比（负载惯量/电机转子惯量）的理想范围是？', options: ['1:1~1:10', '10:1~100:1', '100:1 以上', '越小越好'], answer: 0, explanation: '惯量比过大（>10:1）导致响应慢、振荡；过小（<1:1）则电机能力浪费。工业伺服通常要求 5:1 以内。' },
+    { question: '协作机器人关节驱动最常用的电机类型是？', options: ['有刷直流电机', '步进电机', '永磁同步电机(PMSM)', '异步电机'], answer: 2, explanation: 'PMSM 具有高功率密度、高效率、高动态响应，配合谐波减速器是协作机器人关节的首选方案。' },
+    { question: '以下哪项不是电机拖动系统的组成部分？', options: ['功率变换器', '控制器', '传感器', '天线'], answer: 3, explanation: '电机拖动系统由电机本体、功率变换器、控制器、传感器和机械负载五部分组成。天线是通信设备，不属于拖动系统。' },
+  ],
+
+  'motor-02': [
+    { question: '直流电机电枢回路电压方程 $U_a = E + I_a R_a$ 中，$E$ 代表？', options: ['电源电压', '反电动势', '电枢电流', '电磁转矩'], answer: 1, explanation: '$E = K_e \\Phi n$ 是反电动势，与转速成正比。当电机旋转时产生反电动势，阻碍电流增大，实现转速自调节。' },
+    { question: '直流电机调速时，改变电枢电压属于？', options: ['恒功率调速', '恒转矩调速', '变频调速', '弱磁调速'], answer: 1, explanation: '改变电枢电压 $U_a$ 实现恒转矩调速（基速以下），磁通 $\\Phi$ 恒定，转矩能力不变。弱磁调速才是恒功率调速。' },
+    { question: 'BLDC 电机与有刷直流电机的主要区别是？', options: ['BLDC 有电刷', 'BLDC 用电子换向取代机械换向', 'BLDC 效率更低', 'BLDC 不需要永磁体'], answer: 1, explanation: 'BLDC（无刷直流电机）用电子换向器（逆变器+控制器）取代机械换向器和电刷，提高可靠性和寿命。' },
+    { question: '在 SI 单位制中，直流电机的电动势系数 $C_e$ 和转矩系数 $C_t$ 的关系是？', options: ['$C_e = C_t$', '$C_e = 2C_t$', '$C_e = C_t/2$', '无固定关系'], answer: 0, explanation: '在 SI 单位制中 $C_e = K_e\\Phi$，$C_t = K_t\\Phi$，且 $K_e = K_t$（数值相等），因此 $C_e = C_t$。' },
+    { question: '有刷直流电机的电刷火花会带来什么问题？', options: ['提高效率', '产生 EMI 和磨损', '增加转矩', '降低温度'], answer: 1, explanation: '电刷换向时产生的火花会产生电磁干扰（EMI），限制转速和功率，且电刷需要定期更换。在易燃易爆场合严禁使用有刷电机。' },
+  ],
+
+  'motor-03': [
+    { question: '三相交流电机的同步转速公式是？', options: ['$n_s = 60f/p$', '$n_s = 60p/f$', '$n_s = f/(60p)$', '$n_s = 120f/p$'], answer: 0, explanation: '$n_s = 60f/p$（rpm），$f$ 为电源频率，$p$ 为磁极对数。$f=50$Hz，$p=1$ 时 $n_s = 3000$ rpm。' },
+    { question: '异步电机的转差率 $s=0.04$ 表示？', options: ['电机堵转', '理想空载', '转速为同步转速的 96%', '转速为同步转速的 4%'], answer: 2, explanation: '$s = (n_s - n)/n_s$，$s=0.04$ 表示转速比同步转速低 4%，即 $n = 0.96 n_s$。正常运行时 $s=2\\%\\sim6\\%$。' },
+    { question: '异步电机变频调速时，为什么要保持 $U/f$ 恒定？', options: ['保持转矩恒定', '保持磁通恒定', '保持功率恒定', '保持电流恒定'], answer: 1, explanation: '保持 $U/f$ 恒定使气隙磁通 $\\Phi$ 恒定，避免磁路饱和（$U/f$ 过大）或欠励磁（$U/f$ 过小）。低频时还需补偿定子电阻压降。' },
+    { question: '异步电机等效电路中，$R_2\'/s$ 可以分解为？', options: ['$R_2\' + R_2\'/s$', '$R_2\' + R_2\'(1-s)/s$', '$R_2\' \\cdot s$', '$R_2\'/s^2$'], answer: 1, explanation: '$R_2\'/s = R_2\' + R_2\'(1-s)/s$。$R_2\'$ 为转子铜损电阻，$R_2\'(1-s)/s$ 为等效机械负载电阻。转差率越小，等效负载越大。' },
+    { question: '同步电机与异步电机的根本区别是？', options: ['同步电机有永磁体', '同步电机转速等于同步转速', '异步电机更高效', '同步电机不能调速'], answer: 1, explanation: '同步电机转速严格等于同步转速 $n_s$（$s=0$），需要外部励磁或永磁体。异步电机转速永远低于 $n_s$（$s>0$），靠电磁感应产生转矩。' },
+  ],
+
+  'motor-04': [
+    { question: 'PMSM 矢量控制中，$i_d=0$ 控制的目的是？', options: ['降低功耗', '实现最大转矩/电流比', '减小转矩脉动', '提高弱磁能力'], answer: 1, explanation: '$i_d=0$ 使所有电流用于产生转矩（$T_e = K_t i_q$），效率最高。注入负 $i_d$ 用于弱磁扩速，但会降低效率。' },
+    { question: 'Clarke 变换将三相电流转换为几相？', options: ['3 相', '2 相', '1 相', '4 相'], answer: 1, explanation: 'Clarke 变换将三相静止坐标系（A,B,C）转换为两相静止坐标系（α,β），变量数从 3 减到 2（利用 $i_A+i_B+i_C=0$）。' },
+    { question: 'PMSM 的电磁转矩公式 $T_e = \\frac{3}{2}p_n\\psi_f i_q$ 中，$\\psi_f$ 代表？', options: ['定子磁链', '永磁体磁链', '漏磁链', '互感磁链'], answer: 1, explanation: '$\\psi_f$ 是永磁体在气隙中产生的磁链，由永磁体材料和几何尺寸决定。它是 PMSM 转矩常数的核心参数。' },
+    { question: 'Park 变换的作用是？', options: ['三相变两相', '静止变旋转', '直流变交流', '连续变离散'], answer: 1, explanation: 'Park 变换将两相静止坐标系（αβ）转换为与转子同步旋转的坐标系（dq），使正弦交流量变为直流量，便于 PI 控制器调节。' },
+    { question: 'FOC 控制流程中，将 $u_d, u_q$ 转换为三相 PWM 信号的步骤是？', options: ['Clarke 变换', 'Park 变换', '逆 Park + SVPWM', 'PI 调节'], answer: 2, explanation: '逆 Park 变换将 dq 控制电压转回 αβ 坐标系，SVPWM 将 αβ 电压矢量转换为三相 PWM 占空比，驱动逆变器。' },
+  ],
+
+  'motor-05': [
+    { question: '1.8° 步距角的步进电机，每转需要多少步？', options: ['100 步', '200 步', '360 步', '400 步'], answer: 1, explanation: '步数 = 360°/步距角 = 360°/1.8° = 200 步/转。16 细分时每步 0.1125°，每转 3200 步。' },
+    { question: '步进电机丢步的原因是？', options: ['电压过高', '过载或加速度过大', '温度过低', '电流过小'], answer: 1, explanation: '步进电机在过载或加速度过大时，电磁转矩不足以克服负载转矩，导致实际转角小于指令转角（丢步）。丢步无法检测，是开环控制的主要风险。' },
+    { question: '微步驱动相比全步驱动的主要优势是？', options: ['转矩更大', '运行更平滑', '成本更低', '效率更高'], answer: 1, explanation: '微步驱动通过控制两相电流的正弦/余弦比例实现细分，使步进更平滑，减少振动和噪音。但不提高绝对精度，且低速时可能有位置波动。' },
+    { question: '步进电机在高速时转矩急剧下降的原因是？', options: ['电感阻碍电流变化', '磁饱和', '反电动势增大', '散热不足'], answer: 0, explanation: '步进电机绕组有电感，高速时电流来不及上升到目标值（$L/R$ 时间常数限制），导致有效电流减小，转矩下降。' },
+    { question: '需要高速、高精度位置控制时，应选择？', options: ['步进电机', 'PMSM 伺服电机', '异步电机', '单相电机'], answer: 1, explanation: 'PMSM 伺服电机配合编码器闭环控制，高速时转矩平稳、无丢步风险、精度高。步进电机适合低速、成本敏感的场合。' },
+  ],
+
+  'motor-06': [
+    { question: 'Clarke 变换矩阵是正交矩阵吗？', options: ['是', '不是', '有时是', '取决于电流'], answer: 0, explanation: '等功率 Clarke 变换矩阵是正交矩阵（$T^{-1} = T^T$），保证变换前后功率不变。等幅值变换系数为 $2/3$，不是严格正交但保持幅值不变。' },
+    { question: 'Park 变换中，旋转角度 $\\theta_e$ 是？', options: ['机械角度', '转子电角度', '电源频率', '定子磁链角度'], answer: 1, explanation: '$\\theta_e$ 是转子电角度（转子磁链方向与定子 A 相轴的夹角），由编码器测量。$\\theta_e = p_n \\times \\theta_{mech}$，$p_n$ 为极对数。' },
+    { question: 'dq 坐标系下，PMSM 的电磁转矩与 $i_d$ 的关系是？', options: ['成正比', '成反比', '无直接关系', '平方关系'], answer: 2, explanation: '对于表贴式 PMSM（$L_d = L_q$），$T_e = K_t i_q$，转矩仅与 $i_q$ 成正比，与 $i_d$ 无关。这就是 FOC 解耦的本质。' },
+    { question: '坐标变换的物理意义是？', options: ['改变物理量的单位', '用不同的基描述同一物理现象', '增加变量维度', '简化电路拓扑'], answer: 1, explanation: '坐标变换本质上是基变换——用不同的坐标系（基）描述同一电磁现象。dq 坐标系下交流量变直流量，是数学描述的变化，物理本质不变。' },
+    { question: 'PMSM 的 dq 模型中，$d$ 轴电压方程含有的交叉耦合项是？', options: ['$-\\omega_e L_q i_q$', '$+\\omega_e L_d i_d$', '$R_s i_d$', '$\\psi_f$'], answer: 0, explanation: '$d$ 轴电压方程为 $u_d = R_s i_d + L_d di_d/dt - \\omega_e L_q i_q$，交叉耦合项 $-\\omega_e L_q i_q$ 使 $d$ 轴和 $q$ 轴相互影响，FOC 需要解耦。' },
+  ],
+
+  'motor-07': [
+    { question: '直流电机双闭环调速系统中，内环是？', options: ['位置环', '速度环', '电流环', '电压环'], answer: 2, explanation: '双闭环系统：内环为电流环（最快，限制最大电流保护电机），外环为速度环（保证稳态精度）。设计时从内到外逐环整定。' },
+    { question: 'PI 调节器中，积分项的主要作用是？', options: ['加快响应速度', '消除稳态误差', '抑制超调', '增加阻尼'], answer: 1, explanation: '积分项累积误差，使系统在稳态时误差为零。比例项加快响应但有稳态误差，积分项消除残差但可能增加超调。' },
+    { question: 'V/f 控制保持 $U/f$ 恒定的目的是？', options: ['保持转速恒定', '保持磁通恒定', '保持功率恒定', '保持效率恒定'], answer: 1, explanation: '电机磁通 $\\Phi \\approx U/(4.44fN)$，保持 $U/f$ 恒定使磁通不变，避免磁路饱和（$U/f$ 过大）或欠励磁（$U/f$ 过小）。' },
+    { question: '弱磁控制中，注入负 $i_d$ 的效果是？', options: ['增加转矩', '降低气隙磁通', '提高效率', '减小电流'], answer: 1, explanation: '负 $i_d$ 产生去磁磁场，抵消部分永磁磁通，降低气隙磁通。反电动势减小，允许更高转速运行（恒功率区），但转矩下降。' },
+    { question: 'PI 整定中"先内环后外环"的原因是？', options: ['内环更简单', '内环快，外环慢，内环稳定是外环工作的前提', '外环不需要整定', '历史惯例'], answer: 1, explanation: '内环（电流环）带宽高、响应快，是外环（速度环）的执行机构。只有内环稳定且快速，外环才能正常工作。这与级联系统的设计原则一致。' },
+  ],
+
+  'motor-08': [
+    { question: '伺服系统三环架构中，带宽最高的是？', options: ['位置环', '速度环', '电流环', '力矩环'], answer: 2, explanation: '电流环带宽最高（~10kHz），响应最快；速度环中等（~1kHz）；位置环最低（~100Hz）。串级控制中内环必须比外环快。' },
+    { question: '17 位编码器（131072 脉冲/转）配合 100:1 减速器的理论定位精度是？', options: ['0.0028°', '0.00028°', '0.028°', '0.28°'], answer: 1, explanation: '精度 = 360°/(131072 × 100) ≈ 0.000028° ≈ 0.00028°。17 位编码器提供极高分辨率，谐波减速器进一步细化。' },
+    { question: '位置模式、速度模式、力矩模式分别对应控制什么？', options: ['位置→速度→力矩', '速度→位置→力矩', '力矩→速度→位置', '取决于电机类型'], answer: 0, explanation: '位置模式精确控制位置（CNC），速度模式精确控制转速（传送带），力矩模式精确输出力矩（力控装配）。机器人关节通常用位置或力矩模式。' },
+    { question: '伺服驱动器的保护功能不包括？', options: ['过流保护', '过温保护', '过压保护', '过频保护'], answer: 3, explanation: '标准保护包括过流、过压、欠压、过温、超速、堵转保护。"过频保护"不是标准功能，但超速保护间接限制了频率。' },
+    { question: '调试伺服系统的正确顺序是？', options: ['先调位置环', '先调速度环', '先调电流环', '三环同时调'], answer: 2, explanation: '必须从内到外逐环整定：先电流环（最快），再速度环，最后位置环。跳过内环直接调外环会导致系统不稳定。' },
+    { question: '伺服系统在力矩模式下，控制目标是？', options: ['精确到达目标位置', '精确跟踪速度曲线', '精确输出指定力矩', '最小化能耗'], answer: 2, explanation: '力矩模式下伺服驱动器精确控制电机输出力矩，适用于需要力/力矩控制的场合，如机器人阻抗控制、压装、张力控制。' },
+  ],
+
+  // ========== 概率论与数理统计 prob-01~prob-08 ==========
+  'prob-01': [
+    { question: '概率的三条公理中，$P(\\Omega) =$？', options: ['0', '0.5', '1', '不确定'], answer: 2, explanation: '概率公理②：必然事件的概率为 1，即 $P(\\Omega) = 1$。这是概率归一化的体现。' },
+    { question: '若 $A, B$ 互斥，则 $P(A \\cup B) =$？', options: ['$P(A) + P(B)$', '$P(A) \\cdot P(B)$', '$P(A) - P(B)$', '$1 - P(A)P(B)$'], answer: 0, explanation: '互斥事件（$A \\cap B = \\emptyset$）的加法公式：$P(A \\cup B) = P(A) + P(B)$。一般情况需减去 $P(A \\cap B)$。' },
+    { question: '掷两颗骰子，点数之和为 7 的概率是？', options: ['1/6', '1/12', '7/36', '1/9'], answer: 0, explanation: '两颗骰子共 36 种等可能结果，和为 7 的有 (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) 共 6 种，概率 = 6/36 = 1/6。' },
+    { question: '德摩根律 $\\overline{A \\cup B} =$？', options: ['$\\bar{A} \\cup \\bar{B}$', '$\\bar{A} \\cap \\bar{B}$', '$A \\cap B$', '$A \\cup B$'], answer: 1, explanation: '德摩根律：$\\overline{A \\cup B} = \\bar{A} \\cap \\bar{B}$（"并的补等于补的交"）。类似地 $\\overline{A \\cap B} = \\bar{A} \\cup \\bar{B}$。' },
+    { question: '概率为 0 的事件一定是不可能事件吗？', options: ['是', '不是', '取决于分布', '连续型是，离散型不是'], answer: 1, explanation: '连续型随机变量取任何单点的概率都是 0，但该事件并非不可能事件（如 $P(X=1)=0$ 但 $X$ 可以取 1）。概率为 0 ≠ 不可能发生。' },
+  ],
+
+  'prob-02': [
+    { question: '贝叶斯公式中，$P(B_j|A)$ 称为？', options: ['先验概率', '后验概率', '条件概率', '边缘概率'], answer: 1, explanation: '$P(B_j|A)$ 是观测到数据 $A$ 后对原因 $B_j$ 的概率更新，称为后验概率。$P(B_j)$ 为先验概率，$P(A|B_j)$ 为似然。' },
+    { question: '全概率公式的作用是？', options: ['计算条件概率', '将复杂事件概率分解为各原因下条件概率的加权和', '检验独立性', '计算方差'], answer: 1, explanation: '全概率公式 $P(A) = \\sum P(A|B_i)P(B_i)$ 将事件 $A$ 的概率分解为在各种"原因"$B_i$ 下的条件概率加权和。' },
+    { question: '若 $P(A)=0.3$，$P(B)=0.4$，$A,B$ 独立，则 $P(AB)=$？', options: ['0.12', '0.7', '0.3', '0.4'], answer: 0, explanation: '独立事件：$P(AB) = P(A)P(B) = 0.3 \\times 0.4 = 0.12$。独立性意味着一个事件的发生不影响另一个的概率。' },
+    { question: '条件概率公式 $P(A|B) = P(AB)/P(B)$ 成立的前提是？', options: ['$P(A) > 0$', '$P(B) > 0$', '$P(AB) > 0$', '$P(A \\cup B) > 0$'], answer: 1, explanation: '条件概率要求条件事件的概率大于零，即 $P(B) > 0$，否则分母为零无意义。' },
+    { question: '贝叶斯思维的核心是？', options: ['先验不变', '后验 ∝ 先验 × 似然', '似然决定一切', '数据越多越不准'], answer: 1, explanation: '后验概率与先验概率和似然函数的乘积成正比：$P(\\theta|data) \\propto P(data|\\theta) \\cdot P(\\theta)$。观测数据越多，先验影响越小。' },
+  ],
+
+  'prob-03': [
+    { question: '正态分布 $N(\\mu, \\sigma^2)$ 的概率密度函数在 $x=\\mu$ 处取？', options: ['最小值', '最大值', '零', '不确定'], answer: 1, explanation: '正态分布的 PDF 在均值 $\\mu$ 处取最大值 $1/(\\sqrt{2\\pi}\\sigma)$，向两侧对称递减。这是钟形曲线的峰值。' },
+    { question: '$X \\sim N(0,1)$，$P(X \\le 1.96) \\approx$？', options: ['0.95', '0.975', '0.99', '0.997'], answer: 1, explanation: '标准正态分布：$P(X \\le 1.96) \\approx 0.975$。$P(-1.96 < X < 1.96) \\approx 0.95$，这就是 95% 置信区间的由来。' },
+    { question: '泊松分布适用于描述？', options: ['连续测量值', '单位时间内稀有事件的次数', '二选一结果', '均匀随机数'], answer: 1, explanation: '泊松分布 $P(\\lambda)$ 描述单位时间/空间内稀有事件的发生次数，如每小时接到的电话数、每平方米的缺陷数。$\\lambda$ 为平均发生率。' },
+    { question: '若 $X \\sim N(2, 4)$，则 $P(X > 2) =$？', options: ['0', '0.25', '0.5', '0.75'], answer: 2, explanation: '正态分布关于均值 $\\mu=2$ 对称，$P(X > \\mu) = P(X < \\mu) = 0.5$。方差 $\\sigma^2=4$ 不影响这个对称性质。' },
+    { question: '连续型随机变量 $X$ 的密度函数 $f(x)$ 满足？', options: ['$0 \\le f(x) \\le 1$', '$f(x) \\ge 0$，$\\int f(x)dx = 1$', '$f(x) = P(X=x)$', '$f(x)$ 必须连续'], answer: 1, explanation: 'PDF 满足非负性 $f(x) \\ge 0$ 和归一化 $\\int_{-\\infty}^{+\\infty} f(x)dx = 1$。$f(x)$ 不是概率（可以大于 1），而是概率密度。' },
+  ],
+
+  'prob-04': [
+    { question: '二维正态分布中，$\\rho=0$ 意味着？', options: ['$X,Y$ 独立', '$X,Y$ 不相关', '两者都对', '两者都不对'], answer: 2, explanation: '对于二维正态分布，$\\rho=0$（不相关）等价于独立。这是一般分布不成立的特殊性质——一般分布不相关推不出独立。' },
+    { question: '边缘密度 $f_X(x)$ 的计算方法是？', options: ['$f(x,y)$ 对 $x$ 求偏导', '$f(x,y)$ 对 $y$ 积分', '$f(x,y)$ 对 $x$ 积分', '$f(x,y)$ 除以 $f_Y(y)$'], answer: 1, explanation: '边缘密度通过"消去"另一个变量得到：$f_X(x) = \\int_{-\\infty}^{+\\infty} f(x,y)dy$。对 $y$ 积分消去 $y$，只留下 $x$ 的信息。' },
+    { question: '若 $X,Y$ 独立，则 $E(XY) =$？', options: ['$E(X) + E(Y)$', '$E(X) \\cdot E(Y)$', '$E(X)/E(Y)$', '无法确定'], answer: 1, explanation: '独立性保证 $E(XY) = E(X)E(Y)$。反之不成立：$E(XY) = E(X)E(Y)$ 不一定能推出独立（除非是正态分布等特殊情况）。' },
+    { question: '协方差矩阵的对角线元素是？', options: ['协方差', '相关系数', '方差', '期望'], answer: 2, explanation: '协方差矩阵 $\\Sigma$ 的对角线元素 $\\Sigma_{ii} = \\text{Var}(X_i)$ 是各变量的方差，非对角线 $\\Sigma_{ij} = \\text{Cov}(X_i, X_j)$ 是协方差。' },
+    { question: '二维正态分布的条件分布 $Y|X=x$ 是？', options: ['均匀分布', '正态分布', '指数分布', '泊松分布'], answer: 1, explanation: '二维正态的条件分布仍为正态：$Y|X=x \\sim N(\\mu_2 + \\rho\\frac{\\sigma_2}{\\sigma_1}(x-\\mu_1), \\sigma_2^2(1-\\rho^2))$。这是正态分布的重要性质。' },
+  ],
+
+  'prob-05': [
+    { question: '$D(X) = E(X^2) - [E(X)]^2$ 这个公式称为？', options: ['期望公式', '方差的计算公式', '协方差公式', '切比雪夫不等式'], answer: 1, explanation: '这是方差的计算公式（也叫"二阶矩减一阶矩的平方"）。推导：$D(X) = E[(X-\\mu)^2] = E(X^2) - 2\\mu E(X) + \\mu^2 = E(X^2) - \\mu^2$。' },
+    { question: '若 $D(X)=4$，$D(Y)=9$，$X,Y$ 独立，则 $D(X+Y) =$？', options: ['5', '12', '13', '6'], answer: 2, explanation: '独立时方差可加：$D(X+Y) = D(X) + D(Y) = 4 + 9 = 13$。注意是方差相加，标准差不直接相加。' },
+    { question: '相关系数 $\\rho_{XY} = 0$ 表示？', options: ['$X,Y$ 独立', '$X,Y$ 不相关', '$X,Y$ 无关系', '$E(XY)=0$'], answer: 1, explanation: '$\\rho=0$ 表示 $X,Y$ 线性不相关（无直线关系），但可能存在非线性关系。独立一定不相关，不相关不一定独立（正态分布除外）。' },
+    { question: '指数分布 $E(\\lambda)$ 的期望是？', options: ['$\\lambda$', '$1/\\lambda$', '$\\lambda^2$', '$e^{-\\lambda}$'], answer: 1, explanation: '指数分布 $f(x) = \\lambda e^{-\\lambda x}$（$x \\ge 0$）的期望 $E(X) = 1/\\lambda$，方差 $D(X) = 1/\\lambda^2$。$\\lambda$ 越大，期望越小。' },
+    { question: '$D(aX+b) =$？', options: ['$aD(X)+b$', '$a^2 D(X)$', '$aD(X)$', '$D(X)+b^2$'], answer: 1, explanation: '方差的性质：$D(aX+b) = a^2 D(X)$。常数 $b$ 只平移分布不改变离散程度，系数 $a$ 放大方差 $a^2$ 倍。' },
+  ],
+
+  'prob-06': [
+    { question: '切比雪夫不等式对什么分布成立？', options: ['仅正态分布', '仅离散分布', '任意分布', '仅对称分布'], answer: 2, explanation: '切比雪夫不等式 $P(|X-\\mu| \\ge \\varepsilon) \\le \\sigma^2/\\varepsilon^2$ 对任意分布都成立，不要求特定分布形式。这是它的重要价值。' },
+    { question: '大数定律说明的是？', options: ['样本方差趋于零', '样本均值趋近期望', '样本趋于正态分布', '样本趋于均匀分布'], answer: 1, explanation: '大数定律：样本均值 $\\bar{X}_n$ 依概率（或几乎必然）收敛于期望 $\\mu$。$n$ 越大，样本均值越接近真实均值。' },
+    { question: '中心极限定理的核心结论是？', options: ['样本均值趋于正态分布', '独立随机变量之和标准化后趋于标准正态', '所有分布都是正态的', '方差趋于零'], answer: 1, explanation: 'CLT：$n$ 个独立同分布随机变量之和，标准化后当 $n$ 足够大时近似标准正态分布，无论原始分布是什么形状。' },
+    { question: 'CLT 的实际应用中，$n \\ge$ 多少时近似已较好？', options: ['5', '10', '30', '100'], answer: 2, explanation: '经验规则：$n \\ge 30$ 时 CLT 的正态近似已相当好。对于对称分布，$n \\ge 15$ 即可；对于严重偏态分布，可能需要 $n > 50$。' },
+    { question: '蒙特卡洛积分利用的是？', options: ['CLT', '大数定律', '切比雪夫不等式', '全概率公式'], answer: 1, explanation: '蒙特卡洛积分：用大量随机采样的平均值近似积分值 $\\int f(x)dx \\approx \\frac{1}{N}\\sum f(x_i)$。其收敛性由大数定律保证。' },
+  ],
+
+  'prob-07': [
+    { question: '$\\chi^2(n)$ 分布的自由度 $n$ 代表？', options: ['样本容量', '独立标准正态变量的个数', '参数个数', '方差'], answer: 1, explanation: '$\\chi^2(n)$ 定义为 $n$ 个独立标准正态变量的平方和。自由度 = 独立变量个数。$(n-1)S^2/\\sigma^2 \\sim \\chi^2(n-1)$ 中自由度为 $n-1$。' },
+    { question: '$t$ 分布与标准正态分布的关系是？', options: ['完全相同', '$t$ 分布更"厚尾"', '正态更"厚尾"', '无关系'], answer: 1, explanation: '$t$ 分布比标准正态分布尾部更厚（极端值概率更大），小样本时差异显著。$n$ 增大时 $t$ 分布趋近标准正态。' },
+    { question: '设 $X_1,...,X_n \\sim N(\\mu,\\sigma^2)$，则 $(n-1)S^2/\\sigma^2 \\sim$？', options: ['$\\chi^2(n)$', '$\\chi^2(n-1)$', '$t(n-1)$', '$F(n-1,1)$'], answer: 1, explanation: '样本方差的分布：$(n-1)S^2/\\sigma^2 \\sim \\chi^2(n-1)$。自由度为 $n-1$（而非 $n$），因为用 $\\bar{X}$ 估计 $\\mu$ 损失了一个自由度。' },
+    { question: '$F$ 分布的性质 $1/F(m,n) \\sim$？', options: ['$F(m,n)$', '$F(n,m)$', '$\\chi^2(m)/\\chi^2(n)$', '$t(m+n)$'], answer: 1, explanation: '$F$ 分布的倒数仍为 $F$ 分布，但自由度互换：$1/F(m,n) \\sim F(n,m)$。这一性质在方差分析和回归检验中有用。' },
+    { question: '$\\bar{X}$ 与 $S^2$ 在正态总体下是？', options: ['相关', '独立', '互斥', '函数关系'], answer: 1, explanation: '正态总体的样本均值 $\\bar{X}$ 与样本方差 $S^2$ 相互独立。这是正态分布特有的性质，其他分布一般不成立。' },
+  ],
+
+  'prob-08': [
+    { question: '最大似然估计（MLE）的核心思想是？', options: ['最小化误差', '最大化观测数据出现的概率', '最小化方差', '使估计无偏'], answer: 1, explanation: 'MLE 选择使似然函数 $L(\\theta) = \\prod f(x_i;\\theta)$ 最大（等价于最大化 $\\ln L$）的参数值。直觉：找到最可能产生当前观测数据的参数。' },
+    { question: '无偏估计量要求？', options: ['$D(\\hat{\\theta}) = 0$', '$E(\\hat{\\theta}) = \\theta$', '$\\hat{\\theta} = \\theta$', '$\\text{Var}(\\hat{\\theta})$ 最小'], answer: 1, explanation: '无偏性：估计量的期望等于真值 $E(\\hat{\\theta}) = \\theta$。无偏估计不保证每次估计都准确，但平均而言是正确的。' },
+    { question: '假设检验中，第 I 类错误（弃真）的概率为？', options: ['$\\beta$', '$1-\\alpha$', '$\\alpha$', '$1-\\beta$'], answer: 2, explanation: '第 I 类错误（Type I）：$H_0$ 为真时错误拒绝 $H_0$，概率为显著性水平 $\\alpha$。第 II 类错误：$H_0$ 为假时错误接受 $H_0$，概率为 $\\beta$。' },
+    { question: '正态总体均值的 95% 置信区间（$\\sigma$ 已知）是？', options: ['$\\bar{X} \\pm 1.96\\sigma/\\sqrt{n}$', '$\\bar{X} \\pm 1.96\\sigma$', '$\\bar{X} \\pm 1.96S$', '$\\bar{X} \\pm S/\\sqrt{n}$'], answer: 0, explanation: '$\\sigma$ 已知时用 $z$ 分布：$\\bar{X} \\pm z_{0.025}\\sigma/\\sqrt{n} = \\bar{X} \\pm 1.96\\sigma/\\sqrt{n}$。$\\sigma$ 未知时替换为 $t$ 分布。' },
+    { question: '增大样本量 $n$ 可以？', options: ['同时减小 $\\alpha$ 和 $\\beta$', '只能减小 $\\alpha$', '只能减小 $\\beta$', '不影响错误概率'], answer: 0, explanation: '增大样本量增加信息量，可以同时减小第 I 类错误（$\\alpha$）和第 II 类错误（$\\beta$）的概率。这是统计学中"数据为王"的体现。' },
+  ],
+
+  // ========== 电力电子技术 pwr-01~pwr-06 ==========
+  'pwr-01': [
+    { question: 'DC→AC 变换的电路称为？', options: ['整流电路', '逆变电路', '斩波电路', '变频电路'], answer: 1, explanation: '逆变电路（Inverter）将直流电转换为频率和幅值可调的交流电，是电机驱动的核心。整流是 AC→DC，斩波是 DC→DC。' },
+    { question: 'IGBT 相比 MOSFET 的优势是？', options: ['开关速度更快', '耐压更高、导通压降低', '驱动更简单', '体积更小'], answer: 1, explanation: 'IGBT 结合了 MOSFET 的高输入阻抗和 BJT 的低导通压降，适合中大功率（600V~数kV）应用。MOSFET 开关更快但高压时导通电阻大。' },
+    { question: '功率器件的开关损耗与什么成正比？', options: ['电压', '电流', '开关频率', '温度'], answer: 2, explanation: '开关损耗 $P_{sw} = \\frac{1}{2}V_{bus}I_{load}(t_{on}+t_{off})f_{sw}$，与开关频率 $f_{sw}$ 成正比。频率越高损耗越大，需要在效率和滤波之间权衡。' },
+    { question: 'SiC（碳化硅）器件相比传统 Si 器件的优势是？', options: ['更便宜', '开关速度更快、损耗更低', '体积更大', '仅用于低压'], answer: 1, explanation: '宽禁带半导体（SiC/GaN）具有更高击穿电场、更高热导率、更快开关速度，可工作在更高温度和频率。是下一代电力电子器件。' },
+    { question: '电力电子技术在机器人中的核心应用是？', options: ['信号处理', '电机驱动器的功率变换', '数据存储', '无线通信'], answer: 1, explanation: '电力电子是电机驱动器的功率级——将电池/电源的电能转换为电机所需的电压/电流。没有电力电子就没有电机控制。' },
+  ],
+
+  'pwr-02': [
+    { question: '单相桥式整流加滤波电容后，输出电压约等于？', options: ['$0.9U_2$', '$U_2$', '$\\sqrt{2}U_2$', '$2U_2$'], answer: 2, explanation: '加滤波电容后，电容在峰值充电、负载放电，输出电压接近交流峰值 $\\sqrt{2}U_2$。轻载时更接近，重载时因放电而降低。' },
+    { question: '三相桥式整流的输出电压纹波频率是电源频率的？', options: ['1 倍', '2 倍', '3 倍', '6 倍'], answer: 3, explanation: '三相桥式整流产生 6 脉波，纹波频率 = $6f$（$f$ 为电源频率）。$f=50$Hz 时纹波频率 300Hz，比单相整流（100Hz）更容易滤波。' },
+    { question: '晶闸管整流中，触发角 $\\alpha$ 增大时输出电压？', options: ['增大', '减小', '不变', '先增后减'], answer: 1, explanation: '$U_{dc} = U_{dc0}\\cos\\alpha$，$\\alpha$ 从 0° 增大到 180° 时 $\\cos\\alpha$ 从 1 减小到 -1，输出电压降低。$\\alpha=90°$ 时输出为零。' },
+    { question: '整流电路功率因数低的主要原因是？', options: ['电压太高', '电流波形畸变（谐波）', '频率太低', '电阻太大'], answer: 1, explanation: '整流电路从电网吸取非正弦电流，含有大量谐波，导致功率因数降低。基波功率因数（位移因子）可能接近 1，但谐波使总功率因数下降。' },
+    { question: '快恢复二极管主要用于？', options: ['低频整流', '高频整流和续流', '信号检波', '稳压'], answer: 1, explanation: '快恢复二极管反向恢复时间短（几十ns），适用于高频开关电路（如开关电源、逆变器续流）。普通二极管反向恢复慢，高频时损耗大。' },
+  ],
+
+  'pwr-03': [
+    { question: 'Buck 变换器的输出电压公式是？', options: ['$V_{out} = V_{in}/(1-D)$', '$V_{out} = D \\cdot V_{in}$', '$V_{out} = V_{in}(1-D)$', '$V_{out} = V_{in}^2/D$'], answer: 1, explanation: 'Buck（降压）变换器：$V_{out} = D \\cdot V_{in}$。$D$ 为占空比（0~1），$D=0.5$ 时输出为输入的一半。' },
+    { question: 'Boost 变换器的输出电压特点是？', options: ['输出低于输入', '输出等于输入', '输出高于输入', '输出可正可负'], answer: 2, explanation: 'Boost（升压）变换器：$V_{out} = V_{in}/(1-D)$，$D < 1$ 时 $V_{out} > V_{in}$。用于电池升压、PFC 等需要升高电压的场合。' },
+    { question: 'DC-DC 变换器工作在 CCM 模式时，电感电流？', options: ['始终为零', '有时为零', '始终大于零', '等于负载电流'], answer: 2, explanation: 'CCM（连续导通模式）：电感电流在整个开关周期内始终大于零。DCM（断续模式）：电感电流在部分时间内为零。CCM 纹波小、控制简单。' },
+    { question: 'Buck-Boost 变换器的输出极性与输入的关系是？', options: ['相同', '相反', '可正可负', '取决于占空比'], answer: 1, explanation: '基本 Buck-Boost 变换器输出极性与输入相反（反相）。$V_{out} = -D V_{in}/(1-D)$。$D < 0.5$ 降压，$D > 0.5$ 升压。' },
+    { question: 'DC-DC 变换器输出纹波电压的减小方法不包括？', options: ['增大滤波电容', '增大电感', '提高开关频率', '增大负载电流'], answer: 3, explanation: '减小纹波的方法：增大 $L$ 和 $C$、提高 $f_{sw}$、减小负载电流。增大负载电流反而会增大纹波（放电更快）。' },
+  ],
+
+  'pwr-04': [
+    { question: '三相桥式逆变器有几种基本电压矢量？', options: ['4 种', '6 种', '8 种', '9 种'], answer: 2, explanation: '3 个桥臂各有 2 种状态（上管通/下管通），共 $2^3 = 8$ 种组合：6 个有效矢量（$V_1$~$V_6$）和 2 个零矢量（$V_0, V_7$）。' },
+    { question: 'SPWM 的调制比 $M$ 定义为？', options: ['$V_{dc}/V_{control}$', '$V_{control,peak}/V_{tri,peak}$', '$f_{control}/f_{tri}$', '$D_{max}/D_{min}$'], answer: 1, explanation: '调制比 $M$ = 正弦调制波峰值 / 三角载波峰值。$M \\le 1$ 时线性调制，$M > 1$ 过调制，输出谐波增大。' },
+    { question: 'SVPWM 比 SPWM 电压利用率高约？', options: ['5%', '15%', '30%', '50%'], answer: 1, explanation: 'SVPWM 的最大输出基波幅值 = $V_{dc}/\\sqrt{3}$，SPWM 为 $V_{dc}/2$，利用率提高约 15%。这是 SVPWM 被 FOC 广泛采用的原因之一。' },
+    { question: '逆变器死区时间的作用是？', options: ['提高效率', '防止同一桥臂上下管同时导通', '减小谐波', '增加输出电压'], answer: 1, explanation: '死区时间确保上下管不会同时导通（直通短路）。在切换时先关断再延时后导通，防止因关断延迟导致的直通。' },
+    { question: '逆变器输出滤波器设计需要关注的最低次谐波频率是？', options: ['$f_1$', '$f_{sw}$', '$f_{sw} - 2f_1$', '$2f_{sw}$'], answer: 2, explanation: '双极性 SPWM 最低次谐波在 $f_{sw} \\pm 2f_1$ 附近，单极性在 $2f_{sw} \\pm f_1$ 附近。滤波器截止频率应低于最低次谐波频率。' },
+  ],
+
+  'pwr-05': [
+    { question: 'H 桥电路中，电机正转时导通的开关管是？', options: ['Q1+Q2', 'Q1+Q4', 'Q2+Q3', 'Q3+Q4'], answer: 1, explanation: '正转：对角管 Q1（左上）和 Q4（右下）导通，电流从 V+ → Q1 → 电机(→) → Q4 → GND。反转则 Q2+Q3 导通。' },
+    { question: 'H 桥制动时，电机绕组的状态是？', options: ['开路', '接电源', '短路', '反接电源'], answer: 2, explanation: '短路制动：Q1+Q3 或 Q2+Q4 同时导通，电机绕组被短路。旋转产生的反电动势在短路回路中产生制动电流，形成电磁制动转矩。' },
+    { question: '单极性 PWM 和双极性 PWM 的主要区别是？', options: ['电源电压不同', '开关管数量不同', '一个桥臂 PWM vs 对角管同时 PWM', '电机类型不同'], answer: 2, explanation: '单极性：一个桥臂恒通，另一个桥臂 PWM。双极性：对角管同时 PWM。双极性纹波小但开关损耗高。' },
+    { question: 'H 桥直通（shoot-through）会导致？', options: ['电机反转', '电源短路烧毁器件', '输出电压升高', '效率提高'], answer: 1, explanation: '同一桥臂上下管同时导通（直通）使电源通过开关管直接短路，产生极大电流，瞬间烧毁器件。必须用死区时间防止。' },
+    { question: '死区时间通常取多大？', options: ['0.1~0.5μs', '0.5~2μs', '5~10μs', '50~100μs'], answer: 1, explanation: '死区时间需覆盖开关管的关断延迟和安全裕量，通常 0.5~2μs。太短有直通风险，太长导致输出电压畸变（尤其低速时）。' },
+  ],
+
+  'pwr-06': [
+    { question: 'PWM 的面积等效原理是指？', options: ['脉冲面积等于正弦面积', '等宽不等幅脉冲等效正弦', '等幅不等宽脉冲等效正弦', '脉冲频率等于正弦频率'], answer: 2, explanation: 'PWM 用等幅（固定 $V_{dc}$）不等宽（变化占空比）的脉冲序列，使脉冲面积的低频分量等效于期望的连续信号（如正弦波）。' },
+    { question: 'STM32 定时器的 PWM 频率 $f_{sw} = f_{clk}/(ARR+1)$ 中，$ARR$ 是？', options: ['比较值', '自动重装载值', '预分频器', '计数器当前值'], answer: 1, explanation: '$ARR$（Auto-Reload Register）决定计数周期，$f_{sw} = f_{clk}/(ARR+1)$。$CCR$（比较值）决定占空比，$D = CCR/ARR$。' },
+    { question: '规则采样法相比自然采样法的优势是？', options: ['谐波更少', '开关时刻可预测，易数字实现', '输出电压更高', '不需要载波'], answer: 1, explanation: '规则采样在载波顶/底点采样调制波，开关时刻可以预先计算，适合 MCU/DSP 数字实现。自然采样谐波性能更好但开关时刻不规则。' },
+    { question: 'PWM 开关频率选择需要权衡的是？', options: ['电压和电流', '开关损耗和输出纹波', '电阻和电容', '输入和输出'], answer: 1, explanation: '频率高→谐波易滤除、纹波小，但开关损耗大、EMI 强。频率低→损耗小，但滤波器大、纹波大。需根据应用权衡。' },
+    { question: '中心对齐 PWM 模式相比边沿对齐的优势是？', options: ['更简单', '谐波性能更好', '占空比范围更大', '不需要死区'], answer: 1, explanation: '中心对齐 PWM 的脉冲关于计数器中心对称，等效开关频率翻倍，谐波性能更好。是电机驱动 FOC 的标准 PWM 模式。' },
+    { question: 'SPWM 输出频谱中，主要谐波集中在？', options: ['基波附近', '直流分量附近', '开关频率附近', '任意频率'], answer: 2, explanation: 'SPWM 的主要谐波集中在开关频率 $f_{sw}$ 及其整数倍附近（如 $f_{sw} \\pm 2f_1$）。基波频率 $f_1$ 的谐波被大幅抑制。' },
   ],
 
 };
