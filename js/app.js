@@ -498,7 +498,7 @@
       <!-- Tab 1: 知识图谱 -->
       <div id="tab-graph" class="roadmap-panel active">
         <div class="knowledge-card mb-4">
-          <p class="card-desc">7 大板块 × 96 个知识点的依赖关系图。节点颜色表示学习状态：<span style="color:#059669">绿色=已完成</span>、<span style="color:#d97706">橙色=学习中</span>、<span style="color:#cbd5e1">灰色=未开始</span>。点击节点跳转到对应知识点。</p>
+          <p class="card-desc">${SECTION_GROUPS.length} 大板块 × ${AllKnowledgeIds.length} 个知识点的依赖关系图。节点颜色表示学习状态：<span style="color:#059669">绿色=已完成</span>、<span style="color:#d97706">橙色=学习中</span>、<span style="color:#cbd5e1">灰色=未开始</span>。点击节点跳转到对应知识点。</p>
         </div>
         <div class="chart-container chart-container-lg" data-chart="knowledge-graph"></div>
       </div>
@@ -539,10 +539,12 @@
         <div class="knowledge-card">
           <h3>💡 学习建议</h3>
           <div class="step-list">
-            <div class="step-item"><div><strong>第一阶段 · 数学筑基</strong>：高等数学（微积分为核心）→ 线性代数（矩阵、特征值是后续电路/自控的工具）</div></div>
-            <div class="step-item"><div><strong>第二阶段 · 电路入门</strong>：电路基础（KCL/KVL、暂态）→ 模拟电路（需电路基础+微积分）→ 数字电路（相对独立，可并行）</div></div>
-            <div class="step-item"><div><strong>第三阶段 · 控制理论</strong>：自动控制原理（需拉氏变换、复数、电路基础，工程应用为主）</div></div>
-            <div class="step-item"><div><strong>第四阶段 · 算法数据</strong>：数据结构（相对独立，计算机统考大纲与工程面试核心）</div></div>
+            <div class="step-item"><div><strong>第一阶段 · 数学筑基</strong>：高等数学（微积分为核心）→ 线性代数（矩阵、特征值是后续电路/自控的工具）→ 概率论与数理统计（随机变量、参数估计，卡尔曼滤波与机器学习的基础）</div></div>
+            <div class="step-item"><div><strong>第二阶段 · 电路入门</strong>：电路基础（KCL/KVL、暂态）→ 模拟电路（需电路基础+微积分）→ 数字电路（相对独立，可并行）→ 电力电子技术（DC-DC、逆变、H 桥，电机驱动基础）</div></div>
+            <div class="step-item"><div><strong>第三阶段 · 控制理论</strong>：自动控制原理（需拉氏变换、复数、电路基础，工程应用为主）→ 现代控制理论（状态空间、能控能观、LQR、卡尔曼滤波，机器人控制核心）</div></div>
+            <div class="step-item"><div><strong>第四阶段 · 信号与嵌入式</strong>：信号与系统（傅里叶/拉氏/Z 变换、采样定理）→ 嵌入式系统（ARM、GPIO、PWM、RTOS）→ 传感器与检测（编码器、IMU、信号调理）</div></div>
+            <div class="step-item"><div><strong>第五阶段 · 电机与机器人</strong>：电机与拖动（直流/PMSM/步进/伺服）→ 机器人学导论（DH 参数、运动学、雅可比、动力学、力控制）</div></div>
+            <div class="step-item"><div><strong>第六阶段 · 计算机基础</strong>：数据结构（统考与工程面试核心）→ C/C++ 程序设计（嵌入式主力语言）→ 操作系统（RTOS/进程调度）→ 计算机网络（TCP/IP、工业网络、ROS 通信）</div></div>
           </div>
         </div>
       </div>
