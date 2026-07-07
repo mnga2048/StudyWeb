@@ -4,19 +4,23 @@
   let currentPage = 'home';
 
   // 所有板块分组（用于路由分发与查找），与 nav.children.id 对应
-  const SECTION_GROUPS = ['advanced-math', 'linear-algebra', 'circuit-basics',
-    'analog-circuit', 'digital-circuit', 'control', 'modern-control',
-    'signals', 'sensor', 'embedded-sys', 'data-structure',
-    'cpp', 'os', 'network'];
+  const SECTION_GROUPS = ['advanced-math', 'linear-algebra', 'probability',
+    'circuit-basics', 'analog-circuit', 'digital-circuit', 'power-electronics',
+    'motor-drive', 'control', 'modern-control',
+    'embedded-sys', 'sensor', 'robotics',
+    'data-structure', 'signals', 'cpp', 'os', 'network'];
   // 分组中文名映射（用于面包屑）
   const GROUP_LABELS = {
     'advanced-math': '高等数学', 'linear-algebra': '线性代数',
+    'probability': '概率论与数理统计',
     'circuit-basics': '电路基础', 'analog-circuit': '模拟电路',
-    'digital-circuit': '数字电路', 'control': '自动控制原理',
-    'modern-control': '现代控制理论', 'signals': '信号与系统',
-    'sensor': '传感器与检测', 'embedded-sys': '嵌入式系统',
-    'data-structure': '数据结构', 'cpp': 'C/C++ 程序设计',
-    'os': '操作系统', 'network': '计算机网络',
+    'digital-circuit': '数字电路', 'power-electronics': '电力电子技术',
+    'motor-drive': '电机与拖动',
+    'control': '自动控制原理', 'modern-control': '现代控制理论',
+    'embedded-sys': '嵌入式系统', 'sensor': '传感器与检测',
+    'robotics': '机器人学导论',
+    'data-structure': '数据结构', 'signals': '信号与系统',
+    'cpp': 'C/C++ 程序设计', 'os': '操作系统', 'network': '计算机网络',
   };
 
   // ========== 侧边栏渲染 ==========
