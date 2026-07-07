@@ -1,5 +1,5 @@
 // 协议校验工具模块
-const Validator = (() => {
+var Validator = (() => {
   'use strict';
 
   // ========== 校验算法定义 ==========
