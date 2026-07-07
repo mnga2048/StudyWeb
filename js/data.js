@@ -583,7 +583,7 @@ const CourseData = {
           <div><strong>考点提示</strong>：p-积分的敛散性是选择题高频考点。记忆技巧：无穷区间"大p收敛"（p>1），瑕积分"小p收敛"（p<1）。比较判别法和极限判别法是判断反常积分敛散性的主要工具。</div>
         </div>
       ` },
-      { id: 'hm-07', title: '定积分应用', desc: '面积、体积、弧长、物理应用', icon: '📏', tags: [], goals: { exam: true }, content: `
+      { id: 'hm-07', title: '定积分应用', desc: '面积、体积、弧长、物理应用', icon: '📏', tags: ['高频'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">定积分的几何与物理应用</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
           定积分的核心思想是"微元法"——把整体量分割成无穷多个微小量，再累加求和。掌握了微元法，面积、体积、弧长、物理量的计算都可以统一处理。本节是 <a href="javascript:void(0)" onclick="App.loadDetail('hm-06')">定积分</a> 的直接应用。
@@ -745,7 +745,7 @@ const CourseData = {
           <div><strong>考点提示</strong>：二阶常系数方程是必考内容。先写特征方程求根，再根据根的情况写齐次通解，最后用待定系数法求特解。解的结构"齐次通解 + 非齐次特解"是核心框架。</div>
         </div>
       ` },
-      { id: 'hm-09', title: '多元函数微分学', desc: '偏导数、全微分、链式法则', icon: '🌐', tags: [], goals: { exam: true }, content: `
+      { id: 'hm-09', title: '多元函数微分学', desc: '偏导数、全微分、链式法则', icon: '🌐', tags: ['核心'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">从一元到多元——升维的微分学</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
           多元函数微分学是一元微分学的推广，但由于自变量增多，出现了偏导数、全微分、方向导数、梯度等新概念，连续、可微、偏导存在之间的关系也变得复杂。本节是 <a href="javascript:void(0)" onclick="App.loadDetail('hm-10')">多元极值</a> 和 <a href="javascript:void(0)" onclick="App.loadDetail('hm-11')">二重积分</a> 的基础。
@@ -962,7 +962,7 @@ const CourseData = {
           <div><strong>考点提示</strong>：二重积分计算是必考内容。画图确定积分区域、正确写出积分限是得分关键。交换积分次序是常见题型。极坐标下的二重积分也常考，特别是圆域上的积分。</div>
         </div>
       ` },
-      { id: 'hm-12', title: '三重积分与含参积分', desc: '柱坐标、球坐标、含参变量积分', icon: '🧊', tags: [], goals: { exam: true }, content: `
+      { id: 'hm-12', title: '三重积分与含参积分', desc: '柱坐标、球坐标、含参变量积分', icon: '🧊', tags: ['进阶'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">三维空间的积分</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
           三重积分是 <a href="javascript:void(0)" onclick="App.loadDetail('hm-11')">二重积分</a> 向三维的推广，用于计算空间物体的质量、质心、转动惯量等物理量。含参积分则是将积分视为参数的函数来研究，是分析学的重要工具。
@@ -1253,7 +1253,7 @@ const CourseData = {
           <div><strong>考点提示</strong>：正项级数判敛、幂级数收敛域、函数展开为幂级数是三大必考内容。求和函数的方法（逐项积分/求导）和常用展开式必须熟练掌握。端点敛散性检验是丢分重灾区。</div>
         </div>
       ` },
-      { id: 'hm-16', title: '傅里叶级数', desc: '狄利克雷条件、周期函数展开', icon: '🎵', tags: [], goals: { exam: true }, content: `
+      { id: 'hm-16', title: '傅里叶级数', desc: '狄利克雷条件、周期函数展开', icon: '🎵', tags: ['工程'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">用三角函数逼近周期信号</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
           傅里叶级数的核心思想是：任何满足一定条件的周期函数都可以分解为一系列正弦和余弦函数的叠加。这个思想在信号处理、振动分析、热传导等领域有深远应用，也是 <a href="javascript:void(0)" onclick="App.loadDetail('hm-15')">无穷级数</a> 理论的重要应用。
@@ -1818,7 +1818,7 @@ const CourseData = {
           <div><strong>考点提示</strong>：用正交变换化二次型为标准形是解答题必考内容。配方法是备选方案。惯性定理（正负惯性指数不变）是选择题常客。</div>
         </div>
       ` },
-      { id: 'la-09', title: '正交矩阵与正交变换', desc: '施密特正交化、正定二次型', icon: '⊥', tags: [], goals: { exam: true }, content: `
+      { id: 'la-09', title: '正交矩阵与正交变换', desc: '施密特正交化、正定二次型', icon: '⊥', tags: ['高频'], goals: { exam: true }, content: `
         <h3 class="text-lg font-semibold mb-3">正交性与正定性</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
           正交矩阵和正交变换保持向量的长度和角度不变，是 <a href="javascript:void(0)" onclick="App.loadDetail('la-07')">正交对角化</a> 的基础。正定二次型则与函数极值判断、优化理论密切相关。
@@ -1963,7 +1963,7 @@ const CourseData = {
     sections: [
       { id: 'circ-01', title: '基尔霍夫定律', desc: 'KCL/KVL、节点法、网孔法', icon: '⚡', tags: ['基础必学'], goals: { exam: true, eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">基尔霍夫定律：电路分析的地基</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">基尔霍夫定律（KCL/KVL）是所有电路分析的出发点，无论电路多复杂，归根结底都基于这两条定律。掌握节点电压法和网孔电流法，就能系统化求解任何线性电路。本节是整个<a href="javascript:void(0)" onclick="App.loadDetail('circuit-basics')">电路基础</a>板块的基石，后续的<a href="javascript:void(0)" onclick="App.loadDetail('circ-02')">戴维南定理</a>、<a href="javascript:void(0)" onclick="App.loadDetail('circ-03')">叠加定理</a>都建立在此基础上。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">基尔霍夫定律（KCL/KVL）是所有电路分析的出发点，无论电路多复杂，归根结底都基于这两条定律。掌握节点电压法和网孔电流法，就能系统化求解任何线性电路。本节是整个<strong>电路基础</strong>板块的基石，后续的<a href="javascript:void(0)" onclick="App.loadDetail('circ-02')">戴维南定理</a>、<a href="javascript:void(0)" onclick="App.loadDetail('circ-03')">叠加定理</a>都建立在此基础上。</p>
 
         <h4 class="font-medium mt-6 mb-2">KCL：电流连续性原理</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">基尔霍夫电流定律（KCL）指出：任意时刻，流入任一节点的电流代数和为零。其物理本质是<strong>电荷守恒</strong>——电荷不会在节点处积累或消失。</p>
