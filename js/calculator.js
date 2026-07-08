@@ -47,7 +47,6 @@ const Calculator = {
       modal.id = 'calc-modal';
       modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4';
       modal.style.cssText = 'background:rgba(0,0,0,0.5);backdrop-filter:blur(4px)';
-      modal.onclick = (e) => { if (e.target === modal) Calculator.close(); };
       modal.innerHTML = `
         <div class="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl" style="background:var(--bg);border:1px solid var(--border)">
           <div class="flex items-center justify-between p-4 border-b sticky top-0 z-10" style="border-color:var(--border);background:var(--bg)">
@@ -60,6 +59,7 @@ const Calculator = {
         </div>`;
       document.body.appendChild(modal);
       if (window.Validator) Validator.render('calc-content');
+      this._bindEsc();
       return;
     }
     // 将 kebab-case 转换为 camelCase（如 opamp-gain -> opampGain）
@@ -72,7 +72,6 @@ const Calculator = {
     modal.id = 'calc-modal';
     modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4';
     modal.style.cssText = 'background:rgba(0,0,0,0.5);backdrop-filter:blur(4px)';
-    modal.onclick = (e) => { if (e.target === modal) Calculator.close(); };
     modal.innerHTML = `
       <div class="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl" style="background:var(--bg);border:1px solid var(--border)">
         <div class="flex items-center justify-between p-4 border-b sticky top-0 z-10" style="border-color:var(--border);background:var(--bg)">
@@ -85,12 +84,20 @@ const Calculator = {
       </div>`;
     document.body.appendChild(modal);
     calc.render(document.getElementById('calc-content'));
+    this._bindEsc();
+  },
+
+  _bindEsc() {
+    if (this._escHandler) return;
+    this._escHandler = (e) => { if (e.key === 'Escape') Calculator.close(); };
+    document.addEventListener('keydown', this._escHandler);
   },
 
   close() {
     const modal = document.getElementById('calc-modal');
     if (modal) modal.remove();
     this._active = null;
+    if (this._escHandler) { document.removeEventListener('keydown', this._escHandler); this._escHandler = null; }
   },
 
   // 计算器清单（按分类组织）
