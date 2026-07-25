@@ -780,7 +780,7 @@ Charts.register('accuracy-bar', function(el) {
     grid: { left: 150, right: 30, top: 10, bottom: 30 },
     xAxis: { type: 'value', max: 100, axisLabel: { formatter: '{value}%' } },
     yAxis: { type: 'category', data: data.map(d => d.name), axisLabel: { fontSize: 11 } },
-    series: [{
+      series: [{
       type: 'bar',
       data: data.map(d => ({
         value: d.value,
@@ -789,4 +789,103 @@ Charts.register('accuracy-bar', function(el) {
       label: { show: true, position: 'right', formatter: '{c}%', fontSize: 11 }
     }]
   });
+});
+
+// ==================== 新增交互图表（v0.9.1） ====================
+
+// 二极管伏安特性曲线（ana-01）
+// 公式：I = IS·(e^(U/UT) - 1)，UT = kT/q ≈ 26mV·(T/298)
+Charts.register('diode-iv', function(el) {
+  if (typeof echarts === 'undefined') return;
+
+  // 初始参数（IS 用对数刻度的指数表示：logIS 范围 -12 ~ -9）
+  const initLogIS = parseFloat(el.dataset.logis || '-12');
+  const initT = parseFloat(el.dataset.temp || '25');
+  const title = el.dataset.title || '二极管伏安特性曲线';
+
+  // 击穿电压（反向，负值），用于击穿段绘制
+  const U_BR = -20;
+
+  // 计算伏安特性数据；参数：IS（A）、T（℃）
+  // 返回 { forward: [[U, I_mA], ...], reverse: [...] }
+  function calcData(IS, T) {
+    const UT = 0.026 * (T + 273) / 298;  // 热电压 V
+    const forward = [];
+    const reverse = [];
+    // 正向：0 ~ 0.9V，细步长（指数增长敏感）
+    for (let U = 0; U <= 0.9; U += 0.005) {
+      const expArg = U / UT;
+      const I = IS * (Math.exp(Math.min(expArg, 40)) - 1);  // 防 e^ 溢出
+      forward.push([parseFloat(U.toFixed(4)), parseFloat((I * 1000).toFixed(6))]);  // A → mA
+    }
+    // 反向：U_BR ~ 0V，反向饱和电流近似为 -IS（击穿前）
+    for (let U = 0; U >= U_BR; U -= 0.2) {
+      let I;
+      if (U > U_BR + 0.5) {
+        // 反向截止区：微小漏电流
+        const expArg = U / UT;
+        I = IS * (Math.exp(Math.min(expArg, 40)) - 1);  // U<0 时 e^(负) -1 ≈ -1，I ≈ -IS
+      } else {
+        // 反向击穿区：电流急剧增大（简化为指数）
+        const overshoot = (U_BR - U) / 0.5;  // 超出击穿点的程度
+        I = -IS * (1 + Math.exp(overshoot * 3));  // 击穿后急剧负向增大
+      }
+      reverse.push([parseFloat(U.toFixed(3)), parseFloat((I * 1000).toFixed(6))]);
+    }
+    return { forward, reverse };
+  }
+
+  // 创建滑块控件
+  const controls = document.createElement('div');
+  controls.style.cssText = 'display:flex;gap:1.5rem;align-items:center;padding:0.75rem;background:var(--bg-secondary);border-radius:0.5rem;margin-top:0.5rem;font-size:0.8rem;flex-wrap:wrap;';
+  controls.innerHTML = `
+    <label style="display:flex;align-items:center;gap:0.5rem">
+      <span>lg(I<sub>S</sub>):</span>
+      <input type="range" id="div-logis" min="-13" max="-9" step="0.5" value="${initLogIS}" style="width:120px">
+      <span id="div-logis-val" style="min-width:3rem;font-weight:600">${initLogIS}</span>
+    </label>
+    <label style="display:flex;align-items:center;gap:0.5rem">
+      <span>T (℃):</span>
+      <input type="range" id="div-temp" min="-20" max="100" step="5" value="${initT}" style="width:120px">
+      <span id="div-temp-val" style="min-width:2.5rem;font-weight:600">${initT}</span>
+    </label>
+    <span style="color:var(--text-secondary)">U<sub>T</sub> ≈ <span id="div-ut" style="font-weight:600">${(0.026*(initT+273)/298*1000).toFixed(1)}</span> mV</span>
+  `;
+  el.appendChild(controls);
+
+  const IS0 = Math.pow(10, initLogIS);
+  const { forward, reverse } = calcData(IS0, initT);
+
+  const chartEl = document.createElement('div');
+  chartEl.style.height = '350px';
+  el.insertBefore(chartEl, controls);
+
+  const inst = echarts.init(chartEl);
+  Charts._instances.push(inst);
+  inst.setOption({
+    title: { text: title, textStyle: { fontSize: 14 } },
+    tooltip: { trigger: 'axis', formatter: p => `U = ${p[0].data[0]} V<br>I = ${p[0].data[1]} mA` },
+    legend: { data: ['正向特性', '反向特性'], bottom: 0 },
+    grid: { left: 60, right: 30, top: 40, bottom: 40 },
+    xAxis: { type: 'value', name: 'U (V)', nameLocation: 'middle', nameGap: 25, min: U_BR, max: 1 },
+    yAxis: { type: 'value', name: 'I (mA)', nameLocation: 'end' },
+    series: [
+      { name: '正向特性', type: 'line', data: forward, showSymbol: false, lineStyle: { width: 2, color: '#ef4444' }, smooth: true },
+      { name: '反向特性', type: 'line', data: reverse, showSymbol: false, lineStyle: { width: 2, color: '#3b82f6' }, smooth: true }
+    ]
+  });
+
+  // 更新函数
+  function update() {
+    const logIS = parseFloat(document.getElementById('div-logis')?.value || initLogIS);
+    const T = parseFloat(document.getElementById('div-temp')?.value || initT);
+    document.getElementById('div-logis-val').textContent = logIS.toFixed(1);
+    document.getElementById('div-temp-val').textContent = T.toFixed(0);
+    document.getElementById('div-ut').textContent = (0.026*(T+273)/298*1000).toFixed(1);
+    const IS = Math.pow(10, logIS);
+    const { forward: fd, reverse: rd } = calcData(IS, T);
+    inst.setOption({ series: [{ data: fd }, { data: rd }] });
+  }
+  el.querySelector('#div-logis')?.addEventListener('input', update);
+  el.querySelector('#div-temp')?.addEventListener('input', update);
 });

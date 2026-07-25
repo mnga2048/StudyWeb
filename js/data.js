@@ -2352,6 +2352,8 @@ const CourseData = {
 
         <h4 class="font-medium mt-6 mb-2">伏安特性（肖克莱方程）</h4>
         <div class="formula-block">二极管电流方程：$I = I_S(e^{U/U_T} - 1)$<br>其中：$I_S$ 为反向饱和电流（极小，nA 级）<br>$U_T = \\frac{kT}{q} \\approx 26mV$（室温热电压）<div class="text-sm text-gray-500 mt-2">正向电压每增加 60mV，电流增大 10 倍（指数关系）</div></div>
+        <div class="chart-container" data-chart="diode-iv" data-logis="-12" data-temp="25" data-title="二极管伏安特性（拖动滑块观察 IS 和温度的影响）"></div>
+        <div class="text-xs text-center mt-1 mb-4" style="color:var(--text-secondary)">红线=正向导通区（0.7V 附近陡升），蓝线=反向截止/击穿区；温度↑→U<sub>T</sub>↑、I<sub>S</sub>↑↑</div>
 
         <h4 class="font-medium mt-6 mb-2">三个工作区</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>工作区</th><th>电压条件</th><th>电流特性</th><th>等效模型</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">正向导通区</td><td>$U > U_{on}$（硅 0.7V）</td><td>指数增长</td><td>0.7V 恒压源</td><td>整流、钳位</td></tr><tr><td class="font-medium">反向截止区</td><td>$U_{BR} < U < 0$</td><td>微小 $I_S$</td><td>断路</td><td>隔离、检波</td></tr><tr><td class="font-medium">反向击穿区</td><td>$U < U_{BR}$</td><td>剧增（可控）</td><td>稳压源</td><td>稳压管</td></tr></tbody></table></div>
