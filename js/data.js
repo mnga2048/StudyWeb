@@ -2576,6 +2576,8 @@ const CourseData = {
 
         <h4 class="font-medium mt-6 mb-2">常用运放电路汇总</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>电路</th><th>输入输出关系</th><th>输入电阻</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">反相比例</td><td>$u_o = -\\frac{R_f}{R_1}u_i$</td><td>$R_1$</td><td>反相放大</td></tr><tr><td class="font-medium">同相比例</td><td>$u_o = (1+\\frac{R_f}{R_1})u_i$</td><td>$\\infty$</td><td>同相放大</td></tr><tr><td class="font-medium">电压跟随器</td><td>$u_o = u_i$</td><td>$\\infty$</td><td>阻抗变换（缓冲）</td></tr><tr><td class="font-medium">反相求和</td><td>$u_o = -(\\frac{R_f}{R_1}u_1 + \\frac{R_f}{R_2}u_2)$</td><td>各支路独立</td><td>加权加法</td></tr><tr><td class="font-medium">积分器</td><td>$u_o = -\\frac{1}{RC}\\int u_i\\,dt$</td><td>$R$</td><td>波形变换</td></tr><tr><td class="font-medium">微分器</td><td>$u_o = -RC\\frac{du_i}{dt}$</td><td>$R$</td><td>边缘检测</td></tr></tbody></table></div>
+        <div class="chart-container" data-chart="opamp-circuit" data-rf="10" data-r1="1" data-title="运放电路输入输出波形（点击按钮切换电路类型）"></div>
+        <div class="text-xs text-center mt-1 mb-4" style="color:var(--text-secondary)">输入为方波；反相/同相→放大后方波，积分→三角波，微分→尖峰波</div>
 
         <h4 class="font-medium mt-6 mb-2">实例计算：反相求和放大器</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">设计一个反相求和放大器：$u_o = -(2u_1 + 3u_2)$，选 $R_f=60k\\Omega$。求 $R_1$ 和 $R_2$。</p>

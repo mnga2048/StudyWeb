@@ -889,3 +889,155 @@ Charts.register('diode-iv', function(el) {
   el.querySelector('#div-logis')?.addEventListener('input', update);
   el.querySelector('#div-temp')?.addEventListener('input', update);
 });
+
+// 运放电路交互（ana-09）：反相/同相/积分/微分四种电路，实时显示输入输出波形
+Charts.register('opamp-circuit', function(el) {
+  if (typeof echarts === 'undefined') return;
+
+  const initRf = parseFloat(el.dataset.rf || '10');   // kΩ
+  const initR1 = parseFloat(el.dataset.r1 || '1');    // kΩ
+  const title = el.dataset.title || '运放电路输入输出波形对比';
+
+  // 输入信号：方波 ±1V，周期 1s（频率 1Hz 便于观察）
+  // t 范围 0~2s（两个周期）
+  function inputAt(t) {
+    // 方波：每 0.5s 翻转一次
+    return Math.sin(2 * Math.PI * 1 * t) >= 0 ? 1 : -1;
+  }
+
+  // 按给定电路类型计算输出波形
+  // mode: 'invert' | 'noninv' | 'integ' | 'diff'
+  function calcData(mode, Rf, R1) {
+    const dt = 0.005;
+    const tmax = 2;
+    const input = [], output = [];
+    let integAcc = 0;       // 积分器累积量
+    let prevU = inputAt(0); // 微分器前一刻输入
+    // 积分器时间常数 τ = R*C，本仿真取 R=Rf(kΩ化作无量纲)·C=1μF，故 1/τ 系数取 Rf/10
+    const integK = 1 / (Rf * 0.1);  // -1/(RC)·∫ui dt 的系数
+    const diffK = Rf * 0.1;          // -RC·dui/dt 的系数
+
+    for (let t = 0; t <= tmax + 1e-9; t += dt) {
+      const ui = inputAt(t);
+      let uo;
+      switch (mode) {
+        case 'invert':
+          uo = -(Rf / R1) * ui;
+          break;
+        case 'noninv':
+          uo = (1 + Rf / R1) * ui;
+          break;
+        case 'integ':
+          // uo = -1/(RC) · ∫ui dt（梯形积分）
+          integAcc += (ui + prevU) / 2 * dt;
+          uo = -integK * integAcc;
+          // 限幅防发散
+          uo = Math.max(-15, Math.min(15, uo));
+          break;
+        case 'diff':
+          // uo = -RC · dui/dt（差分近似）
+          uo = -diffK * (ui - prevU) / dt;
+          // 方波边缘会出尖峰，限幅
+          uo = Math.max(-15, Math.min(15, uo));
+          break;
+      }
+      input.push([parseFloat(t.toFixed(4)), ui]);
+      output.push([parseFloat(t.toFixed(4)), parseFloat(uo.toFixed(4))]);
+      prevU = ui;
+    }
+    return { input, output };
+  }
+
+  // 创建控件：模式按钮 + Rf/R1 滑块
+  const controls = document.createElement('div');
+  controls.style.cssText = 'display:flex;gap:1rem;align-items:center;padding:0.75rem;background:var(--bg-secondary);border-radius:0.5rem;margin-top:0.5rem;font-size:0.8rem;flex-wrap:wrap;';
+  controls.innerHTML = `
+    <div style="display:flex;gap:0.25rem;flex-wrap:wrap">
+      <button type="button" data-mode="invert" class="opamp-btn" style="padding:0.25rem 0.6rem;border:1px solid var(--border);border-radius:0.25rem;background:var(--bg-primary);cursor:pointer">反相</button>
+      <button type="button" data-mode="noninv" class="opamp-btn" style="padding:0.25rem 0.6rem;border:1px solid var(--border);border-radius:0.25rem;background:var(--bg-primary);cursor:pointer">同相</button>
+      <button type="button" data-mode="integ" class="opamp-btn" style="padding:0.25rem 0.6rem;border:1px solid var(--border);border-radius:0.25rem;background:var(--bg-primary);cursor:pointer">积分</button>
+      <button type="button" data-mode="diff" class="opamp-btn" style="padding:0.25rem 0.6rem;border:1px solid var(--border);border-radius:0.25rem;background:var(--bg-primary);cursor:pointer">微分</button>
+    </div>
+    <label style="display:flex;align-items:center;gap:0.5rem">
+      <span>R<sub>f</sub> (kΩ):</span>
+      <input type="range" id="op-rf" min="0.1" max="20" step="0.1" value="${initRf}" style="width:100px">
+      <span id="op-rf-val" style="min-width:2.5rem;font-weight:600">${initRf}</span>
+    </label>
+    <label style="display:flex;align-items:center;gap:0.5rem">
+      <span>R<sub>1</sub> (kΩ):</span>
+      <input type="range" id="op-r1" min="0.1" max="20" step="0.1" value="${initR1}" style="width:100px">
+      <span id="op-r1-val" style="min-width:2.5rem;font-weight:600">${initR1}</span>
+    </label>
+    <span id="op-gain-info" style="color:var(--text-secondary)"></span>
+  `;
+  el.appendChild(controls);
+
+  let currentMode = 'invert';
+
+  const chartEl = document.createElement('div');
+  chartEl.style.height = '350px';
+  el.insertBefore(chartEl, controls);
+
+  const inst = echarts.init(chartEl);
+  Charts._instances.push(inst);
+  inst.setOption({
+    title: { text: title, textStyle: { fontSize: 14 } },
+    tooltip: { trigger: 'axis', formatter: p => `t = ${p[0].data[0]}s<br>${p.map(x => `${x.seriesName}: ${x.data[1]}V`).join('<br>')}` },
+    legend: { data: ['输入 u_i', '输出 u_o'], bottom: 0 },
+    grid: { left: 50, right: 20, top: 40, bottom: 40 },
+    xAxis: { type: 'value', name: 't (s)', nameLocation: 'middle', nameGap: 25, min: 0, max: 2 },
+    yAxis: { type: 'value', name: 'u (V)', nameLocation: 'end', min: -15, max: 15 },
+    series: [
+      { name: '输入 u_i', type: 'line', data: [], showSymbol: false, step: 'end', lineStyle: { width: 1.5, color: '#94a3b8' } },
+      { name: '输出 u_o', type: 'line', data: [], showSymbol: false, lineStyle: { width: 2, color: '#3b82f6' } }
+    ]
+  });
+
+  // 更新按钮高亮 + 数据 + 增益信息
+  function highlightButton() {
+    el.querySelectorAll('.opamp-btn').forEach(b => {
+      if (b.dataset.mode === currentMode) {
+        b.style.background = 'var(--primary)';
+        b.style.color = '#fff';
+        b.style.borderColor = 'var(--primary)';
+      } else {
+        b.style.background = 'var(--bg-primary)';
+        b.style.color = '';
+        b.style.borderColor = 'var(--border)';
+      }
+    });
+  }
+
+  function update() {
+    const Rf = parseFloat(document.getElementById('op-rf')?.value || initRf);
+    const R1 = parseFloat(document.getElementById('op-r1')?.value || initR1);
+    document.getElementById('op-rf-val').textContent = Rf.toFixed(1);
+    document.getElementById('op-r1-val').textContent = R1.toFixed(1);
+    const { input, output } = calcData(currentMode, Rf, R1);
+    inst.setOption({ series: [{ data: input }, { data: output }] });
+
+    // 增益信息文本
+    let info = '';
+    switch (currentMode) {
+      case 'invert':  info = `A_v = -R_f/R_1 = ${(-Rf/R1).toFixed(2)}`; break;
+      case 'noninv':  info = `A_v = 1+R_f/R_1 = ${(1+Rf/R1).toFixed(2)}`; break;
+      case 'integ':   info = `u_o = -(1/RC)·∫u_i dt，方波→三角波`; break;
+      case 'diff':    info = `u_o = -RC·du_i/dt，方波→尖峰`; break;
+    }
+    document.getElementById('op-gain-info').textContent = info;
+  }
+
+  highlightButton();
+  update();
+
+  // 模式切换
+  el.querySelectorAll('.opamp-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      currentMode = b.dataset.mode;
+      highlightButton();
+      update();
+    });
+  });
+  el.querySelector('#op-rf')?.addEventListener('input', update);
+  el.querySelector('#op-r1')?.addEventListener('input', update);
+});
