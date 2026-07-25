@@ -6,7 +6,7 @@ const Calculator = {
   _active: null,
 
   // 分类顺序
-  _categoryOrder: ['电路基础', '模拟电路', '数字电路', '信号处理', '自动控制', '计算机', '工程协议', '电机驱动'],
+  _categoryOrder: ['电路基础', '模拟电路', '数字电路', '信号处理', '自动控制', '计算机', '工程协议', '电机驱动', '嵌入式'],
 
   render(containerId) {
     const container = document.getElementById(containerId);
@@ -33,7 +33,7 @@ const Calculator = {
   },
 
   _categoryIcon(cat) {
-    const icons = {'电路基础':'🔵','模拟电路':'🟢','数字电路':'🟡','信号处理':'📡','自动控制':'🟣','计算机':'💻','工程协议':'🔌','电机驱动':'⚡'};
+    const icons = {'电路基础':'🔵','模拟电路':'🟢','数字电路':'🟡','信号处理':'📡','自动控制':'🟣','计算机':'💻','工程协议':'🔌','电机驱动':'⚡','嵌入式':'🔩'};
     return icons[cat] || '🔧';
   },
 
@@ -133,6 +133,11 @@ const Calculator = {
     { id: 'validator', title: '协议校验器', desc: 'CRC-8/16/32/Modbus/CAN 帧解析', icon: '🔐', category: '工程协议' },
     // ===== 电机驱动 =====
     { id: 'motor', title: '电机参数计算', desc: '转速-转矩-功率、步进脉冲', icon: '⚙️', category: '电机驱动' },
+    // ===== 嵌入式 =====
+    { id: 'adc-calc', title: 'ADC 分辨率计算', desc: '位 N / Vref → LSB、量化误差、SINAD', icon: '📊', category: '嵌入式' },
+    { id: 'pwm-calc', title: 'PWM 参数计算', desc: '时钟/频率 → ARR、PSC、占空比精度', icon: '🌊', category: '嵌入式' },
+    { id: 'led-resistor', title: 'LED 限流电阻', desc: 'Vs/Vf/If → 阻值、功耗、E24 标称值', icon: '💡', category: '嵌入式' },
+    { id: 'battery-life', title: '电池续航估算', desc: '容量/负载 → 工作时长、放电倍率', icon: '🔋', category: '嵌入式' },
   ],
 
   // 各计算器实现
@@ -1467,6 +1472,82 @@ const Calculator = {
             总角度 = ${pulses} × ${effAngle.toFixed(4)}° = <strong>${totalAngle.toFixed(2)}°</strong> (${revolutions.toFixed(3)} 圈)<br>
             转速 = ${freq} × ${effAngle.toFixed(2)} × 60 / 360 = <strong>${rpm.toFixed(2)} RPM</strong>`;
         }
+      }
+    },
+
+    // ==================== ADC 分辨率计算（嵌入式） ====================
+    adcCalc: {
+      render(el) {
+        el.innerHTML = `
+          <div class="space-y-4">
+            <div class="info-box info"><div>ADC 位分辨率 N 决定量化精度：LSB = V<sub>ref</sub> / 2<sup>N</sup>。位每加 1，分辨率翻倍。理论动态范围 DR = 6.02N + 1.76 dB。</div></div>
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="text-sm">分辨率位数 N</label>
+                <select id="adc-n" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)">
+                  <option value="8">8 位</option><option value="10">10 位</option>
+                  <option value="12" selected>12 位</option><option value="14">14 位</option>
+                  <option value="16">16 位</option><option value="20">20 位</option><option value="24">24 位</option>
+                </select></div>
+              <div><label class="text-sm">参考电压 V<sub>ref</sub> (V)</label>
+                <select id="adc-vref" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)">
+                  <option value="5">5.0 (经典 5V)</option>
+                  <option value="3.3" selected>3.3 (STM32)</option>
+                  <option value="2.5">2.5 (精密基准)</option>
+                  <option value="1.2">1.2 (带隙)</option>
+                  <option value="custom">自定义...</option>
+                </select></div>
+            </div>
+            <div id="adc-vref-custom" style="display:none"><label class="text-sm">自定义 V<sub>ref</sub> (V)</label>
+              <input type="number" id="adc-vref-val" value="3.3" step="0.01" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+            <div><label class="text-sm">输入模式</label>
+              <select id="adc-mode" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)">
+                <option value="single">单端（量程 0 ~ V<sub>ref</sub>）</option>
+                <option value="diff">差分（量程 ±V<sub>ref</sub>）</option>
+              </select></div>
+            <button onclick="Calculator._calculators.adcCalc.calc()" class="w-full px-4 py-2 rounded font-medium" style="background:var(--primary);color:white">计算</button>
+            <div id="adc-result" class="p-3 rounded" style="background:var(--bg-secondary);border:1px solid var(--border);min-height:3rem"></div>
+          </div>`;
+        // 自定义 Vref 显隐
+        document.getElementById('adc-vref')?.addEventListener('change', e => {
+          document.getElementById('adc-vref-custom').style.display = (e.target.value === 'custom') ? 'block' : 'none';
+        });
+      },
+      calc() {
+        const N = parseInt(document.getElementById('adc-n')?.value || 12);
+        const vrefSel = document.getElementById('adc-vref')?.value || '3.3';
+        const Vref = vrefSel === 'custom' ? parseFloat(document.getElementById('adc-vref-val')?.value || 3.3) : parseFloat(vrefSel);
+        const mode = document.getElementById('adc-mode')?.value || 'single';
+        const result = document.getElementById('adc-result');
+        if (!result || N <= 0 || Vref <= 0) { result.innerHTML = '<span class="text-red-500">请输入有效参数</span>'; return; }
+
+        const levels = Math.pow(2, N);
+        const LSB = Vref / levels;                          // 量化阶
+        const quantErr = 0.5 * LSB;                          // 量化误差 ±0.5 LSB
+        const DR = 6.02 * N + 1.76;                          // 理论 SINAD / 动态范围 (dB)
+        const ENOB = (DR - 1.76) / 6.02;                     // 等效位数
+        const range = mode === 'single' ? `0 ~ ${Vref} V` : `±${Vref} V`;
+
+        // 格式化电压：μV / mV / V
+        const fmtV = v => {
+          if (v >= 1) return v.toFixed(4) + ' V';
+          if (v >= 0.001) return (v * 1000).toFixed(3) + ' mV';
+          return (v * 1e6).toFixed(2) + ' μV';
+        };
+
+        result.innerHTML = `
+          <div class="space-y-1">
+            <strong>核心结果（${N} 位 / V<sub>ref</sub>=${Vref}V / ${mode === 'single' ? '单端' : '差分'}）</strong><br>
+            量化级数 2<sup>${N}</sup> = <strong>${levels.toLocaleString()}</strong> 级<br>
+            量程 = <strong>${range}</strong><br>
+            LSB = V<sub>ref</sub>/2<sup>${N}</sup> = ${Vref}/${levels.toLocaleString()} = <strong>${fmtV(LSB)}</strong><br>
+            量化误差 ±½LSB = <strong>${fmtV(quantErr)}</strong>
+          </div>
+          <div class="mt-2 pt-2 border-t" style="border-color:var(--border)">
+            <span class="text-sm text-gray-500">
+              理论动态范围 DR = 6.02×${N} + 1.76 = <strong>${DR.toFixed(2)} dB</strong><br>
+              （实际受噪声/非线性影响，等效位数 ENOB ≈ <strong>${ENOB.toFixed(2)} 位</strong>，通常比标称低 1~2 位）
+            </span>
+          </div>`;
       }
     },
   },
