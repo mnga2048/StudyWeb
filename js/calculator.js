@@ -1715,5 +1715,115 @@ const Calculator = {
           </div>`;
       }
     },
+
+    // ==================== PWM 参数计算（嵌入式） ====================
+    pwmCalc: {
+      render(el) {
+        el.innerHTML = `
+          <div class="space-y-4">
+            <div class="info-box info"><div>PWM 频率 f = f<sub>clk</sub> / ((PSC+1)·(ARR+1))。占空比 = CCR/(ARR+1)。建议 ARR ≥ 100 以保证占空比精度，且 PSC、ARR 不超过定时器位宽（16 位 ≤ 65535）。</div></div>
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="text-sm">定时器时钟 (MHz)</label>
+                <select id="pw-clk" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)">
+                  <option value="72" selected>72 (STM32F1 APB1)</option>
+                  <option value="84">84 (STM32F4 APB1)</option>
+                  <option value="168">168 (STM32F4 APB2)</option>
+                  <option value="16">16 (Arduino UNO)</option>
+                  <option value="custom">自定义...</option>
+                </select></div>
+              <div><label class="text-sm">定时器位宽</label>
+                <select id="pw-bits" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)">
+                  <option value="16" selected>16 位 (max 65535)</option>
+                  <option value="32">32 位 (max 4294967295)</option>
+                  <option value="8">8 位 (max 255)</option>
+                </select></div>
+            </div>
+            <div id="pw-clk-custom" style="display:none"><label class="text-sm">自定义时钟 (MHz)</label>
+              <input type="number" id="pw-clk-val" value="72" step="1" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+            <div><label class="text-sm">目标 PWM 频率 (Hz)</label>
+              <select id="pw-freq-preset" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)">
+                <option value="custom" selected>自定义...</option>
+                <option value="50">50 (舵机/伺服)</option>
+                <option value="1000">1k (电机调速)</option>
+                <option value="10000">10k (开关电源)</option>
+                <option value="20000">20k (BLDC/SMD 焊台)</option>
+                <option value="38000">38k (IR 红外)</option>
+              </select>
+              <input type="number" id="pw-freq" value="1000" step="1" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg);margin-top:0.5rem"></div>
+            <button onclick="Calculator._calculators.pwmCalc.calc()" class="w-full px-4 py-2 rounded font-medium" style="background:var(--primary);color:white">计算最佳 PSC / ARR</button>
+            <div id="pw-result" class="p-3 rounded" style="background:var(--bg-secondary);border:1px solid var(--border);min-height:3rem"></div>
+          </div>`;
+        document.getElementById('pw-clk')?.addEventListener('change', e => {
+          document.getElementById('pw-clk-custom').style.display = (e.target.value === 'custom') ? 'block' : 'none';
+        });
+        document.getElementById('pw-freq-preset')?.addEventListener('change', e => {
+          if (e.target.value !== 'custom') {
+            document.getElementById('pw-freq').value = e.target.value;
+          }
+        });
+      },
+      calc() {
+        const clkSel = document.getElementById('pw-clk')?.value || '72';
+        const clk_MHz = clkSel === 'custom' ? parseFloat(document.getElementById('pw-clk-val')?.value || 72) : parseFloat(clkSel);
+        const bits = parseInt(document.getElementById('pw-bits')?.value || 16);
+        const freq = parseFloat(document.getElementById('pw-freq')?.value || 1000);
+        const result = document.getElementById('pw-result');
+        if (!result) return;
+        if (clk_MHz <= 0 || freq <= 0) {
+          result.innerHTML = '<span class="text-red-500">请输入有效参数（时钟和频率均须 &gt; 0）</span>'; return;
+        }
+        const clk = clk_MHz * 1e6;   // Hz
+        const maxN = Math.pow(2, bits) - 1;   // PSC/ARR 上限
+        // 总分频比
+        const totalDiv = clk / freq;  // (PSC+1)(ARR+1)
+        if (totalDiv < 1) {
+          result.innerHTML = `<span class="text-red-500">⚠ 目标频率 ${freq}Hz 高于时钟 ${clk_MHz}MHz，无法实现。</span>`;
+          return;
+        }
+        // 寻找最优 (PSC, ARR) 组合：优先 ARR 较大（占空比精度高），且 PSC 最小
+        // 遍历 PSC，求 ARR = totalDiv/(PSC+1) - 1，取整后校验
+        let best = null;
+        for (let PSC = 0; PSC <= maxN; PSC++) {
+          const arrIdeal = totalDiv / (PSC + 1) - 1;
+          if (arrIdeal < 1) break;          // ARR 太小，停止（继续增大 PSC 只会更小）
+          const ARR = Math.round(arrIdeal);
+          if (ARR < 1 || ARR > maxN) continue;
+          const fReal = clk / ((PSC + 1) * (ARR + 1));
+          const err = Math.abs(fReal - freq) / freq;
+          // 评分：误差小、ARR 大优先
+          const score = err * 1e6 - ARR;    // 误差占主导，ARR 大者加分（score 小为优）
+          if (!best || score < best.score) {
+            best = { PSC, ARR, fReal, err, score };
+          }
+          // 若 ARR 已 ≥ 500（精度足够），且误差很小，可提前停止
+          if (ARR >= 500 && err < 0.0005) break;
+        }
+
+        if (!best) {
+          result.innerHTML = `<span class="text-red-500">⚠ 无法在 ${bits} 位定时器范围内找到合适的 PSC/ARR 组合（总分频比 ${totalDiv.toFixed(0)} 过大）。请降低目标频率或换 32 位定时器。</span>`;
+          return;
+        }
+
+        const dutyStep = 100 / (best.ARR + 1);   // 占空比分辨率 %
+        // 推荐 CCR 示例：50% 占空比
+        const ccr50 = Math.round((best.ARR + 1) / 2);
+
+        result.innerHTML = `
+          <div class="space-y-1">
+            <strong>推荐参数</strong>（${bits} 位定时器，时钟 ${clk_MHz} MHz，目标 ${freq} Hz）<br>
+            <span style="font-size:1.1em">PSC = <strong>${best.PSC}</strong>　ARR = <strong>${best.ARR}</strong></span><br>
+            实际频率 f = ${clk_MHz}e6/((PSC+1)(ARR+1)) = ${clk_MHz}e6/(${best.PSC+1}×${best.ARR+1})<br>
+            　 = <strong>${best.fReal.toFixed(3)} Hz</strong>　<span class="text-sm text-gray-500">(误差 ${(best.err*100).toFixed(4)}%)</span>
+          </div>
+          <div class="mt-2 pt-2 border-t" style="border-color:var(--border)">
+            <strong>占空比设置</strong>：<br>
+            占空比分辨率 = 100/(ARR+1) = 100/${best.ARR+1} = <strong>${dutyStep.toFixed(3)}%</strong><br>
+            <span class="text-sm text-gray-500">50% 占空比 → CCR = ${ccr50}（取值范围 0 ~ ${best.ARR}）</span>
+          </div>`;
+        if (best.ARR < 100) {
+          result.innerHTML += `<div class="mt-2"><span class="text-sm" style="color:#f59e0b">⚠ ARR = ${best.ARR} 偏小，占空比精度仅 ${dutyStep.toFixed(2)}%，建议降低目标频率或提高时钟以增大 ARR。</span></div>`;
+        }
+      }
+    },
   },
 };
