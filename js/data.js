@@ -2109,6 +2109,8 @@ const CourseData = {
           <li><strong>欠阻尼</strong>：电阻较小，电容和电感间能量交换产生振荡，振幅按 $e^{-\\alpha t}$ 衰减。</li>
           <li><strong>无阻尼</strong>：理想情况（R=0），能量无损耗，等幅振荡永不停止。</li>
         </ul>
+        <div class="chart-container" data-chart="rlc-waveform" data-r="100" data-l="0.01" data-c="1e-6" data-title="RLC 暂态响应（拖动 R/L/C 观察阻尼类型变化）"></div>
+        <div class="text-xs text-center mt-1 mb-4" style="color:var(--text-secondary)">初始值 R=100Ω, L=10mH, C=1μF 对应 ζ=0.5（欠阻尼）；增大 R → 临界/过阻尼</div>
 
         <h4 class="font-medium mt-6 mb-2">实例计算：判断阻尼类型</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">已知 RLC 串联电路：$R=100\\Omega$，$L=10mH$，$C=1\\mu F$。求阻尼比和响应类型。</p>

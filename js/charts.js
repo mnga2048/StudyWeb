@@ -1041,3 +1041,113 @@ Charts.register('opamp-circuit', function(el) {
   el.querySelector('#op-rf')?.addEventListener('input', update);
   el.querySelector('#op-r1')?.addEventListener('input', update);
 });
+
+// RLC 二阶电路暂态响应（circ-05）
+// 复用 step-response 的二阶 ODE 解析解，参数从 R/L/C 推导
+Charts.register('rlc-waveform', function(el) {
+  if (typeof echarts === 'undefined') return;
+
+  // 初始参数：与正文实例一致 R=100Ω, L=10mH, C=1μF
+  const initR = parseFloat(el.dataset.r || '100');    // Ω
+  const initL = parseFloat(el.dataset.l || '0.01');   // H (10mH)
+  const initC = parseFloat(el.dataset.c || '1e-6');   // F (1μF)
+  const title = el.dataset.title || 'RLC 串联电路暂态响应';
+
+  // 根据 R/L/C 计算 ζ、ω0；返回 { zeta, omega, alpha, label }
+  function derive(R, L, C) {
+    const omega = 1 / Math.sqrt(L * C);           // 无阻尼自然频率
+    const alpha = R / (2 * L);                    // 衰减常数
+    const zeta = (R / 2) * Math.sqrt(C / L);      // 阻尼比 = α/ω0
+    let label;
+    if (zeta > 1.02)      label = '过阻尼（单调衰减）';
+    else if (zeta < 0.98) label = '欠阻尼（衰减振荡）';
+    else                  label = '临界阻尼（最快无振荡）';
+    return { zeta, omega, alpha, label };
+  }
+
+  // 计算 t=0 时刻电容电压单位阶跃响应，归一化到稳态=1
+  // 复用 step-response 的解析公式
+  function calcData(zeta, omega) {
+    const data = [];
+    const dt = 0.0005;  // 时间步长（s）
+    const tmax = Math.max(10 / omega, 5 * (zeta > 1 ? 1 / (omega * (zeta - Math.sqrt(zeta*zeta-1))) : 1 / (zeta * omega || omega)));
+    for (let t = 0; t <= tmax; t += dt) {
+      let y;
+      if (zeta < 1) {
+        const wd = omega * Math.sqrt(1 - zeta*zeta);
+        const sigma = zeta * omega;
+        y = 1 - Math.exp(-sigma*t) * (Math.cos(wd*t) + (sigma/wd)*Math.sin(wd*t));
+      } else if (Math.abs(zeta - 1) < 1e-6) {
+        y = 1 - (1 + omega*t) * Math.exp(-omega*t);
+      } else {
+        const s1 = -omega*(zeta + Math.sqrt(zeta*zeta-1));
+        const s2 = -omega*(zeta - Math.sqrt(zeta*zeta-1));
+        y = 1 + (s2*Math.exp(s1*t) - s1*Math.exp(s2*t))/(s1-s2);
+      }
+      data.push([parseFloat((t*1000).toFixed(4)), parseFloat(y.toFixed(4))]);  // t 转 ms
+    }
+    return data;
+  }
+
+  // 创建控件
+  const controls = document.createElement('div');
+  controls.style.cssText = 'display:flex;gap:1.5rem;align-items:center;padding:0.75rem;background:var(--bg-secondary);border-radius:0.5rem;margin-top:0.5rem;font-size:0.8rem;flex-wrap:wrap;';
+  controls.innerHTML = `
+    <label style="display:flex;align-items:center;gap:0.5rem">
+      <span>R (Ω):</span>
+      <input type="range" id="rlc-r" min="1" max="1000" step="1" value="${initR}" style="width:100px">
+      <span id="rlc-r-val" style="min-width:2.5rem;font-weight:600">${initR}</span>
+    </label>
+    <label style="display:flex;align-items:center;gap:0.5rem">
+      <span>L (mH):</span>
+      <input type="range" id="rlc-l" min="0.1" max="50" step="0.1" value="${(initL*1000).toFixed(1)}" style="width:100px">
+      <span id="rlc-l-val" style="min-width:2.5rem;font-weight:600">${(initL*1000).toFixed(1)}</span>
+    </label>
+    <label style="display:flex;align-items:center;gap:0.5rem">
+      <span>C (μF):</span>
+      <input type="range" id="rlc-c" min="0.1" max="50" step="0.1" value="${(initC*1e6).toFixed(1)}" style="width:100px">
+      <span id="rlc-c-val" style="min-width:2.5rem;font-weight:600">${(initC*1e6).toFixed(1)}</span>
+    </label>
+    <span style="color:var(--text-secondary)">ζ = <span id="rlc-zeta" style="font-weight:600;color:var(--primary)"></span>，<span id="rlc-label"></span></span>
+  `;
+  el.appendChild(controls);
+
+  const chartEl = document.createElement('div');
+  chartEl.style.height = '350px';
+  el.insertBefore(chartEl, controls);
+
+  const inst = echarts.init(chartEl);
+  Charts._instances.push(inst);
+  inst.setOption({
+    title: { text: title, textStyle: { fontSize: 14 } },
+    tooltip: { trigger: 'axis', formatter: p => `t = ${p[0].data[0]} ms<br>u_C = ${p[0].data[1]} (归一化)` },
+    grid: { left: 50, right: 20, top: 40, bottom: 30 },
+    xAxis: { type: 'value', name: 't (ms)', nameLocation: 'middle', nameGap: 25 },
+    yAxis: { type: 'value', name: 'u_C / U_∞', nameLocation: 'end', max: 1.6, min: -0.3 },
+    series: [{
+      type: 'line', data: [], showSymbol: false, lineStyle: { width: 2, color: '#3b82f6' },
+      areaStyle: { opacity: 0.1 },
+      markLine: { data: [{ yAxis: 1, lineStyle: { type: 'dashed', color: '#999' } }] }
+    }]
+  });
+
+  function update() {
+    const R = parseFloat(document.getElementById('rlc-r')?.value || initR);
+    const LmH = parseFloat(document.getElementById('rlc-l')?.value || initL*1000);
+    const CuF = parseFloat(document.getElementById('rlc-c')?.value || initC*1e6);
+    const L = LmH / 1000;
+    const C = CuF / 1e-6;
+    document.getElementById('rlc-r-val').textContent = R.toFixed(0);
+    document.getElementById('rlc-l-val').textContent = LmH.toFixed(1);
+    document.getElementById('rlc-c-val').textContent = CuF.toFixed(1);
+    const { zeta, omega, label } = derive(R, L, C);
+    document.getElementById('rlc-zeta').textContent = zeta.toFixed(2);
+    document.getElementById('rlc-label').textContent = label;
+    const newData = calcData(zeta, omega);
+    inst.setOption({ series: [{ data: newData }] });
+  }
+  update();
+  el.querySelector('#rlc-r')?.addEventListener('input', update);
+  el.querySelector('#rlc-l')?.addEventListener('input', update);
+  el.querySelector('#rlc-c')?.addEventListener('input', update);
+});
