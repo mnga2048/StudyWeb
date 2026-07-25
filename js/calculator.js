@@ -1648,5 +1648,72 @@ const Calculator = {
         result.innerHTML = html;
       }
     },
+
+    // ==================== 电池续航估算（嵌入式） ====================
+    batteryLife: {
+      render(el) {
+        el.innerHTML = `
+          <div class="space-y-4">
+            <div class="info-box info"><div>理论续航 t = 容量 × η / 负载电流。实际受放电倍率 C 影响：C &gt; 2 时有效容量下降。η 为转换效率（LDO ~60%，DC-DC ~90%）。</div></div>
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="text-sm">电池容量 (mAh)</label>
+                <input type="number" id="bl-cap" value="2000" step="100" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+              <div><label class="text-sm">标称电压 (V)</label>
+                <input type="number" id="bl-v" value="3.7" step="0.1" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="text-sm">平均负载 (mA)</label>
+                <input type="number" id="bl-load" value="100" step="10" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+              <div><label class="text-sm">转换效率 η (%)</label>
+                <input type="number" id="bl-eff" value="85" min="10" max="100" step="5" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+            </div>
+            <button onclick="Calculator._calculators.batteryLife.calc()" class="w-full px-4 py-2 rounded font-medium" style="background:var(--primary);color:white">计算</button>
+            <div id="bl-result" class="p-3 rounded" style="background:var(--bg-secondary);border:1px solid var(--border);min-height:3rem"></div>
+          </div>`;
+      },
+      calc() {
+        const cap = parseFloat(document.getElementById('bl-cap')?.value || 0);
+        const V = parseFloat(document.getElementById('bl-v')?.value || 0);
+        const load = parseFloat(document.getElementById('bl-load')?.value || 0);
+        const eff = parseFloat(document.getElementById('bl-eff')?.value || 85);
+        const result = document.getElementById('bl-result');
+        if (!result) return;
+        if (cap <= 0 || V <= 0 || load <= 0) {
+          result.innerHTML = '<span class="text-red-500">请输入有效参数（均须 &gt; 0）</span>'; return;
+        }
+        const eta = Math.max(10, Math.min(100, eff)) / 100;
+        const t_h = cap * eta / load;             // 理论时长（小时）
+        const C = load / cap;                       // 放电倍率
+        const Wh = cap * V / 1000;                  // 瓦时
+        // 大电流下有效容量折减
+        let effFactor = 1.0;
+        let rateNote = '';
+        if (C > 2) { effFactor = 0.7; rateNote = '⚠ 放电倍率 C &gt; 2（大电流），实际容量约打 7 折'; }
+        else if (C > 0.5) { effFactor = 0.85; rateNote = 'ℹ 放电倍率 0.5 &lt; C ≤ 2（中等损耗），实际容量约打 85 折'; }
+        else { rateNote = '✓ 放电倍率 C ≤ 0.5（小电流），基本无损耗'; }
+        const t_real = t_h * effFactor;
+
+        // 格式化时长：h / 天
+        const fmtT = h => {
+          if (h >= 72) return (h / 24).toFixed(2) + ' 天 (' + h.toFixed(1) + ' h)';
+          if (h >= 1) return h.toFixed(2) + ' 小时';
+          return (h * 60).toFixed(1) + ' 分钟';
+        };
+
+        result.innerHTML = `
+          <div class="space-y-1">
+            <strong>核心结果</strong><br>
+            理论时长 t = 容量×η/负载 = ${cap}×${(eta*100).toFixed(0)}%/${load} = <strong>${fmtT(t_h)}</strong><br>
+            电池能量 = 容量×电压 = ${cap}×${V}/1000 = <strong>${Wh.toFixed(2)} Wh</strong><br>
+            放电倍率 C = 负载/容量 = ${load}/${cap} = <strong>${C.toFixed(2)}C</strong>
+          </div>
+          <div class="mt-2 pt-2 border-t" style="border-color:var(--border)">
+            <strong>实际估算</strong>：<br>
+            考虑倍率损耗后实际续航 ≈ <strong>${fmtT(t_real)}</strong><br>
+            <span class="text-sm text-gray-500">${rateNote}</span><br>
+            <span class="text-sm text-gray-500">注：另需扣除自放电（锂电 ~2%/月）、温度影响（低温容量降 10~30%）、老化（500 周期后约 80%）。</span>
+          </div>`;
+      }
+    },
   },
 };
