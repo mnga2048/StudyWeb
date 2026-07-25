@@ -4317,6 +4317,8 @@ const CourseData = {
         <span class="code-keyword">if</span> (t-&gt;right) <span class="code-func">enqueue</span>(&amp;q, t-&gt;right);
     }
 }</div>
+        <div class="chart-container chart-container-lg" data-chart="tree-traversal" data-title="二叉树遍历动画（选择遍历方式后点击播放）"></div>
+        <div class="text-xs text-center mt-1 mb-4" style="color:var(--text-secondary)">7 节点完全二叉树 A-B-C-D-E-F-G；红色=正在访问，蓝色=已访问；前序=ABDECFG，中序=DBEAFCG，后序=DEBFGCA，层序=ABCDEFG</div>
         <div class="info-box info">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <div><strong>前序+中序 → 唯一确定二叉树</strong>：前序第一个元素是根，在中序中定位根，左侧是左子树，右侧是右子树，递归构造。同理后序+中序也可唯一确定。但前序+后序不能唯一确定（无法区分左右子树）。这是高频考点。</div>

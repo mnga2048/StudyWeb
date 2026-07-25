@@ -1151,3 +1151,180 @@ Charts.register('rlc-waveform', function(el) {
   el.querySelector('#rlc-l')?.addEventListener('input', update);
   el.querySelector('#rlc-c')?.addEventListener('input', update);
 });
+
+// 二叉树遍历动画（ds-06）：固定 7 节点完全二叉树，演示前/中/后/层序
+Charts.register('tree-traversal', function(el) {
+  if (typeof echarts === 'undefined') return;
+
+  const title = el.dataset.title || '二叉树遍历动画演示';
+
+  // 固定 7 节点完全二叉树（值与索引 1..7 一一对应，便于层序）
+  // 索引 1=A根，2=B左子，3=C右子，4=D，5=E，6=F，7=G
+  const labels = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G'];
+  // 节点坐标（手绘完全二叉树位置，归一化 0-10 横轴，0-5 纵轴倒置）
+  const positions = {
+    1: [5, 5],     // 根
+    2: [2.5, 3.3], // 左子
+    3: [7.5, 3.3], // 右子
+    4: [1, 1.6],   5: [4, 1.6], 6: [6, 1.6], 7: [9, 1.6]
+  };
+  // 边：父子关系
+  const edges = [[1,2],[1,3],[2,4],[2,5],[3,6],[3,7]];
+
+  // 计算四种遍历顺序（返回节点索引数组）
+  function traverse(order) {
+    const result = [];
+    function pre(i)  { if (!i) return; result.push(i); pre(2*i); pre(2*i+1); }
+    function ino(i)  { if (!i) return; ino(2*i); result.push(i); ino(2*i+1); }
+    function post(i) { if (!i) return; post(2*i); post(2*i+1); result.push(i); }
+    function level() {
+      const q = [1];
+      while (q.length) {
+        const i = q.shift();
+        if (!i) continue;
+        result.push(i);
+        if (2*i   <= 7) q.push(2*i);
+        if (2*i+1 <= 7) q.push(2*i+1);
+      }
+    }
+    if (order === 'pre')       pre(1);
+    else if (order === 'in')   ino(1);
+    else if (order === 'post') post(1);
+    else                       level();
+    return result;
+  }
+
+  // 构建 ECharts graph 数据
+  function buildNodes(highlightSet = new Set(), visitedSet = new Set(), currentNode = -1) {
+    const nodes = [];
+    for (let i = 1; i <= 7; i++) {
+      let color = '#cbd5e1';        // 默认灰
+      let borderColor = '#94a3b8';
+      if (visitedSet.has(i))        { color = '#3b82f6'; borderColor = '#1d4ed8'; }       // 已访问：蓝
+      if (highlightSet.has(i))      { color = '#f59e0b'; borderColor = '#b45309'; }       // 当前路径高亮：琥珀
+      if (currentNode === i)        { color = '#ef4444'; borderColor = '#b91c1c'; }       // 正在访问：红
+      nodes.push({
+        id: String(i), name: labels[i], x: positions[i][0], y: positions[i][1],
+        symbolSize: 38, draggable: false,
+        itemStyle: { color, borderColor, borderWidth: 2 },
+        label: { show: true, color: '#fff', fontWeight: 'bold' }
+      });
+    }
+    return nodes;
+  }
+
+  function buildLinks() {
+    return edges.map(([a, b]) => ({ source: String(a), target: String(b) }));
+  }
+
+  // 创建控件：4 单选按钮 + 播放 + 速度
+  const controls = document.createElement('div');
+  controls.style.cssText = 'display:flex;gap:1rem;align-items:center;padding:0.75rem;background:var(--bg-secondary);border-radius:0.5rem;margin-top:0.5rem;font-size:0.8rem;flex-wrap:wrap;';
+  controls.innerHTML = `
+    <div style="display:flex;gap:0.25rem">
+      <button type="button" data-order="pre" class="tt-btn" style="padding:0.25rem 0.6rem;border:1px solid var(--border);border-radius:0.25rem;background:var(--bg-primary);cursor:pointer">前序</button>
+      <button type="button" data-order="in" class="tt-btn" style="padding:0.25rem 0.6rem;border:1px solid var(--border);border-radius:0.25rem;background:var(--bg-primary);cursor:pointer">中序</button>
+      <button type="button" data-order="post" class="tt-btn" style="padding:0.25rem 0.6rem;border:1px solid var(--border);border-radius:0.25rem;background:var(--bg-primary);cursor:pointer">后序</button>
+      <button type="button" data-order="level" class="tt-btn" style="padding:0.25rem 0.6rem;border:1px solid var(--border);border-radius:0.25rem;background:var(--bg-primary);cursor:pointer">层序</button>
+    </div>
+    <button type="button" id="tt-play" style="padding:0.25rem 0.8rem;border:1px solid var(--primary);border-radius:0.25rem;background:var(--primary);color:#fff;cursor:pointer;font-weight:600">▶ 播放</button>
+    <label style="display:flex;align-items:center;gap:0.5rem">
+      <span>速度:</span>
+      <input type="range" id="tt-speed" min="200" max="1500" step="100" value="700" style="width:100px">
+      <span id="tt-speed-val" style="min-width:3rem;font-weight:600">700ms</span>
+    </label>
+    <span style="color:var(--text-secondary)">输出序列：<span id="tt-output" style="font-weight:600;color:var(--primary);font-family:monospace"></span></span>
+  `;
+  el.appendChild(controls);
+
+  const chartEl = document.createElement('div');
+  chartEl.style.height = '350px';
+  el.insertBefore(chartEl, controls);
+
+  const inst = echarts.init(chartEl);
+  Charts._instances.push(inst);
+  inst.setOption({
+    title: { text: title, textStyle: { fontSize: 14 } },
+    tooltip: { show: false },
+    animation: false,
+    xAxis: { show: false, min: -0.5, max: 10.5 },
+    yAxis: { show: false, min: 0.5, max: 6 },
+    series: [{
+      type: 'graph', layout: 'none', roam: false,
+      data: buildNodes(), links: buildLinks(),
+      lineStyle: { color: '#64748b', width: 2, curveness: 0 }
+    }]
+  });
+
+  let currentOrder = 'pre';
+  let animTimer = null;
+  const visited = [];
+
+  function highlightButtons() {
+    el.querySelectorAll('.tt-btn').forEach(b => {
+      if (b.dataset.order === currentOrder) {
+        b.style.background = 'var(--primary)';
+        b.style.color = '#fff';
+        b.style.borderColor = 'var(--primary)';
+      } else {
+        b.style.background = 'var(--bg-primary)';
+        b.style.color = '';
+        b.style.borderColor = 'var(--border)';
+      }
+    });
+  }
+
+  function reset() {
+    if (animTimer) { clearInterval(animTimer); animTimer = null; Charts.stopAll(); }
+    visited.length = 0;
+    inst.setOption({ series: [{ data: buildNodes() }] });
+    document.getElementById('tt-output').textContent = '';
+  }
+
+  function playAnimation() {
+    reset();
+    const order = traverse(currentOrder);
+    let step = 0;
+    animTimer = setInterval(() => {
+      if (step >= order.length) {
+        clearInterval(animTimer);
+        animTimer = null;
+        return;
+      }
+      const node = order[step];
+      visited.push(node);
+      // 当前节点用红，已访问（含当前）用蓝
+      const visitedSet = new Set(visited);
+      inst.setOption({ series: [{ data: buildNodes(new Set(), visitedSet, node) }] });
+      // 输出序列
+      document.getElementById('tt-output').textContent = visited.map(i => labels[i]).join(' → ');
+      step++;
+    }, parseInt(document.getElementById('tt-speed')?.value || '700'));
+    // 注册 timer 以便页面切换时清除
+    Charts._timers.push(animTimer);
+  }
+
+  highlightButtons();
+
+  el.querySelectorAll('.tt-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      currentOrder = b.dataset.order;
+      highlightButtons();
+      reset();
+      // 静态显示完整遍历结果（不动画，便于对比）
+      const order = traverse(currentOrder);
+      document.getElementById('tt-output').textContent = order.map(i => labels[i]).join(' → ');
+      const visitedSet = new Set(order);
+      inst.setOption({ series: [{ data: buildNodes(new Set(), visitedSet, -1) }] });
+    });
+  });
+  el.querySelector('#tt-play')?.addEventListener('click', playAnimation);
+  el.querySelector('#tt-speed')?.addEventListener('input', e => {
+    document.getElementById('tt-speed-val').textContent = e.target.value + 'ms';
+  });
+
+  // 初始：显示完整前序遍历结果
+  const initOrder = traverse('pre');
+  document.getElementById('tt-output').textContent = initOrder.map(i => labels[i]).join(' → ');
+  inst.setOption({ series: [{ data: buildNodes(new Set(), new Set(initOrder), -1) }] });
+});
