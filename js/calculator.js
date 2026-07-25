@@ -1550,5 +1550,103 @@ const Calculator = {
           </div>`;
       }
     },
+
+    // ==================== LED 限流电阻（嵌入式） ====================
+    ledResistor: {
+      // E24 标称值基数（× 10^k）
+      _e24: [1.0, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.7, 3.0, 3.3, 3.6, 3.9, 4.3, 4.7, 5.1, 5.6, 6.2, 6.8, 7.5, 8.2, 9.1],
+      // 找 ≥ r 的最小 E24 标称值
+      _e24Pick(r) {
+        if (r <= 0) return null;
+        const decade = Math.pow(10, Math.floor(Math.log10(r)));
+        const norm = r / decade;
+        for (const d = 0; d < 3; d++) {  // 最多跨 3 个数量级
+          for (const base of this._e24) {
+            const v = base * decade * Math.pow(10, d);
+            if (v >= r * 0.9999) return v;
+          }
+        }
+        return null;
+      },
+      // 格式化电阻：Ω/kΩ/MΩ
+      _fmtR(r) {
+        if (r >= 1e6) return (r / 1e6).toFixed(2) + ' MΩ';
+        if (r >= 1e3) return (r / 1e3).toFixed(2) + ' kΩ';
+        return r.toFixed(2) + ' Ω';
+      },
+      render(el) {
+        el.innerHTML = `
+          <div class="space-y-4">
+            <div class="info-box info"><div>LED 限流电阻：R = (V<sub>s</sub> - n·V<sub>f</sub>) / I<sub>f</sub>。串联 LED 数 n 不能使 n·V<sub>f</sub> ≥ V<sub>s</sub>。</div></div>
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="text-sm">电源电压 V<sub>s</sub> (V)</label>
+                <input type="number" id="lr-vs" value="5" step="0.1" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+              <div><label class="text-sm">LED 正向压降 V<sub>f</sub> (V)</label>
+                <select id="lr-vf" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)">
+                  <option value="2.0" selected>2.0 (红/黄)</option>
+                  <option value="3.0">3.0 (绿/蓝)</option>
+                  <option value="3.2">3.2 (白/蓝)</option>
+                  <option value="custom">自定义...</option>
+                </select></div>
+            </div>
+            <div id="lr-vf-custom" style="display:none"><label class="text-sm">自定义 V<sub>f</sub> (V)</label>
+              <input type="number" id="lr-vf-val" value="2.0" step="0.1" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="text-sm">正向电流 I<sub>f</sub> (mA)</label>
+                <input type="number" id="lr-if" value="20" step="1" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+              <div><label class="text-sm">串联 LED 数 n</label>
+                <input type="number" id="lr-n" value="1" min="1" step="1" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+            </div>
+            <button onclick="Calculator._calculators.ledResistor.calc()" class="w-full px-4 py-2 rounded font-medium" style="background:var(--primary);color:white">计算</button>
+            <div id="lr-result" class="p-3 rounded" style="background:var(--bg-secondary);border:1px solid var(--border);min-height:3rem"></div>
+          </div>`;
+        document.getElementById('lr-vf')?.addEventListener('change', e => {
+          document.getElementById('lr-vf-custom').style.display = (e.target.value === 'custom') ? 'block' : 'none';
+        });
+      },
+      calc() {
+        const Vs = parseFloat(document.getElementById('lr-vs')?.value || 0);
+        const vfSel = document.getElementById('lr-vf')?.value || '2.0';
+        const Vf = vfSel === 'custom' ? parseFloat(document.getElementById('lr-vf-val')?.value || 0) : parseFloat(vfSel);
+        const If_mA = parseFloat(document.getElementById('lr-if')?.value || 0);
+        const n = parseInt(document.getElementById('lr-n')?.value || 1);
+        const result = document.getElementById('lr-result');
+        if (!result) return;
+        if (Vs <= 0 || Vf <= 0 || If_mA <= 0 || n <= 0) {
+          result.innerHTML = '<span class="text-red-500">请输入有效参数（均须 &gt; 0）</span>'; return;
+        }
+        const If = If_mA / 1000;  // A
+        const VfTotal = n * Vf;
+        if (Vs <= VfTotal) {
+          result.innerHTML = `<span class="text-red-500">⚠ 电压不足：V<sub>s</sub>=${Vs}V ≤ n·V<sub>f</sub>=${VfTotal}V，无法点亮 ${n} 个 LED。请提高电源电压或减少串联数。</span>`;
+          return;
+        }
+        const R = (Vs - VfTotal) / If;
+        const P = If * If * R;
+        const e24 = this._e24Pick(R);
+
+        let html = `
+          <div class="space-y-1">
+            <strong>核心结果</strong><br>
+            R = (V<sub>s</sub> - n·V<sub>f</sub>)/I<sub>f</sub> = (${Vs} - ${n}×${Vf})/${If_mA}mA<br>
+            　 = (${Vs - VfTotal})/${If_mA}mA = <strong>${this._fmtR(R)}</strong><br>
+            电阻功耗 P = I<sub>f</sub>²·R = ${If_mA}²×${this._fmtR(R)} = <strong>${(P * 1000).toFixed(2)} mW</strong>
+          </div>`;
+        if (e24) {
+          const iE24 = (e24 * If * If).toFixed(4);
+          const iReal = (Vs - VfTotal) / e24 * 1000;
+          html += `
+          <div class="mt-2 pt-2 border-t" style="border-color:var(--border)">
+            <strong>选型建议</strong>（E24 标准系列）：<br>
+            最近标称值 <strong>${this._fmtR(e24)}</strong>　<span class="text-sm text-gray-500">(取 ≥ 计算值，确保电流不过载)</span><br>
+            <span class="text-sm text-gray-500">选用该值时：实际电流 I = ${(Vs - VfTotal)}/${this._fmtR(e24)} = <strong>${iReal.toFixed(2)} mA</strong>，功耗 ${(iE24 * 1000).toFixed(2)} mW</span>
+          </div>`;
+        }
+        if (R < 10) {
+          html += `<div class="mt-2"><span class="text-sm" style="color:#f59e0b">⚠ R &lt; 10Ω，电流接近或超过 LED 额定，建议加恒流驱动而非简单限流电阻。</span></div>`;
+        }
+        result.innerHTML = html;
+      }
+    },
   },
 };
