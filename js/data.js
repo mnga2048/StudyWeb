@@ -3942,6 +3942,8 @@ const CourseData = {
           <div class="step-item"><div><strong>观察响应</strong>：每次调参后给阶跃输入，看超调、调节时间、稳态误差三项指标。</div></div>
           <div class="step-item"><div><strong>最终微调</strong>：超调大→减 $K_p$ 或加 $K_d$；稳态误差大→加 $K_i$；振荡→减所有参数。</div></div>
         </div>
+        <div class="chart-container" data-chart="pid-sim" data-kp="1.5" data-ki="0.8" data-kd="0.3" data-title="PID 闭环阶跃响应（拖动 Kp/Ki/Kd 验证调参规律）"></div>
+        <div class="text-xs text-center mt-1 mb-4" style="color:var(--text-secondary)">被控对象 G(s)=4/(s²+2.4s+4)；先单独调 $K_p$ 看临界振荡，再加 $K_i$ 消除稳态误差，最后加 $K_d$ 抑制超调</div>
         <div class="info-box info">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <div><strong>参考资源</strong>：电机控制中 PID 整定的完整工程案例（含速度环/电流环双环调试、STM32 代码）可参考 <a href="javascript:void(0)" onclick="App.loadDetail('act-05')">时域分析</a> 中的性能指标定义。实际项目中建议用 MATLAB/Simulink 先做仿真验证，再上板调试。</div>

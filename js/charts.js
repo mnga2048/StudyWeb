@@ -1328,3 +1328,122 @@ Charts.register('tree-traversal', function(el) {
   document.getElementById('tt-output').textContent = initOrder.map(i => labels[i]).join(' → ');
   inst.setOption({ series: [{ data: buildNodes(new Set(), new Set(initOrder), -1) }] });
 });
+
+// PID 闭环阶跃响应仿真器（act-14）
+// 被控对象：二阶 plant G(s)=ωn²/(s²+2ζωn·s+ωn²)；PID 用欧拉法离散
+Charts.register('pid-sim', function(el) {
+  if (typeof echarts === 'undefined') return;
+
+  const initKp = parseFloat(el.dataset.kp || '1.5');
+  const initKi = parseFloat(el.dataset.ki || '0.8');
+  const initKd = parseFloat(el.dataset.kd || '0.3');
+  const title = el.dataset.title || 'PID 闭环阶跃响应仿真';
+
+  // 被控对象参数（固定）
+  const wn = 2.0;       // 自然频率
+  const zetaPlant = 0.6; // 阻尼比
+  const dt = 0.005;
+  const tmax = 15;
+
+  // PID 闭环仿真，返回阶跃响应曲线 + 性能指标
+  function simulate(Kp, Ki, Kd) {
+    // 状态空间化二阶对象：ẍ = -2ζωn·ẋ + ωn²·(u)，y=x
+    let x1 = 0, x2 = 0;        // x1=y, x2=ẏ
+    let integral = 0, prevErr = 1; // PID 状态
+    const setpoint = 1;
+    const data = [];
+    let peak = 0, ts = null, lastCross = 0;
+    let lastErr = 1;
+    data.push([0, 0]);
+
+    for (let t = dt; t <= tmax; t += dt) {
+      const err = setpoint - x1;
+      integral += err * dt;
+      // 积分饱和限幅
+      integral = Math.max(-5, Math.min(5, integral));
+      const deriv = (err - prevErr) / dt;
+      const u = Kp * err + Ki * integral + Kd * deriv;
+      // 输出限幅（模拟实际执行机构）
+      const uLim = Math.max(-10, Math.min(10, u));
+      // 二阶对象离散更新（欧拉）
+      const dx2 = -2 * zetaPlant * wn * x2 + wn * wn * uLim;
+      x2 += dx2 * dt;
+      x1 += x2 * dt;
+      prevErr = err;
+      data.push([parseFloat(t.toFixed(3)), parseFloat(x1.toFixed(4))]);
+
+      // 性能指标
+      if (x1 > peak) peak = x1;
+      // 调节时间：进入 ±2% 带后不再出来的最后时刻
+      if (Math.abs(x1 - setpoint) <= 0.02) ts = t;
+      else ts = null;  // 一旦再次超出，重置
+    }
+    // 超调量
+    const overshoot = peak > setpoint ? ((peak - setpoint) / setpoint) * 100 : 0;
+    // 稳态误差（用末段均值近似）
+    const tail = data.slice(-200).map(d => d[1]);
+    const ess = setpoint - tail.reduce((a, b) => a + b, 0) / tail.length;
+    return { data, overshoot, ts, ess };
+  }
+
+  // 控件
+  const controls = document.createElement('div');
+  controls.style.cssText = 'display:flex;gap:1.5rem;align-items:center;padding:0.75rem;background:var(--bg-secondary);border-radius:0.5rem;margin-top:0.5rem;font-size:0.8rem;flex-wrap:wrap;';
+  controls.innerHTML = `
+    <label style="display:flex;align-items:center;gap:0.5rem">
+      <span>K<sub>p</sub>:</span>
+      <input type="range" id="pid-kp" min="0" max="10" step="0.1" value="${initKp}" style="width:100px">
+      <span id="pid-kp-val" style="min-width:2.5rem;font-weight:600">${initKp}</span>
+    </label>
+    <label style="display:flex;align-items:center;gap:0.5rem">
+      <span>K<sub>i</sub>:</span>
+      <input type="range" id="pid-ki" min="0" max="5" step="0.1" value="${initKi}" style="width:100px">
+      <span id="pid-ki-val" style="min-width:2.5rem;font-weight:600">${initKi}</span>
+    </label>
+    <label style="display:flex;align-items:center;gap:0.5rem">
+      <span>K<sub>d</sub>:</span>
+      <input type="range" id="pid-kd" min="0" max="5" step="0.1" value="${initKd}" style="width:100px">
+      <span id="pid-kd-val" style="min-width:2.5rem;font-weight:600">${initKd}</span>
+    </label>
+    <span style="color:var(--text-secondary)">超调 <span id="pid-os" style="font-weight:600;color:#ef4444"></span>%　ts <span id="pid-ts" style="font-weight:600;color:#f59e0b"></span>s　ess <span id="pid-ess" style="font-weight:600;color:#059669"></span></span>
+  `;
+  el.appendChild(controls);
+
+  const chartEl = document.createElement('div');
+  chartEl.style.height = '350px';
+  el.insertBefore(chartEl, controls);
+
+  const inst = echarts.init(chartEl);
+  Charts._instances.push(inst);
+  inst.setOption({
+    title: { text: title, textStyle: { fontSize: 14 } },
+    tooltip: { trigger: 'axis' },
+    legend: { data: ['阶跃响应 y(t)', '设定值 r=1'], bottom: 0 },
+    grid: { left: 50, right: 20, top: 40, bottom: 40 },
+    xAxis: { type: 'value', name: 't (s)', nameLocation: 'middle', nameGap: 25, min: 0, max: tmax },
+    yAxis: { type: 'value', name: 'y', nameLocation: 'end', min: 0, max: 2 },
+    series: [
+      { name: '阶跃响应 y(t)', type: 'line', data: [], showSymbol: false, lineStyle: { width: 2, color: '#3b82f6' }, areaStyle: { opacity: 0.08 } },
+      { name: '设定值 r=1', type: 'line', data: [], showSymbol: false, lineStyle: { width: 1.5, color: '#94a3b8', type: 'dashed' } }
+    ]
+  });
+
+  function update() {
+    const Kp = parseFloat(document.getElementById('pid-kp')?.value || initKp);
+    const Ki = parseFloat(document.getElementById('pid-ki')?.value || initKi);
+    const Kd = parseFloat(document.getElementById('pid-kd')?.value || initKd);
+    document.getElementById('pid-kp-val').textContent = Kp.toFixed(1);
+    document.getElementById('pid-ki-val').textContent = Ki.toFixed(1);
+    document.getElementById('pid-kd-val').textContent = Kd.toFixed(1);
+    const { data, overshoot, ts, ess } = simulate(Kp, Ki, Kd);
+    const setpointData = data.map(d => [d[0], 1]);
+    inst.setOption({ series: [{ data }, { data: setpointData }] });
+    document.getElementById('pid-os').textContent = overshoot.toFixed(1);
+    document.getElementById('pid-ts').textContent = ts !== null ? ts.toFixed(2) : '∞';
+    document.getElementById('pid-ess').textContent = Math.abs(ess) < 0.001 ? '≈0' : ess.toFixed(3);
+  }
+  update();
+  el.querySelector('#pid-kp')?.addEventListener('input', update);
+  el.querySelector('#pid-ki')?.addEventListener('input', update);
+  el.querySelector('#pid-kd')?.addEventListener('input', update);
+});
