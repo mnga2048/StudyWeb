@@ -138,6 +138,7 @@ const Calculator = {
     { id: 'pwm-calc', title: 'PWM 参数计算', desc: '时钟/频率 → ARR、PSC、占空比精度', icon: '🌊', category: '嵌入式' },
     { id: 'led-resistor', title: 'LED 限流电阻', desc: 'Vs/Vf/If → 阻值、功耗、E24 标称值', icon: '💡', category: '嵌入式' },
     { id: 'battery-life', title: '电池续航估算', desc: '容量/负载 → 工作时长、放电倍率', icon: '🔋', category: '嵌入式' },
+    { id: 'uart-debug', title: '串口调试助手', desc: '十六进制收发模拟 + CRC 校验 + Web Serial 真机', icon: '🔌', category: '嵌入式' },
   ],
 
   // 各计算器实现
@@ -1824,6 +1825,341 @@ const Calculator = {
           result.innerHTML += `<div class="mt-2"><span class="text-sm" style="color:#f59e0b">⚠ ARR = ${best.ARR} 偏小，占空比精度仅 ${dutyStep.toFixed(2)}%，建议降低目标频率或提高时钟以增大 ARR。</span></div>`;
         }
       }
+    },
+
+    // ==================== 串口调试助手（嵌入式，双模式） ====================
+    // 独立 CRC 查找表（不依赖 validator.js 闭包）
+    uartDebug: {
+      // —— 运行时状态 ——
+      _mode: 'sim',              // 'sim' 模拟模式（默认） | 'real' Web Serial 真机模式
+      _port: null,               // Web Serial 端口句柄
+      _reader: null,             // 读循环引用
+      _keepReading: false,
+      _serialSupported: ('serial' in navigator),
+      _txCount: 0, _rxCount: 0,
+      _crc: 'crc16',             // 'none' | 'crc8' | 'crc16' | 'crc32'
+      _appendCrc: true,          // 是否把 CRC 字节附加到帧末尾
+
+      // —— CRC 算法（独立实现，复用 validator.js 的多项式约定）——
+      // CRC-16/Modbus：多项式 0x8005（反转 0xA001），初值 0xFFFF
+      _crc16Table: (() => {
+        const t = new Uint16Array(256);
+        for (let i = 0; i < 256; i++) {
+          let crc = i;
+          for (let j = 0; j < 8; j++) crc = (crc & 1) ? ((crc >> 1) ^ 0xA001) : (crc >> 1);
+          t[i] = crc;
+        }
+        return t;
+      })(),
+      // CRC-8/Maxim-Dallas：多项式 0x31，反转 0x8C，初值 0x00（DS18B20/1-Wire）
+      _crc8Table: (() => {
+        const t = new Uint8Array(256);
+        for (let i = 0; i < 256; i++) {
+          let c = i;
+          for (let j = 0; j < 8; j++) c = (c & 1) ? ((c >> 1) ^ 0x8C) : (c >> 1);
+          t[i] = c;
+        }
+        return t;
+      })(),
+      // CRC-32：标准以太网/ZIP，多项式反转 0xEDB88320，初值 0xFFFFFFFF，结果异或 0xFFFFFFFF
+      _crc32Table: (() => {
+        const t = new Uint32Array(256);
+        for (let i = 0; i < 256; i++) {
+          let c = i;
+          for (let j = 0; j < 8; j++) c = (c & 1) ? ((c >>> 1) ^ 0xEDB88320) : (c >>> 1);
+          t[i] = c;
+        }
+        return t;
+      })(),
+      crc8(bytes)  { let c = 0x00;            for (const b of bytes) c = this._crc8Table[(c ^ b) & 0xFF];            return c & 0xFF; },
+      crc16(bytes) { let c = 0xFFFF;          for (const b of bytes) c = this._crc16Table[(c ^ b) & 0xFF] ^ (c >> 8); return c & 0xFFFF; },
+      crc32(bytes) { let c = 0xFFFFFFFF >>> 0; for (const b of bytes) c = this._crc32Table[(c ^ b) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; },
+
+      // —— 工具：hex 字符串 ↔ 字节数组 ——
+      parseHex(str) {
+        // 支持 "01 03"、"01,03"、"0103"、混排；忽略 0x 前缀
+        const cleaned = (str || '').replace(/0x/gi, '').replace(/[^0-9a-fA-F]/g, '');
+        if (cleaned.length % 2 !== 0) return null;  // 奇数位
+        const out = [];
+        for (let i = 0; i < cleaned.length; i += 2) out.push(parseInt(cleaned.substr(i, 2), 16));
+        return out;
+      },
+      bytesToHex(bytes, sep = ' ') {
+        return bytes.map(b => (b & 0xFF).toString(16).toUpperCase().padStart(2, '0')).join(sep);
+      },
+
+      render(el) {
+        el.innerHTML = `
+          <div class="space-y-3">
+            <div class="info-box info"><div><strong>双模式串口调试</strong>：<br>① <b>模拟模式</b>（默认）——纯前端，输入十六进制帧，自动附加 CRC，记录到日志。教学/协议调试。<br>② <b>真机模式</b>——通过 Web Serial API 连物理串口实时收发（仅 Chrome/Edge，需 HTTPS 或 localhost）。</div></div>
+
+            <div class="flex gap-2">
+              <button onclick="Calculator._calculators.uartDebug.setMode('sim')" id="ud-mode-sim" class="flex-1 px-3 py-1.5 rounded text-sm font-medium" style="background:var(--primary);color:white">📝 模拟模式</button>
+              <button onclick="Calculator._calculators.uartDebug.setMode('real')" id="ud-mode-real" class="flex-1 px-3 py-1.5 rounded text-sm font-medium" style="background:var(--bg-secondary);color:var(--text)">🔗 真机模式</button>
+            </div>
+
+            <div id="ud-params" style="display:none">
+              <div class="grid grid-cols-4 gap-2 text-xs">
+                <div>波特率
+                  <select id="ud-baud" class="w-full px-2 py-1 rounded mt-0.5" style="border:1px solid var(--border);background:var(--bg)">
+                    <option>1200</option><option>4800</option><option selected>9600</option><option>19200</option><option>38400</option><option>57600</option><option>115200</option>
+                  </select></div>
+                <div>数据位
+                  <select id="ud-data" class="w-full px-2 py-1 rounded mt-0.5" style="border:1px solid var(--border);background:var(--bg)">
+                    <option>7</option><option selected>8</option>
+                  </select></div>
+                <div>停止位
+                  <select id="ud-stop" class="w-full px-2 py-1 rounded mt-0.5" style="border:1px solid var(--border);background:var(--bg)">
+                    <option selected>1</option><option>2</option>
+                  </select></div>
+                <div>校验位
+                  <select id="ud-parity" class="w-full px-2 py-1 rounded mt-0.5" style="border:1px solid var(--border);background:var(--bg)">
+                    <option value="none" selected>无</option><option value="even">偶</option><option value="odd">奇</option>
+                  </select></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="text-sm mb-1">CRC 校验</div>
+              <div class="flex gap-1 flex-wrap">
+                <button onclick="Calculator._calculators.uartDebug.setCrc('none')"  id="ud-crc-none"  class="px-2 py-1 rounded text-xs" style="background:var(--bg-secondary);color:var(--text);border:1px solid var(--border)">无</button>
+                <button onclick="Calculator._calculators.uartDebug.setCrc('crc8')"  id="ud-crc-crc8"  class="px-2 py-1 rounded text-xs" style="background:var(--bg-secondary);color:var(--text);border:1px solid var(--border)">CRC-8</button>
+                <button onclick="Calculator._calculators.uartDebug.setCrc('crc16')" id="ud-crc-crc16" class="px-2 py-1 rounded text-xs" style="background:var(--primary);color:white;border:1px solid var(--primary)">CRC-16/Modbus</button>
+                <button onclick="Calculator._calculators.uartDebug.setCrc('crc32')" id="ud-crc-crc32" class="px-2 py-1 rounded text-xs" style="background:var(--bg-secondary);color:var(--text);border:1px solid var(--border)">CRC-32</button>
+              </div>
+              <label class="text-xs flex items-center gap-1 mt-1"><input type="checkbox" id="ud-append" checked onchange="Calculator._calculators.uartDebug._appendCrc=this.checked"> 校验码附加到帧末尾（小端，Modbus 习惯）</label>
+            </div>
+
+            <div>
+              <div class="text-sm mb-1">发送区（十六进制，空格/逗号分隔）</div>
+              <textarea id="ud-input" rows="3" class="w-full px-3 py-2 rounded font-mono text-sm" placeholder="如：01 03 00 00 00 01" style="border:1px solid var(--border);background:var(--bg)">01 03 00 00 00 01</textarea>
+            </div>
+
+            <div class="flex gap-2 flex-wrap">
+              <button onclick="Calculator._calculators.uartDebug.send()" class="flex-1 px-4 py-2 rounded font-medium" style="background:var(--primary);color:white" id="ud-send-btn">▶ 发送（模拟）</button>
+              <button onclick="Calculator._calculators.uartDebug.toggleConnect()" class="px-4 py-2 rounded font-medium" style="background:var(--bg-secondary);color:var(--text);border:1px solid var(--border);display:none" id="ud-connect-btn">🔗 连接串口</button>
+              <button onclick="Calculator._calculators.uartDebug.clearLog()" class="px-3 py-2 rounded" style="background:var(--bg-secondary);color:var(--text);border:1px solid var(--border)">清空</button>
+            </div>
+
+            <div class="text-xs" style="color:var(--text-secondary)">
+              TX: <span id="ud-tx" style="font-weight:600">0</span> 字节　RX: <span id="ud-rx" style="font-weight:600">0</span> 字节
+            </div>
+
+            <div>
+              <div class="text-sm mb-1">收发日志</div>
+              <div id="ud-log" class="p-2 rounded font-mono text-xs" style="background:#1e293b;color:#e2e8f0;min-height:140px;max-height:280px;overflow-y:auto;border:1px solid var(--border)"></div>
+            </div>
+          </div>`;
+        // 真机模式按钮在不支持的浏览器中禁用
+        if (!this._serialSupported) {
+          const realBtn = document.getElementById('ud-mode-real');
+          if (realBtn) { realBtn.disabled = true; realBtn.title = '当前浏览器不支持 Web Serial API（仅 Chrome/Edge）'; realBtn.style.opacity = '0.5'; }
+        }
+        this.setMode('sim');
+      },
+
+      setMode(mode) {
+        this._mode = mode;
+        // 模式按钮高亮
+        const simBtn = document.getElementById('ud-mode-sim');
+        const realBtn = document.getElementById('ud-mode-real');
+        if (simBtn) {
+          simBtn.style.background = mode === 'sim' ? 'var(--primary)' : 'var(--bg-secondary)';
+          simBtn.style.color = mode === 'sim' ? 'white' : 'var(--text)';
+        }
+        if (realBtn) {
+          realBtn.style.background = mode === 'real' ? 'var(--primary)' : 'var(--bg-secondary)';
+          realBtn.style.color = mode === 'real' ? 'white' : 'var(--text)';
+        }
+        // 参数区与连接按钮显隐
+        const params = document.getElementById('ud-params');
+        const connBtn = document.getElementById('ud-connect-btn');
+        if (params) params.style.display = (mode === 'real') ? 'block' : 'none';
+        if (connBtn) connBtn.style.display = (mode === 'real') ? 'block' : 'none';
+        // 发送按钮文案
+        const sendBtn = document.getElementById('ud-send-btn');
+        if (sendBtn) sendBtn.textContent = (mode === 'real') ? '▶ 发送（真机）' : '▶ 发送（模拟）';
+      },
+
+      setCrc(type) {
+        this._crc = type;
+        ['none','crc8','crc16','crc32'].forEach(t => {
+          const btn = document.getElementById('ud-crc-' + t);
+          if (!btn) return;
+          if (t === type) {
+            btn.style.background = 'var(--primary)'; btn.style.color = 'white'; btn.style.borderColor = 'var(--primary)';
+          } else {
+            btn.style.background = 'var(--bg-secondary)'; btn.style.color = 'var(--text)'; btn.style.borderColor = 'var(--border)';
+          }
+        });
+      },
+
+      // 构造完整帧：原始字节 +（可选）CRC 附加
+      buildFrame(bytes) {
+        if (this._crc === 'none' || !this._appendCrc) return bytes.slice();
+        let crcBytes;
+        if (this._crc === 'crc8') {
+          const c = this.crc8(bytes);
+          crcBytes = [c];                              // 1 字节
+        } else if (this._crc === 'crc16') {
+          const c = this.crc16(bytes);
+          crcBytes = [c & 0xFF, (c >> 8) & 0xFF];      // 小端：低字节在前（Modbus 习惯）
+        } else {
+          const c = this.crc32(bytes);
+          crcBytes = [c & 0xFF, (c >> 8) & 0xFF, (c >> 16) & 0xFF, (c >> 24) & 0xFF];
+        }
+        return bytes.concat(crcBytes);
+      },
+
+      // 统一发送入口
+      async send() {
+        if (this._mode === 'real') return this.sendReal();
+        return this.sendSim();
+      },
+
+      // 模拟模式发送
+      sendSim() {
+        const input = document.getElementById('ud-input')?.value || '';
+        if (!document.getElementById('ud-log')) return;
+        const data = this.parseHex(input);
+        if (!data || data.length === 0) {
+          this.appendLog('ERR', '解析失败：十六进制格式错误（应为偶数位 0-9 a-f）', '#ef4444');
+          return;
+        }
+        const frame = this.buildFrame(data);
+        this._txCount += frame.length;
+        const txEl = document.getElementById('ud-tx');
+        if (txEl) txEl.textContent = this._txCount;
+        // 显示原始 + CRC 信息
+        let crcInfo = '';
+        if (this._crc !== 'none') {
+          const crcHex = this.bytesToHex(frame.slice(data.length));
+          const crcName = this._crc.toUpperCase();
+          crcInfo = `<span style="color:#fbbf24"> + ${crcName}: ${crcHex}</span>`;
+        }
+        this.appendLog('TX', this.bytesToHex(data) + crcInfo, '#60a5fa');
+        // 首次发送时提示模拟模式语义
+        if (this._txCount === frame.length) {
+          this.appendLog('INFO', '提示：模拟模式不连接真实设备，仅演示帧构造与 CRC。切到"真机模式"连接物理串口实际收发。', '#94a3b8');
+        }
+      },
+
+      // —— Web Serial 真机模式 ——
+      async toggleConnect() {
+        if (this._port) return this.disconnect();
+        return this.connect();
+      },
+      async connect() {
+        if (!this._serialSupported) {
+          this.appendLog('ERR', '当前浏览器不支持 Web Serial API（仅 Chrome/Edge）', '#ef4444');
+          return;
+        }
+        try {
+          this._port = await navigator.serial.requestPort();
+          const baud = parseInt(document.getElementById('ud-baud')?.value || '9600');
+          const dataBits = parseInt(document.getElementById('ud-data')?.value || '8');
+          const stopBits = parseInt(document.getElementById('ud-stop')?.value || '1');
+          const parity = document.getElementById('ud-parity')?.value || 'none';
+          await this._port.open({ baudRate: baud, dataBits, stopBits, parity });
+          this._keepReading = true;
+          this._readLoop();  // 异步启动读循环（不 await，避免阻塞）
+          this.appendLog('INFO', `已连接：${baud} baud, ${dataBits}N${stopBits}`, '#94a3b8');
+          const btn = document.getElementById('ud-connect-btn');
+          if (btn) btn.textContent = '⛔ 断开';
+        } catch (e) {
+          this.appendLog('ERR', '连接失败：' + (e.message || e), '#ef4444');
+          this._port = null;
+        }
+      },
+      async disconnect() {
+        this._keepReading = false;
+        try {
+          if (this._reader) { await this._reader.cancel(); this._reader.releaseLock(); this._reader = null; }
+          if (this._port) { await this._port.close(); }
+        } catch (e) { /* 忽略关闭异常 */ }
+        this._port = null;
+        this.appendLog('INFO', '已断开', '#94a3b8');
+        const btn = document.getElementById('ud-connect-btn');
+        if (btn) btn.textContent = '🔗 连接串口';
+      },
+      async _readLoop() {
+        while (this._port && this._keepReading) {
+          try {
+            this._reader = this._port.readable.getReader();
+            while (this._keepReading) {
+              const { value, done } = await this._reader.read();
+              if (done) break;
+              if (value) {
+                const bytes = Array.from(value);
+                this._rxCount += bytes.length;
+                const rxEl = document.getElementById('ud-rx');
+                if (rxEl) rxEl.textContent = this._rxCount;
+                this.appendLog('RX', this.bytesToHex(bytes), '#34d399');
+              }
+            }
+            this._reader.releaseLock();
+            this._reader = null;
+          } catch (e) {
+            this.appendLog('ERR', '读循环异常：' + (e.message || e), '#ef4444');
+            break;
+          }
+        }
+      },
+      async sendReal() {
+        if (!this._port || !this._port.writable) {
+          this.appendLog('ERR', '未连接，请先点击"连接串口"', '#ef4444');
+          return;
+        }
+        const input = document.getElementById('ud-input')?.value || '';
+        const data = this.parseHex(input);
+        if (!data || data.length === 0) {
+          this.appendLog('ERR', '解析失败：十六进制格式错误', '#ef4444');
+          return;
+        }
+        const frame = this.buildFrame(data);
+        try {
+          const writer = this._port.writable.getWriter();
+          await writer.write(new Uint8Array(frame));
+          writer.releaseLock();
+          this._txCount += frame.length;
+          const txEl = document.getElementById('ud-tx');
+          if (txEl) txEl.textContent = this._txCount;
+          let crcInfo = '';
+          if (this._crc !== 'none') crcInfo = ` <span style="color:#fbbf24">+${this._crc.toUpperCase()}</span>`;
+          this.appendLog('TX', this.bytesToHex(data) + crcInfo, '#60a5fa');
+        } catch (e) {
+          this.appendLog('ERR', '发送失败：' + (e.message || e), '#ef4444');
+        }
+      },
+
+      // 日志追加：dir = 'TX'/'RX'/'INFO'/'ERR'
+      appendLog(dir, content, color) {
+        const log = document.getElementById('ud-log');
+        if (!log) return;
+        const t = new Date();
+        const ts = `${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}:${String(t.getSeconds()).padStart(2,'0')}`;
+        let arrow = '';
+        if (dir === 'TX') arrow = '<span style="color:#60a5fa">TX &gt;&gt;</span>';
+        else if (dir === 'RX') arrow = '<span style="color:#34d399">RX &lt;&lt;</span>';
+        else if (dir === 'ERR') arrow = '<span style="color:#ef4444">ERR!!</span>';
+        else arrow = '<span style="color:#94a3b8">INFO</span>';
+        const line = document.createElement('div');
+        line.style.borderBottom = '1px dashed rgba(148,163,184,0.2)';
+        line.style.padding = '2px 0';
+        line.innerHTML = `<span style="color:#64748b">[${ts}]</span> ${arrow} <span style="color:${dir==='ERR'?'#ef4444':(dir==='INFO'?'#94a3b8':'#e2e8f0')}">${content}</span>`;
+        log.appendChild(line);
+        log.scrollTop = log.scrollHeight;  // 自动滚到底
+      },
+
+      clearLog() {
+        const log = document.getElementById('ud-log');
+        if (log) log.innerHTML = '';
+        this._txCount = 0; this._rxCount = 0;
+        const txEl = document.getElementById('ud-tx');
+        const rxEl = document.getElementById('ud-rx');
+        if (txEl) txEl.textContent = '0';
+        if (rxEl) rxEl.textContent = '0';
+      },
     },
   },
 };
