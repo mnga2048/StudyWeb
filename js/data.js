@@ -4656,6 +4656,8 @@ const CourseData = {
           <div><strong>Dijkstra 不能有负权边</strong>：它的贪心假设"已确定的最短路不会再变"，负权边会破坏这个假设。有负权时用 Bellman-Ford。Floyd 求所有点对最短路，适合顶点数少（n≤200）的图。导航软件、路由协议用 Dijkstra 及其优化（A*）。</div>
         </div>
 
+        <div class="chart-container chart-container-lg" data-chart="graph-algo" data-title="图算法动画：BFS / DFS / Dijkstra（选择算法与起点，逐步观察队列/递归栈/dist 的变化）"></div>
+
         <h4 class="font-medium mt-6 mb-2">三、拓扑排序（AOV 网）</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
           AOV 网（顶点表示活动，边表示先后关系）的拓扑排序：把所有顶点排成线性序列，使每条边 $(u,v)$ 中 u 在 v 前。

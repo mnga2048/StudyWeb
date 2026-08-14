@@ -1447,3 +1447,345 @@ Charts.register('pid-sim', function(el) {
   el.querySelector('#pid-ki')?.addEventListener('input', update);
   el.querySelector('#pid-kd')?.addEventListener('input', update);
 });
+
+// 图算法动画（ds-12）：BFS / DFS / Dijkstra 三种算法逐步执行
+// 固定 7 顶点带权无向图（导航场景），红=当前、琥珀=队列/栈/候选、蓝=已访问/已确定、蓝粗边=生成树/最短路径树
+Charts.register('graph-algo', function(el) {
+  if (typeof echarts === 'undefined') return;
+
+  const title = el.dataset.title || '图算法动画：BFS / DFS / Dijkstra';
+
+  // ---- 图数据（顶点坐标手工布局，权重为非负整数）----
+  const NODES = [
+    { id: 'A', x: 0.8, y: 5.4 },
+    { id: 'B', x: 4.2, y: 3.4 },
+    { id: 'C', x: 1.5, y: 1.6 },
+    { id: 'D', x: 7.5, y: 5.4 },
+    { id: 'E', x: 6.0, y: 0.8 },
+    { id: 'F', x: 9.0, y: 2.8 },
+    { id: 'G', x: 10.8, y: 5.0 },
+  ];
+  const EDGES = [
+    ['A','B',4], ['A','C',3], ['B','C',2], ['B','D',7], ['B','E',3],
+    ['C','E',5], ['D','F',4], ['D','G',3], ['E','F',6], ['F','G',5],
+  ];
+  // 邻接表（按顶点字母序，保证动画顺序确定）
+  const ADJ = {};
+  NODES.forEach(n => ADJ[n.id] = []);
+  EDGES.forEach(([a, b, w]) => { ADJ[a].push([b, w]); ADJ[b].push([a, w]); });
+  const edgeKey = (a, b) => [a, b].sort().join('-');
+
+  // ---- 步骤生成器：每步记录 settled(蓝)/active(琥珀)/current/target/edgesActive/edgeCurrent/order/stateHtml ----
+
+  // BFS：队列，逐层扩展；入队即标记，出队时访问
+  function bfsSteps(start) {
+    const steps = [];
+    const visited = new Set([start]);
+    const queue = [start];
+    const order = [start];
+    const tree = new Set();
+    const snap = (desc, extra = {}) => {
+      steps.push({
+        desc,
+        settled: new Set([...visited].filter(n => !queue.includes(n))),
+        active: new Set(queue),
+        edgesActive: new Set(tree),
+        order: [...order],
+        stateHtml: `队列：[${queue.join(', ')}]`,
+        ...extra,
+      });
+    };
+    snap(`起点 ${start} 入队并标记已访问`);
+    while (queue.length) {
+      const u = queue.shift();
+      snap(`出队 ${u}，依次检查其邻居`, { current: u });
+      for (const [v] of ADJ[u]) {
+        if (!visited.has(v)) {
+          visited.add(v); queue.push(v); order.push(v);
+          const ek = edgeKey(u, v); tree.add(ek);
+          snap(`发现未访问顶点 ${v} → 入队并标记（经边 ${u}-${v}）`, { current: u, target: v, edgeCurrent: ek });
+        }
+      }
+    }
+    snap('队列已空，BFS 结束：按层访问完成，蓝边为 BFS 生成树', { done: true });
+    return steps;
+  }
+
+  // DFS：递归（等价递归栈），沿边深入，无路可走时回溯
+  function dfsSteps(start) {
+    const steps = [];
+    const visited = new Set();
+    const stack = [];
+    const order = [];
+    const tree = new Set();
+    const snap = (desc, extra = {}) => {
+      steps.push({
+        desc,
+        settled: new Set([...visited].filter(n => !stack.includes(n))),
+        active: new Set(stack),
+        edgesActive: new Set(tree),
+        order: [...order],
+        stateHtml: `递归栈：[${stack.join(' → ')}]`,
+        ...extra,
+      });
+    };
+    (function dfs(u, via) {
+      visited.add(u); stack.push(u); order.push(u);
+      if (via) tree.add(via);
+      snap(via ? `沿边 ${via} 深入，访问 ${u}` : `从起点 ${u} 开始访问`, { current: u, edgeCurrent: via });
+      for (const [v] of ADJ[u]) {
+        if (!visited.has(v)) dfs(v, edgeKey(u, v));
+      }
+      stack.pop();
+      snap(`${u} 的邻居全部处理完，回溯${stack.length ? `到 ${stack[stack.length - 1]}` : '（栈空）'}`, { current: stack[stack.length - 1] });
+    })(start, null);
+    snap('递归栈空，DFS 结束：一路深入再回溯，蓝边为 DFS 生成树', { done: true });
+    return steps;
+  }
+
+  // Dijkstra：贪心选最近未确定点 + 松弛邻边；换前驱时更新最短路径树
+  function dijkstraSteps(start) {
+    const steps = [];
+    const ids = NODES.map(n => n.id);
+    const dist = {}; ids.forEach(n => dist[n] = Infinity); dist[start] = 0;
+    const determined = new Set();
+    const tree = new Set();
+    const pred = {};
+    const fmt = v => dist[v] === Infinity ? '∞' : String(dist[v]);
+    const snap = (desc, extra = {}) => {
+      steps.push({
+        desc,
+        settled: new Set(determined),
+        active: new Set(ids.filter(n => !determined.has(n) && dist[n] < Infinity)),
+        edgesActive: new Set(tree),
+        dist: { ...dist },
+        order: [...determined],
+        stateHtml: 'dist：' + ids.map(n => {
+          const color = determined.has(n) ? '#059669;font-weight:700'
+            : dist[n] < Infinity ? '#d97706' : '#94a3b8';
+          return `<span style="color:${color}">${n}=${fmt(n)}</span>`;
+        }).join(' '),
+        ...extra,
+      });
+    };
+    snap(`初始化：dist[${start}]=0，其余均为 ∞`, { current: start });
+    while (determined.size < ids.length) {
+      let u = null, best = Infinity;
+      for (const n of ids) if (!determined.has(n) && dist[n] < best) { best = dist[n]; u = n; }
+      if (!u) break;
+      determined.add(u);
+      snap(`贪心：未确定顶点中 ${u} 最近（dist=${best}），标记为已确定`, { current: u });
+      for (const [v, w] of ADJ[u]) {
+        if (determined.has(v)) continue;
+        const nd = dist[u] + w;
+        if (nd < dist[v]) {
+          const old = fmt(v);
+          dist[v] = nd;
+          const ek = edgeKey(u, v);
+          if (pred[v]) tree.delete(pred[v]);
+          pred[v] = ek; tree.add(ek);
+          snap(`松弛 ${u}-${v}：dist[${u}]+${w}=${nd} &lt; ${old}，更新 dist[${v}]=${nd}（换前驱边）`, { current: u, target: v, edgeCurrent: ek });
+        }
+      }
+    }
+    snap('全部顶点已确定，dist[] 即单源最短距离，蓝边为最短路径树', { done: true });
+    return steps;
+  }
+
+  // ---- 渲染 ----
+  function buildLinks(step) {
+    return EDGES.map(([a, b, w]) => {
+      const k = edgeKey(a, b);
+      const isActive = step?.edgesActive?.has(k);
+      const isCur = step?.edgeCurrent === k;
+      return {
+        source: a, target: b,
+        lineStyle: { color: isCur ? '#ef4444' : isActive ? '#3b82f6' : '#94a3b8', width: isCur ? 4 : isActive ? 3 : 1.5, curveness: 0 },
+        label: { show: true, formatter: String(w), fontSize: 11, color: isCur ? '#ef4444' : isActive ? '#1d4ed8' : '#64748b', fontWeight: isCur || isActive ? 'bold' : 'normal' },
+      };
+    });
+  }
+
+  function renderStep(step) {
+    const settled = step?.settled || new Set();
+    const active = step?.active || new Set();
+    const isDij = currentAlgo === 'dijkstra';
+    const data = NODES.map(n => {
+      let color = '#cbd5e1', borderColor = '#94a3b8';
+      if (settled.has(n.id)) { color = '#3b82f6'; borderColor = '#1d4ed8'; }
+      if (active.has(n.id))  { color = '#f59e0b'; borderColor = '#b45309'; }
+      if (step?.target === n.id) { color = '#f97316'; borderColor = '#c2410c'; }
+      if (step?.current === n.id) { color = '#ef4444'; borderColor = '#b91c1c'; }
+      const isStart = n.id === startNode;
+      let name = n.id;
+      if (isDij && step?.dist) name = `${n.id}\n${step.dist[n.id] === Infinity ? '∞' : step.dist[n.id]}`;
+      return {
+        id: n.id, name, x: n.x, y: n.y,
+        symbolSize: isDij ? 46 : 38, draggable: false,
+        itemStyle: { color, borderColor: isStart ? '#059669' : borderColor, borderWidth: isStart ? 3.5 : 2 },
+        label: { show: true, color: '#fff', fontWeight: 'bold', fontSize: isDij ? 11 : 13 },
+      };
+    });
+    inst.setOption({ series: [{ data, links: buildLinks(step) }] });
+  }
+
+  // ---- DOM：图表 + 状态面板 + 控件 + 图例 ----
+  const chartEl = document.createElement('div');
+  chartEl.style.height = '330px';
+  el.appendChild(chartEl);
+
+  const statePanel = document.createElement('div');
+  statePanel.style.cssText = 'margin-top:0.5rem;padding:0.6rem 0.75rem;background:var(--bg-secondary);border-radius:0.5rem;font-size:0.8rem;min-height:3.4rem;';
+  statePanel.innerHTML = `
+    <div id="ga-desc" style="font-weight:600"></div>
+    <div id="ga-state" style="margin-top:0.25rem;font-family:monospace;font-size:0.78rem;color:var(--text-secondary)"></div>
+    <div id="ga-order" style="margin-top:0.15rem;font-size:0.75rem;color:var(--primary)"></div>`;
+  el.appendChild(statePanel);
+
+  const controls = document.createElement('div');
+  controls.style.cssText = 'display:flex;gap:1rem;align-items:center;padding:0.6rem 0.75rem;background:var(--bg-secondary);border-radius:0.5rem;margin-top:0.5rem;font-size:0.8rem;flex-wrap:wrap;';
+  controls.innerHTML = `
+    <div style="display:flex;gap:0.25rem">
+      <button type="button" data-algo="bfs" class="ga-btn" style="padding:0.25rem 0.6rem;border:1px solid var(--border);border-radius:0.25rem;background:var(--bg-primary);cursor:pointer">BFS</button>
+      <button type="button" data-algo="dfs" class="ga-btn" style="padding:0.25rem 0.6rem;border:1px solid var(--border);border-radius:0.25rem;background:var(--bg-primary);cursor:pointer">DFS</button>
+      <button type="button" data-algo="dijkstra" class="ga-btn" style="padding:0.25rem 0.6rem;border:1px solid var(--border);border-radius:0.25rem;background:var(--bg-primary);cursor:pointer">Dijkstra</button>
+    </div>
+    <label style="display:flex;align-items:center;gap:0.4rem">
+      <span>起点:</span>
+      <select id="ga-start" style="padding:0.2rem;border:1px solid var(--border);border-radius:0.25rem;background:var(--bg-primary);color:inherit">
+        ${NODES.map(n => `<option value="${n.id}">${n.id}</option>`).join('')}
+      </select>
+    </label>
+    <button type="button" id="ga-play" style="padding:0.25rem 0.8rem;border:1px solid var(--primary);border-radius:0.25rem;background:var(--primary);color:#fff;cursor:pointer;font-weight:600">▶ 播放</button>
+    <button type="button" id="ga-step" style="padding:0.25rem 0.6rem;border:1px solid var(--border);border-radius:0.25rem;background:var(--bg-primary);cursor:pointer">⏭ 单步</button>
+    <button type="button" id="ga-reset" style="padding:0.25rem 0.6rem;border:1px solid var(--border);border-radius:0.25rem;background:var(--bg-primary);cursor:pointer">↺ 重置</button>
+    <label style="display:flex;align-items:center;gap:0.4rem">
+      <span>速度:</span>
+      <input type="range" id="ga-speed" min="300" max="1500" step="100" value="800" style="width:90px">
+      <span id="ga-speed-val" style="min-width:3rem;font-weight:600">800ms</span>
+    </label>`;
+  el.appendChild(controls);
+
+  const legendEl = document.createElement('div');
+  legendEl.style.cssText = 'margin-top:0.4rem;font-size:0.72rem;color:var(--text-secondary);line-height:1.7;';
+  el.appendChild(legendEl);
+
+  const inst = echarts.init(chartEl);
+  Charts._instances.push(inst);
+  inst.setOption({
+    title: { text: title, textStyle: { fontSize: 14 } },
+    tooltip: { show: false },
+    animation: false,
+    xAxis: { show: false, min: -0.3, max: 11.6 },
+    yAxis: { show: false, min: 0.2, max: 6.2 },
+    series: [{
+      type: 'graph', layout: 'none', roam: false,
+      data: [], links: buildLinks(null),
+      lineStyle: { curveness: 0 },
+    }],
+  });
+
+  // ---- 状态与交互 ----
+  let currentAlgo = 'dijkstra';
+  let startNode = 'A';
+  let steps = [];
+  let stepIdx = -1;
+  let timer = null;
+
+  const $ = id => el.querySelector('#' + id);
+  const descEl = $('ga-desc'), stateEl = $('ga-state'), orderEl = $('ga-order');
+  const playBtn = $('ga-play'), stepBtn = $('ga-step'), resetBtn = $('ga-reset');
+
+  const ALGO_NAMES = { bfs: 'BFS 广度优先遍历', dfs: 'DFS 深度优先遍历', dijkstra: 'Dijkstra 单源最短路' };
+  const dot = c => `<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${c};vertical-align:-1px"></span>`;
+  const ring = `<span style="display:inline-block;width:9px;height:9px;border-radius:50%;border:2px solid #059669;vertical-align:-1px"></span>`;
+  const LEGENDS = {
+    bfs: `${dot('#f59e0b')} 队列中(已标记) ｜ ${dot('#3b82f6')} 已出队 ｜ ${dot('#ef4444')} 正在出队 ｜ ${dot('#f97316')} 新入队 ｜ ${ring} 起点 ｜ <b style="color:#3b82f6">蓝粗边</b>=BFS 生成树(按层扩展)`,
+    dfs: `${dot('#f59e0b')} 递归栈中 ｜ ${dot('#3b82f6')} 已回溯 ｜ ${dot('#ef4444')} 正在访问 ｜ ${ring} 起点 ｜ <b style="color:#3b82f6">蓝粗边</b>=DFS 生成树(一路深入)`,
+    dijkstra: `${dot('#f59e0b')} 候选(未确定) ｜ ${dot('#3b82f6')} 已确定 ｜ ${dot('#ef4444')} 贪心选中 ｜ ${dot('#f97316')} 松弛目标 ｜ ${ring} 起点 ｜ <b style="color:#3b82f6">蓝粗边</b>=最短路径树`,
+  };
+
+  function genSteps() {
+    steps = currentAlgo === 'bfs' ? bfsSteps(startNode)
+          : currentAlgo === 'dfs' ? dfsSteps(startNode)
+          : dijkstraSteps(startNode);
+  }
+
+  function getSpeed() { return parseInt($('ga-speed')?.value || '800'); }
+
+  function stopPlay() {
+    if (timer) {
+      clearInterval(timer);
+      Charts._timers = Charts._timers.filter(t => t !== timer);
+      timer = null;
+    }
+    playBtn.textContent = '▶ 播放';
+  }
+
+  function startPlay() {
+    if (timer) return;
+    if (stepIdx >= steps.length - 1) stepIdx = -1;   // 播完再按播放 → 从头重播
+    timer = setInterval(() => {
+      if (stepIdx >= steps.length - 1) { stopPlay(); return; }
+      showStep(stepIdx + 1);
+    }, getSpeed());
+    Charts._timers.push(timer);
+    playBtn.textContent = '⏸ 暂停';
+  }
+
+  function showStep(i) {
+    stepIdx = Math.max(0, Math.min(i, steps.length - 1));
+    const s = steps[stepIdx];
+    renderStep(s);
+    descEl.textContent = `【${stepIdx + 1}/${steps.length}】${s.desc}`;
+    stateEl.innerHTML = s.stateHtml || '';
+    orderEl.textContent = s.order?.length ? (currentAlgo === 'dijkstra' ? `确定顺序：${s.order.join(' → ')}` : `访问序列：${s.order.join(' → ')}`) : '';
+  }
+
+  function resetAll() {
+    stopPlay();
+    genSteps();
+    stepIdx = -1;
+    renderStep(null);
+    descEl.textContent = `已选择「${ALGO_NAMES[currentAlgo]}」（起点 ${startNode}），点击 ▶播放 或 ⏭单步 观察执行过程`;
+    stateEl.innerHTML = currentAlgo === 'dijkstra' ? 'dist：' + NODES.map(n => `<span style="color:#94a3b8">${n.id}=∞</span>`).join(' ') : '';
+    orderEl.textContent = '';
+  }
+
+  function highlightAlgo() {
+    el.querySelectorAll('.ga-btn').forEach(b => {
+      if (b.dataset.algo === currentAlgo) {
+        b.style.background = 'var(--primary)';
+        b.style.color = '#fff';
+        b.style.borderColor = 'var(--primary)';
+      } else {
+        b.style.background = 'var(--bg-primary)';
+        b.style.color = '';
+        b.style.borderColor = 'var(--border)';
+      }
+    });
+  }
+
+  el.querySelectorAll('.ga-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      if (currentAlgo === b.dataset.algo) return;
+      currentAlgo = b.dataset.algo;
+      highlightAlgo();
+      legendEl.innerHTML = LEGENDS[currentAlgo];
+      resetAll();
+    });
+  });
+  $('ga-start')?.addEventListener('change', e => { startNode = e.target.value; resetAll(); });
+  playBtn.addEventListener('click', () => timer ? stopPlay() : startPlay());
+  stepBtn.addEventListener('click', () => { stopPlay(); if (stepIdx < steps.length - 1) showStep(stepIdx + 1); });
+  resetBtn.addEventListener('click', resetAll);
+  $('ga-speed')?.addEventListener('input', e => {
+    $('ga-speed-val').textContent = e.target.value + 'ms';
+    if (timer) { stopPlay(); startPlay(); }   // 播放中调速：重启定时器
+  });
+
+  // 初始状态
+  highlightAlgo();
+  legendEl.innerHTML = LEGENDS[currentAlgo];
+  resetAll();
+});
