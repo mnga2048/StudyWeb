@@ -149,6 +149,7 @@ const Calculator = {
 
     // ===== 人工智能 =====
     { id: 'token-est', title: 'Token 估算器', desc: '中英文本 → token 数 → 4K/8K/32K/128K 上下文窗口占用', icon: '🧮', category: '人工智能' },
+    { id: 'llm-memory', title: 'LLM 内存估算器', desc: '参数量 × 精度 → 权重/KV Cache/全账内存，对照 STM32/树莓派/RK3588 判定能否跑', icon: '💾', category: '人工智能' },
   ],
 
   // 各计算器实现
@@ -2655,6 +2656,126 @@ const Calculator = {
               </div>`;
             }).join('')}
             <div class="text-xs text-gray-500">上下文窗口 = 提示词 + 模型已生成部分之和；排 Agent 时工具定义与检索片段同样消耗这份预算（详见 ai-04）。</div>
+          </div>`;
+      },
+    },
+
+    // LLM 内存估算器：参数量×精度 → 权重/KV/全账 → 对照硬件判定
+    llmMemory: {
+      _presets: [
+        { label: '0.5B（Qwen 0.5B 级）', n: 0.5e9, layers: 24, dmodel: 896 },
+        { label: '1.5B（Qwen 1.5B 级）', n: 1.5e9, layers: 28, dmodel: 1536 },
+        { label: '3B', n: 3e9, layers: 36, dmodel: 2048 },
+        { label: '7B（Qwen/Llama 7B 级）', n: 7e9, layers: 32, dmodel: 4096 },
+        { label: '14B', n: 14e9, layers: 48, dmodel: 5120 },
+        { label: '32B', n: 32e9, layers: 64, dmodel: 6400 },
+        { label: '70B', n: 70e9, layers: 80, dmodel: 8192 },
+      ],
+      _hw: [
+        { label: 'STM32F4（192KB RAM / 1MB Flash）', ram: 192 * 1024, usable: 0.8 },
+        { label: 'ESP32-S3（512KB + 8MB PSRAM）', ram: 8 * 1024 * 1024, usable: 0.7 },
+        { label: '树莓派 Zero 2（512MB）', ram: 512 * 1024 * 1024, usable: 0.55 },
+        { label: '树莓派 4B（4GB）', ram: 4 * 1024 ** 3, usable: 0.75 },
+        { label: '树莓派 5（8GB）', ram: 8 * 1024 ** 3, usable: 0.75 },
+        { label: 'RK3588（16GB）', ram: 16 * 1024 ** 3, usable: 0.8 },
+      ],
+      _bytes: { fp32: 4, fp16: 2, int8: 1, int4: 0.5 },
+      _kvBytes: { fp32: 4, fp16: 2, int8: 1, int4: 0.5 },
+      render(el) {
+        el.innerHTML = `
+          <div class="space-y-4">
+            <div class="info-box info"><div>公式：权重内存 ≈ 参数量 × 每参数字节（fp16=2 / int8=1 / int4=0.5）；KV Cache = 2×每元素字节×层数×d<sub>model</sub>×上下文长度（ai-04）；全账再 +20% 运行开销。选型口诀：先算显存再挑模型，留 20% 余量。</div></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <div class="text-xs text-gray-500 mb-1">模型规模</div>
+                <select id="lm-model" class="w-full px-3 py-2 rounded text-sm" style="border:1px solid var(--border);background:var(--bg)">
+                  <option value="custom">自定义…</option>
+                  ${this._presets.map((p, i) => `<option value="${i}">${p.label}</option>`).join('')}
+                </select>
+              </div>
+              <div>
+                <div class="text-xs text-gray-500 mb-1">参数量（十亿 B）</div>
+                <input id="lm-n" type="number" value="0.5" min="0.01" step="0.1" class="w-full px-3 py-2 rounded text-sm" style="border:1px solid var(--border);background:var(--bg)">
+              </div>
+              <div>
+                <div class="text-xs text-gray-500 mb-1">权重精度</div>
+                <select id="lm-prec" class="w-full px-3 py-2 rounded text-sm" style="border:1px solid var(--border);background:var(--bg)">
+                  <option value="fp32">fp32（4 B/参数）</option>
+                  <option value="fp16">fp16（2 B/参数）</option>
+                  <option value="int8">int8（1 B/参数）</option>
+                  <option value="int4" selected>int4（0.5 B/参数，GGUF Q4）</option>
+                </select>
+              </div>
+              <div>
+                <div class="text-xs text-gray-500 mb-1">上下文长度（token）</div>
+                <select id="lm-ctx" class="w-full px-3 py-2 rounded text-sm" style="border:1px solid var(--border);background:var(--bg)">
+                  <option value="512">512</option>
+                  <option value="2048" selected>2048</option>
+                  <option value="8192">8192</option>
+                  <option value="32768">32768</option>
+                </select>
+              </div>
+              <div class="sm:col-span-2">
+                <div class="text-xs text-gray-500 mb-1">目标硬件</div>
+                <select id="lm-hw" class="w-full px-3 py-2 rounded text-sm" style="border:1px solid var(--border);background:var(--bg)">
+                  ${this._hw.map((h, i) => `<option value="${i}" ${i === 3 ? 'selected' : ''}>${h.label}</option>`).join('')}
+                </select>
+              </div>
+            </div>
+            <button onclick="Calculator._calculators.llmMemory.calc()" class="px-4 py-2 rounded font-medium w-full sm:w-auto" style="background:var(--primary);color:white">估算内存</button>
+            <div id="lm-result"></div>
+          </div>`;
+        const self = this;
+        document.getElementById('lm-model').addEventListener('change', function () {
+          if (this.value !== 'custom') {
+            const p = self._presets[+this.value];
+            document.getElementById('lm-n').value = (p.n / 1e9).toString();
+          }
+        });
+        this.calc();
+      },
+      fmt(b) {
+        if (b >= 1024 ** 3) return (b / 1024 ** 3).toFixed(2) + ' GB';
+        if (b >= 1024 ** 2) return (b / 1024 ** 2).toFixed(1) + ' MB';
+        return (b / 1024).toFixed(1) + ' KB';
+      },
+      calc() {
+        const result = document.getElementById('lm-result');
+        if (!result) return;
+        const $ = id => document.getElementById(id);
+        const nB = parseFloat($('lm-n').value);
+        const prec = $('lm-prec').value;
+        const ctxLen = +$('lm-ctx').value;
+        const hw = this._hw[+$('lm-hw').value];
+        const modelSel = $('lm-model').value;
+        if (!nB || nB <= 0) { result.innerHTML = '<div class="text-gray-500 p-2">请输入有效参数量</div>'; return; }
+        // 层数/d_model：预置模型查表，自定义按 7B 比例估算
+        let layers = 32, dmodel = 4096;
+        if (modelSel !== 'custom') { ({ layers, dmodel } = this._presets[+modelSel]); }
+        else { const scale = (nB * 1e9) / 7e9; layers = Math.max(4, Math.round(32 * Math.pow(scale, 1 / 3))); dmodel = Math.max(256, Math.round(4096 * Math.pow(scale, 1 / 3) / 64) * 64); }
+        const weights = nB * 1e9 * this._bytes[prec];
+        // KV Cache：int4 模型 KV 通常降到 q8（保守按 int8 算）
+        const kvB = prec === 'int4' ? this._kvBytes.int8 : this._kvBytes[prec];
+        const kv = 2 * kvB * layers * dmodel * ctxLen;
+        const total = (weights + kv) * 1.2;
+        const avail = hw.ram * hw.usable;
+        const verdict = total < avail * 0.6
+          ? { t: '✅ 富余', c: '#059669', d: '内存占用不到可用内存六成，可正常跑' }
+          : total <= avail
+          ? { t: '🟡 勉强', c: '#f59e0b', d: '接近可用上限：缩短上下文或降精度更稳' }
+          : { t: '❌ 放不下', c: '#ef4444', d: '超出可用内存，换更小模型 / 更低精度 / 更大内存板' };
+        result.innerHTML = `
+          <div class="space-y-2 p-3 rounded" style="background:var(--bg-secondary);border:1px solid var(--border)">
+            <div class="flex justify-between flex-wrap gap-2 items-center">
+              <b>判定（${hw.label.split('（')[0]}）</b>
+              <span style="color:${verdict.c};font-weight:700;font-size:1.1em">${verdict.t}</span>
+            </div>
+            <div class="text-xs text-gray-500">${verdict.d}（可用内存 ≈ ${this.fmt(avail)}，占用 ${(total / avail * 100).toFixed(0)}%）</div>
+            <div class="text-sm">权重内存：<b>${this.fmt(weights)}</b>（${nB}B × ${this._bytes[prec]} B/参数）</div>
+            <div class="text-sm">KV Cache：<b>${this.fmt(kv)}</b>（${layers} 层 × d=${dmodel} × ${ctxLen.toLocaleString()} token${prec === 'int4' ? '，KV 按 int8 计' : ''}）</div>
+            <div class="text-sm">全账（+20% 开销）：<b style="color:var(--primary)">${this.fmt(total)}</b></div>
+            ${modelSel === 'custom' ? '<div class="text-xs text-gray-500">自定义规模的层数/d_model 按 7B 立方根比例估算，仅数量级参考</div>' : ''}
+            <div class="text-xs text-gray-500">依据：ai-04（KV Cache 公式）与 ai-12（内存全账与量化）。MCU 跑 LLM 目前不现实——MCU 端 AI 请走 TinyML 小模型路线（ai-11/13）。</div>
           </div>`;
       },
     },

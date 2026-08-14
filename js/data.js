@@ -97,7 +97,7 @@ const CourseData = {
       { label: '知识板块', value: '21', color: 'blue' },
       { label: '知识点', value: '228', color: 'green' },
       { label: '交互图表', value: '18', color: 'purple' },
-      { label: '计算工具', value: '34', color: 'orange' },
+      { label: '计算工具', value: '35', color: 'orange' },
     ],
     sections: [
       { id: 'advanced-math', title: '高等数学', desc: '极限、微积分、级数、微分方程，工学类高数全考点', icon: '🔴', level: '应试' },
@@ -14212,7 +14212,7 @@ tools = [
         <h4 class="font-medium mt-6 mb-2">停止条件与预算：成本核算</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
           没有停止条件的 agent 循环，等价于没有看门狗的 while(1) 循环。五道闸门按顺序检查：<strong>任务完成</strong>（模型输出最终答案）→ <strong>轮数上限</strong>（如 25 轮）→ <strong>token 预算</strong> → <strong>无进展检测</strong>（连续 3 轮调用同一工具同样参数 = 卡死，强制注入提示或终止）→ <strong>人工接管</strong>（长时间无进展时挂起等确认）。成本公式：
-        </div>
+        </p>
         <div class="formula-block">
           $$\\text{Cost} = \\sum_{i=1}^{R}\\left(n^{(i)}_{\\text{in}} \\, p_{\\text{in}} + n^{(i)}_{\\text{out}} \\, p_{\\text{out}}\\right) \\;\\xrightarrow{\\text{循环不压缩}}\\; O(R^2)$$
           <div class="text-sm text-gray-500 mt-2">轮数 $R$ 增加，每轮输入 $n_{\\text{in}}$ 因历史累积而增长——不压缩时总 token 按平方涨；压缩把它压回近似线性，这是 harness 直接省钱的地方（价格量级随时间变化，公式结构不变）</div>
@@ -14329,59 +14329,288 @@ server.run(<span class="code-string">"stdio"</span>)                      <span 
         <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>生态现状（截至 2026 年）</strong>：MCP 由 Anthropic 开源后已被 OpenAI、Google 等主流厂商采纳，社区 server 覆盖数据库/浏览器/Git/云服务/工业协议等场景；竞争规范（如 OpenAPI 直连、各家私有插件协议）仍在，但"写一次、处处接入"的网络效应让 MCP 的领先优势持续扩大——标准之争历史上赢的通常是生态最厚的那个（USB 对 FireWire 也是如此）。</div></div>
       ` },
 
-      // ===== ai-11 边缘 AI 与 TinyML 概述（概览版，完整版随批次 6c 上线）=====
-      { id: 'ai-11', title: '边缘 AI 与 TinyML 概述', desc: '为什么把模型塞进 MCU：延迟/隐私/功耗/离线；2026 框架版图（概览版）', icon: '🪶', tags: ['概览'], goals: { eng: true }, content: `
+      // ===== ai-11 边缘 AI 与 TinyML 概述 =====
+      { id: 'ai-11', title: '边缘 AI 与 TinyML 概述', desc: '为什么把模型塞进 MCU：延迟/隐私/功耗/离线四大刚需；内存与算力约束；2026 框架版图与 TinyML 工作流', icon: '🪶', tags: ['核心', '工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">把智能装进几块钱的芯片</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          云端 AI 要联网、要上行数据、按次计费；而产线电机异响检测、可穿戴手势识别、传感器自诊断这些场景要的是<strong>毫秒级响应、数据不出设备、微安级功耗、断网可用</strong>——把小模型直接跑在 MCU 上（TinyML）是唯一解。约束也前所未有：<a href="javascript:void(0)" onclick="App.loadDetail('emb-03')">嵌入式存储系统</a>的 RAM 通常只有几十~几百 KB、Flash 几百 KB~2MB，没有操作系统兜底、没有动态内存，模型必须小到几十 KB 级——靠的是"小模型 + 量化 + 砍算子"三板斧（<a href="javascript:void(0)" onclick="App.loadDetail('ai-12')">ai-12</a>）。
+          前十节讲的 LLM/Agent 都住在云端 GPU 上；本层转向另一个极端——<strong>把小模型直接跑在 MCU 里</strong>（TinyML）。这不是"低配版 AI"，而是另一类需求的唯一解：产线电机异响检测要毫秒级响应、可穿戴设备的数据不能出腕、田间传感器没有网络、电池要撑一年。云端 AI 与边缘 AI 是<strong>互补关系</strong>：前者管"智能的上限"（大模型推理），后者管"智能的落地"（传感、决策、执行贴着物理世界）。对自动化背景的你，后者甚至是主场——<a href="javascript:void(0)" onclick="App.loadDetail('emb-01')">嵌入式系统</a> + <a href="javascript:void(0)" onclick="App.loadDetail('ai-01')">机器学习</a>的交叉点。
         </p>
-        <h4 class="font-medium mt-6 mb-2">2026 框架版图（截至 2026 年）</h4>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
-          <strong>LiteRT</strong>（原 TensorFlow Lite Micro，2024 年更名）是 MCU 端主流运行时，纯 C++、无动态内存；<strong>STM32Cube.AI</strong> 是 ST 官方工具链，能把 Keras/ONNX 模型直接转成 STM32 优化库；<strong>TinyMaix</strong> 是国内极简推理框架，ARM Cortex-M 上几十 KB 即可运行；硬件侧 <strong>NPU MCU</strong>（STM32N6、带 Ethos-U 的 MCU）开始把专用加速器带进单片机。选型逻辑与 <a href="javascript:void(0)" onclick="App.loadDetail('emb-01')">嵌入式系统</a>选型同构：先看 RAM/Flash 预算，再看算子支持，最后看生态。
-        </p>
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>概览版说明</strong>：完整版（典型 TinyML 工作流、内存约束计算、框架横向对比、NPU 编程模型）随批次 6c 上线。</div></div>
-      ` },
 
-      // ===== ai-12 模型压缩：量化/剪枝/蒸馏（概览版）=====
-      { id: 'ai-12', title: '模型压缩：量化/剪枝/蒸馏', desc: 'int8/int4 量化原理（scale/zero-point）、PTQ vs QAT、GGUF 格式与内存估算（概览版）', icon: '🗜️', tags: ['概览'], goals: { eng: true }, content: `
-        <h3 class="text-lg font-semibold mb-3">模型瘦身三板斧</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          <a href="javascript:void(0)" onclick="App.loadDetail('ai-05')">ai-05</a> 的模型动辄几 GB，塞进开发板要靠压缩。<strong>量化</strong>（Quantization）把 fp32/fp16 权重压成 int8/int4——用"缩放因子 + 零点"把浮点区间映射到整数格点：
+        <h4 class="font-medium mt-6 mb-2">四大刚需：什么时候必须边缘</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>维度</th><th>云端 AI</th><th>边缘 AI（TinyML）</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">延迟</td><td>往返 100ms~1s（网络+排队）</td><td>本地推理 1~20ms，确定性好</td></tr>
+            <tr><td class="font-medium">隐私</td><td>原始数据必须上传</td><td>数据不出设备，只出结论</td></tr>
+            <tr><td class="font-medium">功耗/成本</td><td>按次计费 + 持续联网</td><td>mW 级功耗、无流量费，芯片几块钱</td></tr>
+            <tr><td class="font-medium">离线</td><td>断网即瘫痪</td><td>完全自治</td></tr>
+            <tr><td class="font-medium">模型规模</td><td>千亿参数 LLM</td><td>几 KB~几百 KB 的小模型</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          典型任务画像：<strong>传感数据分类</strong>（振动/电流/声音的故障识别）、<strong>关键词唤醒</strong>（"Hey 设备"——只认一个词，不是语音助手）、<strong>视觉检测</strong>（有无/计数/瑕疵，不是"这是什么"）、<strong>异常检测</strong>（偏离正常分布即报警）。共同点：输入维度低、类别少、模型可以极小——这与 LLM 的"通用智能"完全是两个世界。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">MCU 的硬约束：一笔内存账</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          <a href="javascript:void(0)" onclick="App.loadDetail('emb-03')">嵌入式存储系统</a>给 TinyML 划了三条红线。以 STM32F4 系列（192KB RAM / 1MB Flash）为例，模型部署的内存账：
         </p>
         <div class="formula-block">
-          $$q = \\text{round}\\left(\\frac{x}{s}\\right) + z, \\qquad \\hat{x} = s\\,(q - z)$$
-          <div class="text-sm text-gray-500 mt-2">$s$（scale）是浮点步长，$z$（zero-point）让 0 精确对应某个整数——这正是<a href="javascript:void(0)" onclick="App.loadDetail('dig-13')"> ADC/DAC</a> 里定点数的推广：模拟量 ↔ 整数码的映射，思想完全同源</div>
+          $$\\text{RAM} \\geq \\underbrace{W_{\\text{int8}}}_{\\text{权重（可放 Flash）}} + \\underbrace{A_{\\text{激活}}}_{\\text{中间张量}} + \\underbrace{B_{\\text{采样/通信缓冲}}}_{\\text{业务占用}}$$
+          <div class="text-sm text-gray-500 mt-2">权重通常 const 存 Flash（XIP 执行），RAM 只扛<strong>激活张量</strong>（tensor arena，推理框架的一次性工作内存）——所以"模型 200KB"不等于"要 200KB RAM"，这是新手最容易算错的一笔账</div>
         </div>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
-          <strong>PTQ</strong>（训练后量化）拿现成模型校准几百个样本即得，分钟级完成；<strong>QAT</strong>（量化感知训练）把量化误差模拟进训练过程，精度更高但要训练资源。LLM 侧的事实标准容器是 <strong>GGUF</strong> 格式（llama.cpp 生态），int4 量化后每参数仅 0.5 字节。内存估算一句话公式：<strong>内存 ≈ 参数量 × 每参数字节数</strong>（7B int4 ≈ 3.5 GB，0.5B int4 ≈ 0.25 GB）——加上 <a href="javascript:void(0)" onclick="App.loadDetail('ai-04')">ai-04</a> 的 KV Cache 才是全账。剪枝（删不重要权重）与蒸馏（大模型教小模型）另有妙用，完整版展开。
+          算力红线：Cortex-M4 的 DSP 扩展每周期可做 1 次 MAC（乘累加），168MHz 就是 1.68 亿 MAC/s。一个推理要 $M$ 次 MAC，时延下限：
         </p>
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>概览版说明</strong>：完整版（对称/非对称量化推导、GPTQ/AWQ/GGUF q 系列对比、llm-memory 内存估算器工具）随批次 6c 上线。</div></div>
+        <div class="formula-block">
+          $$T_{\\min} = \\frac{M}{f_{\\text{CPU}} \\times \\text{MAC/周期}}, \\qquad \\text{例：} M = 500\\,\\text{k MAC} \\Rightarrow T_{\\min} \\approx 3\\,\\text{ms} \\;(\\text{@168MHz})$$
+          <div class="text-sm text-gray-500 mt-2">这是<strong>理想下限</strong>——实测还要除以实现效率（0.3~0.7）；带 NPU 的 MCU（如 STM32N6 的 Neural-ART）把 MAC/周期提高两个数量级，专卷这笔账</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">2026 框架版图（截至 2026 年）</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>框架/平台</th><th>定位</th><th>足迹</th><th>适合</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">LiteRT（原 TFLite Micro）</td><td>Google 出品，2024 年更名，纯 C++ 无动态内存</td><td>核心 ~16KB + 算子</td><td>跨厂商通用、社区最大</td></tr>
+            <tr><td class="font-medium">STM32Cube.AI</td><td>ST 官方工具链，Keras/ONNX/Torch → C 库</td><td>自动优化到 STM32 外设（CMSIS-NN）</td><td>STM32 用户首选，<a href="javascript:void(0)" onclick="App.loadDetail('ai-13')">ai-13 实战</a>用它</td></tr>
+            <tr><td class="font-medium">TinyMaix</td><td>国产极简推理框架</td><td>核心 &lt;3KB、RAM &lt;1KB 起步</td><td>极限资源（51 都能跑的演示）、学习源码</td></tr>
+            <tr><td class="font-medium">NPU MCU（STM32N6 / Ethos-U 系）</td><td>硬件加速路线：MCU 里嵌神经网络加速器</td><td>算力数百 GOPS~TOPS 级</td><td>视觉类、帧率要求高的任务</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          选型逻辑与 <a href="javascript:void(0)" onclick="App.loadDetail('emb-01')">嵌入式选型</a>同构：先算 RAM/Flash 预算 → 再看算子支持（你的模型里有没有框架没实现的层）→ 最后看生态（文档、示例、调试工具）。生态动态：云端开发平台 Edge Impulse 2025 年被 Qualcomm 收购后转向其芯片生态，开源侧 LiteRT 与厂商工具链（Cube.AI 等）是主流——选型时注意工具链的持续维护承诺。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">TinyML 工作流：训练在云，推理在端</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>问题定义</strong><br>把工程问题翻译成分类/回归/异常检测：电机故障 → "正常/堵转/卡滞"三分类；划定输入（256 点电流窗）与输出（3 类概率 + 决策阈值）</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>数据采集</strong><br>真实工况录数据（<a href="javascript:void(0)" onclick="App.loadDetail('emb-07')">ADC 采样</a>→<a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">调理</a>→滑窗切片），正常/故障各类几千窗口，按时间划分训练测试集（防泄漏）</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>PC 训练</strong><br>小网络 + 早停，目标不是刷 SOTA 而是够用且小；训练完看混淆矩阵，确认故障类的<strong>召回率</strong>达标</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>量化压缩</strong><br>int8 量化（<a href="javascript:void(0)" onclick="App.loadDetail('ai-12')">ai-12</a>），用代表性样本校准；精度损失 &gt;2% 就考虑量化感知训练或回退特征工程</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>转换部署</strong><br>模型 → C 数组/库 → 集成进固件；分配 tensor arena；在<strong>真实 MCU</strong> 上复测精度（定点误差可能与 PC 仿真不同）</div></div>
+          <div class="step"><span class="step-num">6</span><div class="step-content"><strong>闭环运维</strong><br>推理结果接控制逻辑（降速/停机/上报），误报样本回流标注、定期重训——模型是固件的一部分，也要版本管理</div></div>
+        </div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>MCU 上没有 LLM 的位置</strong>：最小的实用 LLM（0.5B 参数 int4）也要 ~300MB 内存——比 STM32 的 RAM 大三个数量级。"MCU 跑大模型"的演示视频多半是串口连着 PC。MCU 端 AI 的正确定位是<strong>感知级小模型</strong>；要本地对话/规划，上 Linux 开发板（<a href="javascript:void(0)" onclick="App.loadDetail('ai-14')">ai-14</a>），两者在写字机项目里各司其职。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>延迟手感</strong>：云端 API 往返 100~300ms 且有抖动（对控制环是灾难）；MCU 本地 1D 小模型 5~10ms 且确定。写字机的分工由此定型——电流异常检测在 STM32（毫秒级保命），自然语言理解在 Linux 板（百毫秒级够用）——这正是 <a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">linux-12</a>"大脑/小脑"架构的 AI 版。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>先学哪条路线</strong>：有 STM32 板 → 直接 <a href="javascript:void(0)" onclick="App.loadDetail('ai-13')">ai-13 的 Cube.AI 实战</a>；板子资源紧张或想读源码 → TinyMaix；做通用课程/换芯片不换代码 → LiteRT。框架只是容器，<strong>数据质量和特征设计</strong>才是 TinyML 成败的主变量——下一节先解决"模型怎么变小"：<a href="javascript:void(0)" onclick="App.loadDetail('ai-12')">量化/剪枝/蒸馏</a>。</div></div>
       ` },
 
-      // ===== ai-13 MCU 端部署实战（概览版）=====
-      { id: 'ai-13', title: 'MCU 端部署实战', desc: 'Cube.AI / LiteRT / TinyMaix 三路线；写字机电机电流异常检测端到端（概览版）', icon: '⚙️', tags: ['概览'], goals: { eng: true }, content: `
+      // ===== ai-12 模型压缩：量化/剪枝/蒸馏 =====
+      { id: 'ai-12', title: '模型压缩：量化/剪枝/蒸馏', desc: 'int8/int4 量化原理（scale/zero-point、对称/非对称、per-channel）、PTQ vs QAT、GGUF 与内存估算、剪枝与蒸馏', icon: '🗜️', tags: ['核心', '工程'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">模型瘦身三板斧</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          <a href="javascript:void(0)" onclick="App.loadDetail('ai-05')">ai-05</a> 的开源模型动辄几 GB，MCU 只有几百 KB、开发板只有几 GB——压缩是部署的前置工序。三板斧按性价比排序：<strong>量化</strong>（几乎免费拿 4 倍压缩）、<strong>剪枝</strong>（删不重要的权重）、<strong>蒸馏</strong>（大模型教小模型）。本节重点拆量化——你会发现它的数学内核是 <a href="javascript:void(0)" onclick="App.loadDetail('dig-13')">ADC/DAC 的定点数映射</a>，控制人天生就懂。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">量化：定点映射的推广</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          把 fp32/fp16 权重的取值区间 $[x_{\\min}, x_{\\max}]$ 线性映射到 $n$ 位整数的 $2^n$ 个格点上，存整数、用的时候再反量化回浮点：
+        </p>
+        <div class="formula-block">
+          $$q = \\mathrm{clip}\\left(\\mathrm{round}\\left(\\frac{x}{s}\\right) + z,\\; 0,\\; 2^n - 1\\right), \\qquad \\hat{x} = s\\,(q - z)$$
+          <div class="text-sm text-gray-500 mt-2">$s$（scale）= 浮点步长，$z$（zero-point）= 浮点 0 对应的整数格点。与 ADC 一模一样：模拟量 ↔ 整数码，误差 = 量化噪声（$\\pm s/2$），思想完全同源</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          两个工程分支：<strong>对称 vs 非对称</strong>——权重分布大致零对称时取 $z=0$（对称量化，省一次减法）；激活值恒非负（ReLU 后）则用非对称（$z \\ne 0$）利用满量程。<strong>per-tensor vs per-channel</strong>——每个输出通道一套 $(s, z)$，对离群值更宽容，卷积层标配。LLM 侧还有更激进的方案（GPTQ 逐层最小化重构误差、AWQ 按激活分布保护重要权重），名字常换，内核都是这条映射公式。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">PTQ vs QAT：两条路线</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>维度</th><th>训练后量化 PTQ</th><th>量化感知训练 QAT</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">做法</td><td>训好浮点模型 → 几百个校准样本统计 $s, z$</td><td>训练图中插入伪量化节点，前向模拟量化误差</td></tr>
+            <tr><td class="font-medium">耗时</td><td>分钟级，无需训练资源</td><td>要重训（小时~天）</td></tr>
+            <tr><td class="font-medium">精度</td><td>int8 几乎无损；int4 明显掉</td><td>int4 也能保住大部分精度</td></tr>
+            <tr><td class="font-medium">适用</td><td>部署首选起点</td><td>PTQ 掉分超标时的补救</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          实践顺序永远是：先 PTQ 看精度 → 掉分 &gt;2% 再考虑 QAT 或回退到 int8。注意"精度"看的是<strong>任务指标</strong>（故障召回率、困惑度），不是"权重差了多少"。
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>GGUF 档位</th><th>有效位宽</th><th>0.5B 权重体积</th><th>质量</th><th>适用</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">Q8_0</td><td>~8.5 bit</td><td>~0.53 GB</td><td>几乎无损</td><td>内存富余时的保守选择</td></tr>
+            <tr><td class="font-medium">Q5_K_M</td><td>~5.7 bit</td><td>~0.38 GB</td><td>轻微损失</td><td>质量/体积平衡点</td></tr>
+            <tr><td class="font-medium">Q4_K_M</td><td>~4.8 bit</td><td>~0.33 GB</td><td>小模型需实测</td><td>开发板默认档（<a href="javascript:void(0)" onclick="App.loadDetail('ai-14')">ai-14</a> 用它）</td></tr>
+            <tr><td class="font-medium">Q2_K</td><td>~2.6 bit</td><td>~0.19 GB</td><td>明显掉分</td><td>只求能跑的极限压缩</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          K 后缀表示"分块量化"（block-wise super-quantization）：每 32/256 个权重共享一组 scale，混合高低位宽的方案（K-quant 系）在同等体积下质量优于朴素 int4——这是 llama.cpp 生态多年调优的结晶，档位名会变，"分块 + 混合精度"的思路不变。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">LLM 侧：GGUF 与内存全账</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          LLM 本地部署（llama.cpp 生态）的事实标准容器是 <strong>GGUF</strong> 格式：单文件打包权重 + 分词器 + 元数据，文件名里的 q4/q5/q8 就是量化位宽（如 Q4_K_M 是 4 位混合方案，重要层用更高精度）。内存估算一句话公式：
+        </p>
+        <div class="formula-block">
+          $$\\text{内存}_{\\text{权重}} \\approx N_{\\text{参数}} \\times b, \\qquad b:\\; \\text{fp16}=2,\\; \\text{int8}=1,\\; \\text{int4}=0.5 \\;\\text{字节}$$
+          <div class="text-sm text-gray-500 mt-2">全账还要加 <a href="javascript:void(0)" onclick="App.loadDetail('ai-04')">ai-04</a> 的 KV Cache（随上下文线性涨，且随权重精度一起降）+ 10~20% 运行开销</div>
+        </div>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>例题设定</strong><br>Qwen 0.5B（$N = 5 \\times 10^8$ 参数）、int4 量化、上下文 2K，部署到 4GB 内存开发板，判断能否运行</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>权重账</strong><br>$5\\times10^8 \\times 0.5$ 字节 $= 2.5 \\times 10^8$ B ≈ <strong>0.23 GB</strong></div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>KV Cache 账</strong><br>代入 ai-04 公式（24 层、$d_{model}$=1024、fp16 KV、2048 token）：$2 \\times 2 \\times 24 \\times 1024 \\times 2048 \\approx 1.9 \\times 10^8$ B ≈ <strong>0.18 GB</strong></div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>运行开销</strong><br>激活/图结构/分词缓冲按 20% 加权：$(0.23+0.18)\\times1.2 \\approx 0.5$ GB</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>结论</strong><br>0.5 GB &lt; 4GB − 系统占用(~0.5GB) → <strong>✅ 可跑</strong>，且余量充足；换成 7B int4（≈3.5GB 全账）就到极限，8GB 板才稳。工具箱"人工智能"分类的 LLM 内存估算器可一键复算</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">剪枝与蒸馏：换个维度变小</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          <strong>剪枝</strong>（pruning）：权重绝对值小的对输出贡献小，置零后存储可稀疏压缩（结构化剪枝直接删整行/整通道，推理真变快）。<strong>蒸馏</strong>（distillation）：让小模型（学生）拟合大模型（教师）的输出分布——不只学"答案是 A"，还学"教师觉得 B 有 30% 可能"这种暗知识（soft target）。对小数据任务，蒸馏常常比直接训练小模型高几个点。工程组合拳：<strong>蒸馏先变小 → 量化再变密</strong>（DeepSeek 蒸馏小模型就是 R1 教 Qwen/Llama 小尺寸学生）。三者正交，可叠加。
+        </p>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>量化不是免费午餐</strong>：① 困惑度必升——int8 可忽略，int4 在小模型上可能掉得刺眼，"<strong>模型越小越经不起量化</strong>"（7B int4 常见，1B 以下慎用）；② 校准样本要贴近真实分布——拿纯噪声校准，$s/z$ 全歪；③ 混合精度有陷阱：KV Cache 与权重不同精度时先查运行时支持，别只算一半的账。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>动手</strong>：工具箱 → 人工智能 → <strong>LLM 内存估算器</strong>，输入参数量与精度，一键得到权重/KV/全账内存并对照常见硬件（STM32/ESP32/树莓派/RK3588）判定能不能跑——选型五秒出结论，再来读 <a href="javascript:void(0)" onclick="App.loadDetail('ai-14')">ai-14</a> 真机部署。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>为什么 KV Cache 跟着变小</strong>：缓存的 $K/V$ 与权重独立量化，GGUF 的 q 系列通常把 KV 也降到 q8 甚至 q4——所以 <a href="javascript:void(0)" onclick="App.loadDetail('ai-04')">ai-04</a> 公式里的 $b$ 对 int4 模型取 0.5 而不是 2，长上下文的显存压力随量化断崖式下降。这是"量化对长上下文额外友好"的不显然推论。</div></div>
+      ` },
+
+      // ===== ai-13 MCU 端部署实战 =====
+      { id: 'ai-13', title: 'MCU 端部署实战', desc: 'Cube.AI/LiteRT/TinyMaix 三路线；写字机电机电流异常检测端到端：数据集→1D-CNN→int8→STM32 推理→控制闭环', icon: '⚙️', tags: ['核心', '工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">在 STM32 上跑一个真模型</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          边缘部署三条路线：<strong>STM32Cube.AI</strong>（模型转 C 库，工具链最顺）、<strong>LiteRT</strong>（跨厂商通用）、<strong>TinyMaix</strong>（极小足迹）。本节的实战任务选得非常"自动化人"：<strong>写字机电机电流异常检测</strong>——堵转、皮带卡滞、丢步这些机械故障，最先反映在相电流波形里（呼应 <a href="javascript:void(0)" onclick="App.loadDetail('emb-07')">ADC 采样</a>与 <a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">信号调理</a>）。
+          本节把 <a href="javascript:void(0)" onclick="App.loadDetail('ai-11')">ai-11</a> 的工作流落到一个"自动化人"的任务上：<strong>写字机电机电流异常检测</strong>——堵转、皮带卡滞、丢步这些机械故障，最先反映在相电流波形里，等肉眼发现"字歪了"已经晚了。目标：STM32 以 1kHz 采样相电流，滑窗送入 int8 小模型，10ms 内给出"正常/堵转/卡滞"判定，异常时降速停机并上报 <a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">linux-12 的控制链</a>。整个过程你已有的技能（<a href="javascript:void(0)" onclick="App.loadDetail('emb-07')">ADC 采样</a>、<a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">信号调理</a>、<a href="javascript:void(0)" onclick="App.loadDetail('dig-13')">定点数</a>）全部用上。
         </p>
-        <h4 class="font-medium mt-6 mb-2">端到端流水线预览</h4>
+
+        <h4 class="font-medium mt-6 mb-2">三条部署路线对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>维度</th><th>STM32Cube.AI</th><th>LiteRT Micro</th><th>TinyMaix</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">输入格式</td><td>Keras / ONNX / TFLite / PyTorch</td><td>TFLite</td><td>TFLite / 自有格式</td></tr>
+            <tr><td class="font-medium">优化深度</td><td>深度绑定 STM32（CMSIS-NN、内存布局）</td><td>通用 C++，各厂商后端</td><td>极简算子集，手工极致</td></tr>
+            <tr><td class="font-medium">RAM 需求</td><td>自动报告 tensor arena 峰值</td><td>自报 arena，可控</td><td>最小（&lt;1KB 可跑演示）</td></tr>
+            <tr><td class="font-medium">上手</td><td>CubeMX 里点几下即生成 C 库</td><td>要自己搭工程链接内核</td><td>单文件易读易改</td></tr>
+            <tr><td class="font-medium">本节选择</td><td>✅（示例板为 STM32F4）</td><td>换非 ST 芯片时切换</td><td>资源极限时切换</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">第一步：数据集（成败的 80%）</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>采集设计</strong><br>1kHz 采样 X 轴相电流（分流电阻→运放→12 位 ADC，链路见 <a href="javascript:void(0)" onclick="App.loadDetail('dig-13')">电流采样</a>），256 点窗口 = 0.256s 一帧，50% 重叠滑动</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>工况覆盖</strong><br>正常：空载/画直线/画圆弧/不同速度各 15 分钟；堵转：抱死轴手动制造；卡滞：皮带加阻尼垫片模拟——<strong>故障样本靠安全地人为制造</strong>，这是工业数据集的标准做法</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>切片与划分</strong><br>共 ~6,000 窗口（正常 4,000 / 堵转 1,000 / 卡滞 1,000）。<strong>按时间段划分</strong>训练/测试集（7:3）——随机划分会让相邻窗口同时进两边，测出的精度虚高（数据泄漏）</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>特征两条路</strong><br>A. 特征工程：每窗算 RMS/峭度/过零率 等 8 维 → 决策树/小 MLP；B. 端到端：原始 256 点直接进 1D-CNN。两条都试——A 在 MCU 上更省资源，B 上限更高</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">第二步：模型——够小就是美</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
-          ADC 以 1kHz 采样相电流 → 滑动窗口取 256 点 → 提取时域特征（RMS、峭度、过零率）或直接 1D 卷积 → int8 量化小模型（<a href="javascript:void(0)" onclick="App.loadDetail('ai-12')">ai-12</a> 的 PTQ）推理 → 异常概率超阈值则降速停机、上报 <a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">linux-12 的控制链</a>。数据采集用"正常工况 + 人为制造故障"各录几千窗口，训练在 PC 完成，板端只推理——<strong>训练在云、推理在端</strong>是 TinyML 与 <a href="javascript:void(0)" onclick="App.loadDetail('ai-14')">ai-14 开发板 LLM</a> 共同的部署哲学。
+          1D-CNN 结构（Keras 伪码），参数量刻意压在 4K 以内：
         </p>
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>概览版说明</strong>：完整版（数据集制作、模型结构与训练代码、Cube.AI 转换部署全程、推理耗时实测、关键词唤醒备选方案）随批次 6c 上线。</div></div>
+        <div class="code-block"><span class="code-comment"># 输入 (256, 1) 电流窗 → 输出 3 类概率</span>
+x = Input((256, 1))
+x = Conv1D(8, 7, activation=<span class="code-string">'relu'</span>)(x)      <span class="code-comment"># 8×7×1+8 = 64 参数</span>
+x = MaxPooling1D(4)(x)                          <span class="code-comment"># 64 点</span>
+x = Conv1D(16, 7, activation=<span class="code-string">'relu'</span>)(x)     <span class="code-comment"># 16×7×8+16 = 912 参数</span>
+x = MaxPooling1D(4)(x)                          <span class="code-comment"># 16 点</span>
+x = Flatten()(x)                                <span class="code-comment"># 256 维</span>
+x = Dense(16, activation=<span class="code-string">'relu'</span>)(x)          <span class="code-comment"># 256×16+16 = 4,112 参数</span>
+y = Dense(3, activation=<span class="code-string">'softmax'</span>)(x)       <span class="code-comment"># 51 参数</span>
+<span class="code-comment"># 合计 ~5.1k 参数 → int8 后 ~5KB Flash，激活峰值 ~2KB RAM</span></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          训练要点：类别不平衡（正常样本是故障的 4 倍）用<strong>类别加权损失</strong>或过采样；评估只看<strong>混淆矩阵与故障类召回率</strong>——漏检（故障判成正常）代价远高于误报，阈值从 softmax 概率 0.5 调到 0.3 换召回是常规操作。目标定务实：故障召回 ≥95%、误报 ≤2%，而不是刷总体准确率（正常类占 2/3 时，全猜"正常"就有 66% 准确率——被平均指标骗是新手第一名）。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">第三步：量化与部署（Cube.AI）</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>PTQ int8</strong><br>从测试集抽 200 个代表窗口做校准集，TFLite Converter 全 int8 量化（<a href="javascript:void(0)" onclick="App.loadDetail('ai-12')">ai-12</a> 的流程）；对比浮点版混淆矩阵——故障召回掉不超过 1% 为合格</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>导入 CubeMX</strong><br>X-CUBE-AI 中间件加载 .tflite → 自动分析算子兼容性 → 生成 aiModelRunner C 库；报告里看三个数：Flash 占用 / RAM 峰值（tensor arena）/ MAC 数</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>集成推理</strong><br>主循环或 RTOS 任务里：滑窗填满 → 填输入张量 → aiRun() → 读 3 类概率。实测 STM32F407 @168MHz：~0.9M MAC 的网络推理约 6~8ms，满足 10ms 判定指标</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>闭环动作</strong><br>概率超阈且连续 3 窗一致 → 触发安全序列：减速→停机→置错误码→经 <a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11 协议</a>上报"X 轴卡滞置信度 92%"。连续 3 窗 = 消抖，与 <a href="javascript:void(0)" onclick="App.loadDetail('dig-08')">按键消抖</a>同一个思想</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>板端复测</strong><br>PC 上 96% 的模型上板可能 93%——定点实现误差、传感器批次差异都真实存在；把板端误报样本存 Flash 回流标注，下轮重训。模型是固件，有版本号</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">备选任务：关键词唤醒（KWS）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          同一套流水线换个传感器就是另一个经典任务：麦克风 → 预处理成音频谱图（1kHz 采样 1s 窗，MFCC 特征 40×32）→ 同量级小 CNN → "写字机，开始"唤醒词。与电流检测的差异只在输入端：多一维特征提取、类别通常是"关键词/未知/静音"三类（开集问题，"未知"类吸收一切杂音）。两个任务共享同一套"采集→训练→量化→部署"骨架——<strong> TinyML 的可复制性就在骨架，任务只是插件</strong>。
+        </p>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>别踩的三个坑</strong>：① 训练/部署预处理不一致——PC 上做了标准化，板端忘了做，精度雪崩；把<strong>全部预处理写进模型第一层或两边同源代码</strong>。② tensor arena 溢出无声踩内存——Cube.AI 报告的 RAM 峰值再留 30% 余量，链接脚本里静态分配并 memfill 校验。③ 时序数据随机划分泄漏——必须按时间/按工况段划分，测出来 99% 先怀疑泄漏再看模型。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>先跑特征工程基线</strong>：RMS + 峭度 + 过零率 8 维特征 + 决策树，几十行 Python、板上几百字节——很多工业场景这个基线就是 90 分。深度模型只在基线不够时上：<strong>简单方案先赢，复杂方案后来</strong>，与 <a href="javascript:void(0)" onclick="App.loadDetail('act-14')">PID 先于现代控制的工程哲学</a>一脉相承。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与故障诊断理论的关系</strong>：传统故障诊断（<a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">观测器/滤波器</a>路线）需要机理模型，残差超阈报警；数据驱动路线（本节）不需要模型、但需要故障样本。工业实践常混合：机理残差管"已知故障"，数据模型兜"未知异常"——两套看门狗并存，正如 <a href="javascript:void(0)" onclick="App.loadDetail('ai-09')">ai-09</a> 里 harness 的多道停止条件。</div></div>
       ` },
 
-      // ===== ai-14 开发板本地 LLM 实战（概览版，收官项目）=====
-      { id: 'ai-14', title: '开发板本地 LLM 实战', desc: 'llama.cpp 交叉编译、PC 量化→板端推理，收官：自然语言控制写字机（概览版）', icon: '🏁', tags: ['概览', '收官'], goals: { eng: true }, content: `
+      // ===== ai-14 开发板本地 LLM 实战（收官项目）=====
+      { id: 'ai-14', title: '开发板本地 LLM 实战', desc: 'llama.cpp 交叉编译、PC 量化→板端推理、HTTP API 封装；收官：自然语言控制写字机端到端', icon: '🏁', tags: ['核心', '收官'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">收官：让写字机听懂人话</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          全站三线在此会合：linux 板块造了控制链（<a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">整机联调</a>），print 板块造了机身，本板块补上"智能"。目标：开发板本地跑一个 0.5B 级小模型（如 Qwen 0.5B 的 int4 量化版，约 0.5 GB——截至今日主流 4GB 内存开发板可推理），说"画个正方形"，模型经 <a href="javascript:void(0)" onclick="App.loadDetail('ai-08')">Function Calling</a> 输出 draw_line 调用，宿主程序翻译成 <a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11 协议帧</a>，写字机动笔——<strong>语音/文字 → 模型 → 工具 → 协议 → 轨迹</strong>。
+          全站三线在此会合：<a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">linux 板块</a>造了控制链（协议、电机、规划、上位机），<a href="javascript:void(0)" onclick="App.loadDetail('print-08')">print 板块</a>造了机身，本板块补上"智能"——<strong>MCU 管毫秒级的保命检测（ai-13），开发板管百毫秒级的理解与规划（本节）</strong>。目标：开发板本地跑一个 0.5B 级小模型（如 Qwen 0.5B 的 int4 量化版，全账约 0.5GB，截至今日主流 4GB 内存开发板可推理），说"画个正方形"，模型经 <a href="javascript:void(0)" onclick="App.loadDetail('ai-08')">Function Calling</a> 输出 draw_line 调用，宿主程序翻译成 <a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11 协议帧</a>，写字机动笔——<strong>语音/文字 → 模型 → 工具 → 协议 → 轨迹</strong>，全程不联云。
         </p>
-        <h4 class="font-medium mt-6 mb-2">部署哲学：量化在 PC，板子只推理</h4>
+
+        <h4 class="font-medium mt-6 mb-2">第一步：硬件选型账（开工前算清）</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
-          llama.cpp 用 <a href="javascript:void(0)" onclick="App.loadDetail('linux-04')">交叉编译</a>（呼应工具链一节）产出 ARM 可执行，GGUF 模型在 PC 上量化好拷过去，开发板只承担推理；再包一层 HTTP API（复用 <a href="javascript:void(0)" onclick="App.loadDetail('linux-14')">linux-14 实时上位机</a>的 WebSocket/Web 架构），任何局域网客户端都能指挥写字机。至此，控制、结构、智能三条线在<strong>同一台机器</strong>上闭环——这正是本站区别于普通 AI 教程的招牌。
+          用 <a href="javascript:void(0)" onclick="App.loadDetail('ai-12')">ai-12</a> 的内存公式逐档算（工具箱"LLM 内存估算器"一键复算）：0.5B int4 全账 ≈ 0.5GB；1.5B int4 ≈ 1.2GB；7B int4 ≈ 4GB+。结论：<strong>4GB 板是 0.5B~1.5B 的舒适区</strong>，8GB 板才碰 7B。写进 compare-table：
         </p>
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>概览版说明</strong>：完整版（llama.cpp 交叉编译全流程、上下文/线程数调参、HTTP 服务封装、Function Calling 端到端联调实录与性能数据）随批次 6c 上线，作为全站收官项目。</div></div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>平台</th><th>内存</th><th>0.5B int4</th><th>7B int4</th><th>角色</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">STM32F4</td><td>192KB</td><td>❌（差 3 个数量级）</td><td>❌</td><td>电流检测/运动执行</td></tr>
+            <tr><td class="font-medium">树莓派 4B</td><td>4GB</td><td>✅ 流畅</td><td>🟡 勉强（swap 拖慢）</td><td>本节主角</td></tr>
+            <tr><td class="font-medium">RK3588 类</td><td>8~16GB</td><td>✅ 富余</td><td>✅ 可用</td><td>进阶（部分带 NPU 加速）</td></tr>
+            <tr><td class="font-medium">PC/笔记本</td><td>16GB+</td><td>✅（开发/量化用）</td><td>✅</td><td>量化在 PC，板子只推理</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">第二步：llama.cpp 交叉编译与部署</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>PC 端准备模型</strong><br>下载开源 0.5B 的 GGUF 权重（或用 llama.cpp 的 convert + quantize 工具把 fp16 转成 Q4_K_M）——<strong>量化在 PC 完成，板子只拿成品</strong>（部署哲学：<a href="javascript:void(0)" onclick="App.loadDetail('ai-12')">ai-12</a>）</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>交叉编译</strong><br>拉取 llama.cpp 源码，cmake 指定 <a href="javascript:void(0)" onclick="App.loadDetail('linux-04')">交叉工具链</a>（aarch64-linux-gnu-gcc），关闭 CUDA、开 NEON 优化：cmake -B build -DCMAKE_TOOLCHAIN_FILE=… -DGGML_NATIVE=OFF → make -j8，产出 llama-server / llama-cli</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>拷贝上板冒烟</strong><br>scp 二进制 + GGUF 到板子（~0.5GB，走 <a href="javascript:void(0)" onclick="App.loadDetail('linux-01')">SSH</a>），先跑 llama-cli -m model.gguf -p "你好" 验证：能出字、速度量级可接受（截至今日 4GB ARM 板跑 0.5B int4 约数 token/s 量级，够控制指令场景）</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>调参三件套</strong><br>线程数 = 物理核数（多了反而调度抖动）；上下文 -c 2048（KV Cache 省内存，<a href="javascript:void(0)" onclick="App.loadDetail('ai-04')">ai-04</a> 的账）；温度 0.2~0.4（工具调用要稳不要创意，<a href="javascript:void(0)" onclick="App.loadDetail('ai-04')">采样参数</a>）</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">第三步：HTTP 服务与工具接入</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          llama-server 自带 <strong>OpenAI 兼容的 /v1/chat/completions 端点</strong>，支持 tools 参数——Function Calling 开箱即用（<a href="javascript:void(0)" onclick="App.loadDetail('ai-08')">ai-08</a> 的机制）。把它注册成开机自启服务（systemd，<a href="javascript:void(0)" onclick="App.loadDetail('linux-09')">linux-09 产品化</a>），写字机宿主程序（Python 几十行）跑通 agent 循环：
+        </p>
+        <div class="code-block"><span class="code-comment"># 写字机本地 LLM 服务（systemd 单元示意）</span>
+[Service]
+ExecStart=/opt/llama/llama-server -m /opt/models/qwen0.5b-q4.gguf \
+  -c 2048 -t 4 --host 127.0.0.1 --port 8080
+<span class="code-comment"># 宿主 agent（伪码）：ai-08 的 ReAct 循环 + linux-11 协议桥</span>
+tools = [home, move_to, draw_line]              <span class="code-comment"># schema 同 ai-08</span>
+<span class="code-keyword">while</span> <span class="code-keyword">not</span> done:
+    resp = post(<span class="code-string">"http://127.0.0.1:8080/v1/chat/completions"</span>,
+                json={messages, tools, temperature: 0.3})
+    <span class="code-keyword">for</span> call <span class="code-keyword">in</span> resp.tool_calls:
+        frame = cmd_table[call.name](**call.args)   <span class="code-comment"># → linux-11 协议帧</span>
+        ser.write(frame); obs = ser.read()          <span class="code-comment"># → STM32 执行回读</span>
+        messages.append(obs)                        <span class="code-comment"># 观察回注，下一轮</span></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          上位机界面复用 <a href="javascript:void(0)" onclick="App.loadDetail('linux-14')">linux-14 的 WebSocket 架构</a>：浏览器面板输入自然语言 → 宿主程序调本地模型 → 轨迹与状态实时回推。进阶：按 <a href="javascript:void(0)" onclick="App.loadDetail('ai-10')">ai-10</a> 把三个工具包成 MCP server，任何 MCP 客户端（包括你的编码 agent）都能直接指挥这台写字机——<strong>机器变成生态公民</strong>。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">第四步：端到端联调与性能边界</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>环节</th><th>时延量级</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">语音/文字输入</td><td>~0.1s</td><td>文字即输入；语音唤醒另配 KWS（<a href="javascript:void(0)" onclick="App.loadDetail('ai-13')">ai-13</a> 备选任务）</td></tr>
+            <tr><td class="font-medium">本地 LLM 生成 5~10 次 tool call</td><td>1~5s</td><td>0.5B int4 数 token/s 量级 × 短输出——指令场景可接受</td></tr>
+            <tr><td class="font-medium">协议帧往返</td><td>ms 级</td><td>linux-11 链路，CRC 校验</td></tr>
+            <tr><td class="font-medium">运动执行</td><td>0.5~3s</td><td>梯形规划（<a href="javascript:void(0)" onclick="App.loadDetail('linux-13')">linux-13</a>），与生成流水并行</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          联调要点：① 小模型 Function Calling 稳定性弱于大模型——工具 schema 写得越"傻瓜"越好（<a href="javascript:void(0)" onclick="App.loadDetail('ai-08')">ai-08 五原则</a>加倍重要），坐标越界等硬校验全部留在宿主程序与协议层兜底；② 生成与运动<strong>流水化</strong>（画第 1 条边时生成第 2 条的指令），体感时延减半；③ 连续推理注意散热与供电（SoC 满载电流显著上升，劣质 USB 电源会欠压重启——<a href="javascript:void(0)" onclick="App.loadDetail('print-08')">整机结构</a>里给散热留位置）。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">收官：一台机器，三门课程</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          回看这条链：<strong>数学</strong>（hm/la/prob）给了模型与控制的底层数学 → <strong>电子</strong>（circ/ana/dig/pwr）给了采样、驱动、功率链 → <strong>控制</strong>（act/mct/motor）给了闭环与运动品质 → <strong>嵌入式</strong>（emb/sns/linux）给了实时执行与操作系统 → <strong>计算机</strong>（ds/cpp/os/net）给了数据组织与通信 → <strong>制造</strong>（print）给了机身 → <strong>智能</strong>（ai：LLM 原理 → Agent/MCP → TinyML/本地部署）给了理解与自治。写字机是把这些课程缝在一起的那根线——<strong>学完的不是 21 个板块，是造一台智能机器的完整能力</strong>。
+        </p>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>性能数字会过时，方法不会</strong>：本节的 token/s、内存占用都标注"截至今日"——按摩尔与算法进步，两年后数字全变，但"<strong>内存账 → 量化在 PC → 板端只推理 → 工具 schema 兜底 → 流水化</strong>"这套工程流程长期有效。另外：0.5B 模型的能力边界要实测——复杂指令（嵌套、多约束）它接不住，把 prompt 拆简单、一次一个动作，是小模型场景的第一守则。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>上手顺序</strong>：① 先在 PC 用 llama.cpp 跑通同一模型（验证量化文件与 prompt）→ ② 板子交叉编译冒烟 → ③ 接工具循环 → ④ 最后才接协议与整机。每一层独立可测，出问题能定位——与 <a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">linux-10 六层验收</a>同一纪律。跑通后试试把系统提示换成繁体中文/英文，观察 0.5B 的指令跟随差异，你会对"模型能力"建立真实手感。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>学完本板块，往哪走</strong>：深化 LLM 工程——读 llama.cpp 源码（推理引擎的 C++ 工程）、给自己的领域做 <a href="javascript:void(0)" onclick="App.loadDetail('ai-07')">RAG</a> 知识库、用 <a href="javascript:void(0)" onclick="App.loadDetail('ai-09')">harness 五要素</a>评估调优一个 agent；深化边缘——NPU 编程、多传感器融合检测。或者，回到 <a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">写字机</a>，给它加上语音唤醒 + 本地对话 + 自动排障，让这台机器配得上"智能"两个字。</div></div>
       ` },
 
     ],
