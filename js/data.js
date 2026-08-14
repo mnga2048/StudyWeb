@@ -81,14 +81,14 @@ const CourseData = {
     subtitle: '应试 + 工程双线并重，覆盖数学、电子、控制、嵌入式、计算机、制造工艺六大领域，系统化学习笔试考点与工程实战知识',
     intro: '本项目把分散在课本、视频、真题里的专业课知识，系统化、可视化、可交互地组织在一个网站里。数学基础侧重笔试考点与计算训练，电路/控制/嵌入式侧重工程应用与实战仿真，数据结构与信号处理兼顾统考大纲与工程面试，Linux 开发板与 3D 打印板块覆盖动手实战。配合交互图表、公式可视化、自测练习，做到"看得懂、记得牢、用得上"。',
     features: [
-      { icon: '📚', label: '系统化知识', desc: '20 大板块、210 知识点按学习路径递进，应试与工程双标签筛选' },
+      { icon: '📚', label: '系统化知识', desc: '20 大板块、214 知识点按学习路径递进，应试与工程双标签筛选' },
       { icon: '🧮', label: '公式与计算', desc: 'KaTeX 渲染全部数学/控制公式，配套矩阵计算器、拉氏变换查表等工具' },
       { icon: '🎮', label: '交互可视化', desc: '伯德图、根轨迹、卡诺图、运放电路、排序算法等可交互原理图' },
       { icon: '✏️', label: '自测与真题', desc: '每节配自测题，数学/数电/模电含笔试真题模块，支持错题记录' },
     ],
     stats: [
       { label: '知识板块', value: '20', color: 'blue' },
-      { label: '知识点', value: '210', color: 'green' },
+      { label: '知识点', value: '214', color: 'green' },
       { label: '交互图表', value: '16', color: 'purple' },
       { label: '计算工具', value: '28', color: 'orange' },
     ],
@@ -112,7 +112,7 @@ const CourseData = {
       { id: 'power-electronics', title: '电力电子技术', desc: '整流/逆变/斩波电路、PWM 控制、H 桥驱动', icon: '⚡', level: '工程' },
       { id: 'motor-drive', title: '电机与拖动', desc: '直流/交流/PMSM/步进电机原理与调速控制', icon: '🔧', level: '工程' },
       { id: 'linux-dev', title: 'Linux 开发板实战', desc: '系统烧录、命令行、设备树、通信协议、电机控制——两轴写字机实战主线', icon: '🐧', level: '工程' },
-      { id: 'digital-mfg', title: '3D 打印与数字化制造', desc: 'FDM/SLA 工艺、切片参数、材料选型、机器人零件制造', icon: '🖨️', level: '工程' },
+      { id: 'digital-mfg', title: '3D 打印与数字化制造', desc: '工艺、切片、材料、建模、公差、后处理到写字机整机结构——制造工艺全链路', icon: '🖨️', level: '工程' },
     ],
   },
 
@@ -13017,6 +13017,321 @@ M104 S0                          <span class="code-comment"># 结束代码：关
         <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>食品安全误区</strong>："PLA 食品级"指树脂本体合规，但打印层间缝隙藏菌、黄铜喷嘴含铅，成品并不适合长期直接接触食品。真有需求：成品涂食品级环氧封孔，或换不锈钢喷嘴并专机专用。</div></div>
       ` },
 
+      // ===== print-05 3D 建模入门（主线实例：写字机笔架）=====
+      { id: 'print-05', title: '3D 建模入门', desc: 'Fusion 360/FreeCAD 草图与特征建模、STL 导出检查；实例：写字机笔架建模十步', icon: '🎨', tags: ['入门', '主线'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">从想法到 STL：写字机笔架建模全流程</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          3D 打印的第一道工序不在打印机上，而在建模软件里。写字机的<strong>笔架</strong>是第一个"以零件身份"进入机器的自制件——它要夹住笔、固定在 X 滑块上、还要给抬笔舵机留位置。本节用这个巴掌大的零件，把参数化建模的完整流程走一遍：草图 → 特征 → 阵列 → 导出 STL。建模能力直接决定你能自制零件的范围：支架、外壳、夹具，全都从这一课开始。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">建模软件怎么选</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>软件</th><th>定位</th><th>上手</th><th>适合</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">Fusion 360</td><td>云端 CAD/CAM 一体</td><td>天级</td><td><strong>学生免费授权，本节主线 ✅</strong></td></tr>
+            <tr><td class="font-medium">FreeCAD</td><td>开源参数化 CAD</td><td>2~3 天</td><td>不想依赖云、全免费</td></tr>
+            <tr><td class="font-medium">OpenSCAD</td><td>用代码写模型</td><td>会编程则半天</td><td>参数化夹具、批量改尺寸</td></tr>
+            <tr><td class="font-medium">Tinkercad</td><td>浏览器拖积木</td><td>小时级</td><td>验证想法，不适合配合件</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          它们的内核思想一致：<strong>特征建模</strong>——先画带约束的 2D 草图，再用拉伸/旋转等操作生成 3D 特征，特征堆叠成零件。换软件只是换按钮位置，思维通用。建模里的平移/旋转与 <a href="javascript:void(0)" onclick="App.loadDetail('robo-02')">robo-02 齐次变换</a>是同一套数学。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">六个核心操作与一条铁律</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>草图 Sketch</strong>：一切从 2D 轮廓开始；<strong>铁律：完全约束</strong>（所有线变黑）再退出——半约束草图改尺寸时会"乱跳"，是返工第一大来源</li>
+          <li><strong>拉伸 Extrude</strong>：草图沿法向长出实体（加材料）或切穿（减材料）</li>
+          <li><strong>旋转 Revolve</strong>：轮廓绕轴转 360°——轴对称件（皮带轮坯、喷嘴座）用它，别用拉伸拼</li>
+          <li><strong>圆角/倒角 Fillet/Chamfer</strong>：去应力+防翘边（大平面边缘 R2 还能减翘曲）</li>
+          <li><strong>阵列 Pattern</strong>：一个孔阵出 4 个；参数改一处全联动</li>
+          <li><strong>抽壳 Shell</strong>：挖成薄壁盒（外壳类零件第一步）</li>
+        </ul>
+        <div class="formula-block">
+          $$t_{wall} \\approx 3\\,d_{nozzle} = 3 \\times 0.4 = 1.2\\,\\text{mm}$$
+          <div class="text-sm text-gray-500 mt-2">最小实用壁厚：薄于 3 倍喷嘴直径时，切片器画不出封闭的壁环，强度和尺寸都失控；受力件壁厚 ≥ 2mm，配合孔周围留 ≥ 3mm 材料</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：笔架建模十步（尺寸齐全，可照做）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          设计输入：夹持 φ8 圆珠笔（快换）、通过 M3 螺钉固定在 X 滑块、SG90 舵机驱动抬笔连杆。
+        </p>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>底板草图</strong><br>顶视图画 40×60mm 矩形，四角 R5 圆角；完全约束（两对称轴定位）</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>拉伸底板</strong><br>向上拉伸 5mm（安装面 + 螺纹埋入深度）</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>笔夹臂草图</strong><br>底板上表面画 L 形臂轮廓：根部 12mm 宽、悬伸 35mm、端头宽 16mm</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>拉伸臂</strong><br>8mm 厚（壁厚铁律 ×2，悬臂根是受力点）</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>笔孔</strong><br>臂端画 φ8.5 圆（笔杆 8 + 0.5 快换间隙，公差逻辑见 <a href="javascript:void(0)" onclick="App.loadDetail('print-06')">print-06</a>），贯通切除</div></div>
+          <div class="step"><span class="step-num">6</span><div class="step-content"><strong>侧向锁紧孔</strong><br>笔孔侧面切 M3 通过孔 φ3.4 + 沉头，配蝶形螺钉夹笔</div></div>
+          <div class="step"><span class="step-num">7</span><div class="step-content"><strong>舵机舱</strong><br>底板切除 23×12.5×23 凹槽（SG90 本体 22.8×12.2×22.8 + 0.2~0.3 间隙），四角 M2 自攻桩 φ1.8×2</div></div>
+          <div class="step"><span class="step-num">8</span><div class="step-content"><strong>滑块接口</strong><br>底板钻 2×φ3.4 通过孔（中心距按滑块牙位 30mm），底面沉 2 个 φ5.4×4 热熔螺母坑（<a href="javascript:void(0)" onclick="App.loadDetail('print-07')">print-07 后处理</a>）</div></div>
+          <div class="step"><span class="step-num">9</span><div class="step-content"><strong>细节</strong><br>臂根双面 R2 圆角去应力；写字侧倒 C1 斜角防刮纸</div></div>
+          <div class="step"><span class="step-num">10</span><div class="step-content"><strong>导出 STL</strong><br>分辨率：偏差 0.01mm、角度公差 5°；确认单位 mm；文件名 pen-holder-v1.stl 进版本管理</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">STL：交换格式与三个检查项</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          STL 只是一堆三角面片（顶点 + 法向），没有单位、没有颜色、没有历史——所以导出时必查三件事：<strong>单位是 mm</strong>（英寸制软件导出会缩小 25.4 倍，切片才发现就晚了）、<strong>流形/水密</strong>（边必须恰好两个面共享，切片器自带修复可处理小毛病）、<strong>分辨率够用</strong>（0.01mm 偏差足够 FDM；曲面打太细只浪费文件体积）。
+        </p>
+        <div class="code-block"><span class="code-comment">// pen-holder.scad —— OpenSCAD 参数化版：换笔只改一行</span>
+pen_d = 8.5;              <span class="code-comment">// 笔杆 8 + 0.5 快换间隙</span>
+wall  = 3;                <span class="code-comment">// 壁厚 ≥ 3×喷嘴直径</span>
+arm_l = 35;
+<span class="code-func">$fn</span> = 64;                  <span class="code-comment">// 圆的分辨率</span>
+
+<span class="code-keyword">difference</span>() {
+    <span class="code-keyword">hull</span>() {                          <span class="code-comment">// 底板圆角由 hull 自动生成</span>
+        <span class="code-func">translate</span>([5, 5, 0])   <span class="code-func">cylinder</span>(h = 5, d = 30);
+        <span class="code-func">translate</span>([55, 5, 0])  <span class="code-func">cylinder</span>(h = 5, d = 30);
+    }
+    <span class="code-func">translate</span>([30, 15, -1])     <span class="code-comment">// 笔孔贯通</span>
+        <span class="code-func">cylinder</span>(h = 20, d = pen_d);
+    <span class="code-func">translate</span>([30, 15, 2])      <span class="code-comment">// 热熔螺母坑 ×2（沉入底板）</span>
+        <span class="code-func">cylinder</span>(h = 4, d = 5.4);
+}
+        </div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>新手三大坑</strong>：① 单位陷阱——用英寸模板起稿、导出整体缩小 25.4 倍，上机前用切片器量一下总尺寸最保险；② 薄壁/尖角——小于 1.2mm 的壁和零厚度尖角会被切片器"好心"补厚，轮廓悄悄变形，配合件直接报废；③ 半约束草图——改一个尺寸全图崩形，养成"黑线才退出草图"的习惯。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>专业习惯从第一天养成</strong>：草图全约束、特征命名（"底板""舵机舱"而不是 Feature7）、尺寸全部参数化（改 pen_d 一个变量换笔型）、STL 文件名带版本号。模型文件进 Git，改坏了随时回退——和写代码一模一样。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>承接主线</strong>：笔架是"形状件"，画对就能用；下一层的<strong>配合件</strong>（轴承要压进孔、轴要转得动）光画对形状不够，还得懂公差与收缩——<a href="javascript:void(0)" onclick="App.loadDetail('print-06')">print-06 机械零件设计</a>接着讲；STL 导出后去切片打印的参数在 <a href="javascript:void(0)" onclick="App.loadDetail('print-03')">print-03</a>。</div></div>
+      ` },
+
+      // ===== print-06 机械零件设计（主线实例：轴承座 + 联轴器）=====
+      { id: 'print-06', title: '机械零件设计', desc: 'FDM 误差地图、收缩与孔缩补偿、配合公差表、螺纹/齿轮/卡扣、面向装配设计；实例：写字机轴承座 + 联轴器', icon: '🧩', tags: ['核心', '主线'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">让打印件"装得上"：公差、配合与面向装配的设计</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          会画形状（<a href="javascript:void(0)" onclick="App.loadDetail('print-05')">print-05</a>）之后，机器人零件的成败在<strong>配合</strong>：轴承要压得进座、轴要转得顺、螺丝要咬得住、滑块要滑不晃。3D 打印的公差逻辑和机加工完全不同——它先收缩、孔还会缩小、层纹让强度分方向。本节建立"FDM 误差地图"，给出收缩补偿公式和一张实测校准的配合公差表，实例是写字机的<strong>608 轴承座</strong>与<strong>5mm 轴联轴器</strong>。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">FDM 误差地图：先懂你的"机床"</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>误差源</th><th>方向</th><th>典型量级</th><th>对策</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">热收缩</td><td>整体缩小</td><td>PLA 0.3~0.5% / ABS 0.8%</td><td>尺寸放大补偿（print-04）</td></tr>
+            <tr><td class="font-medium">孔缩</td><td>孔偏小</td><td>−0.2~−0.4mm（圆度差时更大）</td><td>孔径 +0.3 起步实测</td></tr>
+            <tr><td class="font-medium">象脚 elephant foot</td><td>首层外扩</td><td>+0.2~+0.5mm</td><td>倒 C0.4 或切片"象脚补偿"</td></tr>
+            <tr><td class="font-medium">层纹</td><td>Z 向强度低 30~50%</td><td>层间为弱界面</td><td>受力方向放 XY 平面</td></tr>
+            <tr><td class="font-medium">悬垂下垂</td><td>底面塌</td><td>45° 以上明显</td><td>设计 ≤45° 或加支撑</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">收缩 + 孔缩：补偿公式与数字例</h4>
+        <div class="formula-block">
+          $$D_{print} = D_{target}\\,(1 + \\epsilon) + c$$
+          <div class="text-sm text-gray-500 mt-2">ε 为材料线收缩率（PLA 取 0.4%），c 为孔工艺常量（孔再 +0.2~0.4，实心外轮廓取 0）。例：608 轴承座孔目标 22.0 → 22×1.004 + 0.3 ≈ <strong>22.4mm</strong>（首件建议直接打 22.2/22.3/22.4 三档试块）</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          配合不是算一次就完——每台打印机、每卷料、每种参数组合都有自己的 (ε, c)，<strong>用阶梯试块实测标定</strong>才是正道。以下是写字机常用的配合公差表（PLA、0.2 层高、40% 填充、立打）：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>配合对</th><th>目标尺寸</th><th>打印值</th><th>配合性质</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">608 轴承 → 轴承座孔</td><td>φ22.0</td><td><strong>φ22.3~22.4</strong>（腔深 7→7.2）</td><td>手压入 + 常温抱紧</td></tr>
+            <tr><td class="font-medium">电机轴 φ5 → 联轴器孔</td><td>φ5.0</td><td>φ5.2 + M3 顶丝</td><td>紧配 + 顶丝锁死</td></tr>
+            <tr><td class="font-medium">光轴 φ8 → 直线滑块孔</td><td>φ8.0</td><td>φ8.3~8.4</td><td>滑动（插拔顺畅无晃）</td></tr>
+            <tr><td class="font-medium">笔杆 φ8 → 笔夹孔</td><td>φ8.0</td><td>φ8.5 + 侧向锁紧</td><td>快换</td></tr>
+            <tr><td class="font-medium">M3 螺钉通过孔</td><td>φ3.0</td><td>φ3.4</td><td>自由通过</td></tr>
+            <tr><td class="font-medium">M3 热熔螺母埋孔</td><td>—</td><td>φ5.4 × 4 深</td><td>烙铁压入（print-07）</td></tr>
+            <tr><td class="font-medium">M3 直接攻丝底孔</td><td>—</td><td>φ2.5 × 8 深</td><td>丝锥攻牙（受拉不推荐）</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">首件试配 → 修正 → 批量（六步）</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>打阶梯试块</strong><br>一块板上打 φ22.2 / 22.3 / 22.4 三孔（同参数同料同方向），10g 料省三小时</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>三向量孔</strong><br>卡尺 0~90~180° 三个方向测每孔，取均值并记录圆度误差</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>实物试配</strong><br>轴承手压入哪个孔手感"紧但不崩"？——那个尺寸就是本机的 c 值答案</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>修正模型</strong><br>把实测 c 回填 OpenSCAD 参数 / Fusion 参数表，重新导出 v2</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>复打验证</strong><br>批量前再打一件全尺寸件确认；配合面允许 0.1 砂磨余量</div></div>
+          <div class="step"><span class="step-num">6</span><div class="step-content"><strong>记录归档</strong><br>打印机+材料+层高+填充+最终 c 写进零件工程图的注释——下次直接复用</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">螺纹、齿轮与卡扣</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>塑料上的螺纹</strong>：受拉场景一律用<strong>热熔铜螺母</strong>（埋孔 φ5.4、烙铁压入，见 <a href="javascript:void(0)" onclick="App.loadDetail('print-07')">print-07</a>）；轻载可用 φ2.5 底孔直接攻 M3 或自攻螺钉，层间受拉会"脱扣"是常态</li>
+          <li><strong>齿轮</strong>：3D 打印齿轮建议<strong>模数 ≥ 2、压力角 20°、齿数 ≥ 12</strong>——模数 1 的齿尖只有 0.3mm，打出来是圆的；写字机同步传动不用齿轮，用同步带（无背隙累积、静音）</li>
+          <li><strong>GT2 同步带轮</strong>：20 齿 = 每转 40mm（齿距 2mm × 20），这是 <a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">linux-12 脉冲当量</a>公式里的那个 40；带轮买金属成品（¥3/个），打印带轮精度寿命都不划算</li>
+          <li><strong>卡扣</strong>：悬臂式卡扣臂厚 1.2~1.5mm、倒扣 0.5mm、入口 30° 斜面——PLA 弹性有限，卡拆两次就白，正式连接还是螺钉</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">面向装配的设计（DfA）六条军规</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>打印方向 = 受力方向</strong>：最大拉应力放 XY 平面（层内强度高）；必须 Z 向受拉的关键件，竖起来打并加大截面 50%</li>
+          <li><strong>孔立着打</strong>：孔轴平行 Z 时圆度和尺寸最好；平放的孔会被重力+桥接压扁成鸭蛋</li>
+          <li><strong>埋孔朝上</strong>：热熔螺母坑放打印朝上的面，压入时烙铁不碰桌面也不烫零件底</li>
+          <li><strong>螺丝可达</strong>：装机时螺丝刀要能直线到达——用凹槽/沉孔给工具留路径，别装到一半发现拧不进去</li>
+          <li><strong>一件一功能</strong>：轴承座、电机座分开打——单件失败只换单件，别做"一体化大件"考验整机运气</li>
+          <li><strong>参数化留后路</strong>：所有配合尺寸进参数表，实测 c 一改全线更新（<a href="javascript:void(0)" onclick="App.loadDetail('print-05')">print-05 的 OpenSCAD</a>就是干这个的）</li>
+        </ul>
+        <div class="code-block"><span class="code-comment">// bearing-block.scad —— 608 轴承座（换型号只改前三行）</span>
+b_od  = 22.4;    <span class="code-comment">// 轴承外径 22 + 实测压入间隙 0.4</span>
+b_h   = 7.2;     <span class="code-comment">// 轴承厚 7 + 0.2</span>
+wall  = 5;       <span class="code-comment">// 配合孔周围材料 ≥ 3mm</span>
+<span class="code-func">$fn</span> = 96;
+
+<span class="code-keyword">difference</span>() {
+    <span class="code-func">translate</span>([-(b_od/2 + wall), -(b_od/2 + wall), 0])
+        <span class="code-func">cube</span>([b_od + 2*wall, b_od + 2*wall, b_h + 5]);
+    <span class="code-func">translate</span>([0, 0, 5])                <span class="code-comment">// 轴承腔（底面留 5mm 底）</span>
+        <span class="code-func">cylinder</span>(h = b_h + 1, d = b_od);
+    <span class="code-func">translate</span>([0, 0, -1])               <span class="code-comment">// 轴通过孔 φ8.4</span>
+        <span class="code-func">cylinder</span>(h = b_h + 8, d = 8.4);
+}
+        </div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>配合件四坑</strong>：① 孔偏小就拼命锉——锉出来的孔失圆还松动，正确做法是回模型改 c 重打；② 忽略各向异性——Z 向受拉的打印件上机就裂，方向设计要在建模时就定；③ 悬垂超 45° 硬打——配合面下垂 0.3mm 公差直接报废；④ 小模数齿轮——模数 &lt;2 的齿打出来是"波浪"，传动抖到不能看。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>和机加工的关系</strong>：CNC 能做到 IT7 级（±0.02mm），FDM 实际 ±0.2mm——差一个数量级，所以 3D 打印件的配合靠"实测标定 + 间隙放大"，不能照搬机械设计手册的公差带。量产后换注塑/CNC 时，公差表要整体重标。给 <a href="javascript:void(0)" onclick="App.loadDetail('circ-11')">PCB 设计外壳</a>时同理：先留 0.3 间隙再实测。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>承接主线</strong>：公差件打废了、翘边拉丝堵头？<a href="javascript:void(0)" onclick="App.loadDetail('print-07')">print-07</a> 给翻车排查决策树和后处理工艺（含热熔螺母标准操作）；零件都合格后，整台写字机的结构布局与装配在 <a href="javascript:void(0)" onclick="App.loadDetail('print-08')">print-08</a>。</div></div>
+      ` },
+
+      // ===== print-07 打印问题与后处理（主线：翻车排查 + 热熔螺母）=====
+      { id: 'print-07', title: '打印问题与后处理', desc: '翘边/拉丝/层偏移/堵头排查决策树、首件质检、打磨上色、热熔铜螺母标准工艺', icon: '🔧', tags: ['实战'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">翻车现场救援：排查决策树 + 后处理工艺</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          再完美的模型（<a href="javascript:void(0)" onclick="App.loadDetail('print-05')">print-05</a>）和参数（<a href="javascript:void(0)" onclick="App.loadDetail('print-03')">print-03</a>）也挡不住翻车：翘边、拉丝、层偏移、堵头是每个玩家每周都要面对的四大件。本节给一张"症状 → 根因 → 处方"速查表和一棵<strong>排查决策树</strong>（先易后难、一次只改一个变量），再讲让零件从"能用"到"好看又耐用"的后处理工艺——其中<strong>热熔铜螺母</strong>是塑料件装螺丝的标准做法，写字机所有结构件都靠它。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">五大翻车症状速查表</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>症状</th><th>根因</th><th>处方</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">翘边/脱板</td><td>首层附不住、冷缩拉起</td><td>热床 PLA 60 / PETG 80 / ABS 100℃；首层关风扇；加 brim 裙边；胶棒/胶水；ABS 封腔</td></tr>
+            <tr><td class="font-medium">拉丝串线</td><td>空移时料漏出</td><td>回抽 0.5~1mm @ 40mm/s；温度 −5~10℃；湿料先干燥（print-04 表）</td></tr>
+            <tr><td class="font-medium">层偏移</td><td>机械打滑/堵转丢步</td><td>查同步带张紧、降打印加速度——正是 <a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">linux-12</a> 丢步的机械版</td></tr>
+            <tr><td class="font-medium">堵头</td><td>温度低/粉灰/换料碳化</td><td>升温到 240 冷拉（pull）；不通则拆喷针通；换喷嘴（¥5 消耗品）</td></tr>
+            <tr><td class="font-medium">振纹/鬼影</td><td>机械共振激励</td><td>降加速度与拐角速度——和 <a href="javascript:void(0)" onclick="App.loadDetail('linux-13')">linux-13 S 曲线</a>同一物理：加速度阶跃激振</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">排查决策树：一次只动一个变量</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>先看首层</strong><br>首层是问题放大器：附不住、压扁、线条分离——先解决（床温/调平/Z 偏移），后面九成的毛病随首层消失</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>再看料</strong><br>吸湿料贡献一半翻车：拉丝+气泡+强度骤降。听"啪啪"声、看表面气泡，先按 print-04 干燥表烘料再调参数</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>再查机械</strong><br>皮带按压挠度 &gt;10mm 就张紧；轮子/导轨有无旷量；异响来源手摸定位——层偏移和振纹九成是机械</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>然后参数</strong><br>按症状表处方微调，每次只改一项、打小测试件（10 分钟的温度塔/回抽塔），别一次改五个参数</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>最后建模</strong><br>参数都对了还翻车（悬垂、薄壁、尖角），回 <a href="javascript:void(0)" onclick="App.loadDetail('print-05')">print-05</a> 改设计——面向制造的设计比参数更重要</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">首件质检：三向量、对角线、记录</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          配合件（<a href="javascript:void(0)" onclick="App.loadDetail('print-06')">print-06 流程</a>）下打印机后先质检再装配：孔径 0°/90°/180° 三向测均值与圆度；框形件量两对角线差（≤0.2mm/200mm 视为方正）；关键配合手感（压入力、滑动阻力）记进零件档案。60 秒的检查省掉装机后"拆了重打"的一小时。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">后处理四级：从毛坯到成品</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>级别</th><th>工艺</th><th>工具</th><th>效果</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">L1 去支撑修边</td><td>钳子剥支撑、笔刀清 interface、半圆刀修孔口</td><td>斜口钳、笔刀</td><td>能装配</td></tr>
+            <tr><td class="font-medium">L2 打磨</td><td>120→240→400 目水磨（PLA 怕热，轻压多遍）</td><td>水砂纸、水</td><td>层纹消失</td></tr>
+            <tr><td class="font-medium">L3 上色</td><td>水补土 1000# → 丙烯 → 消光清漆</td><td>喷罐/笔</td><td>展示级外观</td></tr>
+            <tr><td class="font-medium">L4 功能升级</td><td><strong>热熔螺母</strong>、环氧浸渍增强、手工铰孔精修</td><td>烙铁、钻头</td><td>可靠受力/气密</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">热熔铜螺母：塑料件装螺丝的标准做法</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          塑料直接攻丝的螺纹强度低（层间脱扣），正式连接的标准工艺是把<strong>铜螺母加热压进预留孔</strong>：熔化的塑料流入螺母的滚花槽，冷固后形成高强度嵌件，可反复拆装几十次。写字机所有结构件的 M3 连接都用它（埋孔 φ5.4×4，建模时就要留好，见 <a href="javascript:void(0)" onclick="App.loadDetail('print-06')">print-06 公差表</a>）。
+        </p>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>备料</strong><br>M3×5×4 热熔螺母对准埋孔放正（通孔还是盲孔，建模时已定）</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>加热</strong><br>烙铁调 220~250℃，烙铁头压在螺母上平面（用平头/马蹄头）持续 5~8 秒，螺母靠热传导熔孔壁下陷</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>压入</strong><br>顺着孔轴垂直下压至螺母上表面与零件面齐平（深了浅了都会拧不到位），别歪——歪了趁热拔出重来</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>冷却试拧</strong><br>静置 30 秒固化后，M3×10 螺钉试拧全程顺滑无打滑；完成后这颗连接可以放心受力</div></div>
+        </div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>后处理安全</strong>：烙铁 250℃ 烫伤一碰一个泡，戴手套、放烙铁架；打磨 ABS 的粉尘有刺激性，湿磨 + 口罩；ABS 丙酮蒸气抛光必须通风柜/户外，且蒸气可燃——PLA 不溶于丙酮，别白忙活。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>材料决定后处理路线</strong>：PLA 打磨温度敏感（轻压湿磨）、不可丙酮抛光；ABS 可丙酮蒸抛光和丙酮粘接（自制"胶水"= ABS 溶解在丙酮里）；PETG 表面自带光亮基本免打磨；TPU 不能打磨只能剪。选材（print-04）时就该想好成品要不要后处理。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>承接主线</strong>：翻车能救、零件能强化（热熔螺母全就位）后，写字机的全部零件就绪——<a href="javascript:void(0)" onclick="App.loadDetail('print-08')">print-08 整机结构设计</a>把它们装配成机器；电气与软件侧的装配验收在 <a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">linux-10 六层验收</a>。</div></div>
+      ` },
+
+      // ===== print-08 写字机整机结构（主线：与 linux-10 会合）=====
+      { id: 'print-08', title: '机器人/自动化应用：写字机整机结构', desc: '十字滑台 vs CoreXY 选型、行程与扭矩计算、结构件清单、装配校准、传感器支架、拓扑优化入门', icon: '🦾', tags: ['实战', '主线'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">整机结构设计：两轴写字机的骨架</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          机电产品的结构 = <strong>布局 + 传动 + 连接</strong>三件事。本节把前七节攒下的能力（工艺 print-01、切片 print-03、材料 print-04、建模 print-05、公差 print-06、后处理 print-07）收拢，设计写字机的完整骨架：龙门十字滑台布局、GT2 同步带传动、全 3D 打印连接件（可选 2020 铝型材混合）——它与 <a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">linux-10 整机联调</a>在同一个项目上会合，print 板块的毕业礼。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">布局选型：十字滑台 vs CoreXY</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>维度</th><th>龙门十字滑台</th><th>CoreXY</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">结构</td><td>X 导轨骑在 Y 龙门上，随动</td><td>皮带交叉布线，双电机全固定</td></tr>
+            <tr><td class="font-medium">动质量</td><td>较大（X 整轴随 Y 动）</td><td>小（只有龙门横梁动）</td></tr>
+            <tr><td class="font-medium">受力/精度</td><td>结构直观，装配误差好控制</td><td>皮带路径长，张紧一致性要求高</td></tr>
+            <tr><td class="font-medium">代表机型</td><td>绘图仪、激光雕刻机</td><td>主流 FDM 打印机（<a href="javascript:void(0)" onclick="App.loadDetail('print-02')">print-02</a>）</td></tr>
+            <tr><td class="font-medium">写字机选择</td><td><strong>✅ 行程 200mm、笔载荷 50g，简单即正义</strong></td><td>高速重载才值得</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          十字滑台的每一层都是"导轨 + 滑块 + 皮带 + 电机"的标准模块（<a href="javascript:void(0)" onclick="App.loadDetail('motor-05')">motor-05 步进</a>驱动），两层正交叠加就是 XY——这也是 3D 打印机 Z 轴、CNC 工作台的通用套路，学会一台等于学会一族。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">行程与扭矩：结构设计的两笔账</h4>
+        <div class="formula-block">
+          $$S = L_{rail} - L_{block} - 2m = 300 - 60 - 2 \\times 20 = 200\\,\\text{mm}$$
+          <div class="text-sm text-gray-500 mt-2">行程 = 导轨长 − 滑块长 − 两侧安全余量 m（20mm：含限位触发与软限位缓冲）。反着用就是选型：要 200mm 行程 → 买 300mm 光轴</div>
+        </div>
+        <div class="formula-block">
+          $$T = \\frac{F \\cdot r}{\\eta} = \\frac{10\\,\\text{N} \\times 6.37\\,\\text{mm}}{0.9} \\approx 0.07\\,\\text{N·m} \\ll 0.4\\,\\text{N·m（42 步进额定）}$$
+          <div class="text-sm text-gray-500 mt-2">F 取摩擦 + 加速合力约 10N（笔架 0.5kg × 2.5m/s² + 导轨摩擦 8N），r = 20 齿 GT2 带轮节圆半径 6.37mm，η 为传动效率——5 倍以上余量，普通 42 步进绰绰有余（驱动参数回到 linux-12）</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">结构件清单：8 个自制件</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>零件</th><th>功能</th><th>关键尺寸/要点</th><th>打印方向</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">Y 轴承座 ×4</td><td>光轴支撑</td><td>608 轴承座孔 φ22.4（print-06 实测）</td><td>孔立打</td></tr>
+            <tr><td class="font-medium">Y 滑块 ×2</td><td>骑光轴 + 托横梁</td><td>φ8.4 滑动配合；顶面 M3 埋孔 ×2</td><td>孔立打</td></tr>
+            <tr><td class="font-medium">X 滑块</td><td>骑横梁 + 挂笔架</td><td>φ8.4×2；侧向 30mm 牙位接笔架</td><td>孔立打</td></tr>
+            <tr><td class="font-medium">笔架</td><td>夹笔 + 舵机</td><td>print-05 十步成品</td><td>臂朝上</td></tr>
+            <tr><td class="font-medium">电机座 ×2</td><td>固定 42 步进</td><td>NEMA17 孔距 31mm × φ3.4×4；侧面留 TMC2209 散热窗</td><td>法兰面朝下</td></tr>
+            <tr><td class="font-medium">张紧轮座 ×2</td><td>调皮带松紧</td><td>腰形槽行程 8mm + 608 轴承作张紧轮</td><td>槽朝上</td></tr>
+            <tr><td class="font-medium">限位挡块 ×2</td><td>触发回零</td><td>触发面 45° 渐进 + 3mm 橡胶垫缓冲</td><td>任意</td></tr>
+            <tr><td class="font-medium">皮带夹 ×2</td><td>连接滑块与带</td><td>GT2 齿槽 3 齿 + M3 压板</td><td>齿面朝上</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          统一打印参数：PLA、0.2 层高、40% 填充、4 壁（print-03 的"结构件"预设）；铝型材版本只需把 Y 承座换成型材角件，其余不变。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">限位与传感器支架：通用设计法则</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>微动开关选常开（NO）</strong>接法：断线 = 触发的反逻辑，接线脱落时系统当"已触发"处理更安全（<a href="javascript:void(0)" onclick="App.loadDetail('linux-05')">linux-05 GPIO 上拉</a>配合）</li>
+          <li><strong>挡块 45° 渐进触发</strong>：滑块高速冲限位时，斜面让滚轮先压缩行程再到底，配 3mm 缓冲垫——直角硬挡一次就能撞裂挡块或丢步</li>
+          <li><strong>触发点 = 原点外 5mm</strong>：回零流程"触发→退 5mm→慢速再触发"（<a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">linux-12</a>）消除高速过冲误差，支架设计要留出这 5mm 的行程富余</li>
+          <li><strong>可调支架</strong>：腰形槽 + 手拧螺丝固定开关，换行程后原点可重标——写死位置的结构是给自己挖坑</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">装配与校准八步</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>底座调平</strong><br>底板（型材/亚克力）放桌面四角不跷；对角线差 ≤0.5mm</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>Y 光轴平行</strong><br>两根光轴同高、平行差 ≤0.2mm/300mm（卡尺跨测 + 移动滑块全程阻力均匀）</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>装 Y 滑块与横梁</strong><br>横梁与 Y 轴垂直：对角线法（横梁端到对侧光轴距离差 ≤0.2mm）</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>装 X 轴与笔架</strong><br>同法校 X 与横梁垂直；最终 XY 垂直度误差决定字"歪不歪"（<a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">linux-10 标定</a>前的机械前提）</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>皮带路径</strong><br>电机带轮→滑块皮带夹→张紧轮，全程平行无蹭刮；夹紧后手拉皮带中段，按压挠度 5~8mm 为宜</div></div>
+          <div class="step"><span class="step-num">6</span><div class="step-content"><strong>装限位挡块</strong><br>手动推滑块到极限，确认触发在机械死点前 3~5mm；接万用表通断验证 NO/NC 没接反</div></div>
+          <div class="step"><span class="step-num">7</span><div class="step-content"><strong>装电机与驱动</strong><br>电机座固定、TMC2209 散热窗对流通风；Vref 0.4V（linux-12）后手动转皮带确认无卡滞</div></div>
+          <div class="step"><span class="step-num">8</span><div class="step-content"><strong>全程手推</strong><br>断电状态下推笔架走满行程两圈：阻力均匀、无啸叫、限位可靠——机械层验收通过，交给 <a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">linux-10 电气层</a></div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">拓扑优化入门：让增材发挥优势</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          传统设计"经验截面 + 安全系数"，增材制造可以更狠：<strong>给定载荷与约束，让软件把没受力的材料挖掉</strong>（Fusion 360 的 Generative Design / 拓扑优化）。写字机 X 滑块按此优化：保留轴承孔、皮带接口、惯性力三个"保留面"，减重约 30%——动质量下降直接换来更高加速度（<a href="javascript:void(0)" onclick="App.loadDetail('linux-13')">linux-13 的 f_max</a> 可以再往上推）。生成的仿生流线形状对注塑是噩梦、对 3D 打印是零成本——这正是"增材思维"与"减材思维"的分水岭。
+        </p>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>结构三大坑</strong>：① 皮带张紧不足——高速来回时皮带"爬齿"，字迹漂移且肉眼难查，装完用力按压复检；② 导轨不平行——滑块局部卡滞，电机在卡点丢步（linux-12 的"莫名丢步"一半来自这里）；③ 挡块没留缓冲——一次回零过冲就撞裂打印件，45° 斜面 + 缓冲垫是保险。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>两板块会师</strong>：至此 print 板块的结构件（机械层）与 linux 板块的电控软件（通信/电机/规划/上位机）在<strong>同一台写字机</strong>上闭环——装配顺序上先机械后电气（本节第 8 步交棒），验证顺序就是 <a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">linux-10 六层验收</a>；脉冲当量、丢步、振纹这些控制侧概念，根因常在本节的机械细节里。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>收官 print 板块</strong>：八节闭环——工艺 → 切片 → 材料 → 建模 → 公差 → 后处理 → 整机结构，每一节都落在写字机的真实零件上。工具箱的公差计算器（制造与工艺分类）可直接算收缩补偿；接下来全站只差 linux/print 自测题与配套工具（见 12.5 路线），v1.0 就绪。</div></div>
+      ` },
+
     ],
   },
 
@@ -13256,7 +13571,7 @@ const KnowledgeDeps = {
   'linux-07': ['linux-06', 'dig-14'],   // 设备树 <- 总线访问 + HDL
   'linux-08': ['linux-03', 'os-03'],    // IPC <- Shell + 进程同步
   'linux-09': ['linux-04', 'os-09'],    // 系统构建 <- 交叉编译 + 现代 OS
-  'linux-10': ['linux-09', 'linux-12', 'linux-13', 'linux-14'], // 整机联调 <- 镜像 + 电机 + 规划 + 上位机
+  'linux-10': ['linux-09', 'linux-12', 'linux-13', 'linux-14', 'print-08'], // 整机联调 <- 镜像 + 电机 + 规划 + 上位机 + 结构
   'linux-11': ['linux-06', 'emb-06', 'emb-10'],  // 协议设计 <- 串口访问 + 接口协议 + 开发实践
   'linux-12': ['linux-11', 'emb-05', 'motor-05', 'motor-07'], // 电机控制 <- 协议 + 定时器 + 步进 + 双闭环
   'linux-13': ['linux-12', 'robo-08', 'motor-07'],  // 运动规划 <- 电机控制 + 轨迹规划 + 调速
@@ -13267,6 +13582,10 @@ const KnowledgeDeps = {
   'print-02': ['print-01', 'motor-05'], // FDM 结构 <- 概述 + 步进电机
   'print-03': ['print-02'],             // 切片 <- FDM 结构
   'print-04': ['print-03'],             // 材料 <- 切片
+  'print-05': ['print-03', 'robo-02'],  // 建模 <- 切片 + 齐次变换
+  'print-06': ['print-05', 'print-04', 'circ-11'], // 零件设计 <- 建模 + 材料 + PCB 外壳配合
+  'print-07': ['print-03', 'print-04'], // 后处理 <- 切片 + 材料
+  'print-08': ['print-06', 'print-02', 'linux-12'], // 整机结构 <- 零件设计 + FDM 结构 + 步进
 };
 
 // 自测题库（按 section id 索引）。每节配 5-8 题，含概念/计算/陷阱三类。
