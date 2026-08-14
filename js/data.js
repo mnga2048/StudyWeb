@@ -81,14 +81,14 @@ const CourseData = {
     subtitle: '应试 + 工程双线并重，覆盖数学、电子、控制、嵌入式、计算机、制造工艺六大领域，系统化学习笔试考点与工程实战知识',
     intro: '本项目把分散在课本、视频、真题里的专业课知识，系统化、可视化、可交互地组织在一个网站里。数学基础侧重笔试考点与计算训练，电路/控制/嵌入式侧重工程应用与实战仿真，数据结构与信号处理兼顾统考大纲与工程面试，Linux 开发板与 3D 打印板块覆盖动手实战。配合交互图表、公式可视化、自测练习，做到"看得懂、记得牢、用得上"。',
     features: [
-      { icon: '📚', label: '系统化知识', desc: '20 大板块、206 知识点按学习路径递进，应试与工程双标签筛选' },
+      { icon: '📚', label: '系统化知识', desc: '20 大板块、208 知识点按学习路径递进，应试与工程双标签筛选' },
       { icon: '🧮', label: '公式与计算', desc: 'KaTeX 渲染全部数学/控制公式，配套矩阵计算器、拉氏变换查表等工具' },
       { icon: '🎮', label: '交互可视化', desc: '伯德图、根轨迹、卡诺图、运放电路、排序算法等可交互原理图' },
       { icon: '✏️', label: '自测与真题', desc: '每节配自测题，数学/数电/模电含笔试真题模块，支持错题记录' },
     ],
     stats: [
       { label: '知识板块', value: '20', color: 'blue' },
-      { label: '知识点', value: '206', color: 'green' },
+      { label: '知识点', value: '208', color: 'green' },
       { label: '交互图表', value: '16', color: 'purple' },
       { label: '计算工具', value: '28', color: 'orange' },
     ],
@@ -111,7 +111,7 @@ const CourseData = {
       { id: 'probability', title: '概率论与数理统计', desc: '随机变量、概率分布、大数定律、参数估计、假设检验', icon: '🎲', level: '应试+工程' },
       { id: 'power-electronics', title: '电力电子技术', desc: '整流/逆变/斩波电路、PWM 控制、H 桥驱动', icon: '⚡', level: '工程' },
       { id: 'motor-drive', title: '电机与拖动', desc: '直流/交流/PMSM/步进电机原理与调速控制', icon: '🔧', level: '工程' },
-      { id: 'linux-dev', title: 'Linux 开发板实战', desc: '系统烧录、命令行/Shell、交叉编译、GPIO/I2C 驱动、系统构建', icon: '🐧', level: '工程' },
+      { id: 'linux-dev', title: 'Linux 开发板实战', desc: '系统烧录、命令行、设备树、通信协议、电机控制——两轴写字机实战主线', icon: '🐧', level: '工程' },
       { id: 'digital-mfg', title: '3D 打印与数字化制造', desc: 'FDM/SLA 工艺、切片参数、材料选型、机器人零件制造', icon: '🖨️', level: '工程' },
     ],
   },
@@ -11193,7 +11193,7 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
   // ========== Linux 开发板实战（v0.9.3 新增）==========
   'linux-dev': {
     title: 'Linux 开发板实战',
-    subtitle: '从系统烧录、命令行到 GPIO/I2C 驱动与系统构建，MCU 与 Linux 之间的实战桥梁',
+    subtitle: '系统烧录、命令行、设备树、通信协议到电机控制——Linux 大脑 + STM32 小脑，一台两轴写字机贯穿始终',
     icon: '🐧',
     sections: [
       // ===== linux-01 Linux 开发板入门 =====
@@ -11645,15 +11645,29 @@ gpioget gpiochip0 27
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>Python 快速原型</strong>：sudo apt install python3-libgpiod 后三行代码点灯，适合先验证接线再写 C：import gpiod; line = gpiod.find_line("GPIO17"); line.request(consumer="demo", type=gpiod.LINE_REQ_DIR_OUT); line.set_value(1)。</div></div>
       ` },
 
-      // ===== linux-06 I2C/SPI/UART 设备驱动（概览版，待扩充）=====
-      { id: 'linux-06', title: 'I2C/SPI/UART 设备访问', desc: 'i2c-tools/spidev/串口设备，用 C 读写传感器芯片（概览版）', icon: '🔌', tags: ['实战'], goals: { eng: true }, content: `
+      // ===== linux-06 I2C/SPI/UART 设备访问（主线：Linux↔MCU 串口通信准备）=====
+      { id: 'linux-06', title: 'I2C/SPI/UART 设备访问', desc: 'i2c-tools/spidev/termios 串口编程——Linux 侧连 STM32 的物理层准备', icon: '🔌', tags: ['实战', '主线'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">总线外设：Linux 把芯片变成文件和命令</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          GPIO 之后，真正的外设世界在三条总线上：<strong>I2C</strong>（传感器标配）、<strong>SPI</strong>（高速器件）、<strong>UART</strong>（调试与模块）。协议时序本身见 <a href="javascript:void(0)" onclick="App.loadDetail('emb-06')">通信接口协议</a>，本节关注 Linux 的访问方式：I2C 走 i2c-dev + 工具，SPI 走 spidev 字符设备，UART 就是 /dev/tty* 文件——与 <a href="javascript:void(0)" onclick="App.loadDetail('linux-05')">GPIO 的 libgpiod</a> 一样，全部遵循"设备即文件"。
+          <a href="javascript:void(0)" onclick="App.loadDetail('linux-05')">上一节</a>的 GPIO 只能输出开关电平，真正的外设世界挂在三条总线上：<strong>I2C</strong>（传感器标配）、<strong>SPI</strong>（高速器件）、<strong>UART</strong>（调试与模块）。对两轴写字机来说，本节有双重身份：既是三条总线的统一访问方法，也是主线的物理层准备——Linux 大脑要与 STM32 小脑对话，载体就是串口。协议时序本身在 <a href="javascript:void(0)" onclick="App.loadDetail('emb-06')">通信接口协议</a>已讲，本节关注 Linux 侧的访问姿势：I2C 走 i2c-dev 加工具，SPI 走 spidev 字符设备，UART 就是一个 /dev/tty* 文件——全部遵循"设备即文件"。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">三条总线在写字机上的分工</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>I2C</th><th>SPI</th><th>UART</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">信号线</td><td>2 根（SDA/SCL，地址寻址）</td><td>4 根（MOSI/MISO/SCK/CS）</td><td>2 根（TX/RX，点对点）</td></tr>
+            <tr><td class="font-medium">常见速率</td><td>100k/400k/1M bps</td><td>1~50M bps</td><td>9.6k~3M bps（常用 115.2k）</td></tr>
+            <tr><td class="font-medium">写字机用途</td><td>EEPROM、状态显示芯片</td><td>高速 ADC、屏幕</td><td><strong>Linux↔STM32 主链路</strong></td></tr>
+            <tr><td class="font-medium">Linux 入口</td><td>/dev/i2c-N + i2c-tools</td><td>/dev/spidevB.C</td><td>/dev/ttyUSB0、/dev/ttyACM0</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          UART 是主角：点对点、全双工、两侧都有硬件支持。下面 I2C/SPI 各取最小可用集，UART 作为主线重点展开成三步——认设备、配参数、写程序。
         </p>
 
         <h4 class="font-medium mt-6 mb-2">I2C：i2c-tools 四件套</h4>
-        <div class="code-block"><span class="code-comment"># 扫总线 1 上的器件地址（-- 强制扫描，会与正在工作的器件通信）</span>
+        <div class="code-block"><span class="code-comment"># 扫总线 1 上的器件地址（-y 跳过交互确认）</span>
 sudo i2cdetect -y 1
 <span class="code-comment">#   典型输出：44 是 SHT30 温湿度，76 是 BMP280 气压计</span>
 
@@ -11661,78 +11675,334 @@ sudo i2cget -y 1 0x44 0x00       <span class="code-comment"># 读 0x44 器件 0x
 sudo i2cset -y 1 0x44 0x30 0xA2  <span class="code-comment"># 写寄存器（配置测量模式）</span>
         </div>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
-          C 编程用 &lt;linux/i2c-dev.h&gt; 的 read/write/ioctl 接口；更好的方式是给芯片写/配内核驱动，之后直接 cat /sys/bus/i2c/devices/.../temp1_input 读温度——<a href="javascript:void(0)" onclick="App.loadDetail('sns-02')">电阻式传感器</a>与<a href="javascript:void(0)" onclick="App.loadDetail('sns-06')">温度传感器</a>的原理在传感器板块，Linux 只是换了访问姿势。
+          命令行只够验证；C 编程打开 /dev/i2c-1 后用 read/write 或 ioctl(I2C_RDWR) 组传输。更工程的归宿是内核驱动：芯片配好后，温度直接出现在 /sys/bus/i2c/devices/1-0044/ 下，cat 即得——<a href="javascript:void(0)" onclick="App.loadDetail('sns-02')">电阻式传感器</a>与<a href="javascript:void(0)" onclick="App.loadDetail('sns-06')">温度传感器</a>的原理在传感器板块，Linux 只是换了访问姿势。
         </p>
 
-        <h4 class="font-medium mt-6 mb-2">SPI 与 UART</h4>
-        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
-          <li><strong>SPI</strong>：设备树启用 spi0 后出现 /dev/spidev0.0，ioctl 配模式/速度/位序后全双工 read/write（详见 <a href="javascript:void(0)" onclick="App.loadDetail('linux-07')">设备树</a>一节的启用示例）</li>
-          <li><strong>UART</strong>：USB 转串口是 /dev/ttyUSB0，板载串口是 /dev/ttyTHS1 或 /dev/ttyS0；先 stty -F /dev/ttyUSB0 115200 cs8 -cstopb 配参数，再 cat/&gt; 或 minicom 交互</li>
-          <li><strong>权限</strong>：同 GPIO 的套路，把用户加入 i2c/spi/dialout 组，免 sudo 运行程序</li>
-        </ul>
+        <h4 class="font-medium mt-6 mb-2">SPI：spidev 全双工交换</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          SPI 读寄存器也要同时"写"一个 dummy 字节把时钟带出来——全双工意味着必须一次调用完成收发，先 write 再 read 的时序就是错的：
+        </p>
+        <div class="code-block"><span class="code-comment">// spidev.c —— 设备树启用 spi0 后出现 /dev/spidev0.0（启用方法见下一节）</span>
+<span class="code-keyword">int</span> fd = <span class="code-func">open</span>(<span class="code-string">"/dev/spidev0.0"</span>, O_RDWR);
+uint8_t mode = SPI_MODE_0;  uint32_t speed = 1000000;
+<span class="code-func">ioctl</span>(fd, SPI_IOC_WR_MODE, &amp;mode);
+<span class="code-func">ioctl</span>(fd, SPI_IOC_WR_MAX_SPEED_HZ, &amp;speed);
 
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>🚧 概览版说明</strong>：本节为路线图概览，SHT30/BMP280 完整 C 驱动例程、spidev 全双工传输代码、串口 termios 编程将在 v1.0.x 扩充到 4500+ 字符。当前可先完成 <a href="javascript:void(0)" onclick="App.loadDetail('linux-05')">GPIO 实战</a>，用 i2cdetect 扫到器件即算入门。</div></div>
+uint8_t tx[3] = { 0x80 | 0x0F, 0x00, 0x00 };   <span class="code-comment">// 读命令 + 2 个 dummy</span>
+uint8_t rx[3] = {0};
+<span class="code-keyword">struct</span> spi_ioc_transfer tr = {
+    .tx_buf = (<span class="code-keyword">unsigned long</span>)tx, .rx_buf = (<span class="code-keyword">unsigned long</span>)rx,
+    .len = 3, .speed_hz = speed };
+<span class="code-func">ioctl</span>(fd, SPI_IOC_MESSAGE(1), &amp;tr);      <span class="code-comment">// 一次 ioctl 完成全双工</span>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">UART 第一步：认设备，给稳定名字</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          插上 STM32 后它对应哪个节点？三类常见来源：<strong>USB 转串口芯片</strong>（CH340/CP2102）→ /dev/ttyUSB0；<strong>STM32 的 USB 虚拟串口</strong>（CDC 类，MCU 用 USB 外设模拟成串口，不占 USART）→ /dev/ttyACM0；<strong>板载 UART</strong> → /dev/ttyS*（需设备树启用，见下一节）。CDC 是开发期首选：不占引脚、速率比 115200 高一个量级。
+        </p>
+        <div class="code-block"><span class="code-comment"># 插上 USB 线，看内核认出了什么</span>
+sudo dmesg | tail -5
+<span class="code-comment">#   cdc_acm 2-1:1.0: ttyACM0: USB ACM device   ← STM32 虚拟串口</span>
+<span class="code-comment">#   ch341-uart converter now attached to ttyUSB0 ← USB 转串口芯片</span>
+
+<span class="code-comment"># 拔插顺序会让 ttyUSB0 变 ttyUSB1 —— 用 udev 规则起稳定别名</span>
+udevadm info -a -n /dev/ttyACM0 | grep -E <span class="code-string">"idVendor|idProduct"</span> | head -2
+<span class="code-comment"># 写入 /etc/udev/rules.d/99-writer.rules 后 reload：</span>
+<span class="code-comment">#  SUBSYSTEM=="tty", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5740", SYMLINK+="writer_mcu", MODE="0666"</span>
+sudo udevadm control --reload &amp;&amp; sudo udevadm trigger
+ls -l /dev/writer_mcu      <span class="code-comment"># 0483:5740 是 ST 官方 CDC 的 VID/PID</span>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">UART 第二步：波特率心里有数</h4>
+        <div class="formula-block">
+          $$R_b = \\frac{115200\\ \\text{bit/s}}{10\\ \\text{bit/字节}} = 11520\\ \\text{B/s} \\approx 11.25\\ \\text{KB/s}$$
+          <div class="text-sm text-gray-500 mt-2">8N1 帧每字节 10 位（1 起始 + 8 数据 + 1 停止）。一帧 20 字节的点动指令约 1.7ms 发完，毫秒级控制绰绰有余；整段轨迹传输则建议 USB CDC（实测约 1MB/s）</div>
+        </div>
+        <div class="formula-block">
+          $$N_{20ms} = R_b \\times T_{poll} = 11520 \\times 0.02 = 230\\,\\text{B}$$
+          <div class="text-sm text-gray-500 mt-2">按 20ms 轮询周期算缓冲区：单周期最多积 230 字节，read 缓冲给 256B 就够——参数要算着定，别拍脑袋开 4KB</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">UART 第三步：termios 配置与收发</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          串口参数由 termios 结构体控制，套路固定：open → 取当前配置 → <strong>原始模式</strong>（cfmakeraw 关掉行编辑、回显这些"终端遗产"，否则二进制帧会被驱动吞字符）→ 设波特率 → 生效：
+        </p>
+        <div class="code-block"><span class="code-comment">// serial_open.c —— 打开并配置 115200 8N1（写字机通信进程的地基）</span>
+<span class="code-keyword">#include</span> <span class="code-string">&lt;termios.h&gt;</span>
+<span class="code-keyword">#include</span> <span class="code-string">&lt;fcntl.h&gt;</span>
+<span class="code-keyword">#include</span> <span class="code-string">&lt;unistd.h&gt;</span>
+
+<span class="code-keyword">int</span> <span class="code-func">serial_open</span>(<span class="code-keyword">const</span> <span class="code-keyword">char</span> *dev) {
+    <span class="code-keyword">int</span> fd = <span class="code-func">open</span>(dev, O_RDWR | O_NOCTTY | O_NONBLOCK);
+    <span class="code-keyword">struct</span> termios tio;
+    <span class="code-func">tcgetattr</span>(fd, &amp;tio);
+    <span class="code-func">cfmakeraw</span>(&amp;tio);                  <span class="code-comment">// 原始模式：字节透传，不解释不改写</span>
+    <span class="code-func">cfsetispeed</span>(&amp;tio, B115200);
+    <span class="code-func">cfsetospeed</span>(&amp;tio, B115200);
+    tio.c_cflag |= CLOCAL | CREAD;              <span class="code-comment">// 本地直连、使能接收</span>
+    tio.c_cflag &amp;= ~CSIZE;  tio.c_cflag |= CS8; <span class="code-comment">// 8 数据位</span>
+    tio.c_cflag &amp;= ~(PARENB | CSTOPB);          <span class="code-comment">// 无校验、1 停止位</span>
+    tio.c_cc[VMIN] = 0;  tio.c_cc[VTIME] = 0;   <span class="code-comment">// 非阻塞：有多少读多少</span>
+    <span class="code-func">tcsetattr</span>(fd, TCSANOW, &amp;tio);
+    <span class="code-func">tcflush</span>(fd, TCIOFLUSH);               <span class="code-comment">// 清掉两侧残留旧数据</span>
+    <span class="code-keyword">return</span> fd;
+}
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          读数据用 <strong>select 等待 + 非阻塞读</strong>：主循环每 20ms 检查一次串口，有字节就喂给协议解析器（<a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11 的帧状态机</a>就跑在这里），没数据就去干别的——比阻塞 read 死等优雅，这正是写字机通信进程的骨架。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">实战五步：从插线到收发自如</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>接线</strong><br>USB CDC 免接线；用板载 UART 直连时 TX↔RX 交叉、GND 必接（<a href="javascript:void(0)" onclick="App.loadDetail('emb-06')">emb-06</a> 的电平与接线规则同样适用于 Linux 侧）</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>认设备</strong><br>dmesg 找到 ttyACM0/ttyUSB0，按上文写 udev 规则生成 /dev/writer_mcu 稳定别名</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>配权限</strong><br>sudo usermod -aG dialout 用户名 后重新登录，即免 sudo 打开串口（同 GPIO 的 i2c/spi 组套路）</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>命令行验证</strong><br>stty -F /dev/writer_mcu 115200 cs8 -cstopb raw 设参数；STM32 端跑回显程序，Linux 端 echo hello &gt; /dev/writer_mcu 再 cat /dev/writer_mcu，原样返回即物理层打通</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>程序验证</strong><br>serial_open + select 循环收发十六进制字节流；收到乱码先回到第 4 步查波特率与共地</div></div>
+        </div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>串口四大坑</strong>：① 收到乱码——九成是波特率不匹配，先对参数再查线；② 程序打不开设备或头几秒丢数据——桌面发行版的 ModemManager/brltty 会抢先探测新串口，卸载它或加 udev 规则 ENV{ID_MM_DEVICE_IGNORE}="1"；③ 拔插后 ttyUSB0 变 ttyUSB1——用 udev 别名根治；④ Permission denied——忘了加 dialout 组。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>USB CDC 与板载 UART 怎么选</strong>：CDC 免接线、速率高（全速 USB 实测约 1MB/s），代价是 MCU 端要跑 USB 协议栈、掉电重连需重新枚举；板载 UART 最简单可靠，但要占引脚且速率受限。两者在 Linux 侧的编程完全相同——都是 termios + /dev/tty*。写字机开发期用 CDC，产品化可换板载 UART 或 CAN（<a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">选型对比见 linux-11</a>）。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>承接主线</strong>：物理层就绪后，"说什么话"是 <a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11 通信协议设计</a>的主题；板载串口/引脚冲突要靠 <a href="javascript:void(0)" onclick="App.loadDetail('linux-07')">linux-07 设备树</a>解决；想给写字机加 I2C 传感器面板，本节 I2C 部分直接复用。</div></div>
       ` },
 
-      // ===== linux-07 设备树（概览版，待扩充）=====
-      { id: 'linux-07', title: '设备树（Device Tree）', desc: 'DTS 语法、节点与属性、Overlay 机制、启用 SPI/I2C 外设（概览版）', icon: '🌳', tags: ['核心', '难点'], goals: { eng: true }, content: `
+      // ===== linux-07 设备树（主线实例：写字机扩展板 Overlay）=====
+      { id: 'linux-07', title: '设备树（Device Tree）', desc: 'DTS 语法、节点与属性、Overlay 机制；实例：给写字机扩展板启用串口与 PWM', icon: '🌳', tags: ['核心', '难点'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">设备树：把硬件清单"写"给内核</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          同一份 Linux 内核镜像要跑几百种板子，板子接了什么硬件怎么告诉内核？答案不是每个板子编一个内核，而是<strong>设备树</strong>：一个描述硬件（CPU、内存、总线、引脚）的数据结构，内核启动时解析它来注册设备——这是 <a href="javascript:void(0)" onclick="App.loadDetail('dig-14')">Verilog HDL</a>式的"硬件描述"思想在软件侧的对应物。
+          同一份 Linux 内核镜像要跑几百种板子，板子接了什么硬件怎么告诉内核？答案不是每块板编一个内核，而是<strong>设备树</strong>：一个描述硬件（CPU、内存、总线、引脚复用）的树形数据结构，内核启动时解析它来注册设备。这是 <a href="javascript:void(0)" onclick="App.loadDetail('dig-14')">Verilog HDL</a>式"用文本描述硬件"思想在软件侧的对应物。对写字机，设备树是绕不开的一关：扩展板需要一路<strong>板载串口</strong>连 STM32、一路<strong>硬件 PWM</strong> 控制抬笔舵机——这些引脚默认可能复用成别的功能，让它们按需"变身"就是设备树的工作。
         </p>
 
-        <h4 class="font-medium mt-6 mb-2">最小 DTS 语法与编译</h4>
-        <div class="code-block"><span class="code-comment">// 节点 { 属性 = 值; }；label 便于被引用（&amp;label）</span>
-&amp;i2c1 {
-    status = <span class="code-string">"okay"</span>;
-    sht30: sht30@44 {
-        compatible = <span class="code-string">"sensirion,sht30"</span>;
-        reg = <span class="code-number">&lt;0x44&gt;</span>;          <span class="code-comment">/* I2C 地址 */</span>
+        <h4 class="font-medium mt-6 mb-2">语法核心：节点、属性、label 与 phandle</h4>
+        <div class="code-block"><span class="code-comment">// 节点名@地址 { 属性 = 值; }；label 供别处 &amp;label 引用（即 phandle）</span>
+&amp;i2c1 {                              <span class="code-comment">// label 引用：在既有 i2c1 控制器下挂设备</span>
+    status = <span class="code-string">"okay"</span>;                   <span class="code-comment">// "disabled" 则内核跳过整个节点</span>
+    sht30: sht30@44 {                 <span class="code-comment">// 器件地址 0x44 作节点名后缀</span>
+        compatible = <span class="code-string">"sensirion,sht30"</span>;  <span class="code-comment">// 内核靠它匹配驱动（关键属性）</span>
+        reg = &lt;0x44&gt;;                   <span class="code-comment">// I2C 从机地址（SPI 下是片选号）</span>
+        interrupt-parent = &lt;&amp;gpio1&gt;;     <span class="code-comment">// phandle：中断引脚属于哪个控制器</span>
+        interrupts = &lt;5 2&gt;;              <span class="code-comment">// 第 5 号线，2 = 下降沿触发</span>
     };
 };
-
-<span class="code-comment"># 源码 .dts → 板级包含 .dtsi → 编译成 .dtb 供内核使用</span>
-dtc -I dts -O dtb -o my.dtb my.dts   <span class="code-comment"># 反向：-I dtb -O dts 反编译学习</span>
         </div>
         <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
-          <li><strong>compatible</strong>：内核靠这个字符串匹配驱动（平台总线匹配规则），写错驱动不加载</li>
-          <li><strong>Overlay（覆盖片）</strong>：不改动厂商基础树，只追加差量的 .dtbo——树莓派放 /boot/overlays/，config.txt 里 dtoverlay=xxx 启用，是添加自定义外设的标准姿势</li>
-          <li><strong>验证</strong>：改完重启后 ls /sys/bus/i2c/devices/ 应出现 1-0044 节点，dmesg | grep -i sht 看驱动注册日志</li>
+          <li><strong>compatible</strong>：驱动匹配的钥匙，字符串写错驱动静默不加载——排查第一现场</li>
+          <li><strong>reg</strong>：总线地址（I2C 从机地址 / SPI 片选 / 寄存器基址+长度），含义由父节点 #address-cells、#size-cells 决定</li>
+          <li><strong>status</strong>：okay/disabled——厂商在基础树里预置了大量外设节点，多数默认 disabled，启用往往就是改这一个词</li>
+          <li><strong>pinctrl-x</strong>：引脚复用选择——同一根物理引脚既能当 GPIO 也能当 UART TX，由 pinctrl 节点决定，是引脚冲突的主战场</li>
         </ul>
 
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>🚧 概览版说明</strong>：pinctrl 引脚复用、phandle 中断引用、完整自定义 Overlay 实战（给 <a href="javascript:void(0)" onclick="App.loadDetail('linux-06')">I2C 传感器</a>加节点）将在后续版本扩充。入门阶段会改 status/写 overlay 即可覆盖 80% 场景。</div></div>
-      ` },
+        <h4 class="font-medium mt-6 mb-2">从 .dts 到运行中的设备</h4>
+        <div class="formula-block">
+          启动链：BootROM（固化）→ u-boot 读取 dtb → 内核解析 dtb → 注册平台设备 → 按 compatible 绑定驱动 → /dev、/sys 出节点<br>
+          源码层级：SoC 级 .dtsi（芯片商写）→ 板级 .dts（板厂写，含差异）→ dtc 编译 → .dtb →（可选）.dtbo 覆盖片叠加
+        </div>
+        <div class="code-block"><span class="code-comment"># 编译自己的 dts；dtc 在发行版包 device-tree-compiler 里</span>
+dtc -@ -I dts -O dtb -o writer.dtbo writer.dts   <span class="code-comment"># -@ 生成符号表，overlay 需要</span>
 
-      // ===== linux-08 进程间通信 IPC（概览版，待扩充）=====
-      { id: 'linux-08', title: '进程间通信（IPC）', desc: '管道/FIFO/共享内存/信号，多进程传感器采集架构（概览版）', icon: '🔄', tags: ['核心'], goals: { eng: true }, content: `
-        <h3 class="text-lg font-semibold mb-3">IPC：让采集、控制、显示各司其职</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          Linux 的天然优势是<strong>多进程</strong>：传感器采集、数据入库、Web 服务可以拆成独立进程，一个崩溃不影响全局。进程地址空间隔离，协作就需要通信机制——<a href="javascript:void(0)" onclick="App.loadDetail('os-03')">进程同步与通信</a>讲过理论，本节是板子上的落地。
+<span class="code-comment"># 反编译厂商 dtb 学习写法（最实用的教材）</span>
+dtc -I dtb -O dts /boot/bcm2711-rpi-4-b.dtb | less
+
+<span class="code-comment"># 运行时真值：内核实际用的树在这里（每个属性是一个文件）</span>
+ls /proc/device-tree/          <span class="code-comment"># cat 对应文件看启用状态</span>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          验证套路回看 <a href="javascript:void(0)" onclick="App.loadDetail('linux-06')">上一节</a>：I2C 设备认不认得，看 ls /sys/bus/i2c/devices/1-0044 出不出现——现在补全因果链：设备树节点启用（因）→ 内核注册设备 → sysfs 出节点（果）；dmesg | grep -i sht 能看到驱动绑定日志。
         </p>
 
-        <div class="formula-block">
-          典型采集架构：<br>[采集进程] --FIFO/共享内存--&gt; [入库进程] --SQLite--&gt; [Web 进程] --HTTP--&gt; 手机<br>进程崩了由 systemd 拉起（见 <a href="javascript:void(0)" onclick="App.loadDetail('linux-03')">Shell 脚本</a>节），数据流单向清晰
-        </div>
-
+        <h4 class="font-medium mt-6 mb-2">Overlay：差量修改的标准姿势</h4>
         <div class="overflow-x-auto"><table class="compare-table">
-          <thead><tr><th>机制</th><th>特点</th><th>适用</th></tr></thead>
+          <thead><tr><th>维度</th><th>直接改基础树</th><th>Overlay 覆盖片</th></tr></thead>
           <tbody>
-            <tr><td class="font-medium">管道 |</td><td>单向、字节流、仅亲缘进程</td><td>shell 命令链</td></tr>
-            <tr><td class="font-medium">命名管道 FIFO</td><td>文件系统路径、任意进程</td><td>无亲缘进程的简单数据流</td></tr>
-            <tr><td class="font-medium">共享内存 shm</td><td>零拷贝、最快，需配信号量同步</td><td>高频数据（IMU 原始流）</td></tr>
-            <tr><td class="font-medium">消息队列</td><td>带类型边界、有优先级</td><td>命令分发</td></tr>
-            <tr><td class="font-medium">信号 signal</td><td>异步通知、携带信息极少</td><td>优雅退出（SIGTERM 触发清理）</td></tr>
-            <tr><td class="font-medium">Unix socket</td><td>本地全双工、像写网络程序</td><td>同机服务间调用（ROS2 底层）</td></tr>
+            <tr><td class="font-medium">改动量</td><td>整树重编重刷</td><td>只写增量，独立 .dtbo</td></tr>
+            <tr><td class="font-medium">系统升级</td><td>改动被覆盖，重新合并</td><td>基础树不动，overlay 照用</td></tr>
+            <tr><td class="font-medium">回滚</td><td>重新烧写</td><td>删掉一行配置即恢复</td></tr>
+            <tr><td class="font-medium">多人协作</td><td>各自魔改，冲突频发</td><td>overlay 文件进 Git，可复制到任意同型号板</td></tr>
           </tbody>
         </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          树莓派把 .dtbo 放 /boot/overlays/，config.txt 写 dtoverlay=名字 启用；RK/全志系多在 u-boot 阶段加载 dtbo 或用厂商烧写工具合成。原理相同：启动时把覆盖片叠加到基础树上，再交给内核解析。
+        </p>
 
-        <div class="code-block"><span class="code-comment"># FIFO 三行体验：一个终端读，另一个写</span>
+        <h4 class="font-medium mt-6 mb-2">实例：写字机扩展板 Overlay（板载串口 + 抬笔舵机 PWM）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          目标：启用 <strong>uart5</strong>（GPIO12/13，直连 STM32 的板载串口，产品化替换 USB 线）和 <strong>PWM0</strong>（GPIO18，控制抬笔舵机）。舵机是 50Hz 脉宽调制的经典应用，参数关系：
+        </p>
+        <div class="formula-block">
+          $$T = 1/f = 20\\,\\text{ms}\\;(50\\,\\text{Hz}),\\quad t_{duty} \\in [0.5, 2.5]\\,\\text{ms} \\mapsto 0° \\sim 180°,\\quad \\text{中位} = 1.5\\,\\text{ms}$$
+          <div class="text-sm text-gray-500 mt-2">sysfs 里 PWM 的 period/duty_cycle 单位是 ns：period=20000000、duty_cycle=1500000 即中位</div>
+        </div>
+        <div class="code-block"><span class="code-comment">// writer-addon.dts —— 写字机扩展板覆盖片（树莓派 4B，BCM2711）</span>
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = <span class="code-string">"brcm,bcm2711"</span>;
+    fragment@0 {                              <span class="code-comment">// ① 启用 uart5 连 STM32</span>
+        target = &lt;&amp;uart5&gt;;
+        __overlay__ {
+            status = <span class="code-string">"okay"</span>;
+            pinctrl-names = <span class="code-string">"default"</span>;
+            pinctrl-0 = &lt;&amp;uart5_pins&gt;;            <span class="code-comment">// 复用 GPIO12/13 为 TX/RX</span>
+        };
+    };
+    fragment@1 {                              <span class="code-comment">// ② 启用 PWM0 给舵机</span>
+        target = &lt;&amp;pwm&gt;;
+        __overlay__ {
+            status = <span class="code-string">"okay"</span>;
+            pinctrl-names = <span class="code-string">"default"</span>;
+            pinctrl-0 = &lt;&amp;pwm0_pins&gt;;            <span class="code-comment">// PWM0 在 GPIO18（与 uart5 无冲突）</span>
+            assigned-clock-rates = &lt;1000000&gt;;    <span class="code-comment">// 1MHz 时基：周期以 ns 精确可控</span>
+        };
+    };
+};
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          编译安装后，用户态看到两件"新家当"：<strong>/dev/ttyAMA5</strong>——<a href="javascript:void(0)" onclick="App.loadDetail('linux-06')">linux-06 的 serial_open</a> 直接能用，波特率两端一致即可；<strong>/sys/class/pwm/pwmchip0</strong>——echo 0 &gt; export 后依次写 period、duty_cycle、enable=1，笔架抬笔机构应转到中位。至于 X/Y 限位开关那路 GPIO 输入，不用进设备树：<a href="javascript:void(0)" onclick="App.loadDetail('linux-05')">libgpiod</a> 申请时带上拉标志即可，这是 linux-05 的主场。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">六步验证：Overlay 生效检查单</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>编译</strong><br>dtc -@ -I dts -O dtb -o writer-addon.dtbo writer-addon.dts；输出无 Warning 才算过（Warning 常提示节点名与 reg 不一致等隐患）</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>安装</strong><br>树莓派：sudo cp writer-addon.dtbo /boot/overlays/，/boot/config.txt 追加 dtoverlay=writer-addon</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>看日志</strong><br>重启后 dmesg | grep -Ei "uart|pwm"，应看到类似 fe215040.serial: ttyAMA5 的注册行</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>查节点</strong><br>ls /dev/ttyAMA* 出现新串口；ls /sys/class/pwm/ 出现 pwmchip0</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>动舵机</strong><br>export pwm0 后按上文写 period/duty_cycle/enable，抬笔机构应有明确角度动作；改 duty 从 1000000 到 2000000 扫一遍</div></div>
+          <div class="step"><span class="step-num">6</span><div class="step-content"><strong>通串口</strong><br>STM32 端跑回显，Linux 端 stty 设好参数后 echo/cat 收发（<a href="javascript:void(0)" onclick="App.loadDetail('linux-06')">linux-06 五步</a>的第 4 步原样复用）</div></div>
+        </div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>改树三大坑</strong>：① 引脚冲突——GPIO12/13 默认可能是 PWM/音频功能，pinctrl 抢不过来时用 gpioinfo 看 consumer、换引脚重写；② dtc 的 Warning 不是装饰——phandle 或 cells 写错，轻则设备不出现，重则内核启动卡死（救砖：拔 SD 卡到电脑上删掉 config.txt 里那行 dtoverlay 即可）；③ overlay 名字与文件名必须一致（writer-addon.dtbo ↔ dtoverlay=writer-addon），且 uart5_pins、pwm0_pins 这类预定义 label 的真实名字以反编译基础树为准。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>学习捷径</strong>：不要凭空写树——先反编译 /boot 下的厂商 dtb 看同外设怎么写（dtc -I dtb -O dts），再抄结构改参数；树莓派官方 overlays 源码目录里有几百个现成覆盖片可抄。/proc/device-tree/ 则是"内核此刻真正在用什么"的真值来源，改完 overlay 后对照它确认属性落盘。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>承接主线</strong>：至此写字机的硬件接口全部就位——串口（连 STM32）、PWM（舵机）、GPIO（限位，走 libgpiod）。<a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11</a> 在串口之上设计通信协议；产品化时这个 overlay 会随系统一起打包（<a href="javascript:void(0)" onclick="App.loadDetail('linux-09')">linux-09 系统构建</a>）。</div></div>
+      ` },
+
+      // ===== linux-08 进程间通信（主线：写字机主机软件分层）=====
+      { id: 'linux-08', title: '进程间通信（IPC）', desc: '管道/共享内存/消息队列/信号；写字机主机软件通信-规划-UI 三进程分层', icon: '🔄', tags: ['核心', '主线'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">IPC：让通信、规划、界面各司其职</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          写字机的主机软件如果塞进一个 main()：串口收发、轨迹计算、网页渲染全在一起——任何一环卡顿，整条链路停摆；改一行 UI 要重启通信，调试时电机突然失联。<a href="javascript:void(0)" onclick="App.loadDetail('os-03')">进程同步与通信</a>讲过理论，本节是它在板子上的落地：把主机软件拆成多个进程，地址空间隔离，一个崩溃另外的照跑；进程要协作，就得选对通信机制——选型依据是<strong>数据形态与频率</strong>，不是"哪个更高级"。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">写字机主机软件的分层架构</h4>
+        <div class="formula-block">
+          [UI 进程]（<a href="javascript:void(0)" onclick="App.loadDetail('linux-14')">linux-14</a>：WebSocket 面板，画曲线/点动按钮）<br>
+            ↕ 命令下行：消息队列（急停可插队）｜状态上行：共享内存（无拷贝高频读）<br>
+          [规划进程]（<a href="javascript:void(0)" onclick="App.loadDetail('linux-13')">linux-13</a>：轨迹→运动段，约 5ms 一段）<br>
+            ↕ 运动段下行：消息队列（带边界的指令包）<br>
+          [通信进程]（<a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11</a>：组帧/解析，独占 /dev/writer_mcu）<br>
+          三个进程各自写成 systemd service，崩溃自动重启（<a href="javascript:void(0)" onclick="App.loadDetail('linux-03')">linux-03 开机自启</a>）
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          分层的收益立竿见影：串口独占权清晰（只有通信进程碰 /dev）；三者可独立开发、独立重启；规划进程崩了，通信进程靠心跳超时让 STM32 自行安全停机——故障不会沿着调用栈蔓延。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">六种机制总览：按数据流选型</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>机制</th><th>特点</th><th>写字机中的岗位</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">管道 |</td><td>单向字节流，仅亲缘进程</td><td>shell 命令链（日志过滤）</td></tr>
+            <tr><td class="font-medium">命名管道 FIFO</td><td>文件路径，任意进程</td><td>调试期日志通道</td></tr>
+            <tr><td class="font-medium">共享内存 shm</td><td>零拷贝最快，需同步</td><td><strong>状态流：位置/温度高频上报</strong></td></tr>
+            <tr><td class="font-medium">消息队列 mq</td><td>带边界与优先级</td><td><strong>命令流：点动/急停插队</strong></td></tr>
+            <tr><td class="font-medium">信号 signal</td><td>异步通知，信息极少</td><td>优雅停机（SIGTERM 清场）</td></tr>
+            <tr><td class="font-medium">Unix socket</td><td>全双工、请求-响应式</td><td>跨机扩展、外部 SDK 接入</td></tr>
+          </tbody>
+        </table></div>
+        <div class="code-block"><span class="code-comment"># FIFO 三行体验：一个终端读，另一个写，实时可见</span>
 mkfifo /tmp/chan
 cat &gt; /tmp/chan        <span class="code-comment"># 终端 1：写端（回车发送）</span>
 cat /tmp/chan          <span class="code-comment"># 终端 2：读端实时收到</span>
         </div>
 
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>🚧 概览版说明</strong>：共享内存 + 信号量的 C 完整例程（shmget/semctl 或 POSIX shm_open）、信号处理函数写法将在后续扩充。先掌握 FIFO 即可搭建 <a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">实战项目</a>的数据通道。</div></div>
+        <h4 class="font-medium mt-6 mb-2">共享内存环形缓冲：状态流的高速公路</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          通信进程每 50ms 收到 STM32 状态帧，UI 每 16ms 刷一次曲线。走 FIFO 的话每条消息两次系统调用加两次拷贝，还有唤醒抖动；共享内存让两个进程映射<strong>同一块物理内存</strong>，写进去对面直接看得见。配合"单写者单读者"约束，head/tail 指针用原子操作即可免锁：
+        </p>
+        <div class="code-block"><span class="code-comment">// shm_status.h —— 状态环形缓冲（通信进程写，UI 进程读）</span>
+<span class="code-keyword">#define</span> SLOTS 64
+<span class="code-keyword">typedef struct</span> {
+    uint32_t magic;                    <span class="code-comment">// 0x57465231，校验"结构体版本"</span>
+    <span class="code-keyword">volatile</span> uint32_t head;      <span class="code-comment">// 写指针：仅通信进程修改</span>
+    <span class="code-keyword">volatile</span> uint32_t tail;      <span class="code-comment">// 读指针：仅 UI 进程修改</span>
+    <span class="code-keyword">struct</span> { uint32_t ms; int32_t x, y; uint16_t flags; } slot[SLOTS];
+} shm_status_t;
+
+<span class="code-comment">// 建立映射（两端同样的三行；POSIX 共享内存对象 /writer_status）</span>
+<span class="code-keyword">int</span> fd = <span class="code-func">shm_open</span>(<span class="code-string">"/writer_status"</span>, O_CREAT | O_RDWR, 0666);
+<span class="code-func">ftruncate</span>(fd, <span class="code-keyword">sizeof</span>(shm_status_t));
+shm_status_t *st = <span class="code-func">mmap</span>(NULL, <span class="code-keyword">sizeof</span>(shm_status_t),
+                   PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+
+<span class="code-comment">// 写端：收到一帧状态塞一个槽，随后发布（release 保证数据先于指针可见）</span>
+uint32_t h = st-&gt;head;
+st-&gt;slot[h % SLOTS] = frame;          <span class="code-comment">// 解析出的状态帧</span>
+__atomic_store_n(&amp;st-&gt;head, h + 1, __ATOMIC_RELEASE);
+
+<span class="code-comment">// 读端：追 head 消费，永远不改 head</span>
+uint32_t h = __atomic_load_n(&amp;st-&gt;head, __ATOMIC_ACQUIRE);
+<span class="code-keyword">while</span> (st-&gt;tail != h) { <span class="code-func">draw</span>(st-&gt;slot[st-&gt;tail % SLOTS]); st-&gt;tail++; }
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          槽位数量也要算：UI 进程偶发卡顿（垃圾回收、页面重排）500ms 不读，缓冲会不会丢？
+        </p>
+        <div class="formula-block">
+          $$B_{min} = f_{prod} \\cdot T_{burst} = 20\\,\\text{帧/s} \\times 0.5\\,\\text{s} = 10 \\;\\lt\\; 64\\,\\text{槽}$$
+          <div class="text-sm text-gray-500 mt-2">50ms 一帧 × 卡顿 0.5s = 10 帧，64 槽留足 6 倍余量；反过来若 UI 卡 3.2s 以上才开始覆盖未读数据——用 head-tail 差值检测"落后"并跳帧追赶</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">消息队列：命令流的优先级通道</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          命令与状态相反：量小、有边界、<strong>"急停"必须插队</strong>。POSIX 消息队列天然带优先级，正合适：
+        </p>
+        <div class="code-block"><span class="code-comment">// 规划/UI 进程：普通运动命令优先级 1，急停优先级 9（数值大先出队）</span>
+mqd_t q = <span class="code-func">mq_open</span>(<span class="code-string">"/writer_cmd"</span>, O_WRONLY);
+<span class="code-func">mq_send</span>(q, (char *)&amp;move_cmd, <span class="code-keyword">sizeof</span> move_cmd, 1);
+<span class="code-func">mq_send</span>(q, (char *)&amp;estop_cmd, <span class="code-keyword">sizeof</span> estop_cmd, 9);
+
+<span class="code-comment">// 通信进程：收下命令转成协议帧发往 STM32（linux-11 的 frame_send）</span>
+<span class="code-keyword">while</span> (g_running) {
+    <span class="code-keyword">struct</span> { uint8_t type; int32_t a, b; } cmd;
+    unsigned prio;
+    <span class="code-func">mq_receive</span>(q_rd, (char *)&amp;cmd, <span class="code-keyword">sizeof</span> cmd, &amp;prio);
+    <span class="code-func">frame_send</span>(uart_fd, cmd.type, &amp;cmd.a, 8);
+}
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">信号：优雅停机的最后一道门</h4>
+        <div class="code-block"><span class="code-comment">// 任何进程被 kill 或 Ctrl+C：先通知 STM32 停机，再清理退出</span>
+<span class="code-keyword">static volatile</span> sig_atomic_t g_running = 1;
+<span class="code-keyword">void</span> <span class="code-func">on_term</span>(<span class="code-keyword">int</span> sig) { (void)sig; g_running = 0; }  <span class="code-comment">// 处理函数只置标志</span>
+
+<span class="code-keyword">int</span> <span class="code-func">main</span>(<span class="code-keyword">void</span>) {
+    <span class="code-keyword">struct</span> sigaction sa = { .sa_handler = on_term };
+    <span class="code-func">sigaction</span>(SIGINT, &amp;sa, NULL);      <span class="code-comment">// Ctrl+C</span>
+    <span class="code-func">sigaction</span>(SIGTERM, &amp;sa, NULL);     <span class="code-comment">// systemctl stop</span>
+    <span class="code-keyword">while</span> (g_running) { <span class="code-comment">/* select 串口 + 处理队列，见 linux-06/11 */</span> }
+    <span class="code-func">frame_send</span>(uart_fd, CMD_ESTOP, NULL, 0);  <span class="code-comment">// 让电机进入安全态</span>
+}
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          信号处理函数里只能做异步信号安全操作（置一个 volatile 标志最稳），printf/malloc 都不能碰——把清理动作搬回主循环是标准写法。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">主机软件拆分设计五步</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>画数据流</strong><br>列全数据：状态帧（50ms 上行）、命令（事件驱动下行）、轨迹段（约 5ms 下行）、日志（低频）。每条标"谁产、谁耗、多大、多快"</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>定进程边界</strong><br>按独占资源和职责切：通信（独占串口）、规划（吃 CPU 的插补）、UI（网页/面板）。边界上只有 IPC，没有共享全局变量</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>为每条流选通道</strong><br>高频状态→共享内存环形缓冲；带优先级命令→消息队列；日志→FIFO/文件；请求-响应→Unix socket</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>定崩溃策略</strong><br>systemd Restart=always 拉起；通信进程失联时 STM32 心跳超时自停（linux-11）；共享内存 magic 校验防读到旧版本结构</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>逐层联调</strong><br>先单进程跑通（mock 掉其他层），再两两对接，最后三进程合体——每一步都有可观察的输出</div></div>
+        </div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>三个翻车现场</strong>：① 共享内存不同步——结构体里塞了 8 字节 double，读到"半新半旧"的撕裂值，曲线偶发跳变；必须按上文原子发布，或干脆配信号量；② FIFO 打开顺序——读端 open 阻塞到写端出现，两个进程互相等成死锁，用 O_NONBLOCK 打开或 systemd 显式声明启动顺序；③ 消息队列写满默认阻塞——规划进程发疯时通信进程卡死，mq_send 前设 O_NONBLOCK 并按策略丢弃旧命令。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>Klipper 就是这个架构的工业级范本</strong>：klipper 主机进程（Python，做规划）与 MCU 固件各为一方，中间是串口/USB 上的自有二进制协议（<a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11</a> 会剖析）；网页端再隔一层 moonraker HTTP/WebSocket——每层独立重启互不拖垮，与 <a href="javascript:void(0)" onclick="App.loadDetail('print-02')">print-02 FDM 打印机</a>讲的"树莓派规划 + MCU 执行"完全一致。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>承接主线</strong>：进程间"消息"定好了，跨机器的消息（浏览器实时看曲线）交给 <a href="javascript:void(0)" onclick="App.loadDetail('linux-14')">linux-14 WebSocket 上位机</a>；STM32 侧的语言（帧协议、心跳）在 <a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11</a>；网络基础回看 <a href="javascript:void(0)" onclick="App.loadDetail('net-05')">HTTP 应用层</a>。</div></div>
       ` },
 
       // ===== linux-09 嵌入式 Linux 系统构建（概览版，待扩充）=====
@@ -11786,6 +12056,294 @@ cat /tmp/chan          <span class="code-comment"># 终端 2：读端实时收�
         </ul>
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>🚧 项目蓝图说明</strong>：本节给出架构与选型，完整代码工程（采集器 C 源码 + FIFO 协议 + sqlite 函数 + mongoose 路由 + 前端图表页）将在 v1.0.x 分阶段扩充。动手顺序建议：先用 <a href="javascript:void(0)" onclick="App.loadDetail('sns-06')">温度传感器</a>知识接好硬件，跑通"采集→打印"再逐层加存储和 Web。</div></div>
+      ` },
+
+      // ===== linux-11 Linux↔MCU 通信协议设计（主线：双侧 C 实现）=====
+      { id: 'linux-11', title: 'Linux↔MCU 通信协议设计', desc: '帧格式+CRC+命令表+心跳超时+分包重组，STM32 与 Linux 双侧 C 实现', icon: '🤝', tags: ['核心', '主线'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">通信协议：Linux 与 STM32 的对话契约</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          <a href="javascript:void(0)" onclick="App.loadDetail('linux-06')">linux-06</a>打通了物理层，字节能进出了。但裸字节流说不了"话"：<strong>没有边界</strong>（一串字节从哪开始到哪结束？）、<strong>没有校验</strong>（一个位翻转谁发现？）、<strong>没有语义</strong>（这 6 个字节是坐标还是速度？）。写字机要动起来，必须在字节流之上设计应用层协议——帧格式、命令表、错误处理，双侧共同遵守。这一节从零设计一套小协议并给出 <strong>STM32 与 Linux 双侧实现</strong>，正是嵌入式岗位"上位机 + 下位机联调"的核心技能。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">载体选型：USB CDC vs 板载 UART vs CAN</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>维度</th><th>USB CDC 虚拟串口</th><th>板载 UART 直连</th><th>CAN 总线</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">有效带宽</td><td>约 1MB/s（全速 USB）</td><td>115.2k~3M bps</td><td>1M bps@40m</td></tr>
+            <tr><td class="font-medium">MCU 端成本</td><td>跑 USB 协议栈</td><td>一个 USART 外设</td><td>CAN 外设+收发器+终端电阻</td></tr>
+            <tr><td class="font-medium">拓扑</td><td>1 对 1</td><td>1 对 1</td><td>多节点组网（每轴一块驱动器）</td></tr>
+            <tr><td class="font-medium">热插拔</td><td>即插即用（ttyACM0）</td><td>固定节点</td><td>固定</td></tr>
+            <tr><td class="font-medium">写字机选择</td><td><strong>✅ 开发期首选</strong></td><td>产品化替换</td><td>多电机/远距离升级路径</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">帧格式：长度定界 + CRC 校验</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          定界有两种主流做法：<strong>转义符法</strong>（HDLC 的 0x7E，数据里出现同值字节就转义）和<strong>长度字段法</strong>。写字机选长度字段——解析状态机简单，不用逐字节扫转义。帧结构如下：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>偏移</th><th>字段</th><th>取值与含义</th></tr></thead>
+          <tbody>
+            <tr><td>0~1</td><td class="font-medium">MAGIC</td><td>0xA5 0x5A：双字节帧头，随机数据误同步概率 1/65536</td></tr>
+            <tr><td>2</td><td class="font-medium">TYPE</td><td>命令字（0x00~0x7F 下行，0x80~0xFF 上行）</td></tr>
+            <tr><td>3</td><td class="font-medium">LEN</td><td>负载长度 0~200（定上限 = 定接收缓冲大小）</td></tr>
+            <tr><td>4</td><td class="font-medium">SEQ</td><td>帧序号循环递增，用于应答匹配与丢帧统计</td></tr>
+            <tr><td>5~4+LEN</td><td class="font-medium">PAYLOAD</td><td>多字节字段一律<strong>小端</strong>，按字节显式打包</td></tr>
+            <tr><td>5+LEN 起</td><td class="font-medium">CRC16</td><td>2 字节小端，覆盖 TYPE/LEN/SEQ/PAYLOAD</td></tr>
+          </tbody>
+        </table></div>
+        <div class="formula-block">
+          $$\text{CRC-16/MODBUS}:\\;\\; p(x) = x^{16} + x^{15} + x^{2} + 1 = \\text{0x8005}$$
+          <div class="text-sm text-gray-500 mt-2">初值 0xFFFF，反射算法用 0xA001；两字节 CRC 把"坏数据碰巧通过"的概率压到 1/65536，配合双字节帧头足够可靠。工具箱工程协议分类下的 CRC 校验器可在线实算，联调时当第三方仲裁</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">命令表：双侧共同的语言</h4>
+        <div class="code-block"><span class="code-comment">// protocol.h —— STM32 与 Linux 共用的命令定义（同文件进两个工程）</span>
+<span class="code-keyword">#define</span> CMD_HANDSHAKE  0x01   <span class="code-comment">// 下行：握手，回固件版本</span>
+<span class="code-keyword">#define</span> CMD_HEARTBEAT  0x02   <span class="code-comment">// 下行：心跳，100ms 一帧</span>
+<span class="code-keyword">#define</span> CMD_JOG        0x10   <span class="code-comment">// 下行：点动（脉冲数/频率）</span>
+<span class="code-keyword">#define</span> CMD_HOME       0x11   <span class="code-comment">// 下行：回零</span>
+<span class="code-keyword">#define</span> CMD_TRAJ_SEG   0x20   <span class="code-comment">// 下行：轨迹段（分包传输）</span>
+<span class="code-keyword">#define</span> CMD_ESTOP      0x1F   <span class="code-comment">// 下行：急停，收到即执行不回包</span>
+<span class="code-keyword">#define</span> CMD_ACK        0x80   <span class="code-comment">// 上行：应答（回填对应 SEQ）</span>
+<span class="code-keyword">#define</span> CMD_STATUS     0x81   <span class="code-comment">// 上行：状态回报（位置/标志，50ms）</span>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">STM32 端：状态机解析 + 心跳超时</h4>
+        <div class="code-block"><span class="code-comment">// stm32_proto.c —— 逐字节喂入的状态机（字节来自 UART 中断/DMA，见 emb-06）</span>
+<span class="code-comment">// CRC-16/MODBUS 单字节增量式：两侧完全同款，联调前先对拍</span>
+uint16_t <span class="code-func">crc16_byte</span>(uint16_t crc, uint8_t d) {
+    crc ^= d;
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = 0; i &lt; 8; i++)
+        crc = (crc &amp; 1) ? (crc &gt;&gt; 1) ^ 0xA001 : (crc &gt;&gt; 1);
+    <span class="code-keyword">return</span> crc;
+}
+
+<span class="code-keyword">typedef enum</span> { H0, H1, T_TYPE, T_LEN, T_SEQ, T_PL, T_C0, T_C1 } ps_t;
+<span class="code-keyword">static</span> ps_t    pstate = H0;
+<span class="code-keyword">static</span> uint8_t f_type, f_len, f_seq, f_idx, buf[200];
+<span class="code-keyword">static</span> uint16_t f_crc, f_calc;
+<span class="code-keyword">static</span> uint32_t hb_left;              <span class="code-comment">// 心跳倒计时 ms</span>
+
+<span class="code-keyword">void</span> <span class="code-func">proto_feed</span>(uint8_t b) {           <span class="code-comment">// 半帧/黏包天然免疫</span>
+    <span class="code-keyword">switch</span> (pstate) {
+    <span class="code-keyword">case</span> H0: <span class="code-keyword">if</span> (b == 0xA5) pstate = H1; <span class="code-keyword">break</span>;
+    <span class="code-keyword">case</span> H1: pstate = (b == 0x5A) ? T_TYPE : H0;
+             <span class="code-keyword">if</span> (pstate == T_TYPE) f_calc = 0xFFFF;  <span class="code-comment">// CRC 从 TYPE 起算</span>
+             <span class="code-keyword">break</span>;
+    <span class="code-keyword">case</span> T_TYPE: f_type = b; f_calc = crc16_byte(f_calc, b); pstate = T_LEN; <span class="code-keyword">break</span>;
+    <span class="code-keyword">case</span> T_LEN:  f_len = b;  f_calc = crc16_byte(f_calc, b); f_idx = 0; pstate = T_SEQ; <span class="code-keyword">break</span>;
+    <span class="code-keyword">case</span> T_SEQ:  f_seq = b;  f_calc = crc16_byte(f_calc, b);
+                 pstate = f_len ? T_PL : T_C0; <span class="code-keyword">break</span>;
+    <span class="code-keyword">case</span> T_PL:   buf[f_idx++] = b; f_calc = crc16_byte(f_calc, b);
+                 <span class="code-keyword">if</span> (f_idx == f_len) pstate = T_C0; <span class="code-keyword">break</span>;
+    <span class="code-keyword">case</span> T_C0:   f_crc = b; pstate = T_C1; <span class="code-keyword">break</span>;
+    <span class="code-keyword">case</span> T_C1:   f_crc |= (uint16_t)b &lt;&lt; 8;
+                 <span class="code-keyword">if</span> (f_crc == f_calc) dispatch(f_type, f_seq, buf, f_len);
+                 pstate = H0; <span class="code-keyword">break</span>;    <span class="code-comment">// CRC 错 = 丢帧重新同步</span>
+    }
+}
+
+<span class="code-comment">// 心跳：SysTick 每 1ms 调用；倒计时归零 → 安全态</span>
+<span class="code-keyword">void</span> <span class="code-func">heartbeat_tick_1ms</span>(<span class="code-keyword">void</span>) {
+    <span class="code-keyword">if</span> (hb_left &amp;&amp; --hb_left == 0) {
+        motor_abort();                             <span class="code-comment">// 停脉冲定时器（linux-12）</span>
+        HAL_GPIO_WritePin(ENA_GPIO_Port, ENA_Pin, GPIO_PIN_SET);  <span class="code-comment">// 失能驱动器</span>
+    }
+}
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          dispatch 按 f_type 分发：HEARTBEAT 喂狗并顺手回一帧 STATUS；ESTOP 直接停机；JOG 把 8 字节负载解成"脉冲数 + 起始/最高频率"交给电机模块（<a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">linux-12</a>）。超时时间为何取 300ms：
+        </p>
+        <div class="formula-block">
+          $$T_{timeout} = n_{miss} \\times T_{hb} = 3 \\times 100\\,\\text{ms} = 300\\,\\text{ms}$$
+          <div class="text-sm text-gray-500 mt-2">连续丢 3 帧心跳才断链——单帧丢失（偶发干扰/调度抖动）不误触发；而 300ms 内电机最多按原速度多走 0.1 × v，机械上完全安全</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">Linux 端：组帧 + select 收 + 心跳</h4>
+        <div class="code-block"><span class="code-comment">// linux_proto.c —— 复用 linux-06 的 serial_open 与 select 骨架</span>
+<span class="code-keyword">static</span> uint8_t next_seq;
+
+<span class="code-keyword">int</span> <span class="code-func">frame_send</span>(<span class="code-keyword">int</span> fd, uint8_t type, <span class="code-keyword">const</span> <span class="code-keyword">void</span> *payload, uint8_t len) {
+    uint8_t pkt[5 + 200 + 2];
+    pkt[0] = 0xA5; pkt[1] = 0x5A; pkt[2] = type; pkt[3] = len; pkt[4] = next_seq++;
+    <span class="code-func">memcpy</span>(pkt + 5, payload, len);
+    uint16_t crc = 0xFFFF;
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = 2; i &lt; 5 + len; i++) crc = crc16_byte(crc, pkt[i]);
+    pkt[5 + len] = (uint8_t)crc;  pkt[6 + len] = (uint8_t)(crc &gt;&gt; 8);
+    <span class="code-keyword">return</span> <span class="code-func">write</span>(fd, pkt, 7 + len) == 7 + len ? 0 : -1;
+}
+
+<span class="code-comment">// 主循环：20ms 查一次串口 + 100ms 发一次心跳</span>
+uint64_t last_hb = now_ms();
+<span class="code-keyword">for</span> (;;) {
+    fd_set rf;  FD_ZERO(&amp;rf);  FD_SET(fd, &amp;rf);
+    <span class="code-keyword">struct</span> timeval tv = { 0, 20000 };
+    <span class="code-keyword">if</span> (<span class="code-func">select</span>(fd + 1, &amp;rf, NULL, NULL, &amp;tv) &gt; 0) {
+        uint8_t chunk[256];
+        <span class="code-keyword">int</span> n = <span class="code-func">read</span>(fd, chunk, <span class="code-keyword">sizeof</span> chunk);
+        <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = 0; i &lt; n; i++) proto_feed(chunk[i]); <span class="code-comment">// 与 STM32 同款状态机</span>
+    }
+    <span class="code-keyword">if</span> (now_ms() - last_hb &gt;= 100) { <span class="code-func">frame_send</span>(fd, CMD_HEARTBEAT, NULL, 0); last_hb = now_ms(); }
+}
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">分包重组：轨迹段的集装箱运输</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          一段轨迹 200 个点、每点 8 字节 = 1600 字节，超出单帧 200 字节上限。拆法：把大块数据切成不超过 197 字节的分片，每片 PAYLOAD 前 3 字节放<strong>分片头</strong>（包 ID、总片数、片号），接收方按包 ID 聚齐再交上层。配套两个工程细节：<strong>滑动窗口</strong>——STM32 缓存 4 段轨迹（Klipper move queue 的思想），缓存满时回 NACK 让发送方暂停，形成天然背压；<strong>分片不跨包</strong>——一个分片只属于一个包，重组逻辑与命令分发彻底解耦。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">协议联调五步</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>物理层环回</strong><br>STM32 端先跑"收到什么回什么"的回显，Linux 端确认字节双向通（<a href="javascript:void(0)" onclick="App.loadDetail('linux-06')">linux-06 五步</a>）</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>CRC 对拍</strong><br>固定一组字节（如 A5 5A 02 00 01），两侧打印的 CRC 值必须一致；工具箱的 CRC 校验器在线实算做第三方仲裁，专治"到底谁的 CRC 错了"</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>最小命令集</strong><br>先只开 HANDSHAKE + STATUS：上电握手拿版本号，之后每 100ms 心跳换回一帧状态，观察数值合理性</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>故障注入</strong><br>拔线 300ms 再插回：STM32 应已失能电机，Linux 重连后握手恢复；向线上人为发一帧坏 CRC，确认被丢弃且后续帧不受影响</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>压力测试</strong><br>连续发 10 万帧轨迹分片，统计 CRC 拦截数与重组失败数，误帧率应低于 0.01%；同时确认 STM32 状态上报不丢拍</div></div>
+        </div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>协议四大坑</strong>：① 拿结构体直接 memcpy 当 PAYLOAD——编译器对齐 padding、大小端、编译器差异三重雷，必须按字节显式打包解包；② 大小端没写死——当前 STM32 与 ARM/x86 Linux 都是小端能跑，换平台即炸，协议文档第一句就写"多字节字段小端"；③ 黏包——一次 read 常读到 1.5 帧或 3 帧，必须逐字节喂状态机而非"一次 read 当一帧"；④ 心跳做成"收不到就无限重发"——正确姿势是超时进安全态 + 有限次重连，别让两个对端互相刷屏。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>业界参照</strong>：Marlin 走文本行协议（G-code，一行一命令，人眼可读好调试）；Klipper 用变长消息 + 定长头 + CRC 的二进制协议（本节方案的同门）；CANopen 用 11 位 ID + 8 字节短帧。文本协议省脑、二进制协议省带宽——写字机用二进制练手，学完顺手读懂 <a href="javascript:void(0)" onclick="App.loadDetail('print-03')">print-03 切片</a>里 G-code 的另一半世界。时序的物理层根基见 <a href="javascript:void(0)" onclick="App.loadDetail('emb-06')">emb-06</a>，嵌入式工程习惯见 <a href="javascript:void(0)" onclick="App.loadDetail('emb-10')">emb-10</a>。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>先通协议再写代码</strong>：调试期用工具箱的 uart-debug 十六进制收发工具手动拼帧——按帧表手写 A5 5A 01 00 00 算上 CRC 发出去，看 STM32 的回帧，比盲写 500 行代码再排错快得多。</div></div>
+      ` },
+
+      // ===== linux-12 电机控制实战（主线：Linux 规划 + STM32 执行）=====
+      { id: 'linux-12', title: '电机控制实战（Linux+MCU）', desc: '实时性定量分析→分层控制：STM32 定时器产脉冲、STEP/DIR 接线、编码器回读', icon: '⚙️', tags: ['实战', '主线'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">电机控制实战：Linux 出脑，STM32 出手</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          协议通了（<a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11</a>），现在让两根轴动起来。第一件要破除的幻想是"Linux 直接发 STEP 脉冲"。本节先用数字证明为什么不行，再搭正确的分层：Linux 发高层运动指令，STM32 定时器产脉冲，编码器回读闭环。接线、代码、参数全部按写字机实物给。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">实时性定量分析：Linux 为什么发不了脉冲</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          写字机 X/Y 轴配置：42 步进电机（步距角 1.8°，即 200 步/转）、驱动器 16 细分、GT2 同步带 + 20 齿带轮（导程 = 2mm × 20 = 40mm/转）。脉冲当量与所需脉冲频率：
+        </p>
+        <div class="formula-block">
+          $$\delta = \\frac{L}{N \cdot m} = \\frac{40\\,\\text{mm}}{200 \\times 16} = 0.0125\\,\\text{mm/脉冲}$$
+          $$f_{step} = \\frac{v}{\delta} = \\frac{100\\,\\text{mm/s}}{0.0125\\,\\text{mm}} = 8\\,\\text{kHz} \\;\\;(T = 125\\,\\mu s)$$
+          <div class="text-sm text-gray-500 mt-2">若升到 32 细分：f = 16kHz、T = 62.5μs，对定时的要求更苛刻。步进电机本体原理见 <a href="javascript:void(0)" onclick="App.loadDetail('motor-05')">motor-05</a></div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          再看 Linux 这边：通用发行版上用户态任务的调度抖动在<strong>毫秒量级</strong>（cyclictest -m -p 95 -i 200 可实测最大延迟）。125μs 的脉冲间隔撞上 ±1000μs 的抖动 = 脉冲成批丢失、电机失步堵转。上 PREEMPT_RT 实时补丁也只能压到几十微秒，还把整个系统绑死。这就是 GRBL、Marlin、Klipper 的共同结论：<strong>脉冲必须由 MCU 硬件定时器产生，Linux 只发"运动段"级指令</strong>——也是 <a href="javascript:void(0)" onclick="App.loadDetail('linux-05')">linux-05</a>所说"实时小脑"的定量注脚。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">分层：Linux 管"去哪"，STM32 管"怎么转"</h4>
+        <div class="formula-block">
+          [Linux 规划进程]（<a href="javascript:void(0)" onclick="App.loadDetail('linux-13')">linux-13 轨迹规划</a>：毫秒级抖动无所谓）<br>
+            ↓ CMD_TRAJ_SEG（目标/速度/加速度，一包约 5ms 的运动量）<br>
+          [STM32 运动队列]（缓存 4 段，吸收 Linux 抖动）→ 定时器中断按梯形剖面产 STEP/DIR<br>
+            ↑ CMD_STATUS（每 50ms 回报位置/标志）<br>
+          [Linux 通信进程]（<a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11 协议</a>）→ 共享内存（<a href="javascript:void(0)" onclick="App.loadDetail('linux-08')">linux-08</a>）→ 上位机（<a href="javascript:void(0)" onclick="App.loadDetail('linux-14')">linux-14</a>）
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          指令粒度从"每个脉冲"升到"每段运动"，Linux 的毫秒抖动就被 STM32 侧的队列吸收了。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">STEP/DIR 驱动器：接线与电流</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          主流步进驱动器（A4988/DRV8825/TMC2209）对外都是同一套接口：<strong>STEP</strong>（每个上升沿走一步）、<strong>DIR</strong>（方向电平）、<strong>ENA</strong>（使能，多数低有效）、<strong>GND</strong>。共阳接法：STEP+/DIR+/ENA+ 并接 3.3V，MCU 引脚分别驱动 STEP-/DIR-/ENA-。驱动器电流由 Vref 分压设定（以 A4988 为例）：
+        </p>
+        <div class="formula-block">
+          $$I_{coil} = \\frac{V_{ref}}{8 R_s} = \\frac{0.4\\,\\text{V}}{8 \\times 0.1\\,\Omega} = 0.5\\,\\text{A}$$
+          <div class="text-sm text-gray-500 mt-2">R_s 为驱动器检流电阻（0.1Ω 常见）。42 步进额定 1.2~1.7A，写字机空载 0.5A 足够——发热小、噪音低，力度不够再加</div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>型号</th><th>细分上限</th><th>电流</th><th>特点</th><th>参考价</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">A4988</td><td>16</td><td>1A（散热后 2A）</td><td>经典便宜，中频啸叫</td><td>¥5</td></tr>
+            <tr><td class="font-medium">DRV8825</td><td>32</td><td>1.5~2.5A</td><td>耐压高，同样偏吵</td><td>¥8</td></tr>
+            <tr><td class="font-medium">TMC2209</td><td>256（实用 16~64）</td><td>2A</td><td>静音 StealthChop + 无感堵转检测</td><td>¥15</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">STM32 端：定时器产脉冲 + 梯形加减速</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          <a href="javascript:void(0)" onclick="App.loadDetail('emb-05')">emb-05 定时器与 PWM</a>的工程应用：TIM3 更新中断里翻转 STEP（两次更新 = 一个完整脉冲），SysTick 每 1ms 做加减速决策。何时开始减速？由<strong>减速距离公式</strong>定：
+        </p>
+        <div class="formula-block">
+          $$n_{dec} = \\frac{f^2}{2a} = \\frac{8000^2}{2 \\times 200000} = 160\\,\\text{脉冲} \\;(\\approx 2\\,\\text{mm})$$
+          <div class="text-sm text-gray-500 mt-2">f 为当前脉冲频率（Hz），a 为加速度（Hz/s）——剩余脉冲数 ≤ n_dec 即进入减速段，梯形速度剖面的核心就这一行</div>
+        </div>
+        <div class="code-block"><span class="code-comment">// motor_stm32.c —— 梯形剖面 + TIM 产脉冲（HAL 工程）</span>
+<span class="code-keyword">static volatile</span> int32_t  g_target, g_sent;           <span class="code-comment">// 本段目标/已发脉冲</span>
+<span class="code-keyword">static volatile</span> uint32_t g_f, g_fstart, g_fmax, g_acc;  <span class="code-comment">// 单位 Hz、Hz/ms</span>
+
+<span class="code-comment">// TIM3 更新中断：每两次更新产生一个 STEP 脉冲</span>
+<span class="code-keyword">void</span> HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+    <span class="code-keyword">static</span> uint8_t phase = 0;
+    <span class="code-keyword">if</span> (htim != &amp;htim3) <span class="code-keyword">return</span>;
+    <span class="code-keyword">if</span> (g_sent &gt;= g_target) { __HAL_TIM_DISABLE_IT(&amp;htim3, TIM_IT_UPDATE); <span class="code-keyword">return</span>; }
+    <span class="code-keyword">if</span> (phase++ &amp; 1) {                              <span class="code-comment">// 相位 2：拉低，脉冲完成</span>
+        HAL_GPIO_WritePin(STEP_GPIO_Port, STEP_Pin, GPIO_PIN_RESET);
+        g_sent++;
+    } <span class="code-keyword">else</span> {                                         <span class="code-comment">// 相位 1：拉高，上升沿走一步</span>
+        HAL_GPIO_WritePin(STEP_GPIO_Port, STEP_Pin, GPIO_PIN_SET);
+    }
+}
+
+<span class="code-comment">// SysTick 1ms：加速还是减速？看剩余距离</span>
+<span class="code-keyword">void</span> <span class="code-func">accel_tick_1ms</span>(<span class="code-keyword">void</span>) {
+    <span class="code-keyword">if</span> (g_sent &gt;= g_target) <span class="code-keyword">return</span>;
+    int32_t remain = g_target - g_sent;
+    uint32_t n_dec = g_f * g_f / (2000u * g_acc);   <span class="code-comment">// acc 单位 Hz/ms：n=f²/(2·acc·1000)</span>
+    <span class="code-keyword">if</span> ((uint32_t)remain &lt;= n_dec)      g_f -= g_acc;  <span class="code-comment">// 进入减速段</span>
+    <span class="code-keyword">else if</span> (g_f &lt; g_fmax)             g_f += g_acc;  <span class="code-comment">// 还能加速</span>
+    <span class="code-keyword">if</span> (g_f &lt; g_fstart) g_f = g_fstart;
+    htim3.Instance-&gt;ARR = TIM3_CLK / (2u * g_f) - 1; <span class="code-comment">// 更新率 = 2×脉冲频率</span>
+}
+
+<span class="code-comment">// linux-11 的 dispatch 收到 CMD_JOG 后调用（示例单轴）</span>
+<span class="code-keyword">void</span> <span class="code-func">jog_start</span>(int32_t pulses, uint32_t fs, uint32_t fm, uint32_t acc) {
+    HAL_GPIO_WritePin(DIR_GPIO_Port, DIR_Pin, pulses &lt; 0 ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    g_target = pulses &lt; 0 ? -pulses : pulses;
+    g_fstart = fs;  g_fmax = fm;  g_acc = acc;  g_f = fs;  g_sent = 0;
+    __HAL_TIM_ENABLE_IT(&amp;htim3, TIM_IT_UPDATE);
+}
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          数值检验：fmax = 8000Hz（100mm/s），fstart = 700Hz（约 8.8mm/s——PSC=0 时 16 位 ARR 决定了最低频率约 TIM3_CLK/2/65536，84MHz 时约 641Hz，起步取 700Hz 合理），acc = 200Hz/ms：起步到全速 36.5ms，减速距离 160 脉冲（2mm），与公式一致。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">Linux 端：发运动段（复用协议层）</h4>
+        <div class="code-block"><span class="code-comment">// motor_client.c —— 点动指令：8 字节负载（4B 带符号脉冲数 + 2B 起始 + 2B 最高频率）</span>
+<span class="code-keyword">int</span> <span class="code-func">jog_x</span>(<span class="code-keyword">int</span> fd, <span class="code-keyword">double</span> mm) {
+    int32_t pulses = (int32_t)(mm / 0.0125);       <span class="code-comment">// mm → 脉冲（当量见上文）</span>
+    uint16_t fstart = 700, fmax = 8000;            <span class="code-comment">// Hz；参数化后来自配置</span>
+    uint8_t p[8];
+    <span class="code-func">memcpy</span>(p, &amp;pulses, 4);  <span class="code-func">memcpy</span>(p + 4, &amp;fstart, 2);  <span class="code-func">memcpy</span>(p + 6, &amp;fmax, 2);
+    <span class="code-keyword">return</span> <span class="code-func">frame_send</span>(fd, CMD_JOG, p, <span class="code-keyword">sizeof</span> p);
+}
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">编码器回读与闭环</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          开环步进的软肋是丢步（堵转、过快、丢脉冲都无感知）。写字机两档做法：<strong>① 廉价方案</strong>——限位开关回零消除累积误差 + TMC2209 的 StallGuard 无感堵转检测（堵转即停）；<strong>② 严格方案</strong>——轴尾加增量编码器（1000 线，4 倍频后 4000 脉/转），STM32 定时器编码器模式直接计数，随 CMD_STATUS 每 50ms 上报，Linux 比对指令位置与实际位置，偏差超 <strong>32 脉冲（0.4mm）报警停机</strong>。这与 <a href="javascript:void(0)" onclick="App.loadDetail('motor-07')">motor-07 双闭环</a>思想同构：内环（MCU 脉冲/电流）快而硬，外环（Linux 位置监督）慢而聪明。
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>方案</th><th>成本</th><th>丢步处理</th><th>适用</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">开环 + 限位回零</td><td>零</td><td>靠回零消除累积误差</td><td><strong>✅ 写字机足够</strong></td></tr>
+            <tr><td class="font-medium">闭环步进（编码器在驱动器侧）</td><td>+¥60/轴</td><td>失步即补</td><td>高速重载绘图仪</td></tr>
+            <tr><td class="font-medium">伺服电机（直流/PMSM）</td><td>高</td><td>根本不丢（闭环调速）</td><td>高动态场景，按 motor-07 调环</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">上电五步：从冷板到可控运动</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>设电流</strong><br>Vref 从 0.4V（0.5A）起步，上电后手拧皮带感受保持力矩；驱动器异常发烫立即断电降流</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>设细分</strong><br>MS 引脚或配置置 16 细分，核算脉冲当量 0.0125mm/脉冲（公式见上文）</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>使能验证</strong><br>ENA 拉低电机自锁（手转不动），抬高电平恢复自由——失能功能是安全机制的基础</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>低速点动</strong><br>linux-11 通了协议后 jog_x(fd, 5) 走 5mm；方向反了改 DIR 取反或对调电机两相；速度上限先压 2000Hz（25mm/s）</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>回零标定</strong><br>触发限位 → 退 5mm → 慢速再触发 → 置零点；软件设 200mm 行程软限位防撞机</div></div>
+        </div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>电机四大坑</strong>：① 共地！STM32、驱动器、Linux 板只要有电气交集（同电源/USB 相连），GND 必须单点相连，否则 STEP 上的地电位差就是"随机丢步"；② 首次点动手扶笔架、低速慢试——方向接反会一头撞限位；③ 电机保持通电发热 60℃ 属正常，暂停超 1 分钟应失能（linux-11 心跳超时已自动处理）；④ 上电后位置是"猜"的，先回零再运动，断电重启位置即失效。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>升级路径：CAN 指令模式</strong>：轴数多、走线远时，每轴一块 CAN 接口驱动器挂总线，Linux 用 SocketCAN（ip link set can0 up + cansend）直接发 CiA 402 风格指令，STM32 退位为纯实时节点之一（<a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11 选型表</a>的第三列）。步进电机矩频特性见 <a href="javascript:void(0)" onclick="App.loadDetail('motor-05')">motor-05</a>。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>工具与承接</strong>：TIM 的 ARR/PSC 组合可用工具箱嵌入式分类的 PWM 参数计算器换算验证。轨迹如何切成连续运动段（直线插补、S 曲线）是 <a href="javascript:void(0)" onclick="App.loadDetail('linux-13')">linux-13</a> 的主题；位置曲线实时上屏是 <a href="javascript:void(0)" onclick="App.loadDetail('linux-14')">linux-14</a>；脉冲当量的算法与 <a href="javascript:void(0)" onclick="App.loadDetail('print-02')">print-02 FDM 结构</a>里的同款计算遥相呼应。</div></div>
       ` },
 
     ],
@@ -12301,6 +12859,8 @@ const KnowledgeDeps = {
   'linux-08': ['linux-03', 'os-03'],    // IPC <- Shell + 进程同步
   'linux-09': ['linux-04', 'os-09'],    // 系统构建 <- 交叉编译 + 现代 OS
   'linux-10': ['linux-05', 'linux-06', 'net-05'], // 实战项目 <- GPIO + 总线 + 应用层
+  'linux-11': ['linux-06', 'emb-06', 'emb-10'],  // 协议设计 <- 串口访问 + 接口协议 + 开发实践
+  'linux-12': ['linux-11', 'emb-05', 'motor-05', 'motor-07'], // 电机控制 <- 协议 + 定时器 + 步进 + 双闭环
 
   // === 3D 打印内部链（v0.9.3 新增）===
   'print-01': [],                       // 工艺概述（无前置）
