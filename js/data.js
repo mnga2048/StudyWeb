@@ -96,7 +96,7 @@ const CourseData = {
     stats: [
       { label: '知识板块', value: '21', color: 'blue' },
       { label: '知识点', value: '228', color: 'green' },
-      { label: '交互图表', value: '17', color: 'purple' },
+      { label: '交互图表', value: '18', color: 'purple' },
       { label: '计算工具', value: '34', color: 'orange' },
     ],
     sections: [
@@ -138,7 +138,7 @@ const CourseData = {
 
         <h4 class="font-medium mt-6 mb-2">极限的精确定义（ε-δ 语言）</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
-          $\lim_{x \\to x_0} f(x) = A$ 的含义是：对任意 $\\varepsilon > 0$，存在 $\\delta > 0$，当 $0 < |x - x_0| < \\delta$ 时，恒有 $|f(x) - A| < \\varepsilon$。直观理解：当 $x$ 无限接近 $x_0$（但 $x \\ne x_0$）时，$f(x)$ 无限接近 $A$。
+          $$\\lim_{x \\to x_0} f(x) = A$$ 的含义是：对任意 $\\varepsilon > 0$，存在 $\\delta > 0$，当 $0 < |x - x_0| < \\delta$ 时，恒有 $|f(x) - A| < \\varepsilon$。直观理解：当 $x$ 无限接近 $x_0$（但 $x \\ne x_0$）时，$f(x)$ 无限接近 $A$。
         </p>
         <div class="info-box info">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -6650,7 +6650,7 @@ const CourseData = {
         </ul>
 
         <h4 class="font-medium mt-6 mb-2">抗混叠滤波与采样定理</h4>
-        <div class="formula-block">奈奎斯特采样定理：<br>$f_s \geq 2 f_{max}$（采样频率 $\geq$ 信号最高频率的 2 倍）<br>抗混叠滤波：在 ADC 前加低通滤波器，截止频率 $f_c \leq f_s/2$<br>工程取值：$f_s \geq (3\sim 5) f_{max}$，留足够余量<div class="text-sm text-gray-500 mt-2">混叠是不可恢复的——一旦采样不满足奈奎斯特条件，信号就永久失真</div></div>
+        <div class="formula-block">奈奎斯特采样定理：<br>$f_s \\geq 2 f_{max}$（采样频率 $\\geq$ 信号最高频率的 2 倍）<br>抗混叠滤波：在 ADC 前加低通滤波器，截止频率 $f_c \\leq f_s/2$<br>工程取值：$f_s \\geq (3\\sim 5) f_{max}$，留足够余量<div class="text-sm text-gray-500 mt-2">混叠是不可恢复的——一旦采样不满足奈奎斯特条件，信号就永久失真</div></div>
 
         <h4 class="font-medium mt-6 mb-2">A/D 转换关键参数</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>参数</th><th>定义</th><th>12bit ADC 示例</th><th>影响</th></tr></thead><tbody><tr><td class="font-medium">分辨率</td><td>$V_{ref}/2^n$</td><td>3.3V/4096 = 0.8mV</td><td>可分辨最小信号</td></tr><tr><td class="font-medium">量化误差</td><td>±0.5 LSB</td><td>±0.4mV</td><td>不可避免的量化噪声</td></tr><tr><td class="font-medium">INL/DNL</td><td>积分/微分非线性</td><td>±1 LSB</td><td>精度上限</td></tr><tr><td class="font-medium">转换速率</td><td>每秒采样数</td><td>1MSPS</td><td>可测信号频率上限</td></tr><tr><td class="font-medium">SNR</td><td>信噪比</td><td>72dB (理论 12bit)</td><td>有效位数</td></tr></tbody></table></div>
@@ -6710,7 +6710,7 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">处理器架构决定了嵌入式系统的计算能力、功耗和编程模型。ARM Cortex-M 系列是当前最主流的嵌入式处理器内核，覆盖从低成本（Cortex-M0，$0.3）到高性能（Cortex-M7，300MHz+）。理解哈佛/冯诺依曼结构差异、流水线原理和 Cortex-M 寄存器模型，是编写高效嵌入式程序的基础。</p>
 
         <h4 class="font-medium mt-6 mb-2">哈佛结构 vs 冯诺依曼结构</h4>
-        <div class="formula-block"><strong>冯诺依曼结构</strong>：指令和数据共享同一条总线<br>$\text{取指} + \text{取数} = 2 \text{次总线访问，顺序执行}$<br><strong>哈佛结构</strong>：指令总线和数据总线独立<br>$\text{取指} \parallel \text{取数} = 1 \text{次总线周期，并行访问}$<div class="text-sm text-gray-500 mt-2">Cortex-M3/M4 采用改进哈佛结构（指令和数据独立总线，但 Flash 统一编址）</div></div>
+        <div class="formula-block"><strong>冯诺依曼结构</strong>：指令和数据共享同一条总线<br>$\\text{取指} + \\text{取数} = 2 \\text{次总线访问，顺序执行}$<br><strong>哈佛结构</strong>：指令总线和数据总线独立<br>$\\text{取指} \\parallel \\text{取数} = 1 \\text{次总线周期，并行访问}$<div class="text-sm text-gray-500 mt-2">Cortex-M3/M4 采用改进哈佛结构（指令和数据独立总线，但 Flash 统一编址）</div></div>
 
         <h4 class="font-medium mt-6 mb-2">ARM Cortex-M 系列对比</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>内核</th><th>流水线</th><th>频率</th><th>DSP</th><th>FPU</th><th>典型应用</th></tr></thead><tbody><tr><td class="font-medium">Cortex-M0/M0+</td><td>2/3 级</td><td>48MHz</td><td>无</td><td>无</td><td>低功耗传感器节点</td></tr><tr><td class="font-medium">Cortex-M3</td><td>3 级</td><td>72~120MHz</td><td>无</td><td>无</td><td>工业控制、IoT</td></tr><tr><td class="font-medium">Cortex-M4</td><td>3 级</td><td>168MHz</td><td>有</td><td>可选</td><td>电机控制、音频</td></tr><tr><td class="font-medium">Cortex-M7</td><td>6 级</td><td>300MHz+</td><td>有</td><td>有</td><td>图形处理、AI 推理</td></tr></tbody></table></div>
@@ -6748,7 +6748,7 @@ const CourseData = {
         <div class="formula-block">4GB 地址空间统一编址（$2^{32}$ 字节）：<br>$0x0000\_0000 \sim 0x1FFF\_FFFF$：Code 区（Flash/ROM，512MB）<br>$0x2000\_0000 \sim 0x3FFF\_FFFF$：SRAM 区（512MB）<br>$0x4000\_0000 \sim 0x5FFF\_FFFF$：外设区（512MB）<br>$0xE000\_0000 \sim 0xE00F\_FFFF$：私有外设（NVIC、SysTick、MPU）<div class="text-sm text-gray-500 mt-2">实际芯片只用到其中一小部分，如 STM32F103：64KB Flash @ 0x0800_0000，20KB SRAM @ 0x2000_0000</div></div>
 
         <h4 class="font-medium mt-6 mb-2">位带操作（Bit-Banding）</h4>
-        <div class="formula-block">将 1MB SRAM/外设区的每一位映射到 32MB 位带别名区的一个字：<br>$\text{别名地址} = \text{位带基址} + (\text{字节偏移} \times 32) + (\text{位号} \times 4)$<br>SRAM 位带：$0x2200\_0000 + (byte\_offset \times 32) + (bit\_number \times 4)$<br>外设位带：$0x4200\_0000 + (byte\_offset \times 32) + (bit\_number \times 4)$<div class="text-sm text-gray-500 mt-2">位带操作实现原子位读写，避免"读-改-写"的竞态条件</div></div>
+        <div class="formula-block">将 1MB SRAM/外设区的每一位映射到 32MB 位带别名区的一个字：<br>$\\text{别名地址} = \\text{位带基址} + (\\text{字节偏移} \\times 32) + (\\text{位号} \\times 4)$<br>SRAM 位带：$0x2200\\_0000 + (byte\\_offset \\times 32) + (bit\\_number \\times 4)$<br>外设位带：$0x4200\\_0000 + (byte\\_offset \\times 32) + (bit\\_number \\times 4)$<div class="text-sm text-gray-500 mt-2">位带操作实现原子位读写，避免"读-改-写"的竞态条件</div></div>
 
         <h4 class="font-medium mt-6 mb-2">Flash 与 SRAM 对比</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>特性</th><th>Flash</th><th>SRAM</th></tr></thead><tbody><tr><td class="font-medium">易失性</td><td>非易失（断电保留）</td><td>易失（断电丢失）</td></tr><tr><td class="font-medium">读速度</td><td>0 等待（有预取）</td><td>0 等待</td></tr><tr><td class="font-medium">写速度</td><td>慢（μs~ms）</td><td>快（ns）</td></tr><tr><td class="font-medium">擦除</td><td>需按扇区擦除</td><td>无需擦除</td></tr><tr><td class="font-medium">密度/成本</td><td>高密度、低成本</td><td>低密度、高成本</td></tr><tr><td class="font-medium">用途</td><td>程序代码、常量</td><td>变量、堆、栈</td></tr></tbody></table></div>
@@ -12486,7 +12486,7 @@ WantedBy=multi-user.target
           </tbody>
         </table></div>
         <div class="formula-block">
-          $$\text{CRC-16/MODBUS}:\\;\\; p(x) = x^{16} + x^{15} + x^{2} + 1 = \\text{0x8005}$$
+          $$\\text{CRC-16/MODBUS}:\\;\\; p(x) = x^{16} + x^{15} + x^{2} + 1 = \\text{0x8005}$$
           <div class="text-sm text-gray-500 mt-2">初值 0xFFFF，反射算法用 0xA001；两字节 CRC 把"坏数据碰巧通过"的概率压到 1/65536，配合双字节帧头足够可靠。工具箱工程协议分类下的 CRC 校验器可在线实算，联调时当第三方仲裁</div>
         </div>
 
@@ -13935,69 +13935,398 @@ wall  = 5;       <span class="code-comment">// 配合孔周围材料 ≥ 3mm</sp
         <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>开源权重 ≠ 开源数据/代码</strong>：大多数"开源模型"开放的是训练好的权重文件（可下载、可本地推理、可微调），训练数据和代码未必公开，学界称 weights-open。对工程实践这已足够：权重到手，量化、微调、<a href="javascript:void(0)" onclick="App.loadDetail('ai-14')">部署到开发板</a>全由你做主——这也是隐私场景（工业数据不出厂）唯一可行的路线。</div></div>
       ` },
 
-      // ===== ai-06 提示工程与上下文工程（概览版，完整版随批次 6b 上线）=====
-      { id: 'ai-06', title: '提示工程与上下文工程', desc: '零/少样本、思维链、系统提示词结构；2026 主线：从 prompt 到 context engineering（概览版）', icon: '✍️', tags: ['概览'], goals: { eng: true }, content: `
-        <h3 class="text-lg font-semibold mb-3">让模型听懂人话的工程学</h3>
+      // ===== ai-06 提示工程与上下文工程 =====
+      { id: 'ai-06', title: '提示工程与上下文工程', desc: '零/少样本、思维链、系统提示词三段式与结构化输出；2026 主线：从 prompt 到 context engineering', icon: '✍️', tags: ['核心', '工程'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">从"炼丹咒语"到"窗口资源调度"</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          同一个 <a href="javascript:void(0)" onclick="App.loadDetail('ai-04')">LLM</a>，换一句问法，答案质量天差地别——研究"怎么问"的学问叫提示工程（Prompt Engineering）。核心工具箱：零样本直问、少样本给例题、思维链（CoT，让它"一步一步想"再答）。系统提示词有成熟的三段式结构：<strong>角色（你是谁）→ 规则（必须/禁止什么）→ 格式（输出长什么样）</strong>。
+          同一个 <a href="javascript:void(0)" onclick="App.loadDetail('ai-04')">LLM</a>，换一句问法，答案质量天差地别。2023 年前后，"怎么问"这门学问（提示工程）一度被当成玄学咒语；到 2026 年共识已清晰：模型输出是一条条件概率分布，提示词就是那个"条件"——<strong>改提示不是念咒，是在改写模型看到的输入</strong>。而随着模型能力增强，瓶颈进一步从"一句话怎么措辞"转移到"进入上下文窗口的信息如何组织"——上下文工程（Context Engineering）。本节把两者一次讲透：它们是 <a href="javascript:void(0)" onclick="App.loadDetail('ai-08')">Agent</a> 与 <a href="javascript:void(0)" onclick="App.loadDetail('ai-09')">Harness 工程</a>的地基。
         </p>
-        <h4 class="font-medium mt-6 mb-2">2026 主线：从 Prompt 到 Context Engineering</h4>
+
+        <h4 class="font-medium mt-6 mb-2">提示三板斧：零样本、少样本、思维链</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
-          行业共识正在从"打磨一句话"转向<strong>上下文工程（Context Engineering）</strong>：模型能力越强，瓶颈越不在措辞，而在"进入上下文窗口的信息组织"——哪些检索结果、哪段历史、哪个工具说明、按什么顺序放进去。窗口是稀缺资源（<a href="javascript:void(0)" onclick="App.loadDetail('ai-04')">ai-04</a> 的 token 与 KV Cache），上下文工程就是窗口的资源调度器，也是 <a href="javascript:void(0)" onclick="App.loadDetail('ai-09')">Agent Harness</a> 的核心组成。
+          一切提示技术的统一视角：<a href="javascript:void(0)" onclick="App.loadDetail('ai-04')">ai-04</a> 讲过模型做的是"给定前文预测下一 token"，那么提示就是你能控制的那部分"前文"。
         </p>
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>概览版说明</strong>：本节完整内容（少样本模板、CoT 变体、结构化输出约束、上下文组装清单与反模式）随批次 6b 上线，当前先建立主线认知。</div></div>
+        <div class="formula-block">
+          $$P(\\text{回答}\\mid \\text{提示}) \\;\\longrightarrow\\; \\text{换提示} = \\text{换条件} = \\text{换分布}$$
+          <div class="text-sm text-gray-500 mt-2">少样本（few-shot）本质是"用示例对条件分布做局部重加权"——模型在上下文里临时学到了你的输出格式与推理风格，这叫<strong>上下文内学习</strong>（in-context learning），权重不变、只在推理时生效</div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>技术</th><th>做法</th><th>适用</th><th>token 成本</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">零样本</td><td>直接下指令："把这句话翻译成英文"</td><td>模型本来就会的常规任务</td><td>最低</td></tr>
+            <tr><td class="font-medium">少样本</td><td>先给 2~5 个"输入→输出"示例再提问</td><td>固定格式输出、领域术语改写、分类任务</td><td>中（示例占窗口）</td></tr>
+            <tr><td class="font-medium">思维链（CoT）</td><td>要求"先一步步推理，最后给答案"</td><td>数学计算、逻辑推理、排错类多步问题</td><td>高（生成变长）</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          CoT 为什么有效？回忆 <a href="javascript:void(0)" onclick="App.loadDetail('ai-04')">ai-04</a>：模型每生成一个 token，这个 token 就会拼回输入参与下一轮计算——<strong>生成的中间步骤就是模型给自己扩展的"草稿纸/寄存器"</strong>。一步算不出的答案，分解成二十步就能算；这与 CPU 里的通用寄存器放不下就写内存是同一个道理，只是"内存"在这里是上下文窗口。少样本与 CoT 可以叠加（先给带推理过程的示例，模型照葫芦画瓢）。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">系统提示词：三段式骨架</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          系统提示词（system prompt）是整个会话的"宪法"，优先级高于用户消息。工程上久经考验的三段式：<strong>角色（你是谁）→ 规则（必须/禁止什么）→ 格式（输出长什么样）</strong>。以本站贯穿案例——写字机 Agent——为例：
+        </p>
+        <div class="code-block"><span class="code-comment"># 写字机 Agent 系统提示词（三段式实例）</span>
+你是"写字机调度员"，负责把用户的绘图需求翻译成工具调用。          <span class="code-comment"># ← 角色</span>
+规则：
+1. 只使用提供的工具，坐标单位 mm，工作范围 X/Y ∈ [0, 300]
+2. 每次落笔前必须先调用 home() 校准；禁止连续两次 draw_line 起点不接续
+3. 不确定用户意图时，先提问确认，不要猜                        <span class="code-comment"># ← 规则</span>
+4. 工具执行失败时，最多重试 1 次，然后向用户报告
+输出：严格 JSON；无法完成时返回 {"error": "原因"}             <span class="code-comment"># ← 格式</span></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          三段的顺序有讲究：角色定语气，规则防事故（第 2、4 条就是给 Agent 上"软件限位"与"看门狗"），格式保证下游程序可解析。规则要用<strong>可判定的表述</strong>——"写清楚点"不可判定，"坐标不得超过 300"可判定；不可判定的规则模型只能靠感觉，等于没写。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">结构化输出：让下游程序敢接</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          Agent 场景里模型输出要喂给程序执行，自然语言自由文本没法解析。工程做法三连：① 提示里给出<strong>JSON Schema 或完整示例</strong>；② 开启 API 的 JSON mode / 结构化输出参数；③ 终极手段是<strong>受约束解码</strong>（constrained decoding）——推理时直接屏蔽不符合语法的 token，让非法 JSON 概率归零：
+        </p>
+        <div class="formula-block">
+          $$y_t \\sim P(y_t \\mid y_{&lt;t}, x) \\;\\Big|_{y_t \\in G}, \\qquad G = \\text{目标 JSON 语法}$$
+          <div class="text-sm text-gray-500 mt-2">语法 $G$ 像一条"轨道"，把采样限制在轨道内——这正与 <a href="javascript:void(0)" onclick="App.loadDetail('dig-11')">状态机</a>约束时序电路合法状态转移同构：解码器每步的"状态"就是当前已生成前缀，合法后继集合由语法决定</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">上下文工程：窗口的资源调度器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          2026 年的主线转移：模型越强，单句措辞的边际收益越小，<strong>"往窗口里放什么"成了第一杠杆</strong>。窗口是硬预算（<a href="javascript:void(0)" onclick="App.loadDetail('ai-04')">ai-04</a> 的 KV Cache 公式：窗口越长显存/延迟线性涨），一次请求的预算分配：
+        </p>
+        <div class="formula-block">
+          $$C_{\\text{total}} = C_{\\text{sys}} + C_{\\text{tools}} + C_{\\text{hist}} + C_{\\text{retrieval}} + C_{\\text{gen}}$$
+          <div class="text-sm text-gray-500 mt-2">系统提示 + 工具定义 + 会话历史 + 检索片段（<a href="javascript:void(0)" onclick="App.loadDetail('ai-07')">RAG</a>）+ 生成预留，五项抢一个窗口——上下文工程就是这套预算的调度算法</div>
+        </div>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>盘点预算</strong><br>模型窗口 32K token，系统提示 800、工具定义 1,200、生成预留 2,000 → 可用于历史+检索的份额 = 32K − 4K = 28K</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>分层放置</strong><br>固定信息（系统提示、工具 schema）放最前；当前任务描述与关键约束放最后——"lost in the middle"：长上下文中部的信息召回率显著低于两端</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>历史瘦身</strong><br>保留最近 3~5 轮原文 + 更早轮次摘要（"用户要求画 20mm 正方形，已完成 2 条边"）；工具返回的大结果截断或落盘引用</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>检索配额</strong><br>RAG 片段给 top-3~5、每条 300~500 token，宁精勿多——塞 20 条相关度平庸的片段，不如 3 条高相关的</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>动态监测</strong><br>每轮组装前检查用量：超过阈值（如 75%）触发压缩——这套"内存超阈值就整理"的策略由 <a href="javascript:void(0)" onclick="App.loadDetail('ai-09')">ai-09 的 Harness</a> 自动执行</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">反模式清单</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          工程实践中最常见的五种翻车：① <strong>规则冲突</strong>——"回答尽量简短"与"给出完整推导"打架，模型随机二选一；② <strong>负面指令过载</strong>——连写十条"不要……不要……"，注意力被"不要"的内容本身占用（先激活再抑制，人脑同理）；③ <strong>示例自相矛盾</strong>——少样本示例格式不一，模型学到的是"格式可以随便"；④ <strong>把窗口当数据库</strong>——一次塞 50KB 文档全文，middle 部分等于没看见，该检索（<a href="javascript:void(0)" onclick="App.loadDetail('ai-07')">ai-07</a>）的场景不要硬塞；⑤ <strong>提示词无版本管理</strong>——改一处全局生效，回归测试无从谈起。提示词是代码，进 Git、写测试、逐步演进。
+        </p>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>"提示词越写越长"陷阱</strong>：没有度量就优化是盲调。每次改动只改一处，用固定的 10~20 个测试用例跑通过率（这套用例集就是 evals，见 <a href="javascript:void(0)" onclick="App.loadDetail('ai-09')">ai-09</a>）。另一常见坑：示例里泄露答案格式却没检查模型是否<strong>只会套格式</strong>——换个数值就错，说明学到的是形不是义。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>一句话记住两门工程</strong>：提示工程管"单次请求怎么说"，上下文工程管"整个会话放什么"。范式三部曲——Prompt（打磨指令）→ Context（组织窗口）→ Harness（设计运行时）——每一步都更"重工程"，下一节先讲把私有资料接进窗口的标准答案：<a href="javascript:void(0)" onclick="App.loadDetail('ai-07')">RAG 检索增强生成</a>。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>系统提示词不是安全边界</strong>：无论规则写得多严，都只是"软约束"——改变概率分布，不保证 100% 遵守。涉及安全的关键校验（坐标越界、危险命令）必须在工具执行层用代码硬校验，这正是 <a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11 协议层</a>存在的意义：LLM 负责理解意图，协议层负责兜底。</div></div>
       ` },
 
-      // ===== ai-07 RAG 检索增强生成（概览版）=====
-      { id: 'ai-07', title: 'RAG 检索增强生成', desc: 'embedding 检索、向量库、分块与重排——用你的资料给模型"开卷考试"（概览版）', icon: '📚', tags: ['概览'], goals: { eng: true }, content: `
+      // ===== ai-07 RAG 检索增强生成 =====
+      { id: 'ai-07', title: 'RAG 检索增强生成', desc: 'embedding 检索、余弦相似度、分块策略、混合检索与重排——用你的资料给模型"开卷考试"', icon: '📚', tags: ['核心', '工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">给模型一本"开卷教材"</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          LLM 的知识冻结在训练截止日，且不认识你的私有资料。RAG（Retrieval-Augmented Generation）的思路朴素：<strong>先检索、后生成</strong>——把用户问题转成 <a href="javascript:void(0)" onclick="App.loadDetail('ai-01')">embedding 向量</a>，在向量库里找回最相关的资料片段，塞进上下文再让模型作答。模型从"闭卷背诵"变"开卷阅读"，幻觉大幅下降，资料更新只需重建索引、不用重训模型。
+          LLM 有两个先天缺陷：知识冻结在训练截止日、不认识你的私有资料（你的笔记、本站 228 节正文、公司工艺文档）。硬靠模型"回忆"作答，幻觉（编造）迟早发生。RAG（Retrieval-Augmented Generation）的思路朴素：<strong>先检索、后生成</strong>——把问题相关的那几段资料找出来，塞进上下文，让模型对着材料作答。模型从"闭卷背诵"变"开卷阅读"，资料更新只需重建索引、不用重训模型——这是把私有知识接入 <a href="javascript:void(0)" onclick="App.loadDetail('ai-04')">LLM</a> 的性价比之王，也是 <a href="javascript:void(0)" onclick="App.loadDetail('ai-06')">ai-06</a> 上下文工程"检索份额"的标准供给方。
         </p>
-        <h4 class="font-medium mt-6 mb-2">流水线与关键抉择</h4>
+
+        <h4 class="font-medium mt-6 mb-2">为什么是 RAG，而不是微调</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>维度</th><th>RAG</th><th>微调（SFT）</th><th>长上下文硬塞</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">知识更新</td><td>重建索引即可（分钟级）</td><td>重新训练（天/周级）</td><td>换文档即可</td></tr>
+            <tr><td class="font-medium">成本</td><td>低：一次 embedding 计算</td><td>高：GPU 训练资源</td><td>高：每请求付长上下文 token 钱</td></tr>
+            <tr><td class="font-medium">可溯源</td><td>✅ 答案附引用出处</td><td>❌ 知识熔进权重</td><td>✅（但难定位）</td></tr>
+            <tr><td class="font-medium">适合注入</td><td>事实型知识（文档/手册/规范）</td><td>风格与技能（格式/术语/推理习惯）</td><td>一次性小文档</td></tr>
+            <tr><td class="font-medium">典型失败</td><td>检索不准 → 答非所问</td><td>过拟合 → 泛化变差</td><td>lost in the middle</td></tr>
+          </tbody>
+        </table></div>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
-          离线侧：文档 → 分块（chunk）→ 逐块向量化 → 入库；在线侧：问题向量化 → 最近邻检索（本质是高维<a href="javascript:void(0)" onclick="App.loadDetail('ds-13')">查找</a>问题）→（可选）重排 → 拼提示词 → 生成。两个最影响效果的工程决策：<strong>分块粒度</strong>（太小语义破碎、太大稀释相关性，典型 200~800 token 带重叠）与<strong>重排</strong>（用轻量模型对前 50 条精排出前 5，比一味加大召回量划算）。实例设想：把本站 228 节内容向量化，做一个"课程问答"入口——问"KV Cache 怎么算"，检索回 ai-04 原文作答。
+          经验法则：<strong>知识用 RAG，行为用微调</strong>，两者可叠加。"让模型用工厂术语写报告"是行为问题（微调）；"让模型答对设备说明书第 7 页的参数"是知识问题（RAG）。
         </p>
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>概览版说明</strong>：完整版（embedding 模型选型、向量库对比、混合检索、评估方法）随批次 6b 上线。</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">embedding 与向量检索：语义怎么变成距离</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          <a href="javascript:void(0)" onclick="App.loadDetail('ai-01')">ai-01</a> 的嵌入矩阵把 token 映射成向量；文档级 embedding 更进一步——用专门的编码模型（双向 Transformer + 池化）把整段文本压成一个固定维度向量（常见 384~1024 维），训练目标让"语义相近 → 向量相近"。相似度用夹角余弦衡量：
+        </p>
+        <div class="formula-block">
+          $$\\text{sim}(\\boldsymbol{a}, \\boldsymbol{b}) = \\cos\\theta = \\frac{\\boldsymbol{a} \\cdot \\boldsymbol{b}}{\\|\\boldsymbol{a}\\|\\,\\|\\boldsymbol{b}\\|} \\in [-1, 1]$$
+          <div class="text-sm text-gray-500 mt-2">比欧氏距离更稳的原因：embedding 模型输出向量的长度不稳定，余弦只看方向——"电机电流"与"相电流过大"方向接近，与"红烧肉做法"接近正交</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          检索 = 在百万级向量里找 top-k 最近邻，本质是高维<a href="javascript:void(0)" onclick="App.loadDetail('ds-13')">查找</a>问题。暴力扫描是 $O(N \\cdot d)$，工业界用 <strong>ANN 近似最近邻索引</strong>（HNSW 分层小世界图：建索引时把向量组织成"高速公路网"，查询从顶层粗跳、逐层细化，亚线性复杂度换 95%+ 召回）——工程权衡的老朋友：索引占内存、召回换速度，与 <a href="javascript:void(0)" onclick="App.loadDetail('ds-13')">散列表</a>用空间换时间同宗。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">分块：RAG 效果的第一决定因素</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          文档必须切成块（chunk）再分别 embedding——块太小语义破碎（"见表 3"单独一块谁也不知所云），太大稀释相关性（一块 2000 token 里只有一段相关，向量被冲淡）。典型粒度 200~800 token、相邻块重叠 10~20%（防止关键句恰好被切断）：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>策略</th><th>做法</th><th>适用</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">固定长度</td><td>每 500 token 一刀，带重叠</td><td>格式均匀的技术文档，实现最简单</td></tr>
+            <tr><td class="font-medium">递归切分</td><td>优先按段落→句子→字符逐级 fallback</td><td>默认首选：尽量保住语义边界</td></tr>
+            <tr><td class="font-medium">按结构切</td><td>Markdown 标题/HTML 标签/LaTeX 环境为界</td><td>本站这类结构化课程（公式块绝不能拦腰切断）</td></tr>
+            <tr><td class="font-medium">父子块</td><td>小块检索命中、返回其所属大块</td><td>检索要准、上下文要全，两全其美</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">混合检索与重排：两段式流水线</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          纯向量检索擅长"意思相近"，但对精确词（型号 "STM32F103"、报错码 "0x8000000A"）常输给关键词匹配。工业标配是<strong>混合检索</strong>：BM25 关键词（本质是带词频饱和与文档长度惩罚的打分，思想与 <a href="javascript:void(0)" onclick="App.loadDetail('search'.length>0?'':'')">…</a> 无关、但与 IDF 概率检索同源）+ 向量检索各召回一路，再用 RRF 融合：
+        </p>
+        <div class="formula-block">
+          $$\\text{RRF}(d) = \\sum_{i \\in \\text{各路}} \\frac{1}{k + \\text{rank}_i(d)}, \\qquad k \\approx 60$$
+          <div class="text-sm text-gray-500 mt-2">只看排名不看分数（两路分数量纲不同没法直接加），$k=60$ 是经验值——第一名约得 1/61 分，第 100 名约 1/160 分，名次敏感递减</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          融合后的第二段是<strong>重排</strong>（rerank）：召回 top-50 → 用交叉编码器（query 和文档拼在一起过模型，逐对打分，精度高但慢）精排 → 取 top-3~5 进上下文。两段式 = <strong>先粗筛后精选</strong>，与 <a href="javascript:void(0)" onclick="App.loadDetail('ai-03')">ai-03</a> 注意力"先算相似度再 softmax 加权"分层递进是一个方法论：便宜的算子扫全量，昂贵的算子只处理候选。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">端到端实例：给本站做"课程问答"</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>离线索引</strong><br>遍历本站 228 节正文 → 按标题/公式块/表格结构切分（平均每节约 15 块）→ embedding 模型逐块向量化 → 入向量库（约 3,400 块），同时存元数据：{板块、节 id、标题}</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>在线查询</strong><br>用户问"KV Cache 显存怎么算" → 问题向量化 → 向量库取 top-20 → BM25 路（关键词 KV/Cache/显存）取 top-20 → RRF 融合</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>重排截断</strong><br>交叉编码器对融合后 top-50 精排 → 取 top-4（预期命中 ai-04 原文公式块）</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>组装生成</strong><br>系统提示（"只依据资料回答，注明出处节 id"）+ 4 段资料 + 用户问题 → LLM 生成，答案带 [ai-04] 引用可点击跳转</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>评估闭环</strong><br>出 50 道标准问答对，度量：检索命中率（正确节进没进 top-4）与答案忠实度（faithfulness，答案是否被资料支撑）——两项分别定位检索层与生成层的锅</div></div>
+        </div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>换 embedding 模型 = 全量重建索引</strong>：不同模型的向量空间互不兼容——A 模型的"电机"和 B 模型的"电机"坐标完全不同，混用等于把两套坐标系叠着用，检索结果全乱。另两个高频翻车点：分块切断公式（$L$ 被劈成两半，检索命中也没法用）；只调生成提示不查检索质量（答案错的根因在上游——先量检索命中率再动提示词）。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>2026 进展速览</strong>：Agentic RAG——模型自己决定"要不要检索、检索什么、够不够"，把 RAG 从固定流水线变成 <a href="javascript:void(0)" onclick="App.loadDetail('ai-08')">Agent 的一个工具</a>（search）；GraphRAG——先抽实体关系图谱再按图检索，适合"谁负责哪个子系统"这类多跳问题。万变不离其宗：都在优化"进窗口的信息密度"。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与边缘部署的关系</strong>：RAG 的检索库可以很小（几千块向量在 STM32 上跑不动，但在 <a href="javascript:void(0)" onclick="App.loadDetail('linux-14')">linux 开发板</a>上用 SQLite + numpy 就能做原型）——开发板本地 LLM（<a href="javascript:void(0)" onclick="App.loadDetail('ai-14')">ai-14</a>）配上本地 RAG，就是一台不联网的"私有知识问答机"。</div></div>
       ` },
 
-      // ===== ai-08 AI Agent 与工具调用（概览版）=====
-      { id: 'ai-08', title: 'AI Agent 与工具调用', desc: 'ReAct 循环、Function Calling、规划与反思——LLM 从"会说"到"会做"（概览版）', icon: '🤖', tags: ['概览'], goals: { eng: true }, content: `
+      // ===== ai-08 AI Agent 与工具调用 =====
+      { id: 'ai-08', title: 'AI Agent 与工具调用', desc: 'ReAct 循环、Function Calling、工具设计五原则、规划与反思、多智能体——LLM 从"会说"到"会做"', icon: '🤖', tags: ['核心', '工程'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">从聊天框到执行器</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          模型只能输出文字，怎么"做事"？答案是让它输出<strong>结构化的调用指令</strong>，由外部程序执行后把结果喂回来。<strong>Function Calling</strong>：预先给模型一份工具清单（JSON Schema 描述函数名、参数、用途），模型判断需要时输出一帧调用请求，运行时执行真实函数。<strong>ReAct 循环</strong>把这一切连成圈：思考（Thought）→ 行动（Action）→ 观察（Observation）→ 再思考……直到给出最终答案——这就是 Agent 的心跳。
+          模型本体只能做一件事：输出文字。那它怎么"做事"？答案是<strong>让文字变成指令，让程序执行指令，把结果喂回模型</strong>。Chat（你问我答）→ Agent（我调工具完成任务）的分界线就在这里。2026 年工程界对 Agent 的共识定义可以压缩成一句话：<strong>LLM + 循环 + 工具 + 状态</strong>——模型在循环里自主决定调用什么工具、观察结果、继续还是停止。本节从 Function Calling 这个原子操作讲起，拼出完整的 ReAct 循环，并把全站贯穿案例落地：<strong>用自然语言指挥写字机</strong>。
         </p>
-        <h4 class="font-medium mt-6 mb-2">写字机会用到的三件工具</h4>
+
+        <h4 class="font-medium mt-6 mb-2">Function Calling：结构化的"请求调用"</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
-          本站贯穿案例在此登场：给写字机 Agent 定义 move_to(x,y) / draw_line(x1,y1,x2,y2) / home() 三个工具，参数 schema 直接复用 <a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11 设计的通信协议命令表</a>。用户说"画个正方形"，模型输出四次 draw_line 调用，宿主程序翻译成协议帧发给 STM32——<strong>LLM 出脑，协议出手，写字机动笔</strong>。工具越少越准、描述越清楚越稳，是 Agent 工程第一定律。
+          原理在 <a href="javascript:void(0)" onclick="App.loadDetail('ai-04')">ai-04</a> 已铺垫：模型输出的是词表上的概率分布。所谓 Function Calling，就是把"函数调用"做成词表里合法的输出形态——预先在请求里附上工具清单（JSON Schema 描述名称、参数、用途），模型判断需要时输出一帧调用请求，<strong>运行时（你的程序）执行真实函数</strong>，再把结果作为新消息喂回。模型自始至终没执行任何东西，它只是"写了一张工单"。给写字机定义的三个工具：
         </p>
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>概览版说明</strong>：完整版（ReAct 样例轨迹、工具 schema 设计规范、规划-反思模式、多智能体分工、agent-loop 动画图）随批次 6b 上线。</div></div>
+        <div class="code-block"><span class="code-comment">// 写字机工具清单：schema 直接来自 linux-11 的协议命令表</span>
+tools = [
+  { "name": "home",        "desc": "笔架回机械原点，执行约 2s",
+    "params": {} },
+  { "name": "move_to",     "desc": "抬笔移动到 (x,y)，单位 mm，范围 0~300",
+    "params": { "x": "number", "y": "number" } },
+  { "name": "draw_line",   "desc": "落笔从当前点画直线到 (x,y)",
+    "params": { "x": "number", "y": "number" } }
+]
+<span class="code-comment">// 模型输出（示意）：请求调用 draw_line，参数由它自己填</span>
+{"tool": "draw_line", "args": {"x": 20, "y": 0}}
+<span class="code-comment">// 运行时执行：编码成 linux-11 协议帧 → 串口 → STM32 → 返回 {"ok": true, "ms": 310}</span></div>
+
+        <h4 class="font-medium mt-6 mb-2">ReAct：Agent 的心跳</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          单次调用只是遥控器；把"思考 → 行动 → 观察"接成环，才有自主性。这就是 <strong>ReAct</strong>（Reason + Act）循环：<strong>Thought</strong>（模型推理当前该做什么）→ <strong>Action</strong>（发出工具调用）→ <strong>Observation</strong>（工具结果回注上下文）→ 回到 Thought……直到模型判定任务完成（或触发停止条件）。下面的动画把这条循环跑给你看——注意上下文条的增长和最后亮起的停止条件：
+        </p>
+        <div data-chart="agent-loop" class="chart-container" style="height:470px"></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          看完动画记三件事：① <strong>每转一轮，历史全部保留在上下文里</strong>——这正是 <a href="javascript:void(0)" onclick="App.loadDetail('ai-06')">ai-06</a> 上下文预算紧张的根源，长任务必须靠 <a href="javascript:void(0)" onclick="App.loadDetail('ai-09')">ai-09 的压缩机制</a>续命；② <strong>停止条件是安全件</strong>：任务完成、轮数上限、预算耗尽，三者任一触发就退出循环，就像 <a href="javascript:void(0)" onclick="App.loadDetail('emb-08')">嵌入式里的看门狗</a>；③ 循环的每一轮都是一次完整的 LLM 请求——延迟和成本按轮数线性累积。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">工具设计五原则</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>原则</th><th>❌ 坏工具</th><th>✅ 好工具</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">描述写给模型看</td><td>"draw_line(x, y)"</td><td>"落笔从当前点画直线到 (x,y)，mm，范围 0~300"</td></tr>
+            <tr><td class="font-medium">参数少而正交</td><td>draw(shape, size, color, x1, y1, x2, y2, …)</td><td>只留 x/y 两个数；"画正方形"是模型该拆的题</td></tr>
+            <tr><td class="font-medium">错误信息可读</td><td>返回 "err -3"</td><td>返回 "坐标 (320, 0) 越界，上限 300"——模型读到就能自我纠正</td></tr>
+            <tr><td class="font-medium">幂等可重试</td><td>home() 执行到一半断电会乱</td><td>home() 任何时候调用都回到确定状态</td></tr>
+            <tr><td class="font-medium">数量克制</td><td>一口气挂 50 个工具</td><td>3~8 个精心描述的工具，选择准确率远高于大杂烩</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">一条完整轨迹："画个边长 20 的正方形"</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>Thought 1（规划）</strong><br>用户要边长 20 的正方形。工作台原点在左下角。计划：先回零，再依次画 (0,0)→(20,0)→(20,20)→(0,20)→(0,0) 四条边</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>Action 1 + Observation 1</strong><br>调用 home() → 运行时下发 <a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">协议帧</a> 0x01 → 观察 {"ok": true, "pos": [0,0]}，历史 +180 token</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>Action 2~5（连续四条边）</strong><br>move_to(0,0) → draw_line(20,0) → draw_line(20,20) → draw_line(0,20) → draw_line(0,0)，每次观察 {"ok": true, "ms": ~300}</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>Thought 2（校验）</strong><br>四条边全部成功且首尾闭合。对照任务：边长 20 ✔ 闭合 ✔ —— 满足完成条件</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>停止 + 汇报</strong><br>退出循环，生成最终回答："已画完 20mm 正方形，耗时约 3.2s"。全程 5 次工具调用、6 次 LLM 请求——这就是一个最小但完整的 Agent</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">进阶：规划、反思与多智能体</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          任务一复杂，纯 ReAct 会"走一步看一步"地跑偏。两种增强：① <strong>先规划后执行</strong>（plan-then-execute）：第一轮让模型产出显式计划清单，之后逐项执行、按需重规划——相当于 <a href="javascript:void(0)" onclick="App.loadDetail('linux-13')">linux-13 的 lookahead 前瞻规划</a>，先看全程再落第一步；② <strong>反思</strong>（reflection）：每完成一阶段让模型自评"哪里可能错了、要不要回头"，典型如"生成代码 → 跑测试 → 读报错 → 修复"的编码循环。再往上 是<strong>多智能体</strong>：一个调度者（orchestrator）把子任务分给专职 agent（检索员、编码员、审查员），各自带自己的上下文与工具——本质是<a href="javascript:void(0)" onclick="App.loadDetail('os-03')">进程拆分</a>思想：上下文隔离、消息通信，避免所有职责挤爆一个窗口。但层级越多调试越难，<strong>能单 agent 解决就别上多 agent</strong>。
+        </p>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>Agent ≠ 更好的模型</strong>：把普通任务硬套 Agent 循环，往往比一次性问答更慢、更贵、更不稳定——确定性任务（每次都相同的格式转换）写十行脚本比调模型可靠一万倍。Agent 的适用区：任务路径<strong>事先未知、需要根据反馈调整</strong>。另外警惕"工具越多越强"的错觉：实测工具超过一二十个后选择准确率明显下降，宁可分组按需注入。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>自动化人的直觉</strong>：ReAct 循环 = <a href="javascript:void(0)" onclick="App.loadDetail('mct-03')">状态反馈控制</a>：目标是任务，工具执行是控制量，观察是反馈，"继续/停止"是决策律；停止条件 = 看门狗；上下文压缩 = 内存回收。你已经学了四年怎么设计"感知-决策-执行"的循环，Agent 只是把执行器换成了自然语言接口——而把这套循环工程化做稳做便宜，正是 <a href="javascript:void(0)" onclick="App.loadDetail('ai-09')">下一节 Harness 工程</a>的主题。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>Function Calling 不是模型的新能力</strong>：底座还是"给定上下文预测下一 token"，工具调用只是把输出空间约束到 JSON 语法（<a href="javascript:void(0)" onclick="App.loadDetail('ai-06')">ai-06</a> 的受约束解码）。所以工具描述写得好不好，直接进模型的概率计算——描述就是给模型的"数据手册"。工具生态的标准化（一次定义、处处可用）则由 <a href="javascript:void(0)" onclick="App.loadDetail('ai-10')">ai-10 的 MCP</a> 解决。</div></div>
       ` },
 
-      // ===== ai-09 Agent Harness 工程（概览版）=====
-      { id: 'ai-09', title: 'Agent Harness 工程', desc: 'LLM 外围工程层：agent loop、上下文压缩、停止条件、权限模型——2026 热点（概览版）', icon: '🛠️', tags: ['概览', '前沿'], goals: { eng: true }, content: `
+      // ===== ai-09 Agent Harness 工程 =====
+      { id: 'ai-09', title: 'Agent Harness 工程', desc: 'LLM 外围工程层五要素：agent loop、上下文压缩、停止条件与预算、权限模型、评估——2026 热点', icon: '🛠️', tags: ['核心', '前沿'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">同一模型，换个"外壳"性能差数倍</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          2026 年工程界的共识：Agent 能力的下限由模型决定，上限由 <strong>Harness</strong>（挽具/外壳）决定——即包裹模型的工程层。以编码 Agent（Claude Code、ZCode 等）为例，harness 五要素：<strong>agent loop</strong>（循环驱动模型-工具-结果直到完成）、<strong>工具与权限</strong>（给什么工具、哪些操作要确认）、<strong>上下文压缩</strong>（长任务历史摘要化，窗口资源调度）、<strong>停止条件</strong>（防无限循环与预算爆炸）、<strong>评估</strong>（怎么知道它做对了）。"同一模型换 harness 表现差数倍"是行业反复复现的现象——就像同一颗 MCU，固件架构决定整机性能（类比 <a href="javascript:void(0)" onclick="App.loadDetail('os-02')">操作系统调度决定程序体验</a>）。
+          2026 年工程界的共识：<strong>Agent 能力的下限由模型决定，上限由 Harness（挽具/外壳）决定</strong>——即包裹模型的那一圈工程层：循环怎么驱动、上下文怎么收纳、工具给哪些、何时停、出错怎么办。"同一个模型换 harness 表现差数倍"是被反复复现的行业现象（各家编码 agent 用同款底座模型，任务完成率天差地别），道理与硬件工程师熟悉的世界一模一样：<strong>同一颗 MCU，固件架构决定整机性能</strong>——调度、内存、外设驱动、看门狗，缺一个都是灾难。本节剖析 harness 五要素，并以编码 agent（Claude Code、ZCode 等）为标本。
         </p>
-        <h4 class="font-medium mt-6 mb-2">范式转移三部曲</h4>
+
+        <h4 class="font-medium mt-6 mb-2">五要素总览</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>要素</th><th>职责</th><th>嵌入式世界类比</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">① Agent Loop</td><td>驱动"模型→工具→结果"循环直到任务完成</td><td><a href="javascript:void(0)" onclick="App.loadDetail('emb-08')">主循环 + 中断</a>调度</td></tr>
+            <tr><td class="font-medium">② 工具与权限</td><td>给什么工具、哪些操作要人工确认</td><td>外设驱动 + 特权指令分级</td></tr>
+            <tr><td class="font-medium">③ 上下文压缩</td><td>长任务历史摘要化，守住窗口预算</td><td>内存回收 / <a href="javascript:void(0)" onclick="App.loadDetail('os-04')">内存管理</a></td></tr>
+            <tr><td class="font-medium">④ 停止条件</td><td>防无限循环、防预算爆炸</td><td><a href="javascript:void(0)" onclick="App.loadDetail('emb-05')">看门狗定时器</a></td></tr>
+            <tr><td class="font-medium">⑤ 评估（Evals）</td><td>怎么知道它做对了——回归测试集</td><td>产测 / 单元测试</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">Agent Loop 的工程实现</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
-          2022~2026 三年三次转向：Prompt Engineering（打磨指令）→ Context Engineering（组织窗口）→ Harness Engineering（设计整个运行时环境）。越往后越"重工程"，越贴近你熟悉的<a href="javascript:void(0)" onclick="App.loadDetail('emb-08')">嵌入式系统设计</a>思维：状态机、看门狗（停止条件）、内存约束（上下文预算）、外设驱动（工具层）。
+          <a href="javascript:void(0)" onclick="App.loadDetail('ai-08')">ai-08</a> 讲了 ReAct 的概念，harness 里它是这样一段再普通不过的程序（伪代码）：
         </p>
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>概览版说明</strong>：完整版（五要素逐项展开、Claude Code/ZCode 类编码 agent 结构剖析、compaction 策略、agent-loop 状态机动画）随批次 6b 上线。</div></div>
+        <div class="code-block"><span class="code-keyword">while</span> (round &lt; MAX_ROUNDS &amp;&amp; cost &lt; BUDGET) {
+  resp = llm(messages, tools)                 <span class="code-comment">// 一次完整请求</span>
+  <span class="code-keyword">if</span> (resp.is_final_answer) <span class="code-keyword">break</span>;           <span class="code-comment">// 停止条件①：模型说做完了</span>
+  <span class="code-keyword">if</span> (ctx_tokens(messages) &gt; THRESHOLD)
+      messages = compact(messages);            <span class="code-comment">// ③ 上下文压缩（下文展开）</span>
+  <span class="code-keyword">for</span> (call <span class="code-keyword">of</span> resp.tool_calls) {
+      <span class="code-keyword">if</span> (!permits(call)) <span class="code-keyword">continue</span>;            <span class="code-comment">// ② 权限检查</span>
+      result = execute(call);                  <span class="code-comment">// 真实世界副作用发生处</span>
+      messages.push(result);                   <span class="code-comment">// 观察回注</span>
+  }
+  round++; cost += resp.usage;                <span class="code-comment">// ④ 预算记账</span>
+}</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          注意一个关键分工：循环、检查、记账全是<strong>普通代码</strong>，模型只出现在 llm() 那一行。AI 产品工程师的日常，90% 在写循环外圈这些确定性逻辑——与 <a href="javascript:void(0)" onclick="App.loadDetail('os-02')">操作系统</a>把"不可靠的并发世界"管起来是同一门手艺。
+        </p>
+        <div data-chart="agent-loop" class="chart-container" style="height:470px"></div>
+
+        <h4 class="font-medium mt-6 mb-2">上下文压缩（Compaction）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          长任务（几千轮工具调用）的历史远超窗口。压缩策略三件套：
+        </p>
+        <div class="formula-block">
+          $$\\text{压缩后} = \\underbrace{\\text{摘要(早期历史)}}_{\\text{LLM 生成}} + \\underbrace{\\text{最近 } k \\text{ 轮原文}}_{\\text{保真}} + \\underbrace{\\text{关键文件/结论落盘}}_{\\text{外部记忆}}$$
+          <div class="text-sm text-gray-500 mt-2">典型的触发阈值：上下文用量超过 75~80% 时异步压缩；正在执行的任务关键信息（当前目标、未完成的 TODO）永远保真不进摘要</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          工具结果是压缩的大头：一次"列目录"返回 500 行、一次"读文件"返回整个源码，看完就该瘦身——保留模型自己写下的结论（"该文件实现了 CRC 校验，无需再读"），原始输出截断或转成文件引用（要用再读）。<strong>外部记忆</strong>则把跨会话需要的信息（笔记、决策、学到的项目约定）写到磁盘文件，下轮会话按需读回——用"检索"换"窗口"，与 <a href="javascript:void(0)" onclick="App.loadDetail('ai-07')">ai-07 的 RAG</a> 共享同一哲学。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">停止条件与预算：成本核算</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          没有停止条件的 agent 循环，等价于没有看门狗的 while(1) 循环。五道闸门按顺序检查：<strong>任务完成</strong>（模型输出最终答案）→ <strong>轮数上限</strong>（如 25 轮）→ <strong>token 预算</strong> → <strong>无进展检测</strong>（连续 3 轮调用同一工具同样参数 = 卡死，强制注入提示或终止）→ <strong>人工接管</strong>（长时间无进展时挂起等确认）。成本公式：
+        </div>
+        <div class="formula-block">
+          $$\\text{Cost} = \\sum_{i=1}^{R}\\left(n^{(i)}_{\\text{in}} \\, p_{\\text{in}} + n^{(i)}_{\\text{out}} \\, p_{\\text{out}}\\right) \\;\\xrightarrow{\\text{循环不压缩}}\\; O(R^2)$$
+          <div class="text-sm text-gray-500 mt-2">轮数 $R$ 增加，每轮输入 $n_{\\text{in}}$ 因历史累积而增长——不压缩时总 token 按平方涨；压缩把它压回近似线性，这是 harness 直接省钱的地方（价格量级随时间变化，公式结构不变）</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">权限模型：副作用分级</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          工具有真实副作用（写文件、发协议帧、删数据）。成熟 harness 的权限分级：<strong>只读操作</strong>（读文件/查状态）自动放行 → <strong>可逆写操作</strong>（改文件但进 git、移动笔架）按策略放行或白名单 → <strong>不可逆危险操作</strong>（rm、推送、发送网络请求）必须人工确认。原则与 <a href="javascript:void(0)" onclick="App.loadDetail('os-02')">操作系统的用户/内核态</a>同构：<strong>最小权限 + 显式授权</strong>。给写字机 agent 划线：move_to/home 自动执行（撞不坏），换笔/清平台要确认（机械干涉风险）。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">标本解剖：编码 Agent 的结构</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          Claude Code、ZCode 这类编码 agent 是 harness 工程的集大成者，结构可以拆成四层：① <strong>交互层</strong>（CLI/IDE 插件，接收自然语言指令）；② <strong>Agent Loop 层</strong>（上一节的循环本体 + 压缩 + 预算 + 权限门）；③ <strong>工具层</strong>（读/写/搜索文件、执行 shell、查 git……每个工具带 schema 与权限级）；④ <strong>模型层</strong>（可换的底座）。把 ZCode 指到你的代码仓库，它"读目录→定位文件→改代码→跑测试→读报错→再改"的每一步，都是 loop 里的一次迭代。<strong>同一模型换 harness 性能差数倍</strong>的来源就在②③：压缩时机、工具描述质量、权限设计、无进展检测——全是普通工程活，没有一点魔法。
+        </p>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>无限循环是 harness 的头号事故</strong>：模型盯住一个解不开的子问题反复尝试，每轮都"看起来在干活"，token 烧穿预算才发现。三道保险都要上：轮数硬上限（最后防线）、无进展检测（同工具同参数连续出现即报警）、预算熔断。另一个隐性坑：压缩把"已发现的事实"摘丢了，模型重新犯一遍已修过的错——压缩提示里必须强制保留"已尝试且失败的方案"清单。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>范式三部曲收束</strong>：Prompt Engineering（2022~23，打磨指令）→ Context Engineering（2024~25，组织窗口，<a href="javascript:void(0)" onclick="App.loadDetail('ai-06')">ai-06</a>）→ Harness Engineering（2026，设计整个运行时，本节）——每一步都更"重工程"，离措辞更远、离系统设计更近。你已经具备的技能树（状态机/看门狗/内存预算/分层架构）在 harness 工程里全部直接复用。工具生态的标准化拼图见 <a href="javascript:void(0)" onclick="App.loadDetail('ai-10')">下一节 MCP</a>。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>Evals：没有度量就没有优化</strong>。固定 30~100 个任务用例（输入 + 期望结果 + 评分规则），每次改 harness（换压缩策略/调权限/改工具描述）跑一遍，通过率对比——这是 harness 迭代的"回归测试"。个人项目可以从 10 个用例起步，重要的是<strong>建立"改了什么→指标动了多少"的因果记录</strong>，否则调 harness 和炼丹无异。</div></div>
       ` },
 
-      // ===== ai-10 MCP 与工具生态（概览版）=====
-      { id: 'ai-10', title: 'MCP 与工具生态', desc: 'Model Context Protocol："AI 的 USB-C"——client/server 架构与三原语（概览版）', icon: '🔌', tags: ['概览', '前沿'], goals: { eng: true }, content: `
+      // ===== ai-10 MCP 与工具生态 =====
+      { id: 'ai-10', title: 'MCP 与工具生态', desc: 'Model Context Protocol："AI 的 USB-C"——client/server 架构、tools/resources/prompts 三原语、最小 server 与安全边界', icon: '🔌', tags: ['核心', '前沿'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">AI 的 USB-C</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          Function Calling 的痛点：每个应用 × 每个工具都要单独对接，M×N 组合爆炸。MCP（Model Context Protocol，Anthropic 2024 年开源）把它变成 M+N：工具方写一次 MCP server，任何支持 MCP 的客户端（Claude、Claude Code、各类 IDE 插件）都能直接用——所以被称作"AI 的 USB-C"。截至 2026 年，MCP 已成为 agent 连接外部工具与数据的事实标准，数据库、浏览器、文件系统、Git 等常用 server 数以千计。
+          <a href="javascript:void(0)" onclick="App.loadDetail('ai-08')">ai-08</a> 的 Function Calling 有个工程痛点：每个 AI 应用 × 每个外部工具都要单独写一遍对接 glue code——$M$ 个应用接 $N$ 个工具就是 $M \\times N$ 份适配代码。MCP（Model Context Protocol，Anthropic 2024 年末开源）把它变成 $M + N$：<strong>工具方写一次 MCP server，任何支持 MCP 的客户端（Claude、Claude Code、各类 IDE 与 agent 框架）都能直接用</strong>。截至 2026 年，MCP 已成为 agent 连接外部工具与数据的事实标准，数据库、浏览器、文件系统、Git 等常用 server 数以千计——"AI 的 USB-C"这个外号精准：接口标准化之前，每台设备带一根专用线；之后，一根线通吃。
         </p>
-        <h4 class="font-medium mt-6 mb-2">架构与三原语</h4>
+
+        <h4 class="font-medium mt-6 mb-2">M×N → M+N：一次标准化的老故事</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
-          <strong>Host/Client（模型侧）↔ Server（能力侧）</strong>：client 运行在 host 应用（如编码 agent）里，通过 JSON-RPC（stdio 本地或 HTTP/SSE 远程，协议分层与 <a href="javascript:void(0)" onclick="App.loadDetail('net-05')">应用层协议</a>设计一脉相承）连接 server。三原语：<strong>tools</strong>（模型可调用的函数，同 Function Calling）、<strong>resources</strong>（可读取的数据源，文件/数据库行）、<strong>prompts</strong>（预置提示词模板）。写一个最小 MCP server 只需声明名称、schema 和处理函数，几十行代码就能把你写字机的控制接口挂进任何 MCP 客户端。
+          这个"把 $M \\times N$ 摊平成 $M + N$"的收益结构，工程史上你已见过三次：<a href="javascript:void(0)" onclick="App.loadDetail('net-01')">分层网络模型</a>（每对应用协议 × 传输介质解耦）、USB（每对设备 × 主机解耦）、C 编译器的 ABI 标准（每对语言 × 平台解耦）。共同点：<strong>在恰当的层上定义一个稳定的接口契约</strong>，让两侧独立演化。MCP 选的层在"应用层协议"——它本身跑在 JSON-RPC 之上，传输两种：<strong>stdio</strong>（本地子进程，管道通信）或 <strong>Streamable HTTP</strong>（远程服务，可鉴权可分发），与 <a href="javascript:void(0)" onclick="App.loadDetail('net-05')">net-05 应用层协议</a>的设计考量一脉相承。
         </p>
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>概览版说明</strong>：完整版（最小 server 实现思路、与 Function Calling 的层次关系、安全边界与 2026 版本演进）随批次 6b 上线。</div></div>
+        <div class="svg-figure">
+          <svg width="640" height="190" viewBox="0 0 640 190">
+            <rect x="20" y="30" width="150" height="130" rx="10" fill="none" stroke="#7c3aed" stroke-width="2"/>
+            <text x="95" y="55" text-anchor="middle" font-size="13" fill="currentColor">Host 应用</text>
+            <text x="95" y="78" text-anchor="middle" font-size="11" fill="#7c3aed">Claude Code / IDE</text>
+            <rect x="42" y="95" width="106" height="26" rx="6" fill="#7c3aed" opacity="0.15"/>
+            <text x="95" y="112" text-anchor="middle" font-size="11" fill="currentColor">MCP Client</text>
+            <text x="95" y="148" text-anchor="middle" font-size="10" fill="#888">一个 host 可带多个 client</text>
+            <line x1="172" y1="70" x2="300" y2="70" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr)"/>
+            <line x1="172" y1="120" x2="300" y2="120" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr)"/>
+            <line x1="300" y1="84" x2="172" y2="84" stroke="#999" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrg)"/>
+            <line x1="300" y1="134" x2="172" y2="134" stroke="#999" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrg)"/>
+            <text x="236" y="60" text-anchor="middle" font-size="10" fill="#7c3aed">JSON-RPC 请求</text>
+            <text x="236" y="152" text-anchor="middle" font-size="10" fill="#888">结果/通知</text>
+            <rect x="300" y="40" width="130" height="55" rx="10" fill="none" stroke="#059669" stroke-width="2"/>
+            <text x="365" y="63" text-anchor="middle" font-size="12" fill="currentColor">MCP Server A</text>
+            <text x="365" y="80" text-anchor="middle" font-size="10" fill="#059669">文件系统</text>
+            <rect x="300" y="95" width="130" height="55" rx="10" fill="none" stroke="#059669" stroke-width="2"/>
+            <text x="365" y="118" text-anchor="middle" font-size="12" fill="currentColor">MCP Server B</text>
+            <text x="365" y="135" text-anchor="middle" font-size="10" fill="#059669">写字机串口</text>
+            <text x="365" y="172" text-anchor="middle" font-size="10" fill="#888">stdio（本地）或 HTTP（远程）</text>
+            <rect x="480" y="40" width="140" height="55" rx="10" fill="none" stroke="#d97706" stroke-width="2"/>
+            <text x="550" y="63" text-anchor="middle" font-size="12" fill="currentColor">能力：tools</text>
+            <text x="550" y="80" text-anchor="middle" font-size="10" fill="#d97706">home / move_to / draw_line</text>
+            <rect x="480" y="95" width="140" height="55" rx="10" fill="none" stroke="#d97706" stroke-width="2"/>
+            <text x="550" y="118" text-anchor="middle" font-size="12" fill="currentColor">能力：resources</text>
+            <text x="550" y="135" text-anchor="middle" font-size="10" fill="#d97706">电机状态 / 限位开关</text>
+            <defs>
+              <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#7c3aed"/></marker>
+              <marker id="arrg" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#999"/></marker>
+            </defs>
+          </svg>
+          <p class="svg-caption">图：MCP 架构——Host 里的 client 与 server 一对一连接，server 对外声明三种能力原语</p>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">三原语：tools / resources / prompts</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>原语</th><th>控制方</th><th>语义</th><th>写字机例子</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">tools</td><td><strong>模型决定</strong>调用</td><td>有副作用的函数（同 Function Calling）</td><td>home() / move_to(x,y) / draw_line(x,y)</td></tr>
+            <tr><td class="font-medium">resources</td><td>应用决定</td><td>可读取的数据源，内容注入上下文</td><td>当前坐标、限位状态、任务队列</td></tr>
+            <tr><td class="font-medium">prompts</td><td>用户决定</td><td>预置提示词模板（斜杠命令）</td><td>/calibrate 生成标定引导话术</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          三者的分界线是<strong>谁有控制权</strong>：tools 是模型自己判断要不要用（所以描述质量仍决定一切，<a href="javascript:void(0)" onclick="App.loadDetail('ai-08')">ai-08 五原则</a>照用）；resources 由应用主动挂载（只读，模型当资料看）；prompts 是给人一键触发的。与 Function Calling 的层次关系一句话：<strong>Function Calling 是模型侧的输出协议，MCP 是工具侧的供给协议</strong>——前者管"模型怎么发调用"，后者管"工具怎么被发现、描述、鉴权"，两者配合而非竞争。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">写一个最小 MCP server</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          以官方 SDK（Python/TypeScript 均有）写"写字机控制 server"，骨架不到 40 行：
+        </p>
+        <div class="code-block"><span class="code-comment"># 最小 MCP server 骨架（Python SDK 伪代码，串口操作复用 linux-11 协议）</span>
+server = Server("plotter")
+
+@server.tool()                          <span class="code-comment"># ① 声明 tool + schema（自动从类型注解生成）</span>
+<span class="code-keyword">def</span> <span class="code-func">draw_line</span>(x: float, y: float) -> str:
+    <span class="code-string">"""落笔从当前点画直线到 (x,y)，单位 mm，范围 0~300"""</span>   <span class="code-comment"># ← docstring 就是给模型的工具描述</span>
+    frame = build_cmd(0x03, x, y)        <span class="code-comment"># 编码协议帧（linux-11）</span>
+    ser.write(frame); resp = ser.read()  <span class="code-comment"># 发给 STM32 并等应答</span>
+    <span class="code-keyword">return</span> parse(resp)               <span class="code-comment"># 返回字符串给模型当观察</span>
+
+@server.resource(<span class="code-string">"plotter://position"</span>)    <span class="code-comment"># ② 声明 resource（只读状态）</span>
+<span class="code-keyword">def</span> <span class="code-func">position</span>() -> str:
+    <span class="code-keyword">return</span> json.dumps(get_pos())
+
+server.run(<span class="code-string">"stdio"</span>)                      <span class="code-comment"># ③ 以 stdio 模式运行，client 管道收发</span></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          就这三步：声明工具（schema + 描述）、实现函数（真实副作用）、选择传输。把它注册进 Claude Code 或 ZCode 的 MCP 配置后，你就能在对话里直接说"画个正方形"——<strong>本站贯穿项目从 linux-11 的协议设计到 MCP 工具化只隔着这层薄壳</strong>，而这层壳是标准化的，所有 MCP 客户端通用。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">安全边界：server 是攻击面</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          MCP 把能力开放给模型，也把风险开放给了提示注入：<strong>工具返回的内容里若藏有恶意指令</strong>（网页抓取 server 返回的页面正文、邮件 server 返回的邮件正文），模型可能把它当成指令执行——"confused deputy"问题的 LLM 版。防御分层：① <strong>最小能力</strong>——server 只暴露必需工具，能只读就不给写；② <strong>权限确认</strong>——危险操作走 <a href="javascript:void(0)" onclick="App.loadDetail('ai-09')">ai-09 权限模型</a>，人工放行；③ <strong>来源隔离</strong>——工具结果在上下文里标记为"数据非指令"，高价值操作不因单条工具结果触发；④ 远程 server 用 HTTPS + 鉴权（OAuth），本地 stdio 起步最简单也最可控。选第三方 server 时看三点：维护活跃度、权限声明、是否有工具投毒（tool poisoning，描述里藏指令）的审计记录。
+        </p>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>MCP 不是"接上就能用"</strong>：① 工具多了照样选择退化（几十个 server × 每个 10 个工具，<a href="javascript:void(0)" onclick="App.loadDetail('ai-08')">ai-08</a> 的数量克制原则仍然成立，按任务启用子集）；② server 进程崩溃/阻塞要有超时与重启，别让一个坏 server 卡死整个 agent loop（又是 <a href="javascript:void(0)" onclick="App.loadDetail('emb-05')">看门狗</a>思想）；③ 版本演进快，写死协议细节的代码要隔离在适配层。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>动手路线</strong>：先本地 stdio 跑通官方 filesystem server（读懂它怎么列目录/读文件），再照本节骨架把写字机串口包成自己的第一个 server——至此 Agent 第二层（ai-08）到工具生态（本节）全部闭环。后面转向第三层"边缘部署"：怎么不靠云端，把模型塞进你自己的开发板（<a href="javascript:void(0)" onclick="App.loadDetail('ai-11')">ai-11</a>）。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>生态现状（截至 2026 年）</strong>：MCP 由 Anthropic 开源后已被 OpenAI、Google 等主流厂商采纳，社区 server 覆盖数据库/浏览器/Git/云服务/工业协议等场景；竞争规范（如 OpenAPI 直连、各家私有插件协议）仍在，但"写一次、处处接入"的网络效应让 MCP 的领先优势持续扩大——标准之争历史上赢的通常是生态最厚的那个（USB 对 FireWire 也是如此）。</div></div>
       ` },
 
       // ===== ai-11 边缘 AI 与 TinyML 概述（概览版，完整版随批次 6c 上线）=====

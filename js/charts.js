@@ -1910,3 +1910,208 @@ Charts.register('attention-vis', function(el) {
   highlightBtns();
   render();
 });
+
+// Agent 循环状态机动画（ai-08 / ai-09）：思考→工具调用→执行→观察 循环 + 上下文增长条 + 停止条件
+// 四个场景：画正方形（正常完成）/ 电机故障排查（多轮推理）/ RAG 问答（一轮即答）/ 失控循环（看门狗救场）
+Charts.register('agent-loop', function(el) {
+  const CTX_WINDOW = 32000, CTX_BASE = 2600;   // 玩具数字：32K 窗口，系统提示+工具定义占 2.6K
+  // stage: user(任务) thought(思考) action(调用) exec(执行) obs(观察) compaction(压缩) stop(停止/答案)
+  const SCEN = [
+    { name: '🎯 画正方形', steps: [
+      { stage: 'user', ctx: 30, text: '用户：画一个边长 20mm 的正方形' },
+      { stage: 'thought', ctx: 110, text: 'Thought：工作台原点在左下角。计划：先回零，再依次画 (0,0)→(20,0)→(20,20)→(0,20)→(0,0) 四条边' },
+      { stage: 'action', ctx: 40, text: 'Action：home()' },
+      { stage: 'exec', ctx: 0, text: '执行：协议帧 0x01 → 串口 → STM32，笔架回原点' },
+      { stage: 'obs', ctx: 130, text: 'Obs：{"ok": true, "pos": [0, 0]}' },
+      { stage: 'action', ctx: 45, text: 'Action：draw_line(20, 0)' },
+      { stage: 'exec', ctx: 0, text: '执行：落笔，梯形速度剖面插补 20mm' },
+      { stage: 'obs', ctx: 120, text: 'Obs：{"ok": true, "ms": 310}' },
+      { stage: 'action', ctx: 45, text: 'Action：draw_line(20, 20)' },
+      { stage: 'exec', ctx: 0, text: '执行：第 2 条边' },
+      { stage: 'obs', ctx: 115, text: 'Obs：{"ok": true, "ms": 302}' },
+      { stage: 'action', ctx: 45, text: 'Action：draw_line(0, 20)' },
+      { stage: 'exec', ctx: 0, text: '执行：第 3 条边' },
+      { stage: 'obs', ctx: 115, text: 'Obs：{"ok": true, "ms": 305}' },
+      { stage: 'action', ctx: 45, text: 'Action：draw_line(0, 0)' },
+      { stage: 'exec', ctx: 0, text: '执行：第 4 条边，回到起点' },
+      { stage: 'obs', ctx: 118, text: 'Obs：{"ok": true, "ms": 308}' },
+      { stage: 'thought', ctx: 85, text: 'Thought：四条边全部成功且首尾闭合，边长 20 ✔ 任务完成' },
+      { stage: 'stop', ctx: 60, text: '🏁 停止条件①：任务完成 → 输出最终答案"已画完 20mm 正方形，耗时约 3.2s"', ok: true },
+    ] },
+    { name: '🔧 故障排查', steps: [
+      { stage: 'user', ctx: 28, text: '用户：X 轴电机声音不对，帮我查一下' },
+      { stage: 'thought', ctx: 95, text: 'Thought：先读 X 轴相电流 RMS，与正常基线对比' },
+      { stage: 'action', ctx: 38, text: 'Action：read_current("X")' },
+      { stage: 'exec', ctx: 0, text: '执行：ADC 采样 256 点 → 滑窗 RMS' },
+      { stage: 'obs', ctx: 125, text: 'Obs：RMS 2.3A（基线 1.1A，偏高 109%）' },
+      { stage: 'thought', ctx: 88, text: 'Thought：电流翻倍像机械卡滞，再看跟随误差确认是否丢步' },
+      { stage: 'action', ctx: 40, text: 'Action：read_pos_err("X")' },
+      { stage: 'exec', ctx: 0, text: '执行：读编码器反馈，比对目标位置' },
+      { stage: 'obs', ctx: 120, text: 'Obs：跟随误差 8.4mm（正常 &lt; 0.5mm）——确已丢步' },
+      { stage: 'thought', ctx: 90, text: 'Thought：继续运行有撞限位风险，先安全停机再上报' },
+      { stage: 'action', ctx: 35, text: 'Action：stop_motor("X")' },
+      { stage: 'exec', ctx: 0, text: '执行：减速曲线停机，保持位置' },
+      { stage: 'obs', ctx: 110, text: 'Obs：{"ok": true, "state": "idle"}' },
+      { stage: 'stop', ctx: 65, text: '🏁 停止条件①：任务完成 → "X 轴皮带疑似卡滞丢步，已停机，请检查从动轮"', ok: true },
+    ] },
+    { name: '📚 RAG 问答', steps: [
+      { stage: 'user', ctx: 26, text: '用户：KV Cache 的显存怎么算？' },
+      { stage: 'thought', ctx: 80, text: 'Thought：概念题，先检索课程库拿一手资料' },
+      { stage: 'action', ctx: 36, text: 'Action：search("KV Cache 显存")' },
+      { stage: 'exec', ctx: 0, text: '执行：问题向量化 → 向量库 top-20 → RRF 融合 → 重排' },
+      { stage: 'obs', ctx: 1450, text: 'Obs：top-4 片段 = ai-04（KV 公式块）+ ai-12（量化）+ …（共 1,400 token）' },
+      { stage: 'thought', ctx: 85, text: 'Thought：ai-04 公式块直接命中，直接引用作答，无需再检索' },
+      { stage: 'stop', ctx: 320, text: '🏁 停止条件①：任务完成 → 按公式作答并附引用 [ai-04]', ok: true },
+    ] },
+    { name: '💥 失控循环', steps: [
+      { stage: 'user', ctx: 30, text: '用户：找到课程里关于"模糊控制"的内容并总结' },
+      { stage: 'thought', ctx: 90, text: 'Thought：检索"模糊控制"' },
+      { stage: 'action', ctx: 40, text: 'Action：search("模糊控制")' },
+      { stage: 'exec', ctx: 0, text: '执行：向量检索 + BM25' },
+      { stage: 'obs', ctx: 3600, text: 'Obs：0 条结果（库里其实没有这个词）' },
+      { stage: 'thought', ctx: 95, text: 'Thought：换个关键词"模糊 PID"再试' },
+      { stage: 'action', ctx: 42, text: 'Action：search("模糊 PID")' },
+      { stage: 'exec', ctx: 0, text: '执行：向量检索 + BM25' },
+      { stage: 'obs', ctx: 3500, text: 'Obs：0 条结果' },
+      { stage: 'thought', ctx: 95, text: 'Thought：大小写问题？改用英文 "FUZZY"' },
+      { stage: 'action', ctx: 40, text: 'Action：search("FUZZY")' },
+      { stage: 'exec', ctx: 0, text: '执行：向量检索 + BM25' },
+      { stage: 'obs', ctx: 3480, text: 'Obs：0 条结果' },
+      { stage: 'thought', ctx: 100, text: 'Thought：一定是索引坏了，重建索引试试' },
+      { stage: 'action', ctx: 45, text: 'Action：reindex()' },
+      { stage: 'exec', ctx: 0, text: '执行：全量重建向量索引（4.2s）' },
+      { stage: 'obs', ctx: 5200, text: 'Obs：重建完成，仍然 0 条' },
+      { stage: 'thought', ctx: 98, text: 'Thought：再试一次"模糊控制"……' },
+      { stage: 'action', ctx: 40, text: 'Action：search("模糊控制")' },
+      { stage: 'exec', ctx: 0, text: '执行：向量检索 + BM25' },
+      { stage: 'obs', ctx: 3550, text: 'Obs：0 条结果' },
+      { stage: 'compaction', ctx: 0, text: '⚠️ Harness：上下文达 82% → 触发压缩，早期轮次摘要化', compact: true },
+      { stage: 'thought', ctx: 95, text: 'Thought：（压缩后）继续尝试其他关键词' },
+      { stage: 'action', ctx: 40, text: 'Action：search("模糊控制器")' },
+      { stage: 'exec', ctx: 0, text: '执行：向量检索 + BM25' },
+      { stage: 'obs', ctx: 3500, text: 'Obs：0 条结果' },
+      { stage: 'stop', ctx: 60, text: '🏁 停止条件②：轮数上限 6 轮触发，强制停止并上报失败——模型自己不会喊停，看门狗是 harness 的', ok: false },
+    ] },
+  ];
+
+  const STAGES = [
+    { key: 'user', icon: '📋', label: '用户任务' },
+    { key: 'thought', icon: '💭', label: '思考 Thought' },
+    { key: 'action', icon: '🔧', label: '工具调用' },
+    { key: 'exec', icon: '⚙️', label: '执行' },
+    { key: 'obs', icon: '👁', label: '观察 Obs' },
+  ];
+
+  el.innerHTML = `
+    <div style="padding:0.5rem 0 0">
+      <div id="alp-scens" style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.6rem"></div>
+      <div id="alp-flow" style="display:flex;align-items:stretch;gap:4px;flex-wrap:nowrap;overflow-x:auto;padding:0.2rem 0"></div>
+      <div style="font-size:0.72rem;color:var(--text-secondary);margin:0.15rem 0 0.5rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.4rem">
+        <span>← 观察结果回注上下文，回到思考（下一轮）　·　思考 → 满足条件直接输出答案（退出循环）→</span>
+        <span id="alp-round"></span>
+      </div>
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+        <div id="alp-log" style="flex:1 1 320px;min-width:280px;height:170px;overflow-y:auto;background:var(--bg-secondary);border-radius:0.5rem;padding:0.5rem 0.65rem;font-family:ui-monospace,Consolas,monospace;font-size:0.72rem;line-height:1.65"></div>
+        <div style="flex:0 0 250px;display:flex;flex-direction:column;gap:0.5rem">
+          <div style="background:var(--bg-secondary);border-radius:0.5rem;padding:0.55rem 0.7rem;font-size:0.75rem">
+            上下文窗口 <span id="alp-ctxn" style="float:right;font-weight:600"></span>
+            <div style="height:10px;border-radius:5px;background:var(--border);margin-top:5px;overflow:hidden"><div id="alp-ctxbar" style="height:100%;width:8%;border-radius:5px;background:#10b981;transition:width .4s"></div></div>
+            <div style="display:flex;justify-content:space-between;color:var(--text-secondary);font-size:0.68rem;margin-top:3px"><span>0</span><span id="alp-ctxp"></span><span>32K</span></div>
+          </div>
+          <div id="alp-stop" style="background:var(--bg-secondary);border-radius:0.5rem;padding:0.55rem 0.7rem;font-size:0.75rem;color:var(--text-secondary)">停止条件：<span style="opacity:.6">等待中</span></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;margin-top:0.6rem">
+        <button id="alp-play" style="padding:0.3rem 0.9rem;border-radius:0.4rem;border:1px solid var(--primary);background:var(--primary);color:#fff;cursor:pointer;font-size:0.8rem">▶ 播放</button>
+        <button id="alp-step" style="padding:0.3rem 0.9rem;border-radius:0.4rem;border:1px solid var(--border);background:var(--bg-primary);cursor:pointer;font-size:0.8rem">⏭ 单步</button>
+        <button id="alp-reset" style="padding:0.3rem 0.9rem;border-radius:0.4rem;border:1px solid var(--border);background:var(--bg-primary);cursor:pointer;font-size:0.8rem">↺ 重置</button>
+        <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.78rem;color:var(--text-secondary)">速度
+          <input type="range" id="alp-speed" min="60" max="2000" step="20" value="800" style="width:100px">
+        </label>
+      </div>
+      <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:0.45rem;line-height:1.55">四个场景各看一遍：正常任务如何"思考→调用→观察"推进；RAG 为什么一轮就停；以及"💥 失控循环"——同一工具反复失败时模型不会自己喊停，轮数上限（看门狗）和上下文压缩（先亮 ⚠️）才是 harness 的安全件。</div>
+    </div>`;
+
+  const $ = id => el.querySelector('#' + id);
+  const ICON = { user: '📋', thought: '💭', action: '🔧', exec: '⚙️', obs: '👁', compaction: '⚠️', stop: '🏁' };
+  const LOGC = { user: '#2563eb', thought: '#7c3aed', action: '#0891b2', exec: '#666', obs: '#059669', compaction: '#d97706', stop: '#dc2626' };
+
+  // 状态机管线
+  $('alp-flow').innerHTML = STAGES.map(s => `
+    <div data-st="${s.key}" style="flex:1;min-width:92px;border:1.5px solid var(--border);border-radius:0.55rem;padding:0.45rem 0.3rem;text-align:center;transition:all .25s">
+      <div style="font-size:1.25rem">${s.icon}</div>
+      <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:2px">${s.label}</div>
+    </div>`).join('') + `
+    <div data-st="stop" style="flex:0 0 96px;border:1.5px dashed var(--border);border-radius:0.55rem;padding:0.45rem 0.3rem;text-align:center;transition:all .25s">
+      <div style="font-size:1.25rem">🏁</div><div style="font-size:0.72rem;color:var(--text-secondary);margin-top:2px">停止条件</div>
+    </div>`;
+  $('alp-scens').innerHTML = SCEN.map((s, i) => `<button data-i="${i}" style="padding:0.28rem 0.8rem;border-radius:9999px;font-size:0.78rem;border:1px solid var(--border);background:var(--bg-primary);cursor:pointer">${s.name}</button>`).join('');
+
+  let scenIdx = 0, idx = 0, ctx = CTX_BASE, round = 0, playing = false, timer = null;
+
+  function highlight(stage) {
+    el.querySelectorAll('[data-st]').forEach(b => {
+      const on = b.dataset.st === stage;
+      b.style.background = on ? 'var(--primary)' : 'transparent';
+      b.style.borderColor = on ? 'var(--primary)' : 'var(--border)';
+      b.style.transform = on ? 'translateY(-2px)' : '';
+      b.querySelectorAll('div')[1].style.color = on ? '#fff' : 'var(--text-secondary)';
+    });
+  }
+  function statusCtx() {
+    const p = ctx / CTX_WINDOW * 100;
+    $('alp-ctxbar').style.width = Math.min(100, p).toFixed(1) + '%';
+    $('alp-ctxbar').style.background = p > 80 ? '#ef4444' : p > 60 ? '#f59e0b' : '#10b981';
+    $('alp-ctxn').textContent = (ctx / 1000).toFixed(1) + 'K';
+    $('alp-ctxp').textContent = p.toFixed(0) + '%';
+  }
+  function log(step) {
+    const d = document.createElement('div');
+    d.innerHTML = `<span style="color:${LOGC[step.stage]}">${ICON[step.stage]}</span> <span style="color:var(--text-primary)">${step.text}</span>`;
+    $('alp-log').appendChild(d);
+    $('alp-log').scrollTop = $('alp-log').scrollHeight;
+  }
+  function tick() {
+    const steps = SCEN[scenIdx].steps;
+    if (idx >= steps.length) { stopPlay(); return; }
+    const st = steps[idx++];
+    if (st.stage === 'thought') { round++; $('alp-round').textContent = '第 ' + round + ' 轮'; }
+    if (st.compact) ctx = Math.round(ctx * 0.42);
+    ctx += st.ctx;
+    highlight(st.stage === 'stop' ? 'stop' : st.stage);
+    log(st);
+    statusCtx();
+    if (st.stage === 'stop') {
+      $('alp-stop').innerHTML = `<span style="color:${st.ok ? '#059669' : '#dc2626'};font-weight:600">${st.ok ? '✅ 正常结束' : '⛔ 强制停止'}</span><br><span style="font-size:0.7rem">${st.text.replace(/^🏁 /, '')}</span>`;
+      stopPlay();
+    }
+  }
+  function stopPlay() { playing = false; clearInterval(timer); timer = null; $('alp-play').textContent = '▶ 播放'; }
+  function startPlay() {
+    if (idx >= SCEN[scenIdx].steps.length) reset();
+    playing = true; $('alp-play').textContent = '⏸ 暂停';
+    clearInterval(timer);
+    timer = setInterval(tick, 2050 - (+$('alp-speed').value));
+  }
+  function reset() {
+    stopPlay(); idx = 0; ctx = CTX_BASE; round = 0;
+    $('alp-log').innerHTML = ''; $('alp-round').textContent = '';
+    $('alp-stop').innerHTML = '停止条件：<span style="opacity:.6">等待中</span>';
+    highlight(null); statusCtx();
+  }
+  function pickScen(i) { scenIdx = i; reset(); }
+
+  el.querySelectorAll('#alp-scens button').forEach(b => {
+    b.addEventListener('click', () => {
+      el.querySelectorAll('#alp-scens button').forEach(x => { x.style.background = 'var(--bg-primary)'; x.style.borderColor = 'var(--border)'; x.style.color = ''; });
+      b.style.background = 'var(--primary)'; b.style.borderColor = 'var(--primary)'; b.style.color = '#fff';
+      pickScen(+b.dataset.i);
+    });
+  });
+  $('alp-play').addEventListener('click', () => playing ? stopPlay() : startPlay());
+  $('alp-step').addEventListener('click', () => { stopPlay(); tick(); });
+  $('alp-reset').addEventListener('click', reset);
+  $('alp-speed').addEventListener('input', () => { if (playing) startPlay(); });
+
+  el.querySelector('#alp-scens button').click();
+});
