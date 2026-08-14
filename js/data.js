@@ -17118,4 +17118,204 @@ const QuizData = {
     { question: 'SPWM 输出频谱中，主要谐波集中在？', options: ['基波附近', '直流分量附近', '开关频率附近', '任意频率'], answer: 2, explanation: 'SPWM 的主要谐波集中在开关频率 $f_{sw}$ 及其整数倍附近（如 $f_{sw} \\pm 2f_1$）。基波频率 $f_1$ 的谐波被大幅抑制。' },
   ],
 
+  // ========== Linux 开发板实战 linux-01~07（v1.0 新增）==========
+  'linux-01': [
+    { question: 'Linux 开发板（MPU）与 MCU 上电后的本质区别是？', options: ['MCU 需要操作系统才能运行', 'Linux 板需经 bootloader→内核→rootfs 才能跑应用，MCU 上电即执行固件', 'Linux 板不能控制 GPIO', 'MCU 主频一定更低'], answer: 1, explanation: 'MCU 片上外设一步到位、上电直接跑固件；Linux SoC 要先由 BootROM→u-boot 加载内核、挂载根文件系统，之后应用才能运行。' },
+    { question: '把系统镜像写入 SD 卡的正确理解是？', options: ['把 .img 文件复制到卡里', '解压后复制里面的文件夹', '按扇区将镜像原样写入整卡（含分区表）', '先格式化再粘贴'], answer: 2, explanation: '镜像包含分区表 + bootloader + 内核 + rootfs 的原始布局，必须用烧录工具按扇区写入，不是文件级复制。' },
+    { question: '树莓派的正常启动链顺序是？', options: ['内核→u-boot→BootROM→systemd', 'BootROM→u-boot→Linux 内核→rootfs/systemd', 'systemd→内核→u-boot', 'u-boot→BootROM→内核'], answer: 1, explanation: '固化 BootROM 先跑，从 SD 卡加载 u-boot，再由 u-boot 加载内核并挂载 rootfs，最后 systemd 拉起服务。任一环损坏都会"点不亮"。' },
+    { question: '无屏（headless）使用开发板最常用的远程方式是？', options: ['蓝牙键盘', 'SSH 远程登录', '串口挖屏', 'U 盘传文件'], answer: 1, explanation: '烧录时开启 SSH 服务（或用网线/无线预配），拿到 IP 后 ssh user@ip 即可远程操作，无需外接显示器。' },
+    { question: '入门选开发板时首要考虑的因素是？', options: ['CPU 主频最高', '内存最大', '软件生态与社区活跃度', '价格最低'], answer: 2, explanation: '官方系统维护越勤、社区答案越多的板子踩坑成本越低；性能差距对学习场景影响远小于生态差距。' },
+    { question: 'SSH 连接失败的排查顺序，最先做的是？', options: ['重烧系统', '确认板子与电脑在同一局域网且 IP 正确（路由器后台或扫描）', '换一根网线', '升级电脑系统'], answer: 1, explanation: '绝大多数"连不上"是 IP/网段问题：先确认供电指示灯正常，再查 IP 与同一网段，最后才考虑服务与系统问题。' },
+  ],
+
+  'linux-02': [
+    { question: '权限 rwxr-xr-- 对应的数字表示是？', options: ['754', '765', '644', '755'], answer: 0, explanation: '按 rwx 分组换算：rwx=7、r-x=5、r--=4，得 754。755 是最常见的目录默认（others 有 x 才能进入）。' },
+    { question: '关于软链接与硬链接，正确的是？', options: ['硬链接可以跨文件系统', '软链接指向路径，删除原文件后失效', '软链接与原文件共享 inode', '硬链接相当于快捷方式'], answer: 1, explanation: '硬链接与原文件同 inode、不能跨文件系统；软链接是独立的路径引用，原文件删除后成为悬空链接。' },
+    { question: 'find 与 grep 的分工是？', options: ['都只搜文件名', 'find 按文件属性/名字找文件，grep 搜文件内容', 'grep 找文件，find 搜内容', '两者完全等价'], answer: 1, explanation: 'find / -name "*.dtb" 按名字找文件；grep -rn "TODO" src/ 递归搜内容。组合管道 grep --include 配 find 也是常见用法。' },
+    { question: '管道 | 的作用是？', options: ['并行执行两个命令', '把前一命令的标准输出接到后一命令的标准输入', '把输出写入文件', '后台运行'], answer: 1, explanation: 'ps aux | grep app 中管道把 ps 的输出流送给 grep 过滤——"Unix 哲学：每个程序做好一件事，用管道串起来"。' },
+    { question: '系统配置、用户家目录、日志分别常在？', options: ['/usr、/home、/tmp', '/etc、/home、/var/log', '/boot、/root、/run', '/bin、/opt、/srv'], answer: 1, explanation: 'FHS 约定：/etc 放配置，/home 普通用户家目录，/var/log 日志。改配置、查日志是运维两大数据来源。' },
+    { question: '下列哪个命令组合最危险？', options: ['ls -l | wc -l', 'rm -rf $DIR/ 当变量为空时', 'cat /etc/hostname', 'df -h'], answer: 1, explanation: '变量为空时 rm -rf $DIR/ 变成 rm -rf /。规范写法 rm -rf "${DIR:?未设置}"/，变量为空时中止并报错。' },
+  ],
+
+  'linux-03': [
+    { question: '脚本第一行 #!/bin/bash 的作用是？', options: ['注释，无实际作用', 'shebang：告诉内核用哪个解释器执行', '声明版权', '指定返回值'], answer: 1, explanation: 'shebang 指定解释器路径，写错（如不存在）会报 bad interpreter。python 脚本对应写 #!/usr/bin/env python3。' },
+    { question: '脚本内引用第一个命令行参数的写法是？', options: ['$1', '#1', '@1', '%1'], answer: 0, explanation: '$1~$9 为位置参数，$# 是参数个数，$@ 是全部参数。双引号包裹 "$1" 防止空参数/带空格参数出错。' },
+    { question: 'if [ "$x" = "1" ]; then 中括号后的空格？', options: ['可有可无', '必须保留——[ 是命令，参数间要空格', '必须删掉', '只影响美观'], answer: 1, explanation: '[ 实际是 test 命令的别名，漏空格会被当成同一个单词导致语法错误，这是 shell 最经典的报错来源之一。' },
+    { question: 'cron 表达式五个字段依次是？', options: ['秒 分 时 日 月', '分 时 日 月 周', '时 分 日 月 年', '分 时 月 日 周'], answer: 1, explanation: '标准 crontab 为 分 时 日 月 周（无秒）。30 8 * * 1 表示每周一 08:30。工具箱的 cron 生成器可可视化编辑并预览执行时间。' },
+    { question: '让服务开机自启的现代标准方式是？', options: ['写 /etc/rc.local', 'systemd service（systemctl enable）', '放进 ~/.bashrc', '手动 nohup'], answer: 1, explanation: 'systemd 管理依赖顺序、自动重启、日志（journalctl）。rc.local 是传统遗留，bashrc 只在交互 shell 生效。' },
+    { question: '变量未加双引号最常见的故障是？', options: ['变量无法赋值', '含空格的值被拆成多个词，循环/判断行为异常', '自动转大写', '数值溢出'], answer: 1, explanation: 'for f in $files 遇到带空格文件名会拆词。写 for f in "$files" 或用数组+引号是规范做法。' },
+  ],
+
+  'linux-04': [
+    { question: '交叉编译指？', options: ['在目标板上编译', '在 x86 主机上编译出 ARM 等目标架构的程序', '同时编译多个文件', '双系统切换编译'], answer: 1, explanation: '主机（host）与目标（target）架构不同，需用 arm-linux-gnueabihf-gcc 这类交叉工具链；在板上编译叫本地编译。' },
+    { question: '为什么主机 gcc 直接编出的程序不能在 ARM 板上运行？', options: ['文件名不对', '指令集不同，二进制不兼容', '权限不够', '缺少图标'], answer: 1, explanation: 'x86 与 ARM 的机器码互不识别。用 file 命令看产物，ARM ELF 会标注 ARM 架构信息。' },
+    { question: '交叉编译时 sysroot 的作用是？', options: ['存放源码', '提供目标板的头文件与库的根目录，链接时从中找依赖', '编译缓存', '输出目录'], answer: 1, explanation: 'sysroot 模拟目标板文件系统，编译链接从中取 /usr/include、/usr/lib，避免误链到主机库（混链是最经典的坑）。' },
+    { question: 'CMake 与 Make 的关系是？', options: ['互相替代且功能相同', 'CMake 生成 Makefile（或 Ninja 文件），Make 负责执行构建', 'CMake 只能编 C++', 'Make 是 CMake 的插件'], answer: 1, explanation: 'CMake 是"生成构建系统的系统"：CMakeLists.txt → 生成 Makefile/Ninja → 实际编译。跨平台项目几乎都用这套组合。' },
+    { question: '验证编译产物架构的命令是？', options: ['ls -l', 'file 程序名', 'cat 程序名', 'md5sum'], answer: 1, explanation: 'file a.out 输出形如 ELF 32-bit LSB executable, ARM——上板前先 file 一下，确认没拿 x86 二进制去 ARM 上跑。' },
+    { question: '交叉编译下 pkg-config 的经典坑是？', options: ['找不到头文件路径时误用主机的库信息，混链出"看似能编"的错架构产物', '速度太慢', '不支持 C++', '必须 root 运行'], answer: 0, explanation: '须用 PKG_CONFIG_LIBDIR/PKG_CONFIG_SYSROOT_DIR 指向目标环境，否则读的是主机 .pc 文件，链接到主机库在板上必炸。' },
+  ],
+
+  'linux-05': [
+    { question: 'libgpiod 相比旧 sysfs 接口的核心优势是？', options: ['速度提升 100 倍', '内核仲裁的申请制与边沿事件，并发安全且支持中断式等待', '不再需要内核', '只支持树莓派'], answer: 1, explanation: 'sysfs 全局编号、多进程抢引脚无保护且已被移除；libgpiod 按"芯片+线"申请占用，支持阻塞等待边沿事件，等价外部中断。' },
+    { question: 'gpioset gpiochip0 17=1 的含义是？', options: ['读 GPIO17 电平', '把 gpiochip0 的 line17 输出高电平', '设置 17 号引脚为输入', '申请中断'], answer: 1, explanation: 'libgpiod 的寻址是"芯片名 + 线号"，17=1 表示该线输出高。注意物理针脚号 ≠ GPIO 线号。' },
+    { question: '检测按键按下，最省 CPU 的方式是？', options: ['循环读电平轮询', "gpiod 边沿事件阻塞等待（request events + event wait），无事件时休眠", '开高频定时器', '用串口中断'], answer: 1, explanation: '事件等待在无事件时进程休眠、CPU 占用为零，等价 MCU 外部中断；轮询空转浪费且响应慢。' },
+    { question: '3.3V 供电、LED 压降 2.0V、目标电流 10mA，限流电阻应选？', options: ['13Ω', '130Ω，实际选 E24 的 150Ω', '330Ω', '1kΩ'], answer: 1, explanation: 'R=(3.3−2.0)/0.01=130Ω；电阻略大只是稍暗，偏小可能损坏 GPIO，故向上取 150Ω。工具箱 LED 计算器可直接算。' },
+    { question: '程序申请 GPIO 报"资源忙"，优先怀疑？', options: ['代码语法错误', '该引脚被串口/I2C 等复用功能占用（gpioinfo 看 consumer）', '内存不足', '权限组未生效'], answer: 1, explanation: 'gpioinfo 显示 consumer 非空的行说明已被内核驱动占用，换引脚或用设备树释放，不要硬抢。' },
+    { question: 'Linux 用户态翻转 GPIO 的抖动量级约为？', options: ['纳秒级', '微秒级', '毫秒级（调度+系统调用开销）', '秒级'], answer: 2, explanation: 'ms 级抖动决定了用户态发不了 μs 级精确脉冲——需要硬件 PWM/内核驱动，或交给 STM32，这是"大脑+小脑"混合架构的定量依据。' },
+  ],
+
+  'linux-06': [
+    { question: 'STM32 的 USB 虚拟串口（CDC）在 Linux 上通常是？', options: ['/dev/sda0', '/dev/ttyACM0', '/dev/i2c-1', '/dev/spidev0.0'], answer: 1, explanation: 'CDC 类设备由 cdc_acm 驱动注册为 /dev/ttyACM0；CH340 等 USB 转串口芯片则是 /dev/ttyUSB0。' },
+    { question: '串口编程用 cfmakeraw 设原始模式的原因是？', options: ['提高波特率', '关闭行编辑/回显等终端处理，让二进制帧字节透传', '减少功耗', '自动配波特率'], answer: 1, explanation: '默认线路规程会把特殊字节当控制字符吞掉/转换；原始模式保证帧数据原样进出，是协议通信的前提。' },
+    { question: '115200 bps、8N1 的有效字节速率约为？', options: ['115200 B/s', '11520 B/s（每字节 10 位）', '14400 B/s', '960 B/s'], answer: 1, explanation: '8N1 帧每字节 10 位（1 起始+8 数据+1 停止），115200/10=11520 B/s≈11.25KB/s。' },
+    { question: '为串口设备写 udev 规则起 /dev/writer_mcu 别名的主要目的？', options: ['提升速率', '拔插顺序变化后程序仍打开稳定名字', '加密通信', '降低功耗'], answer: 1, explanation: '按 VID/PID（0483:5740）匹配生成 symlink，ttyUSB0/1 变号不影响程序；也顺手解决权限。' },
+    { question: '串口收到乱码字节流，最可能的原因是？', options: ['波特率不匹配', 'DNS 配置错误', 'SD 卡损坏', 'GPIO 未申请'], answer: 0, explanation: '九成乱码源于两侧波特率不一致；其次查共地与电平。先 stty 对齐参数再查线。' },
+    { question: '通信主循环推荐 select+非阻塞读而非阻塞 read 的原因是？', options: ['代码更短', '等待期内可处理其他事件（心跳/队列/超时），不会卡死在串口上', '占用更多 CPU', '可以不用配置波特率'], answer: 1, explanation: '阻塞 read 在无数据时死等；select 设超时的循环让"收串口+发心跳+处理命令"在一帧代码里有节奏地轮转，是写字机通信进程的骨架。' },
+  ],
+
+  'linux-07': [
+    { question: '设备树里 compatible 属性的作用是？', options: ['设置时钟频率', '内核据此字符串匹配并绑定驱动', '指定中断号', '声明许可证'], answer: 1, explanation: '平台总线按 compatible 匹配驱动，字符串写错（厂商,型号）驱动静默不加载——排查设备不出现的第一现场。' },
+    { question: '节点 status = "disabled" 意味着？', options: ['驱动崩溃', '内核跳过该节点，不注册此设备', '设备只读', '节点被删除'], answer: 1, explanation: '厂商基础树预置大量外设节点、多数默认 disabled，启用往往只需改成 okay——这就是"启用外设=改一个词"。' },
+    { question: 'Overlay（覆盖片）相比直接改基础树的优势不包括？', options: ['只写增量，独立编译', '系统升级不被覆盖', '删除一行即可回滚', '运行速度更快'], answer: 3, explanation: 'Overlay 改变的是设备注册结果，与运行速度无关。前三项全是 overlay 在可维护性上的优势。' },
+    { question: '验证 overlay 是否生效，最直接的组合是？', options: ['ls /proc/cpuinfo', 'dmesg | grep 相关关键字 + ls /sys 或 /dev 下节点', 'cat /etc/os-release', 'free -h'], answer: 1, explanation: 'dmesg 看驱动绑定日志，sysfs/dev 节点出现是"树→内核→设备"链条走通的最终证据。' },
+    { question: '编译 overlay 的命令要点是？', options: ['gcc -o 编译', 'dtc -@ -I dts -O dtb 生成 .dtbo（-@ 生成符号表）', 'make install', 'objcopy'], answer: 1, explanation: '设备树用 dtc 编译；-@ 保留符号表供 overlay 引用。反编译学习用 -I dtb -O dts。' },
+    { question: '改树后设备不出现且引脚"抢不过来"，优先怀疑？', options: ['硬盘故障', 'pinctrl 引脚复用冲突（该引脚默认是其他功能）', '网络断开', '内存泄漏'], answer: 1, explanation: '同一物理引脚的复用由 pinctrl 决定，冲突时用 gpioinfo 查占用并换引脚或调整 overlay 的 pinctrl 引用。' },
+  ],
+
+  'linux-08': [
+    { question: '写字机状态流（50ms 一帧位置）选共享内存而非 FIFO 的核心理由？', options: ['代码更简单', '零拷贝、无系统调用开销，高频读写延迟与抖动最小', '可以跨机器传输', '自动加密'], answer: 1, explanation: '两进程映射同一块物理内存，写进去对面直接可见；FIFO 每条消息两次拷贝两次系统调用。高频状态流首选 shm 环形缓冲。' },
+    { question: '命令流选 POSIX 消息队列的关键特性？', options: ['带宽最大', '带消息边界与优先级——急停可以插队', '自动持久化', '无需同步'], answer: 1, explanation: 'mq_send 可带优先级（数值大先出队），急停发优先级 9 即可越过排队中的普通运动命令，这正是命令分发要的性质。' },
+    { question: '信号处理函数里安全的做法是？', options: ['printf 打日志', 'malloc 分配内存', '只置 volatile 标志，清理逻辑放回主循环', '关闭文件并重启'], answer: 2, explanation: '信号是异步打断，printf/malloc 等非异步信号安全函数可能死锁。置 sig_atomic_t 标志、主循环检查退出是标准写法。' },
+    { question: '单写单读环形缓冲可以免锁的条件？', options: ['必须加互斥锁', 'head 仅写者改、tail 仅读者改，且用原子操作发布（acquire/release）', '数据量小于 1KB', '只能单核运行'], answer: 1, explanation: '各自拥有一个指针+原子读写发布，即实现无锁 SPSC 队列；共享一个指针或非原子访问则会读到撕裂数据。' },
+    { question: '状态 20 帧/s，UI 卡顿 0.5s，至少需要多少槽才不丢数据？', options: ['5 槽', '10 槽', '40 槽', '2 槽'], answer: 1, explanation: 'B=f×T=20×0.5=10 帧，取 64 槽留 6 倍余量；覆盖未读数据时用 head-tail 差值检测落后并跳帧追赶。' },
+    { question: '两个进程用 FIFO 互相等待对方打开，造成卡死的原因？', options: ['磁盘满', '读端 open 阻塞到写端出现（默认阻塞模式）', '权限不足', '缓冲区太大'], answer: 1, explanation: '经典 FIFO 打开顺序死锁：用 O_NONBLOCK 打开或由 systemd 显式声明启动顺序解决。' },
+  ],
+
+  'linux-09': [
+    { question: '个人项目、单板小批量做产品化，构建系统首选？', options: ['Yocto', 'Buildroot', '手工编译 rootfs', '直接用官方镜像不裁剪'], answer: 1, explanation: 'Buildroot 小时级上手、产出单一镜像，适合写字机这类场景；Yocto 面向公司级多板族与包仓库维护。' },
+    { question: 'BR2_ROOTFS_OVERLAY 机制的作用是？', options: ['编译内核模块', '把一个目录树原样拷进 rootfs（放自制程序/服务/配置）', '生成设备树', '加速下载'], answer: 1, explanation: '写字机三进程、systemd 服务、前端页面全放 overlay 目录，构建时合入镜像——"私货"的标准入口。' },
+    { question: 'Buildroot 产出的 SD 卡镜像包含？', options: ['只有一个内核文件', 'FAT32 boot 分区（bootloader/内核/设备树）+ EXT4 rootfs 分区', 'Windows 系统文件', '源码仓库'], answer: 1, explanation: '两分区布局对应启动链：boot 分区供 u-boot 加载，rootfs 提供用户态一切——构建系统就是决定这两个分区每个文件的来源。' },
+    { question: '把 defconfig + overlay + dtbo 全部进 Git 打 tag 的意义？', options: ['节省磁盘', '任何人任何时候 make 都能复现一致镜像（可复现性）', '加快编译', '自动测试'], answer: 1, explanation: '配置即代码：系统的完整定义被版本化，换机换卡都能得到相同产物，"在我机器上是好的"不再是借口。' },
+    { question: 'writer-comms.service 里 After=dev-writer_mcu.device 的含义？', options: ['每分钟重启', '等 udev 生成 /dev/writer_mcu 设备单元后再启动（替代 sleep 硬等）', '限速运行', '开机即杀掉'], answer: 1, explanation: 'systemd 会为设备节点生成 .device 单元，用 After/Requires 声明依赖比脚本 sleep 更快更可靠。' },
+    { question: 'Buildroot 构建的坏习惯是？', options: ['普通用户构建', 'make savedefconfig 固化配置', '直接修改 output/ 里的生成产物', '用 overlay 放置自制文件'], answer: 2, explanation: 'output/ 是生成物，下次 make 即被覆盖；一切修改进 defconfig 或 overlay，这是"配置即代码"的纪律。' },
+  ],
+
+  'linux-10': [
+    { question: '整机联调"分层验收"方法论的核心？', options: ['全部装完一起测', '每层单独证明正常再叠加，出问题立刻定位到层', '只测最终功能', '跳过机械直接调软件'], answer: 1, explanation: '机械→电气→固件→通信→软件→界面逐层过：下层可靠上层问题才不被掩盖；从写字机到任何机电系统通用。' },
+    { question: '指令 100mm、实测 100.32mm，补偿系数 k 与新当量（原 0.0125）为？', options: ['k=0.9968，δ′=0.01246', 'k=1.0032，δ′≈0.01254', 'k=1.32，δ′=0.0165', 'k=1.0 不需补偿'], answer: 1, explanation: 'k=实测/指令=100.32/100=1.0032，δ′=0.0125×1.0032≈0.01254；k 偏离 1 超过 1% 先查机械再改软件。' },
+    { question: '写的字整体等比例放大，最可能的层？', options: ['通信层', '标定层（脉冲当量不准）', '界面层', '电源层'], answer: 1, explanation: '等比例缩放是当量系统性偏差的特征；按标定五步重测补偿系数即可。' },
+    { question: '三级安全链不包括？', options: ['面板急停按钮', '进程退出前发 CMD_ESTOP', 'STM32 心跳超时自停', '浏览器页面自动刷新'], answer: 3, explanation: '安全链靠急停命令与心跳超时兜底；UI 刷新只是显示行为，绝不把安全逻辑放在浏览器里。' },
+    { question: '运行中机器突然失能，dmesg 显示 USB 断连重连，这多半是？', options: ['软件 bug 需重装系统', '设计行为：心跳超时兜底生效（先查 USB 线/供电）', '电机损坏', '必须更换开发板'], answer: 1, explanation: '心跳超时停机是安全设计而非故障本身；根因常是 USB 线接触不良或供电瞬跌，先换线复测。' },
+    { question: '点动 X+8000 脉冲对应位移（当量 0.0125mm）？', options: ['10mm', '80mm', '100mm', '64mm'], answer: 2, explanation: '8000×0.0125=100mm，这也是标定流程的标准测试距离——指令整数好记，实测卡尺直接读偏差。' },
+  ],
+
+  'linux-11': [
+    { question: '帧头用双字节 0xA5 0x5A 而非单字节的目的？', options: ['提高波特率', '把随机数据误同步概率从 1/256 降到 1/65536', '节省带宽', '兼容 CAN'], answer: 1, explanation: '帧头负责在字节流中"对齐"，双字节显著降低误对齐概率，再叠加 CRC 校验兜底，链路可靠性就足够了。' },
+    { question: 'CRC-16/MODBUS 的生成多项式与反射值为？', options: ['0x1021 / 0x8408', '0x8005 / 0xA001', '0x3D65 / 0xA6BC', '0x04C11DB7 / 无反射'], answer: 1, explanation: 'p(x)=x¹⁶+x¹⁵+x²+1=0x8005，反射算法查 0xA001，初值 0xFFFF。双侧联调前先用工具箱 CRC 校验器对拍。' },
+    { question: '心跳 100ms、超时取 300ms 而非 150ms 的理由？', options: ['省电', '连续丢 3 帧才断链，单帧偶发丢失不误触发', '提高带宽', '协议规定必须 3 倍'], answer: 1, explanation: '超时=3×心跳周期：容忍调度抖动与单帧干扰；且 300ms 内电机按原速多走的距离机械上完全安全。' },
+    { question: '把结构体直接 memcpy 当协议负载的最大隐患？', options: ['编译报错', '编译器对齐 padding、大小端、跨编译器差异导致两侧解析不一致', '运行变慢', '无法加密'], answer: 1, explanation: '协议字段必须按字节显式打包（小端写进文档），memcpy 结构体是"能跑就行"的定时炸弹，换编译器/加字段就炸。' },
+    { question: '轨迹分包时 STM32 缓存 4 段、缓存满回 NACK 的作用？', options: ['纠错重传', '滑动窗口背压：发送方暂停，防止 MCU 内存被冲爆', '加密通道', '时钟同步'], answer: 1, explanation: '这是 Klipper move queue 的思想：接收方用有限缓存+反馈控制发送节奏，大数据量也不会丢段。' },
+    { question: '开发期的通信载体首选？', options: ['CAN 总线', 'USB CDC 虚拟串口（免接线、约 1MB/s）', 'RS485', '蓝牙'], answer: 1, explanation: 'STM32 用 USB 外设模拟 CDC，Linux 侧 termios 编程与物理串口完全相同；产品化再换板载 UART 或 CAN。' },
+  ],
+
+  'linux-12': [
+    { question: '导程 40mm、200 步/转、16 细分，脉冲当量是？', options: ['0.00625 mm/脉冲', '0.0125 mm/脉冲', '0.2 mm/脉冲', '0.05 mm/脉冲'], answer: 1, explanation: 'δ=40/(200×16)=0.0125mm/脉冲。这是写字机全部行程/速度/标定计算的基石数字。' },
+    { question: '100mm/s 所需脉冲频率与周期（δ=0.0125）？', options: ['8kHz / 125μs', '800Hz / 1.25ms', '80kHz / 12.5μs', '1kHz / 1ms'], answer: 0, explanation: 'f=v/δ=100/0.0125=8kHz，周期 125μs——远小于 Linux 用户态毫秒级抖动，所以脉冲必须由 STM32 定时器发。' },
+    { question: 'A4988 检流电阻 0.1Ω、Vref=0.4V 时绕组电流约？', options: ['0.05A', '0.5A', '2A', '5A'], answer: 1, explanation: 'I=Vref/(8Rs)=0.4/0.8=0.5A。写字机空载起步 0.5A 发热小噪音低，力度不足再逐步上调。' },
+    { question: 'f=8000Hz、a=200000Hz/s，减速所需脉冲数约？', options: ['16 脉冲', '160 脉冲', '1600 脉冲', '16000 脉冲'], answer: 1, explanation: 'n_dec=f²/(2a)=64×10⁶/4×10⁵=160 脉冲（约 2mm）——梯形剖面判断"何时开始减速"的核心一行。' },
+    { question: '步进电机随机丢步但驱动参数正常，首先检查？', options: ['更换 Linux 发行版', '全系统单点共地（地电位差=随机丢步）', '升级浏览器', '降低串口波特率'], answer: 1, explanation: 'STM32、驱动器、Linux 板有电气交集就必须共地；其次是皮带张紧与加速度过大，都属"电气/机械先于软件"。' },
+    { question: '开环步进防丢步的廉价组合方案？', options: ['加大电流到极限', '限位回零消除累积误差 + TMC2209 StallGuard 无感堵转检测', '换伺服电机', '每天重启'], answer: 1, explanation: '写字机量级用"回零+无感检测"足够；严格场景再加编码器外环，偏差超 32 脉冲（0.4mm）报警停机。' },
+  ],
+
+  'linux-13': [
+    { question: '梯形剖面中 n_a 的计算式（f_start 起步、f_max 上限、加速度 a）？', options: ['n_a = f_max/a', 'n_a = (f_max²−f_start²)/(2a)', 'n_a = f_max×a', 'n_a = 2a/f_max²'], answer: 1, explanation: '加速段脉冲数=(f_max²−f_start²)/(2a)；n_a+n_d>n_total 时退化为三角形剖面（无匀速段）。' },
+    { question: '总脉冲 160、a=200000Hz/s 的短段峰值频率约？', options: ['5657Hz', '800Hz', '400Hz', '8000Hz'], answer: 0, explanation: '三角形剖面 f_peak=√(n·a)=√(160×200000)≈5657Hz（约 70.7mm/s），达不到 8kHz 上限就自动"削峰"。' },
+    { question: '两轴 Bresenham 插补中，一次定时器中断可能？', options: ['只出主轴脉冲', '主轴与副轴同时出脉冲（对角步），整数加减即可保持直线', '出任意多脉冲', '必须先算浮点斜率'], answer: 1, explanation: '误差项决定副轴是否同拍出步——GRBL 同款整数算法，插补误差不超半个脉冲当量（0.00625mm）。' },
+    { question: '拐角速度公式 v_j 的正确趋势？', options: ['θ→0°（直线通过）不限速，θ→180°（折返）必须停', '角度越大速度越高', '与加速度无关', '恒等于 f_max'], answer: 0, explanation: 'v_j=√(aδcos(θ/2)/(1−cos(θ/2)))：直线通过无需减速，完全折返必停——物理本质是向心加速度约束。' },
+    { question: 'lookahead 回填衔接速度的遍历方向？', options: ['从前往后', '从后往前（第 i 段出口受第 i+1 段入口约束）', '随机', '只看当前段'], answer: 1, explanation: '反向遍历才能把下游约束向上游传播；不做 lookahead 每段都停零，整字耗时翻倍且顿挫。' },
+    { question: 'Klipper 的 step compression（步进压缩）是指？', options: ['压缩 G-code 文件', '把连续同方向步合并成"起始时刻+步间隔+步数"的队列项，降低中断频率', '减少电机数量', '压缩打印层高'], answer: 1, explanation: '等差级数表示一段匀速步进，定时器中断从每步一次降到每段一次，8kHz 脉冲率下 MCU 负载依然极低。' },
+  ],
+
+  'linux-14': [
+    { question: '轮询 1s 一次与 WebSocket（RTT≈1ms、推送周期 50ms）的平均延迟约为？', options: ['两者相同', '约 500ms vs 约 26ms', '约 1s vs 500ms', '约 10ms vs 1s'], answer: 1, explanation: '轮询平均等半个周期（500ms）；WS 平均等半个推送周期+RTT≈26ms——差近 20 倍，这是实时面板选推送的根本原因。' },
+    { question: 'WS 服务进程崩溃对写字机的影响？', options: ['机器立即停机', '面板失明但通信/规划照常——UI 只是共享内存的只读消费者', 'STM32 复位', '所有数据丢失'], answer: 1, explanation: '分层红利：ws_server 挂了只是没人广播，通信与规划进程和 STM32 完全不受影响；UI 断线显示状态即可。' },
+    { question: '状态 JSON 约 40B、20 帧/s，单客户端带宽为？', options: ['800 B/s，局域网毫无压力', '800 KB/s', '8 MB/s', '可忽略不计但会打满 Wi-Fi'], answer: 0, explanation: '20×40=800B/s；相比之下轮询每次数百字节 HTTP 头的开销反而更大——WS 既省延迟又省流量。' },
+    { question: '点动按钮的正确交互模式？', options: ['单击一次飞 10mm', 'mousedown 连续按节奏发送、mouseup/leave 立即停，命令端限流', '按住不放就永远动下去', '双击停止'], answer: 1, explanation: '按下/松开配对+固定频率点动+松开即停；命令队列再限流，防止"按住狂发"撑爆队列。' },
+    { question: '浏览器页面关闭后机器仍写完当前字，说明？', options: ['出了故障', '架构正确：安全由 STM32 心跳超时兜底，UI 是纯观察者', '软件泄漏', '必须重启服务'], answer: 1, explanation: 'UI 掉线≠失控。真正的安全链在命令层与固件层：心跳超时是最后的、不依赖任何上层软件的保险。' },
+    { question: 'Canvas 上轨迹镜像（左右反）说明？', options: ['浏览器 bug', '坐标映射缺了 Y 翻转或 X/Y 接反——按 mm→像素映射逐项核对', '共享内存损坏', '波特率错误'], answer: 1, explanation: '屏幕 Y 向下而机械 Y 向上，py=height−y/RANGE×height 必须翻转；手推笔架走一圈对照屏幕是标准标定法。' },
+  ],
+
+  // ========== 3D 打印 print-01~08（v1.0 新增）==========
+  'print-01': [
+    { question: 'FDM 工艺的基本原理？', options: ['光敏树脂逐层固化', '热熔丝材挤出后逐层堆积成型', '激光烧结金属粉末', '喷射粘结剂到粉末床'], answer: 1, explanation: 'FDM=熔融沉积建模：丝材在喷头熔化挤出，按切片路径逐层堆积。SLA 是光固化，SLM 是金属粉末激光熔化。' },
+    { question: 'FDM / SLA / SLM 三者的典型精度排序（高→低）？', options: ['FDM > SLA > SLM', 'SLA > FDM ≈ SLM', 'SLM > SLA > FDM', '三者相同'], answer: 1, explanation: 'SLA 光固化可达 25~100μm 层厚；FDM 常用 100~300μm；SLM 金属粉末级。工艺选择先看精度与材料需求。' },
+    { question: '相比减材制造（CNC），增材制造的核心优势？', options: ['速度永远更快', '复杂形状几乎零附加成本（拓扑优化、内腔一体成型）', '精度更高', '材料更便宜'], answer: 1, explanation: '挖材料越少不省钱、形状再复杂也不加价——这正是拓扑优化件适合 3D 打印的根本原因；但精度和表面通常不及 CNC。' },
+    { question: '一个完整 3D 打印流程的正确顺序？', options: ['切片→建模→后处理→打印', '建模→切片→打印→后处理', '打印→建模→切片', '后处理→打印→切片'], answer: 1, explanation: 'CAD 建模导出 STL → 切片成 G-code → 打印 → 去支撑/打磨/嵌件等后处理，四步对应 print-05/03/—/07 的分工。' },
+    { question: '3D 打印最适合的机器人开发场景？', options: ['大批量结构件量产', '外壳/夹具/支架的快速迭代与小批量自制', '高精度轴承制造', '芯片封装'], answer: 1, explanation: '打印强项是"一台起订、当天改版"的迭代件；量产换注塑、高精度配合面换 CNC/采购标准件。' },
+    { question: 'STL 模型文件的实质是？', options: ['CAD 参数化工程文件', '三角面片网格（顶点+法向），无单位无颜色', '点云数据', '图片压缩格式'], answer: 1, explanation: 'STL 只描述表面三角网格，无单位——导出必须确认 mm；参数化原始文件（.f3d/.scad）才可再编辑，两者都要存档。' },
+  ],
+
+  'print-02': [
+    { question: 'FDM 打印机中步进电机的岗位不包括？', options: ['X/Y 轴运动', '挤出机送丝', 'Z 轴升降', '热床加热'], answer: 3, explanation: '热床加热靠电阻丝/铝板+温控；步进负责 X/Y/Z 运动与挤出——四路步进是 FDM 的标配（电机原理见 motor-05）。' },
+    { question: '20 齿 GT2 带轮、200 步/转、16 细分，电机转一圈滑块走多远？', options: ['20mm', '40mm', '2mm', '80mm'], answer: 1, explanation: 'GT2 齿距 2mm×20 齿=40mm/转；这也是写字机脉冲当量 0.0125mm 的分子——linux-12 与本节的同一个数字。' },
+    { question: 'Klipper 与传统 Marlin 固件的根本差异？', options: ['Klipper 不用 G-code', 'Klipper 把规划放上位机（Linux），MCU 只负责按时间戳执行步进', 'Klipper 只能打 PLA', 'Marlin 没有加速度控制'], answer: 1, explanation: '"树莓派规划 + MCU 执行"的混合架构正是本站 linux 板块写字机的参照系：上位机算力换运动性能。' },
+    { question: '挤出机（extruder）的作用是？', options: ['加热喷嘴', '把丝材按需推入喷头（送丝量与运动速度联动）', '冷却模型', '切片'], answer: 1, explanation: '挤出机控制进丝速率，与打印速度匹配；多出来的料形成拉丝、少了则欠挤出——回抽参数也是它执行的。' },
+    { question: '打印件出现规律性层偏移，机械上最常见的原因？', options: ['喷嘴温度低', '同步带张紧不足或加速度过高导致丢步', '切片层高太小', '料盘太重'], answer: 1, explanation: '皮带打滑或电机堵转丢步会让后续整体错位；先张紧皮带再降加速度——与写字机 linux-12 丢步同根同源。' },
+    { question: '热床的主要作用？', options: ['加速打印', '减缓首层冷却收缩、增强附着防翘边', '给电机供电', '干燥耗材'], answer: 1, explanation: '热床温度（PLA 60℃ 等）决定首层附着力与底面质量；材料对应床温表见 print-07 翻车速查。' },
+  ],
+
+  'print-03': [
+    { question: '层高从 0.2 降到 0.1 的影响？', options: ['打印更快', '细节更好但打印时间近乎翻倍', '强度减半', '必须换喷嘴'], answer: 1, explanation: '层数翻倍→时间约翻倍；细节与 Z 精度提升。常规件 0.2，展示面 0.12~0.16，快速草稿 0.28。' },
+    { question: '结构件的合理填充率与壁数策略？', options: ['10% + 2 壁', '40% 左右 + 4 壁（强度优先加壁而不是堆填充）', '100% 实心', '0% + 1 壁'], answer: 1, explanation: '壁是连续纤维、承载主力；填充到 40% 后再加强度应加壁数。100% 只用于气密/透明件，费时且易翘。' },
+    { question: '45° 规则指的是？', options: ['喷嘴温度 45℃', '悬垂超过 45° 需要支撑（或设计分型）', '热床 45°', '回抽 45mm'], answer: 1, explanation: '悬垂面相对垂直线的角度超过 45° 时材料下垂明显；建模时就应控制悬垂或预留支撑（print-05/06 的设计约束）。' },
+    { question: 'brim（裙边）的用途？', options: ['装饰', '扩大首层接触面积防翘边/脱板，打印后撕除', '增加强度', '校准喷嘴'], answer: 1, explanation: 'brim 与首层连体、事后撕掉；raft 是隔离底板、pad 型裙边适合细小尖脚件——三者别混用。' },
+    { question: '切片器输出的 G-code 本质是？', options: ['三维模型', '带温度/速度/路径的机床指令文本（G1 X.. Y.. E.. F..）', '图片序列', '压缩包'], answer: 1, explanation: 'G-code 逐行指挥运动与挤出：G1 直线插补、E 挤出量、F 进给速度。工具箱的 G-code 生成器可手搓基础轮廓加深理解。' },
+    { question: '同样的强度提升预算，优先加？', options: ['填充率 20→60%', '壁数 3→5（连续承载路径更长）', '层高 0.2→0.3', '打印速度 60→100'], answer: 1, explanation: '外壁连续无间隙，抗弯抗撕远优于内部网格；这也是 print-06 结构件"4 壁"预设的依据。' },
+  ],
+
+  'print-04': [
+    { question: 'PLA 与 ABS 的关键差异，正确的是？', options: ['PLA 更耐热', 'ABS 更强韧耐温（~95℃）但收缩翘边严重需封闭腔', 'ABS 最容易打印', '两者床温相同'], answer: 1, explanation: 'PLA 易打但耐温仅 ~55℃；ABS 强韧耐温却要 100℃ 床温+封腔防翘。户外/车内件选 ABS/PETG。' },
+    { question: '常见材料线收缩率从大到小排序？', options: ['PLA > PETG > ABS', 'ABS/PC（~0.8%）> PETG（~0.5%）> PLA（~0.3~0.5%）', '都一样', 'TPU 最大'], answer: 1, explanation: '收缩率决定放大补偿量（print-06 公式），ABS 打大件尤其要补偿+防翘。' },
+    { question: '柔性夹持垫/缓冲件选？', options: ['PLA', 'TPU（弹性体，95A~85A 硬度可选）', 'PC', 'PLA-CF'], answer: 1, explanation: 'TPU 是弹性体，可弯折回弹；打印需慢速直路进料，是"柔料难打"的代表，值得单独练一台机器参数。' },
+    { question: '耗材吸湿的典型后果？', options: ['只影响颜色', '拉丝加剧、表面气泡、强度骤降（打印时有啪啪声）', '缩短打印时间', '提高精度'], answer: 1, explanation: '水分在喷嘴汽化爆裂产生气泡与飞溅；按材料干燥表烘料（PLA 45~50℃×4~6h）往往比调参数更管用。' },
+    { question: '碳纤维增强耗材（PLA-CF）的使用要点？', options: ['和普通喷嘴一样', '必须换硬化钢喷嘴（CF 高磨蚀）', '床温必须 120℃', '只能打印小件'], answer: 1, explanation: 'CF 纤维硬化尖锐，黄铜喷嘴孔径几天就被磨大；换硬化钢/红宝石喷嘴后刚度与哑光质感很香。' },
+    { question: '功能件（卡扣/铰链/户外件）优先考虑？', options: ['PLA（最便宜）', 'PETG（韧性优于 PLA、耐温 70℃、抗紫外线）', '任何材料都行', '支撑料'], answer: 1, explanation: 'PLA 硬脆、低温脆化与蠕变明显；PETG 韧性与耐候兼顾且好打，是功能件默认选项。' },
+  ],
+
+  'print-05': [
+    { question: '参数化建模"草图完全约束"的意义？', options: ['文件更小', '改尺寸时几何不乱跳，模型可预期地联动更新', '渲染更快', '导出必须'], answer: 1, explanation: '半约束草图改一个尺寸全图崩形；所有线变黑（完全约束）再退出草图，是 CAD 的第一纪律。' },
+    { question: '0.4mm 喷嘴的最小实用壁厚约？', options: ['0.4mm', '1.2mm（3 倍喷嘴直径）', '2.4mm', '0.1mm'], answer: 1, explanation: 't≈3×d：薄于此切片器画不出封闭壁环；受力件壁厚≥2mm，配合孔周围留≥3mm 材料。' },
+    { question: 'STL 导出的单位陷阱指？', options: ['毫米和厘米混淆', '按英寸建模导出后整体缩小 25.4 倍', '单位影响颜色', 'ASCII 比 Binary 大'], answer: 1, explanation: 'STL 无单位，切片器一律当 mm；英寸制模型导出后缩小 25.4 倍——上机前用切片器量总尺寸最保险。' },
+    { question: '轴对称零件（皮带轮坯、喷嘴座）应优先用？', options: ['多个拉伸拼合', '旋转特征（Revolve）', '抽壳', '布尔并集'], answer: 1, explanation: '画一半轮廓绕轴 360°一步成型，回转精度与可修改性都优于拉伸拼合。' },
+    { question: '笔杆 φ8，笔架孔做成 φ8.5 的理由？', options: ['省材料', '0.5mm 快换间隙（配合性质：快换 +0.5）', '美观', '补偿收缩必须 0.5'], answer: 1, explanation: '配合间隙按用途选：压入 +0.2~0.4、滑动 +0.3~0.5、快换 +0.5；侧向锁紧孔再把笔夹牢。' },
+    { question: '非流形（non-manifold）STL 的问题是？', options: ['文件太大', '边被 2 个以上面共享，切片器可能报错或修补后变形', '颜色丢失', '无法压缩'], answer: 1, explanation: '水密/流形是切片的输入要求；导出前用软件检查，切片器自带修复可处理小毛病，大问题回建模修。' },
+  ],
+
+  'print-06': [
+    { question: 'FDM"孔永远偏小"的常规对策？', options: ['大力锉圆', '孔径设计时 +0.2~0.4mm（孔工艺常量 c），阶梯试块实测标定', '提高温度', '放弃打孔后钻'], answer: 1, explanation: '锉孔失圆必松；把 c 写进参数表，用三档试块（如 22.2/22.3/22.4）一次定标，之后批量直接复用。' },
+    { question: '608 轴承（外径 22）压入座的打印孔径约？', options: ['22.0', '22.3~22.4（收缩+孔缩补偿）', '21.8', '23.5'], answer: 1, explanation: 'D_print=22×(1+0.4%)+0.3≈22.4，手压入后常温抱紧——print-06 公差表的标准行。' },
+    { question: '同一零件 Z 向受拉强度约为 XY 向的？', options: ['相等', '低 30~50%（层间是弱界面）', '高 50%', '高 10 倍'], answer: 1, explanation: '最大拉应力放 XY 平面；必须 Z 向受拉的关键件竖打并加大截面——打印方向在建模时就该定。' },
+    { question: 'M3 热熔铜螺母的埋孔尺寸是？', options: ['φ2.5×8', 'φ5.4×4', 'φ3.4×10', 'φ6.0×5'], answer: 1, explanation: '埋孔略小于螺母对边（滚花咬入熔层），烙铁 220~250℃ 压入；这是塑料件受拉连接的标准工艺。' },
+    { question: '阶梯试块（同板三档孔径）的价值？', options: ['练习打孔', '同参数同料同方向一次测出本机 c 值，10g 料省三小时', '测试层高', '展示用'], answer: 1, explanation: '(ε,c) 属于"打印机+材料+参数"组合，试块实测比查表可靠；标定结果记进零件档案。' },
+    { question: '3D 打印直齿轮的最低实用模数约？', options: ['0.5', '1.0', '2.0（齿尖才有足够强度）', '5.0'], answer: 2, explanation: '模数<2 齿尖仅零点几毫米，打出来是"波浪"；同步传动优先同步带而非齿轮，带轮买金属成品。' },
+  ],
+
+  'print-07': [
+    { question: 'PLA 翘边脱板的首选处方？', options: ['降低热床到 30℃', '热床 60℃ + 首层关风扇 + brim/胶水', '喷嘴升温到 250℃', '提高速度'], answer: 1, explanation: '翘边=首层附着失败+冷缩拉起；床温按材料（PLA 60/PETG 80/ABS 100+），首层关风扇，再上裙边或胶棒。' },
+    { question: '拉丝严重的第一调整项？', options: ['回抽距离/速度（0.5~1mm @40mm/s）与降温 5~10℃', '换打印机', '加倍填充', '关热床'], answer: 0, explanation: '空移漏料靠回抽抑制；湿料也会拉丝——先烘料（print-04）再调参数，一次只动一个变量。' },
+    { question: '热熔铜螺母压入的操作要点？', options: ['烙铁 120℃ 慢压', '220~250℃ 压螺母上平面，顺孔轴垂直压到齐平，冷却 30s 再试拧', '用打火机烧螺母', '常温敲入'], answer: 1, explanation: '热传导熔孔壁后下陷，滚花槽被熔料填充满冷固即成高强度嵌件；歪了趁热拔出重来。' },
+    { question: '排查打印故障的正确节奏？', options: ['一次调五个参数碰运气', '按"首层→料→机械→参数→建模"顺序，一次只改一个变量', '直接重装系统', '全部参数翻倍'], answer: 1, explanation: '决策树自上而下：首层是问题放大器，湿料贡献一半翻车，层偏移九成是机械——变量隔离才能归因。' },
+    { question: '层偏移+振纹同时出现，机械上优先查？', options: ['皮带张紧与传动间隙', '喷嘴新旧', 'SD 卡速度', '切片软件版本'], answer: 0, explanation: '共振与丢步同源：皮带松旷/加速度过高。张紧皮带（按压挠度 5~8mm）并降低加速度——与 linux-13 振纹分析互通。' },
+    { question: '关于丙酮后处理，正确的是？', options: ['PLA 可用丙酮抛光', 'ABS 可丙酮蒸抛光与粘接，PLA 不溶', 'PETG 最适合丙酮', '丙酮对所有材料通用'], answer: 1, explanation: '材料决定后处理路线：ABS 溶于丙酮（蒸抛光/自制胶水），PLA/PETG 不溶只能打磨；丙酮蒸气可燃需通风。' },
+  ],
+
+  'print-08': [
+    { question: '两轴写字机（200mm 行程、笔载荷 50g）的首选布局？', options: ['CoreXY', '龙门十字滑台（结构直观、装配误差好控制）', 'Delta 三角洲', '机械臂'], answer: 1, explanation: 'CoreXY 为高速重载而生（皮带路径长、张紧一致性要求高）；写字机量级"简单即正义"，十字滑台两层正交叠加。' },
+    { question: '导轨 300mm、滑块 60mm、两侧余量各 20mm，行程为？', options: ['240mm', '200mm', '220mm', '180mm'], answer: 1, explanation: 'S=L−L_block−2m=300−60−40=200mm；反着用就是选型公式：要 200 行程买 300 光轴。' },
+    { question: '笔架侧合力约 10N、20 齿 GT2 带轮节圆半径 6.37mm，所需扭矩约？', options: ['0.07 N·m（42 步进额定 0.4 N·m，5 倍余量）', '4 N·m', '0.007 N·m', '40 N·m'], answer: 0, explanation: 'T=Fr/η=10×0.00637/0.9≈0.07N·m——写字机对电机的要求很低，普通 42 步进绰绰有余。' },
+    { question: '限位开关选常开（NO）接线的安全逻辑？', options: ['接线更省', '断线时系统按"已触发"处理，失效更安全（配合上拉）', '响应更快', '必须如此否则不识别'], answer: 1, explanation: '常开+上拉：断线电平不变会被读作触发态，机器停在原点而不是失控冲程——失效安全（fail-safe）设计。' },
+    { question: '校准 XY 垂直度的实用方法是？', options: ['目测', '对角线法：量横梁两端到对侧导轨的距离差（≤0.2mm/200mm）', '水平仪', '称重法'], answer: 1, explanation: '两对角线（或到基准的距离）相等即垂直；垂直度误差直接写成"歪字"，软件标定只能在机械合格后做。' },
+    { question: '对 X 滑块做拓扑优化（保留轴承孔/皮带口/惯性力面）的收益？', options: ['只是好看', '动质量减约 30%，可换取更高加速度（f_max 上探）', '提高精度', '降低成本一半'], answer: 1, explanation: '给定载荷挖掉低应力材料——增材制造复杂度免费，减重直接转化为运动性能；这是"增材思维"的入门案例。' },
+  ],
+
 };
