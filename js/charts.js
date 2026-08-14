@@ -515,7 +515,7 @@ Charts.register('rc-waveform', function(el) {
 Charts.register('knowledge-graph', function(el) {
   if (typeof echarts === 'undefined' || typeof KnowledgeDeps === 'undefined') return;
 
-  const SECTION_GROUPS = ['advanced-math','linear-algebra','probability','circuit-basics','analog-circuit','digital-circuit','power-electronics','motor-drive','control','modern-control','embedded-sys','sensor','linux-dev','robotics','digital-mfg','data-structure','signals','cpp','os','network'];
+  const SECTION_GROUPS = ['advanced-math','linear-algebra','probability','circuit-basics','analog-circuit','digital-circuit','power-electronics','motor-drive','control','modern-control','embedded-sys','sensor','linux-dev','robotics','digital-mfg','data-structure','signals','cpp','os','network','ai'];
   const groupColors = {
     'advanced-math': '#dc2626', 'linear-algebra': '#d97706', 'probability': '#be185d',
     'circuit-basics': '#2563eb', 'analog-circuit': '#059669', 'digital-circuit': '#eab308',
@@ -524,7 +524,8 @@ Charts.register('knowledge-graph', function(el) {
     'embedded-sys': '#475569', 'sensor': '#0891b2', 'robotics': '#be123c',
     'linux-dev': '#111827', 'digital-mfg': '#c026d3',
     'data-structure': '#1e293b', 'signals': '#0369a1',
-    'cpp': '#b91c1c', 'os': '#15803d', 'network': '#1d4ed8'
+    'cpp': '#b91c1c', 'os': '#15803d', 'network': '#1d4ed8',
+    'ai': '#7c3aed'
   };
   const statusColors = { completed: '#059669', learning: '#d97706', pending: '#cbd5e1' };
 
@@ -622,7 +623,7 @@ Charts.register('knowledge-graph', function(el) {
 Charts.register('mastery-heatmap', function(el) {
   if (typeof echarts === 'undefined') return;
 
-  const SECTION_GROUPS = ['advanced-math','linear-algebra','probability','circuit-basics','analog-circuit','digital-circuit','power-electronics','motor-drive','control','modern-control','embedded-sys','sensor','linux-dev','robotics','digital-mfg','data-structure','signals','cpp','os','network'];
+  const SECTION_GROUPS = ['advanced-math','linear-algebra','probability','circuit-basics','analog-circuit','digital-circuit','power-electronics','motor-drive','control','modern-control','embedded-sys','sensor','linux-dev','robotics','digital-mfg','data-structure','signals','cpp','os','network','ai'];
 
   function getMasteryScore(sectionId) {
     const status = Progress.get(sectionId) || 'pending';
@@ -716,7 +717,7 @@ Charts.register('progress-ring', function(el) {
 Charts.register('group-progress-bar', function(el) {
   if (typeof echarts === 'undefined') return;
 
-  const SECTION_GROUPS = ['advanced-math','linear-algebra','probability','circuit-basics','analog-circuit','digital-circuit','power-electronics','motor-drive','control','modern-control','embedded-sys','sensor','linux-dev','robotics','digital-mfg','data-structure','signals','cpp','os','network'];
+  const SECTION_GROUPS = ['advanced-math','linear-algebra','probability','circuit-basics','analog-circuit','digital-circuit','power-electronics','motor-drive','control','modern-control','embedded-sys','sensor','linux-dev','robotics','digital-mfg','data-structure','signals','cpp','os','network','ai'];
   const labels = [];
   const completed = [];
   const learning = [];
@@ -758,7 +759,7 @@ Charts.register('group-progress-bar', function(el) {
 Charts.register('accuracy-bar', function(el) {
   if (typeof echarts === 'undefined') return;
 
-  const SECTION_GROUPS = ['advanced-math','linear-algebra','probability','circuit-basics','analog-circuit','digital-circuit','power-electronics','motor-drive','control','modern-control','embedded-sys','sensor','linux-dev','robotics','digital-mfg','data-structure','signals','cpp','os','network'];
+  const SECTION_GROUPS = ['advanced-math','linear-algebra','probability','circuit-basics','analog-circuit','digital-circuit','power-electronics','motor-drive','control','modern-control','embedded-sys','sensor','linux-dev','robotics','digital-mfg','data-structure','signals','cpp','os','network','ai'];
   const data = [];
 
   SECTION_GROUPS.forEach(gId => {
@@ -1789,4 +1790,123 @@ Charts.register('graph-algo', function(el) {
   highlightAlgo();
   legendEl.innerHTML = LEGENDS[currentAlgo];
   resetAll();
+});
+
+// 注意力权重热力图（ai-03）：玩具级 QKV 计算 + softmax 可视化
+// 切换例句 / 调 dk 与温度 / 开关 √dk 缩放与因果掩码，直观观察"谁关注谁"以及 softmax 饱和现象
+Charts.register('attention-vis', function(el) {
+  const SENTENCES = [
+    { name: '猫追老鼠', tokens: ['小猫', '追', '一只', '老鼠'] },
+    { name: '调参数', tokens: ['工程师', '把', 'PID', '调', '稳', '了'] },
+    { name: '写字机', tokens: ['写字机', '把', '笔', '移', '到', '原点'] },
+    { name: '注意力', tokens: ['注意力', '就是', '一切', '的', '关键'] },
+  ];
+
+  // 确定性哈希 + 伪随机：同一 token 恒得同一向量，热力图可复现
+  function hash(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+  function rng(seed) { return function () { seed |= 0; seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+
+  // 每个 token 派生 q/k 向量：共享"本体"随机源、各自叠加小噪声 → 自己对自己的点积天然偏大（对角亮带）
+  function vec(token, role, dk) {
+    const base = rng(hash(token));
+    const noise = rng(hash(token + '#' + role));
+    const v = [];
+    for (let i = 0; i < dk; i++) v.push((base() * 2 - 1) + (noise() * 2 - 1) * (role === 'q' ? 0.45 : 0.55));
+    return v;
+  }
+  function dot(a, b) { let s = 0; for (let i = 0; i < a.length; i++) s += a[i] * b[i]; return s; }
+
+  let sentIdx = 0;
+  const state = { dk: 16, temp: 1, scale: true, mask: false };
+
+  el.innerHTML = `
+    <div style="padding:0.5rem 0 0">
+      <div id="attn-btns" style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.5rem">
+        ${SENTENCES.map((s, i) => `<button data-i="${i}" class="attn-s" style="padding:0.3rem 0.85rem;border-radius:9999px;font-size:0.8rem;border:1px solid var(--border);background:var(--bg-primary);cursor:pointer">${s.name}</button>`).join('')}
+      </div>
+      <div style="display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center;padding:0.6rem 0.75rem;background:var(--bg-secondary);border-radius:0.5rem;font-size:0.8rem">
+        <label style="display:flex;align-items:center;gap:0.4rem">d<sub>k</sub>
+          <select id="attn-dk" style="padding:0.15rem 0.3rem;border:1px solid var(--border);background:var(--bg);border-radius:0.25rem">
+            <option value="4">4</option><option value="16" selected>16</option><option value="64">64</option>
+          </select>
+        </label>
+        <label style="display:flex;align-items:center;gap:0.5rem">温度 T
+          <input type="range" id="attn-temp" min="0.3" max="3" step="0.1" value="1" style="width:90px">
+          <span id="attn-temp-v" style="min-width:1.8rem;font-weight:600">1.0</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer"><input type="checkbox" id="attn-scale" checked> ÷√d<sub>k</sub> 缩放</label>
+        <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer"><input type="checkbox" id="attn-mask"> 因果掩码</label>
+        <span id="attn-stat" style="color:var(--text-secondary)"></span>
+      </div>
+      <div id="attn-grid" style="margin-top:0.75rem;overflow-x:auto"></div>
+      <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.5rem;line-height:1.5">每行 = 一个 Query 词对全部 Key 词的注意力权重（行和为 1），颜色越深权重越高，对角亮带即"主要关注自己"。试试：勾掉 ÷√d<sub>k</sub> 并把 d<sub>k</sub> 调到 64 → softmax 饱和，权重锁死个别词；勾上因果掩码 → 上三角（未来词）全黑，这就是 decoder-only 的"不许偷看"。</div>
+    </div>`;
+
+  const $ = id => el.querySelector('#' + id);
+
+  // 计算 n×n 注意力矩阵：score = q·k /(√dk)，可关缩放；温度在 softmax 前作用；掩码置 -1e9
+  function compute() {
+    const { tokens } = SENTENCES[sentIdx];
+    const n = tokens.length, dk = state.dk;
+    const Q = tokens.map(t => vec(t, 'q', dk));
+    const K = tokens.map(t => vec(t, 'k', dk));
+    const W = [];
+    for (let i = 0; i < n; i++) {
+      const scores = K.map((k, j) => {
+        let s = dot(Q[i], k) / (state.scale ? Math.sqrt(dk) : 1);
+        if (state.mask && j > i) return -1e9;
+        return s / state.temp;
+      });
+      const m = Math.max(...scores);
+      const exps = scores.map(s => Math.exp(s - m));
+      const sum = exps.reduce((a, b) => a + b, 0);
+      W.push(exps.map(e => e / sum));
+    }
+    return W;
+  }
+
+  function render() {
+    const { tokens } = SENTENCES[sentIdx];
+    const n = tokens.length;
+    const W = compute();
+    let html = `<div style="display:grid;grid-template-columns:4.5rem repeat(${n}, minmax(2.6rem,1fr));gap:3px;min-width:${(4.5 + n * 2.9).toFixed(1)}rem">`;
+    html += '<div></div>' + tokens.map(t => `<div style="font-size:0.72rem;text-align:center;color:var(--text-secondary);align-self:end;padding-bottom:2px">${t}</div>`).join('');
+    for (let i = 0; i < n; i++) {
+      html += `<div style="font-size:0.75rem;display:flex;align-items:center;justify-content:flex-end;padding-right:0.4rem;color:var(--text-secondary)">${tokens[i]}</div>`;
+      for (let j = 0; j < n; j++) {
+        const w = W[i][j];
+        const a = Math.pow(Math.max(0, (w - 1 / n) / (1 - 1 / n)), 1.1);  // 均匀→0，one-hot→1
+        const show = w >= 0.2;
+        html += `<div title="${tokens[i]} 关注 ${tokens[j]}：${(w * 100).toFixed(1)}%" style="height:2.4rem;border-radius:4px;background:rgba(124,58,237,${a.toFixed(3)});display:flex;align-items:center;justify-content:center;font-size:0.68rem;color:${a > 0.55 ? '#fff' : 'var(--text-secondary)'}">${show ? Math.round(w * 100) + '%' : ''}</div>`;
+      }
+    }
+    html += '</div>';
+    $('attn-grid').innerHTML = html;
+
+    let maxSum = 0, entSum = 0;
+    for (let i = 0; i < n; i++) {
+      maxSum += Math.max(...W[i]);
+      let H = 0; W[i].forEach(w => { if (w > 0) H -= w * Math.log(w); });
+      entSum += H / Math.log(n);
+    }
+    $('attn-stat').innerHTML = `平均最大权重 <b style="color:#7c3aed">${(maxSum / n * 100).toFixed(0)}%</b>　相对熵 <b>${(entSum / n * 100).toFixed(0)}%</b>（100% = 完全均匀）`;
+  }
+
+  function highlightBtns() {
+    el.querySelectorAll('.attn-s').forEach(b => {
+      const on = +b.dataset.i === sentIdx;
+      b.style.background = on ? 'var(--primary)' : 'var(--bg-primary)';
+      b.style.color = on ? '#fff' : '';
+      b.style.borderColor = on ? 'var(--primary)' : 'var(--border)';
+    });
+  }
+
+  el.querySelectorAll('.attn-s').forEach(b => b.addEventListener('click', () => { sentIdx = +b.dataset.i; highlightBtns(); render(); }));
+  $('attn-dk').addEventListener('change', e => { state.dk = +e.target.value; render(); });
+  $('attn-temp').addEventListener('input', e => { state.temp = +e.target.value; $('attn-temp-v').textContent = state.temp.toFixed(1); render(); });
+  $('attn-scale').addEventListener('change', e => { state.scale = e.target.checked; render(); });
+  $('attn-mask').addEventListener('change', e => { state.mask = e.target.checked; render(); });
+
+  highlightBtns();
+  render();
 });

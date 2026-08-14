@@ -29,7 +29,8 @@ const Favorites = {
       'circuit-basics', 'analog-circuit', 'digital-circuit', 'power-electronics',
       'motor-drive', 'control', 'modern-control',
       'embedded-sys', 'sensor', 'linux-dev', 'robotics', 'digital-mfg',
-      'data-structure', 'signals', 'cpp', 'os', 'network'];
+      'data-structure', 'signals', 'cpp', 'os', 'network',
+      'ai'];
     for (const g of groups) {
       const section = CourseData[g]?.sections?.find(s => s.id === id);
       if (section) return { id, title: section.title, icon: section.icon, page: g };

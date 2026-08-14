@@ -9,7 +9,8 @@
     'motor-drive', 'control', 'modern-control',
     'embedded-sys', 'sensor', 'linux-dev', 'robotics',
     'digital-mfg',
-    'data-structure', 'signals', 'cpp', 'os', 'network'];
+    'data-structure', 'signals', 'cpp', 'os', 'network',
+    'ai'];
   // 分组中文名映射（用于面包屑）
   const GROUP_LABELS = {
     'advanced-math': '高等数学', 'linear-algebra': '线性代数',
@@ -24,6 +25,7 @@
     'digital-mfg': '3D 打印与数字化制造',
     'data-structure': '数据结构', 'signals': '信号与系统',
     'cpp': 'C/C++ 程序设计', 'os': '操作系统', 'network': '计算机网络',
+    'ai': '人工智能与边缘部署',
   };
 
   // ========== 侧边栏渲染 ==========

@@ -56,6 +56,12 @@ const CourseData = {
         { id: 'network', label: '计算机网络' },
       ]
     },
+    {
+      id: 'aigrp', label: '人工智能', icon: 'brain', badge: '前沿', badgeClass: 'badge-eng',
+      children: [
+        { id: 'ai', label: '人工智能与边缘部署' },
+      ]
+    },
     { id: 'tools', label: '工具箱', icon: 'wrench', badge: '工具', badgeClass: 'badge-tool' },
     { id: 'roadmap', label: '学习路径', icon: 'map', badge: '导航', badgeClass: 'badge-tool' },
   ],
@@ -73,24 +79,25 @@ const CourseData = {
     chip: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v2M15 1v2M9 21v2M15 21v2M1 9h2M1 15h2M21 9h2M21 15h2"/></svg>',
     printer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>',
     linux: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2c-2.5 0-4 2.2-4 5 0 1.8.5 3-.5 5C6.2 14.6 4 16 4 19c0 1.7 2 3 3.5 2 .8-.5 1-1.5 2-1.5.8 0 1.2 1 2.5 1s1.7-1 2.5-1c1 0 1.2 1 2 1.5 1.5 1 3.5-.3 3.5-2 0-3-2.2-4.4-3.5-7-1-2-.5-3.2-.5-5 0-2.8-1.5-5-4-5z"/><path d="M10 8h.01M14 8h.01"/></svg>',
+    brain: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>',
   },
 
   // ========== 首页数据 ==========
   home: {
     title: '专业课学习平台 · StudyWeb',
-    subtitle: '应试 + 工程双线并重，覆盖数学、电子、控制、嵌入式、计算机、制造工艺六大领域，系统化学习笔试考点与工程实战知识',
-    intro: '本项目把分散在课本、视频、真题里的专业课知识，系统化、可视化、可交互地组织在一个网站里。数学基础侧重笔试考点与计算训练，电路/控制/嵌入式侧重工程应用与实战仿真，数据结构与信号处理兼顾统考大纲与工程面试，Linux 开发板与 3D 打印板块覆盖动手实战。配合交互图表、公式可视化、自测练习，做到"看得懂、记得牢、用得上"。',
+    subtitle: '应试 + 工程双线并重，覆盖数学、电子、控制、嵌入式、计算机、制造工艺、人工智能七大领域，系统化学习笔试考点与工程实战知识',
+    intro: '本项目把分散在课本、视频、真题里的专业课知识，系统化、可视化、可交互地组织在一个网站里。数学基础侧重笔试考点与计算训练，电路/控制/嵌入式侧重工程应用与实战仿真，数据结构与信号处理兼顾统考大纲与工程面试，Linux 开发板与 3D 打印板块覆盖动手实战，人工智能板块覆盖 LLM 原理、Agent 工程与边缘部署。配合交互图表、公式可视化、自测练习，做到"看得懂、记得牢、用得上"。',
     features: [
-      { icon: '📚', label: '系统化知识', desc: '20 大板块、214 知识点按学习路径递进，应试与工程双标签筛选' },
+      { icon: '📚', label: '系统化知识', desc: '21 大板块、228 知识点按学习路径递进，应试与工程双标签筛选' },
       { icon: '🧮', label: '公式与计算', desc: 'KaTeX 渲染全部数学/控制公式，配套矩阵计算器、拉氏变换查表等工具' },
-      { icon: '🎮', label: '交互可视化', desc: '伯德图、根轨迹、卡诺图、运放电路、排序算法等可交互原理图' },
+      { icon: '🎮', label: '交互可视化', desc: '伯德图、根轨迹、卡诺图、运放电路、注意力热力图等可交互原理图' },
       { icon: '✏️', label: '自测与真题', desc: '每节配自测题，数学/数电/模电含笔试真题模块，支持错题记录' },
     ],
     stats: [
-      { label: '知识板块', value: '20', color: 'blue' },
-      { label: '知识点', value: '214', color: 'green' },
-      { label: '交互图表', value: '16', color: 'purple' },
-      { label: '计算工具', value: '33', color: 'orange' },
+      { label: '知识板块', value: '21', color: 'blue' },
+      { label: '知识点', value: '228', color: 'green' },
+      { label: '交互图表', value: '17', color: 'purple' },
+      { label: '计算工具', value: '34', color: 'orange' },
     ],
     sections: [
       { id: 'advanced-math', title: '高等数学', desc: '极限、微积分、级数、微分方程，工学类高数全考点', icon: '🔴', level: '应试' },
@@ -113,6 +120,7 @@ const CourseData = {
       { id: 'motor-drive', title: '电机与拖动', desc: '直流/交流/PMSM/步进电机原理与调速控制', icon: '🔧', level: '工程' },
       { id: 'linux-dev', title: 'Linux 开发板实战', desc: '系统烧录、命令行、设备树、通信协议、电机控制——两轴写字机实战主线', icon: '🐧', level: '工程' },
       { id: 'digital-mfg', title: '3D 打印与数字化制造', desc: '工艺、切片、材料、建模、公差、后处理到写字机整机结构——制造工艺全链路', icon: '🖨️', level: '工程' },
+      { id: 'ai', title: '人工智能与边缘部署', desc: '神经网络、Transformer、LLM/Agent 原理到 MCU/开发板边缘部署——AI 加持的写字机收官', icon: '🧠', level: '前沿' },
     ],
   },
 
@@ -13446,13 +13454,497 @@ wall  = 5;       <span class="code-comment">// 配合孔周围材料 ≥ 3mm</sp
     ],
   },
 
+  // ========== 人工智能与边缘部署（v1.0.2 批次 6a：01~05 上线，06~14 概览版，完整版随批次 6b/6c 上线）==========
+  'ai': {
+    title: '人工智能与边缘部署',
+    subtitle: '神经网络 → Transformer → LLM/Agent → MCU/开发板边缘部署——AI 加持的两轴写字机贯穿始终',
+    icon: '🧠',
+    sections: [
+      // ===== ai-01 机器学习与神经网络基础 =====
+      { id: 'ai-01', title: '机器学习与神经网络基础', desc: '线性回归→感知机→多层网络，损失函数/梯度下降/反向传播，与系统辨识类比', icon: '🧠', tags: ['核心', '入门'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">从"写方程"到"学参数"：机器学习的第一性原理</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          做控制系统时你经历过两种建模路线：<a href="javascript:void(0)" onclick="App.loadDetail('act-02')">机理建模</a>写微分方程推传递函数；系统辨识则给对象施加激励、记录输入输出数据、拟合出模型参数——<strong>机器学习是辨识思想的彻底版：连模型结构也参数化，让数据决定一切</strong>。本节从线性回归一步步搭到多层神经网络，你会发现"训练"不过是"最小化损失 + 梯度下降"，数学工具全部来自已学的<a href="javascript:void(0)" onclick="App.loadDetail('la-02')">矩阵运算</a>与<a href="javascript:void(0)" onclick="App.loadDetail('prob-03')">概率分布</a>。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">线性回归：一切模型的原型</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          给定 $n$ 组样本 $(\\boldsymbol{x}_i, y_i)$，其中 $\\boldsymbol{x}_i$ 是特征向量、$y_i$ 是目标值，线性回归找一个线性映射去拟合：
+        </p>
+        <div class="formula-block">
+          $$\\hat{y} = \\boldsymbol{w}^{T}\\boldsymbol{x} + b, \\qquad L(\\boldsymbol{w}, b) = \\frac{1}{n}\\sum_{i=1}^{n}\\left(y_i - \\hat{y}_i\\right)^2$$
+          <div class="text-sm text-gray-500 mt-2">$L$ 称为<strong>损失函数</strong>，这里用均方误差 MSE——训练就是找让 $L$ 最小的参数，与最小二乘辨识是同一件事</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          为什么偏偏用平方误差？概率解释：若假设残差 $\\epsilon = y - \\hat{y}$ 服从零均值高斯分布，则<strong>最大化似然等价于最小化 MSE</strong>——这是<a href="javascript:void(0)" onclick="App.loadDetail('prob-08')">最大似然估计</a>在高斯噪声下的特例。损失函数不是拍脑袋选的，它背后站着一条噪声假设。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">感知机与多层网络：从线性到任意边界</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          线性模型只能画直线决策边界，处理不了"异或"这类问题。感知机（perceptron）在线性组合外套一个 S 形激活函数，就能输出 0~1 的"置信度"做二分类：
+        </p>
+        <div class="formula-block">
+          $$z = \\boldsymbol{w}^{T}\\boldsymbol{x} + b, \\qquad \\hat{y} = \\sigma(z) = \\frac{1}{1 + e^{-z}} \\in (0, 1)$$
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          单个感知机仍是"线性分类器"。真正的飞跃在于<strong>堆叠</strong>：把一层神经元的输出作为下一层的输入，$l$ 层网络的一次前向传播就是一串矩阵乘法：
+        </p>
+        <div class="formula-block">
+          $$\\boldsymbol{h}^{(l)} = \\sigma\\left(\\boldsymbol{W}^{(l)}\\boldsymbol{h}^{(l-1)} + \\boldsymbol{b}^{(l)}\\right), \\qquad \\boldsymbol{h}^{(0)} = \\boldsymbol{x}$$
+          <div class="text-sm text-gray-500 mt-2">前向传播 = 逐层"矩阵乘 + 加偏置 + 过激活函数"。GPU 的 AI 算力指标本质就是矩阵乘吞吐量，这也是<a href="javascript:void(0)" onclick="App.loadDetail('la-02')">矩阵乘法</a>在 2026 年比任何时候都值钱的原因</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">梯度下降：参数怎么"学"</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          损失 $L$ 是参数 $\\boldsymbol{w}$ 的函数。在当前参数处沿<strong>负梯度方向</strong>走一小步，损失就下降一点，反复迭代直到收敛：
+        </p>
+        <div class="formula-block">
+          $$\\boldsymbol{w}_{t+1} = \\boldsymbol{w}_t - \\eta \\, \\nabla_{\\boldsymbol{w}} L$$
+          <div class="text-sm text-gray-500 mt-2">$\\eta$ 是学习率——深度学习工程里最重要的超参数：太小收敛慢，太大在最优点附近震荡甚至发散</div>
+        </div>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>例题设定</strong><br>一维最小二乘 $L(w) = (w-3)^2$，最优解显然是 $w^* = 3$。取初始 $w_0 = 0$、学习率 $\\eta = 0.1$，手算两步感受收敛过程</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>求梯度</strong><br>$\\nabla L = 2(w - 3)$，在 $w_0 = 0$ 处梯度为 $-6$（负号指向最优方向）</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>第一步</strong><br>$w_1 = 0 - 0.1 \\times (-6) = 0.6$，损失从 $9$ 降到 $(0.6-3)^2 = 5.76$</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>第二步</strong><br>新梯度 $2 \\times (0.6-3) = -4.8$，$w_2 = 0.6 + 0.48 = 1.08$。每步误差按几何级数缩小，离 $3$ 越近步子越小——梯度下降天然"先快后慢"</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>反例：学习率过大</strong><br>若取 $\\eta = 1$：$w_1 = 6$、$w_2 = 0$、$w_3 = 6$……永远在 0 与 6 之间震荡不收敛。学习率上限由此而来，工程上常用 1e-4 ~ 1e-3 量级再配合衰减</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">反向传播：链式法则的工程化</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          多层网络的梯度怎么算？把前向传播看成复合函数，用求导链式法则从输出层逐层往回乘——这就是<strong>反向传播</strong>（backpropagation），数学上没有任何新东西，工程价值在于"从后往前算一遍就得到所有层的梯度"，避免了对每个参数单独数值求导的重复计算：
+        </p>
+        <div class="formula-block">
+          $$\\frac{\\partial L}{\\partial \\boldsymbol{W}^{(1)}} = \\frac{\\partial L}{\\partial \\boldsymbol{h}^{(3)}} \\cdot \\frac{\\partial \\boldsymbol{h}^{(3)}}{\\partial \\boldsymbol{h}^{(2)}} \\cdot \\frac{\\partial \\boldsymbol{h}^{(2)}}{\\partial \\boldsymbol{h}^{(1)}} \\cdot \\frac{\\partial \\boldsymbol{h}^{(1)}}{\\partial \\boldsymbol{W}^{(1)}}$$
+          <div class="text-sm text-gray-500 mt-2">PyTorch / TensorFlow 的 autograd 自动完成这件事：框架记录前向计算图，反向时自动求导——你只负责搭网络和定义损失</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">机器学习 vs 系统辨识：一张表看透</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>维度</th><th>机理建模 / 系统辨识</th><th>机器学习</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">模型结构</td><td>人写微分方程 / 选定传递函数阶次</td><td>通用网络结构（层数 × 宽度），结构由人定但映射由数据学</td></tr>
+            <tr><td class="font-medium">参数量</td><td>几个 ~ 几十个</td><td>数千 ~ 数万亿</td></tr>
+            <tr><td class="font-medium">数据需求</td><td>小：一次阶跃响应或扫频就够</td><td>大：样本越多越好</td></tr>
+            <tr><td class="font-medium">可解释性</td><td>强：参数有物理含义（时间常数、增益）</td><td>弱：黑盒权重，需要额外工具解释</td></tr>
+            <tr><td class="font-medium">适用场景</td><td>对象机理清楚（电机、电路、机械）</td><td>机理复杂写不出方程（图像、语言、故障特征）</td></tr>
+            <tr><td class="font-medium">优化方法</td><td>最小二乘 / 梯度法拟合参数</td><td>随机梯度下降 + 反向传播——同一族算法</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>万能近似定理</strong>：只要隐藏层足够宽（或足够深），带非线性激活的多层网络可以以任意精度逼近任意连续函数——这是神经网络能"学一切"的理论保证。但定理只保证"存在"，不保证"能学到"（优化难）也不保证"需要多少数据"（泛化难）——工程问题都在这两个缺口上。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>新手三大坑</strong>：① 特征不归一化——电压量级 1e2、电流量级 1e-3，梯度被大量级特征主导，训练必炸，先做标准化（减均值除标准差）；② 学习率照抄不调——不同任务最优学习率差几个数量级，从损失曲线读：不降=太小，震荡/NaN=太大；③ 拿训练集评估——一定留出测试集，训练误差低只是"背下来了"，测试误差才是"学会了"（过拟合）。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>控制人的翻译表</strong>：损失函数 ↔ 性能指标（ITAE/ISE）；梯度下降 ↔ 最速下降法；学习率 ↔ 步长；过拟合 ↔ 辨识阶次过高拟合了噪声。概念一一对应，区别只在规模——<a href="javascript:void(0)" onclick="App.loadDetail('act-14')">PID 参数整定</a>里的寻优和训练神经网络用的是同一家族的迭代算法。下一节给网络装上"眼睛"和"记忆"（<a href="javascript:void(0)" onclick="App.loadDetail('ai-02')">ai-02</a>）。</div></div>
+      ` },
+
+      // ===== ai-02 深度学习网络结构 =====
+      { id: 'ai-02', title: '深度学习网络结构', desc: 'CNN 卷积/池化处理图像与传感器信号，RNN/LSTM 时序建模及其瓶颈——引出注意力机制', icon: '🔍', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">给网络装上"眼睛"和"记忆"：CNN 与 RNN</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          <a href="javascript:void(0)" onclick="App.loadDetail('ai-01')">上一节</a>的全连接层有个致命浪费：处理一张 32×32×3 的小图，输入是 3072 维，接一个 1000 神经元的隐藏层就是 307 万参数——而且每个像素与每个神经元独立相连，完全无视"相邻像素相关、物体平移后特征不变"这些常识。深度学习的核心方法论：<strong>把问题的先验结构"焊"进网络架构</strong>——图像有局部相关性就用卷积，序列有时间依赖就用循环。参数少了、收敛快了、效果还更好。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">卷积层：权重共享的局部滑窗</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          你在<a href="javascript:void(0)" onclick="App.loadDetail('sig-02')">信号与系统</a>里早就学过卷积——$y(t) = x(t) * h(t)$ 用系统的冲激响应"滑过"输入算输出。CNN 的卷积是它的离散二维版本外加一个关键改动：<strong>核系数不是给定的，是学出来的</strong>。一个 $K_h \\times K_w$ 的小核在图像上滑动做乘加，输出称为特征图（feature map）。三个超参决定输出尺寸：核大小 $K$、填充 $P$（边缘补零圈数）、步幅 $S$（每次滑几格）：
+        </p>
+        <div class="formula-block">
+          $$O = \\left\\lfloor \\frac{W - K + 2P}{S} \\right\\rfloor + 1$$
+          <div class="text-sm text-gray-500 mt-2">$W$ 为输入边长；输出是正方形核作用于正方形输入的特例，长宽可分别计算</div>
+        </div>
+        <div class="formula-block">
+          $$N_{param} = K_h \\times K_w \\times C_{in} \\times C_{out} + C_{out}$$
+          <div class="text-sm text-gray-500 mt-2">末尾 $+C_{out}$ 是每个输出通道的偏置。<strong>同一组核权重复用于整张图</strong>（权重共享）——这正是参数量与图像大小无关的原因，也带来平移等变性：物体挪个位置，特征跟着挪</div>
+        </div>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>例题设定</strong><br>输入 28×28 灰度图（$C_{in}=1$），依次经过 conv1（3×3、16 通道、$P=1$、$S=1$）→ 最大池化（2×2、$S=2$）→ conv2（3×3、32 通道、$P=0$、$S=1$），逐层算输出尺寸与参数量</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>conv1</strong><br>$O = (28 - 3 + 2 \\times 1)/1 + 1 = 28$，输出 28×28×16；参数 $3 \\times 3 \\times 1 \\times 16 + 16 = 160$</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>池化</strong><br>每个 2×2 窗口取最大值、步幅 2：尺寸减半为 14×14×16，无参数（只是取 max 的固定运算）</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>conv2</strong><br>$O = (14 - 3 + 0)/1 + 1 = 12$，输出 12×12×32；参数 $3 \\times 3 \\times 16 \\times 32 + 32 = 4640$</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>对比结论</strong><br>两层卷积共 4800 参数就把 28×28 图压缩成 12×12×32 的特征；若用全连接直接映射 784 维输入到 1000 隐藏层则要 78.4 万参数——<strong>结构先验带来百倍压缩</strong>，这就是深度学习"设计架构"的价值</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">池化与感受野：越叠越"看得全局"</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          池化（pooling）在下采样同时保留显著特征：最大池化取窗口内最大值（"这个区域有没有检测到边缘"），平均池化取均值。卷积 + 池化不断堆叠，单个神经元"看到"的输入区域——<strong>感受野</strong>——逐层扩大：一层 3×3 看的是 3×3，叠两层看 5×5，十几层下来顶层神经元已覆盖整张图。经典架构（VGG、ResNet）就是"小核多层"的极致堆叠，ResNet 的残差连接解决了深层网络退化问题（残差思想见 <a href="javascript:void(0)" onclick="App.loadDetail('ai-03')">ai-03</a> 的 Transformer Block，两者同源）。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">RNN：带反馈的网络</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          处理序列（语音、文本、传感器时间序列）需要"记忆"。循环神经网络（RNN）把上一时刻的隐状态反馈回输入，同一组参数沿时间轴复用：
+        </p>
+        <div class="formula-block">
+          $$\\boldsymbol{h}_t = \\tanh\\left(\\boldsymbol{W}_{h}\\boldsymbol{h}_{t-1} + \\boldsymbol{W}_{x}\\boldsymbol{x}_t + \\boldsymbol{b}\\right)$$
+          <div class="text-sm text-gray-500 mt-2">$\\boldsymbol{h}_t$ 是压缩了全部历史的"记忆状态"——参数量与序列长度无关，这是它与"把序列摊平接全连接"的本质区别</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">LSTM：用门控保护记忆</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          朴素 RNN 的痛点：隐状态每步都被 $\\tanh$"挤压重写"，反向传播时梯度要连乘许多次 $\\tanh'$（上限 1，多数区域接近 0），序列一长梯度就消失——网络"记不住"百步之前的事。长短期记忆网络（LSTM）给记忆加装控门，核心是引入一条独立的<strong>细胞状态</strong>$\\boldsymbol{c}_t$，由遗忘门 $\\boldsymbol{f}_t$ 决定保留多少旧记忆：
+        </p>
+        <div class="formula-block">
+          $$\\boldsymbol{f}_t = \\sigma\\left(\\boldsymbol{W}_f[\\boldsymbol{h}_{t-1}, \\boldsymbol{x}_t]\\right), \\qquad \\boldsymbol{c}_t = \\boldsymbol{f}_t \\odot \\boldsymbol{c}_{t-1} + \\boldsymbol{i}_t \\odot \\tilde{\\boldsymbol{c}}_t$$
+          <div class="text-sm text-gray-500 mt-2">$\\odot$ 是逐元素乘；$\\boldsymbol{i}_t$ 输入门控制写入多少新内容 $\\tilde{\\boldsymbol{c}}_t$。当 $\\boldsymbol{f}_t \\approx 1$ 时旧记忆"原样直通"——梯度有了高速公路，几百步的依赖也能传</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">三大架构一张表</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>全连接 MLP</th><th>CNN</th><th>RNN / LSTM</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">结构先验</td><td>无</td><td>局部连接 + 权重共享</td><td>时间递归 + 参数沿时间共享</td></tr>
+            <tr><td class="font-medium">擅长输入</td><td>表格特征</td><td>图像、2D/1D 网格信号</td><td>文本、语音、传感器时间序列</td></tr>
+            <tr><td class="font-medium">参数量级</td><td>随输入尺寸爆炸</td><td>小（与图像大小无关）</td><td>小（与序列长度无关）</td></tr>
+            <tr><td class="font-medium">并行性</td><td>好</td><td>好（空间维度并行）</td><td>差——必须沿时间逐步计算</td></tr>
+            <tr><td class="font-medium">长程依赖</td><td>—</td><td>靠叠层扩大感受野</td><td>LSTM 缓解但仍会衰减</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>嵌入工程师的 CNN</strong>：电机电流、振动、加速度这些传感器信号就是一维"图像"——把卷积核从 3×3 换成长度 7 的一维核，CNN 直接吃 ADC 采样序列做故障分类，这是工业界的主流做法（<a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">信号调理</a>出来的干净序列是前提）。写字机电机电流异常检测就是 1D-CNN 的典型任务，<a href="javascript:void(0)" onclick="App.loadDetail('ai-13')">ai-13</a> 会把它落到 STM32 上。</div></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>RNN 的三座大山（Transformer 的登场理由）</strong>：① 串行计算——第 $t+1$ 步必须等第 $t$ 步算完，GPU 数千核心大量闲置；② 长依赖衰减——即便 LSTM，几千 token 的依赖也勉強；③ 记忆固定长——不管序列多长都压进同一个 $\\boldsymbol{h}$。2017 年 Transformer 用注意力机制一次解决全部三个问题，<a href="javascript:void(0)" onclick="App.loadDetail('ai-03')">下一节</a>拆解它。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>激活函数简史</strong>：sigmoid 因"梯度上限 0.25"容易消失，被 ReLU（$\\max(0, x)$）取代——正区间梯度恒为 1，训练深网络立刻提速；后来又有 GELU（Transformer 标配，平滑版 ReLU）。选型口诀：默认 ReLU/GELU，二分类输出层用 sigmoid，多分类输出层用 softmax——中间层别用 sigmoid。</div></div>
+      ` },
+
+      // ===== ai-03 Transformer 与注意力机制 =====
+      { id: 'ai-03', title: 'Transformer 与注意力机制', desc: 'QKV 注意力公式、缩放因子意义、多头机制、位置编码——现代 LLM 的共同骨架', icon: '🎯', tags: ['核心', '高频'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">Attention is All You Need：让每个词直接"看到"每个词</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          <a href="javascript:void(0)" onclick="App.loadDetail('ai-02')">上一节</a>结尾的 RNN 三座大山（串行、长依赖衰减、固定记忆），被 2017 年一篇标题就叫《Attention is All You Need》的论文一次拆除。核心思想：不再逐词传递记忆，而是让序列中<strong>任意两个位置直接建立带权重的联系</strong>——"它"能一步找到指代的名词，句首的名词能一步看到句尾的谓语。而且所有位置可并行计算，GPU 彻底吃饱。GPT、BERT、Qwen、DeepSeek……2026 年所有主流大模型的骨架都是它。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">一次"查字典"：Q、K、V 三矩阵</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          每个词向量经三个可学习矩阵投影出三份副本：<strong>Query</strong>（我在找什么）、<strong>Key</strong>（我能被怎样检索）、<strong>Value</strong>（我实际携带的信息）。注意力就是一次软性查表：用每个位置的 Q 与所有位置的 K 算相关性分数，softmax 归一化成权重，再对 V 加权求和：
+        </p>
+        <div class="formula-block">
+          $$\\text{Attention}(Q, K, V) = \\text{softmax}\\left(\\frac{QK^{T}}{\\sqrt{d_k}}\\right)V$$
+          <div class="text-sm text-gray-500 mt-2">$QK^{T}$ 是 $n \\times n$ 的"谁关注谁"打分矩阵（$n$ 为序列长度，$d_k$ 为头维度）；softmax 沿行归一化使每行权重和为 1</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          <strong>为什么除以 $\\sqrt{d_k}$</strong>：两个 $d_k$ 维随机向量的点积方差约为 $d_k$——维度 64 时分数动辄 ±20，softmax 被推成近似 one-hot（最大值权重≈1，其余≈0），梯度几乎为零，训练不动。除以 $\\sqrt{d_k}$ 恰好把方差拉回 1，softmax 输出回到"温和"区间，梯度健康。一个除法决定训练成败，是深度学习里"数值细节即算法本质"的最佳示例。
+        </p>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>手算例子：2 个 token 的注意力</strong><br>设缩放后的打分 $q_1 \\cdot k_1 / \\sqrt{d_k} = 4$（token1 与自己的相关性分），$q_1 \\cdot k_2 / \\sqrt{d_k} = 0$（与 token2 的相关性分）</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>softmax 归一化</strong><br>$w_1 = e^4/(e^4 + e^0) = 54.6/56.6 \\approx 0.965$，$w_2 \\approx 0.035$——分数差经指数放大成压倒性权重</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>加权求和</strong><br>输出 $\\approx 0.965\\,v_1 + 0.035\\,v_2$：token1 的新表示几乎全部来自自己，只"蘸"了一点 token2 的信息</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>感受温度</strong><br>若打分换成 $8$ 和 $0$：$w_1 \\approx 0.9997$——分差翻倍，权重更极端。这解释了为什么缩放因子不可省：不除 $\\sqrt{d_k}$ 时分数普遍偏大，注意力全锁死在少数位置</div></div>
+        </div>
+
+        <div class="chart-container chart-container-lg" data-chart="attention-vis" data-title="注意力权重热力图：切换例句，观察"谁关注谁""></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          上图预置了几个小句子，网格中每行代表一个 Query 位置、每列一个 Key 位置，颜色越深权重越高。留意两个经典模式：<strong>对角线亮带</strong>（每个词主要关注自己）和<strong>标点/承接词列</strong>（"的""是"这类功能词常被大量位置关注，充当"信息中转站"）。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">多头注意力：多个"视角"并行看</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          一次注意力只能学一种关联模式。把 $d_{model}$ 维向量切成 $h$ 份、各自独立做注意力（头维度 $d_k = d_{model}/h$），再拼接线性融合——不同头自发分工：有的盯句法依存、有的盯指代消解、有的盯相邻位置。GPT-3 级模型有 96 个头，可视化研究（如 BertViz）能清晰看到这种分工：
+        </p>
+        <div class="formula-block">
+          $$\\text{head}_i = \\text{Attention}(QW_i^{Q}, KW_i^{K}, VW_i^{V}), \\qquad \\text{MultiHead} = \\text{Concat}(\\text{head}_1, \\dots, \\text{head}_h)\\,W^{O}$$
+          <div class="text-sm text-gray-500 mt-2">总计算量与单个全维度头相同——切头不涨价，只多了"多视角"表达力</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">位置编码：注意力天生"不知顺序"</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          注意力对所有位置的运算完全对称——把输入顺序打乱，输出也只是跟着打乱，模型本身感知不到"先后"。而语言里"狗咬人"和"人咬狗"天差地别，所以必须把位置信息显式加进词向量。原始 Transformer 用不同频率的正弦/余弦：
+        </p>
+        <div class="formula-block">
+          $$PE_{(pos, 2i)} = \\sin\\left(\\frac{pos}{10000^{2i/d}}\\right), \\qquad PE_{(pos, 2i+1)} = \\cos\\left(\\frac{pos}{10000^{2i/d}}\\right)$$
+          <div class="text-sm text-gray-500 mt-2">$pos$ 是词的位置序号，$i$ 是维度序号——低维震荡快、高维震荡慢，任意相对位移 $PE_{pos+k}$ 都可表示为 $PE_{pos}$ 的线性变换，方便模型学相对位置。这与<a href="javascript:void(0)" onclick="App.loadDetail('sig-04')">傅里叶变换</a>"多频率基函数叠加表达信号"的思想同源；后世模型也用可学习的位置嵌入或旋转位置编码 RoPE（2026 年主流），思路一脉相承</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">Transformer Block 全景与代价</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          一个完整的块 = <strong>多头注意力 + 前馈网络（FFN，两层全连接先升维 4 倍再降回）</strong>，两个子层各配"残差连接 + LayerNorm"。残差连接让梯度可以"跳层直通"（与 LSTM 细胞状态的直通通道同一思想），几十层堆叠也能稳定训练。代价在复杂度：自注意力的打分矩阵有 $n^2$ 个元素，总计算量 $O(n^2 d)$——<strong>序列长度翻倍，注意力计算量翻四倍</strong>。这就是为什么长上下文（2026 年主流已到 128K~1M token）需要 FlashAttention、稀疏注意力等专门优化，也是下一节 KV Cache 显存公式的根源。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">LSTM vs Transformer</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>LSTM</th><th>Transformer</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">长依赖</td><td>几百步内有效，再远衰减</td><td>任意两步直接相连，一步可达</td></tr>
+            <tr><td class="font-medium">并行性</td><td>串行——沿时间逐步计算</td><td>全并行——训练可吃满 GPU</td></tr>
+            <tr><td class="font-medium">计算复杂度</td><td>$O(n \\cdot d^2)$，随序列线性</td><td>$O(n^2 \\cdot d)$，随序列平方</td></tr>
+            <tr><td class="font-medium">短序列小数据</td><td>参数少，小数据不易过拟合</td><td>数据不足时优势发挥不出</td></tr>
+            <tr><td class="font-medium">2026 工程地位</td><td>边缘小模型/时序预测仍有用武之地</td><td>LLM 及绝大多数多模态模型的标准骨架</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>常见误区</strong>：① "注意力权重 = 可解释性"——权重高不等于因果依据，模型可能把权重当"草稿纸"，解释要谨慎；② "去掉 $\\sqrt{d_k}$ 只是小改动"——实测训练损失直接不收敛；③ "Transformer 天然擅长一切序列"——短序列、小数据、强实时约束的 MCU 场景，LSTM/TCN 反而更合适（<a href="javascript:void(0)" onclick="App.loadDetail('ai-11')">边缘部署</a>会回到这点）。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>承上启下</strong>：记住 $K$、$V$ 这两个矩阵——自回归生成时，已算过的前文 $K/V$ 可以缓存起来不重算，这就是 <a href="javascript:void(0)" onclick="App.loadDetail('ai-04')">下一节</a> KV Cache 显存公式的全部伏笔；多头的"多视角"思想也会在 <a href="javascript:void(0)" onclick="App.loadDetail('ai-07')">RAG</a> 的多路召回里再次出现。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>Decoder-only 是历史的选择</strong>：原始论文是机器翻译用的 Encoder-Decoder 结构；后来 GPT 证明只留"因果掩码"的解码器（每个位置只能看到前文）做下一词预测，规模化后什么任务都能涌现着做——2026 年的开源 LLM 几乎全是 decoder-only。因果掩码就是把打分矩阵上三角（未来位置）置 $-\\infty$，softmax 后权重为 0，防"偷看答案"。</div></div>
+      ` },
+
+      // ===== ai-04 大语言模型工作原理 =====
+      { id: 'ai-04', title: '大语言模型工作原理', desc: 'token 与词表、自回归生成、KV Cache 显存公式、温度/top-p/top-k 采样与上下文窗口', icon: '💬', tags: ['核心', '工程'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">下一个词预测：大语言模型的全部秘密</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          GPT 的三个词概括了大模型：Generative（生成式）、Pre-trained（预训练）、Transformer（骨架，<a href="javascript:void(0)" onclick="App.loadDetail('ai-03')">上一节</a>）。训练目标朴素到离谱——<strong>给定前文，预测下一个 token</strong>。但把互联网级文本压进千亿参数后，"预测得准"的唯一途径是学会语法、事实、代码乃至推理：想预测定理证明的下一步，你就必须"懂"这个定理。本节拆解推理全链路：文本怎么进模型、怎么一个词一个词生成、显存花在哪、采样怎么调。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">token：模型眼中的文字</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          模型不直接处理字符，而是处理<strong>词表</strong>（典型 3 万~15 万项）里的 token——常用词整词一个 token，生僻词按字节对编码（BPE）切成子词片段，中文常见"一字一 token"或"两字一切"。经验数量级（粗略，因分词器而异）：<strong>1 个英文单词 ≈ 1.3 token，1 个汉字 ≈ 1~2 token</strong>。API 按 token 计费、上下文按 token 计算、生成速度用 token/s 衡量——token 是 LLM 工程的"米、公斤、秒"。工具箱"人工智能"分类新增的 <strong>token 估算器</strong>可以直接试：贴一段中英文，立刻看到 token 数和对 4K/8K/128K 上下文窗口的占用比例。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">自回归生成 = 条件概率链</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          token id 先经 embedding 表查成向量（一张可学习的查表矩阵，正是 <a href="javascript:void(0)" onclick="App.loadDetail('ai-01')">ai-01</a> 说的"嵌入矩阵"），过几十层 Transformer 后输出一个覆盖全词表的概率分布，采样出下一个 token，拼回输入再来一轮。整段生成在数学上是一条链：
+        </p>
+        <div class="formula-block">
+          $$P(x_1, x_2, \\dots, x_T) = \\prod_{t=1}^{T} P(x_t \\mid x_1, \\dots, x_{t-1})$$
+          <div class="text-sm text-gray-500 mt-2">就是<a href="javascript:void(0)" onclick="App.loadDetail('prob-02')">条件概率的乘法公式</a>——每步只算一个条件分布，整句概率连乘而得。"自回归"即用自己的输出当下一轮的输入</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">KV Cache：推理显存的第一大头</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          生成第 1000 个词时，模型要对全部前 999 个 token 做注意力——但前文的 $K$、$V$ 矩阵每轮都算出一模一样的结果。把算过的缓存起来，每步只算新 token 的 Q/K/V，这就是 <strong>KV Cache</strong>，能把长文本生成提速数十倍。代价是显存：缓存量随上下文线性增长，与 batch 大小成正比：
+        </p>
+        <div class="formula-block">
+          $$M_{\\text{KV}} = 2 \\times n_{layers} \\times d_{model} \\times n_{ctx} \\times n_{batch} \\times b$$
+          <div class="text-sm text-gray-500 mt-2">首因子 2 是 K、V 各一份；$b$ 为每元素字节数（fp16=2、int8=1、int4=0.5）——<strong>量化能把 KV Cache 也一起减半再减半</strong>（<a href="javascript:void(0)" onclick="App.loadDetail('ai-12')">ai-12</a> 展开）</div>
+        </div>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>例题：7B 模型 fp16、4K 上下文、单条请求</strong><br>典型 7B 配置：$n_{layers} = 32$，$d_{model} = 4096$，估算 KV Cache 显存</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>每 token 缓存量</strong><br>$2 \\times 32 \\times 4096 \\times 2\\,\\text{B} = 524{,}288\\,\\text{B} = 512\\,\\text{KiB}$</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>4K 上下文总量</strong><br>$512\\,\\text{KiB} \\times 4096 = 2\\,\\text{GiB}$——光缓存就吃掉 2 GiB</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>对照权重显存</strong><br>70 亿参数 × 2 B = 14 GiB 权重 + 2 GiB KV Cache ≈ 16 GiB——4K 上下文尚可，但若上 32K 上下文，KV Cache 涨到 16 GiB 反超权重本身</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>工程结论</strong><br>并发 8 条请求再 ×8。所以推理服务三大优化方向：量化（减 $b$）、GQA/MQA（多头共享 KV，减有效 $d$）、PagedAttention（按页管理缓存减碎片）——名字不同，靶子都是这条公式</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">采样策略：温度 / top-k / top-p</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          模型每步输出的是全词表分布，从分布里"抽"哪个词是工程选择。温度 $T$ 先改造分布再采样：
+        </p>
+        <div class="formula-block">
+          $$P(x_i) = \\frac{\\exp(z_i / T)}{\\sum_{j} \\exp(z_j / T)}$$
+          <div class="text-sm text-gray-500 mt-2">$z_i$ 是原始 logits。$T \\to 0$ 退化为贪心（永远选最大），$T$ 大则分布拉平、冷门词也有机会</div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>策略</th><th>机制</th><th>调小</th><th>调大</th><th>典型取值</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">温度 T</td><td>logits 除以 T 再 softmax</td><td>稳定、保守、适合代码/数学</td><td>发散、有创意、适合文案/头脑风暴</td><td>0.0~0.3 代码；0.7~1.0 对话</td></tr>
+            <tr><td class="font-medium">top-k</td><td>只在概率前 k 个词里采样</td><td>排除长尾噪声</td><td>候选更丰富</td><td>k = 20~50</td></tr>
+            <tr><td class="font-medium">top-p（核采样）</td><td>取累计概率达 p 的最小候选集</td><td>分布尖时自动少选（自适应）</td><td>分布平时自动多选</td><td>p = 0.9 左右</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          top-p 与 top-k 的区别在<strong>自适应</strong>：模型很确定时（分布尖）top-p 只留两三个词，模型犹豫时（分布平）top-p 自动放宽候选——所以 2026 年的默认配置普遍是 top-p 而非 top-k，二者通常只开一个。
+        </p>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>上下文窗口 ≠ 记忆</strong>：窗口（prompt + 已生成全部 token 之和）是模型一次能"看见"的范围，超出即被截断丢弃——它不是跨对话的长期记忆，新开对话一切清零；长对话中模型"忘了开头说过什么"，多半是窗口已满被截断。另注意温度设 0（贪心）在多数推理引擎下仍可能有微小非确定性（浮点并行归约顺序），别把确定性期望寄托在采样参数上。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>动手算一遍</strong>：工具箱 → 人工智能 → token 估算器，贴入你的一段笔记，看它占 8K 窗口的百分比；再用本节公式手算"6B 模型、28 层、$d_{model}$=4096、fp16、8K 上下文"的 KV Cache（答案：每 token 448 KiB，共 3.5 GiB）。算显存的手感，是 <a href="javascript:void(0)" onclick="App.loadDetail('ai-12')">量化</a>与<a href="javascript:void(0)" onclick="App.loadDetail('ai-14')">开发板部署</a>的前置技能。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>为什么"预测下一词"能涌现推理</strong>：训练数据里有大量"因为……所以……""先化简再代入"式的文本，模型要降低损失就必须内部建模这些模式。Scaling Law（<a href="javascript:void(0)" onclick="App.loadDetail('ai-05')">下一节</a>）显示：参数与数据跨过某个量级后，多步推理等能力"突然"可用——不是玄学，是小概率能力被规模放大到可见。但预测机制也决定了模型会"一本正经地编"（幻觉）：它的第一职责是"像"，不是"真"。</div></div>
+      ` },
+
+      // ===== ai-05 大模型训练与开源生态 =====
+      { id: 'ai-05', title: '大模型训练与开源生态', desc: '预训练→SFT→RLHF/DPO 三阶段、Scaling Law 与 Chinchilla 法则、开源模型版图（截至 2026 年）', icon: '🏗️', tags: ['核心', '前沿'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">从"读遍互联网"到"听话有用"：大模型三阶段炼成</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          <a href="javascript:void(0)" onclick="App.loadDetail('ai-04')">上一节</a>讲了推理，本节讲模型从哪来。主流大模型的诞生是一条三阶段流水线，像培养一个新人：<strong>先泡图书馆（预训练）→ 再读示范手册（SFT）→ 最后教练贴身反馈（对齐）</strong>。理解三阶段的分工，你才能看懂开源模型名字里的 Base/Instruct/Chat 后缀差异，以及"小模型+好数据"为什么能打赢"大模型+脏数据"。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">第一阶段：预训练——学"语言与世界"</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          用数万亿 token 的网页、代码、书籍，以"下一词预测"为目标训练数周~数月。损失函数是覆盖全词表的交叉熵（负对数似然，<a href="javascript:void(0)" onclick="App.loadDetail('ai-01')">ai-01</a> 概率解释的推广）：
+        </p>
+        <div class="formula-block">
+          $$L = -\\frac{1}{T}\\sum_{t=1}^{T} \\log P(x_t \\mid x_{1}, \\dots, x_{t-1};\\, \\Theta)$$
+          <div class="text-sm text-gray-500 mt-2">$\\Theta$ 是全部网络参数。训练算力有著名的经验公式（前向约 $2ND$ FLOPs + 反向约 $4ND$）：</div>
+          $$C \\approx 6 N D$$
+          <div class="text-sm text-gray-500 mt-2">例：7B 参数 × 2 万亿 token ≈ $8.4 \\times 10^{22}$ FLOPs——按一张 600 TFLOPS 级显卡的有效利用率折算，单卡要跑数年，这就是预训练只在公司/机构手里做的原因</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">第二阶段：SFT——学"任务格式"</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          预训练模型是"百科全书但不会聊天"——你问"写个排序函数"，它可能接着补"的三种方法是……"（续写而非回答）。SFT（Supervised Fine-Tuning，监督微调）用数万~数百万条人工编写的"指令 → 高质量回答"对继续训练，目标函数不变（仍是下一词预测），只是数据换了格式。SFT 后的模型就是开源界的 <strong>Instruct/Chat 版</strong>；没对齐过的 Base 版续写能力完整但"听不懂人话"，微调社区偏爱它。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">第三阶段：对齐——学"人类偏好"</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          SFT 只有一个"标准答案"，但开放问题没有标准答案。对齐阶段让人类（或 AI 代替人类）对同一问题的多个回答排序，再让模型向"更受偏好"的方向调整。<strong>RLHF</strong>（人类反馈强化学习）先训练一个奖励模型学人类打分，再用 PPO 优化策略；<strong>DPO</strong>（直接偏好优化）推导出"跳过奖励模型、跳过强化学习"的损失函数，直接从偏好对更新策略——实现简单、训练稳定，开源社区到 2026 年已普遍用 DPO 系方法。
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>维度</th><th>预训练</th><th>SFT</th><th>RLHF / DPO</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">数据</td><td>数万亿 token 原始语料</td><td>数万~百万条指令对</td><td>数万~百万条偏好对（A 优于 B）</td></tr>
+            <tr><td class="font-medium">目标</td><td>下一词预测（交叉熵）</td><td>同左，仅数据格式不同</td><td>向人类偏好对齐（奖励最大化/偏好损失）</td></tr>
+            <tr><td class="font-medium">产物</td><td>Base 基座模型</td><td>Instruct 指令模型</td><td>Chat 对话模型（安全、有用、诚实）</td></tr>
+            <tr><td class="font-medium">算力占比</td><td>约 95%+</td><td>约 3%</td><td>约 2%</td></tr>
+            <tr><td class="font-medium">个人可否复现</td><td>基本不可</td><td>LoRA 微调可（单卡）</td><td>小规模 DPO 可</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">Scaling Law 与 Chinchilla 法则</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          2020 年 Kaplan 等人发现损失随参数量 $N$、数据量 $D$、算力 $C$ 沿<strong>幂律</strong>平滑下降——量变引起质变有了公式；2022 年 Chinchilla 论文修正了最优配比：
+        </p>
+        <div class="formula-block">
+          $$L(N, D) = E + \\frac{A}{N^{\\alpha}} + \\frac{B}{D^{\\beta}} \\qquad \\text{（训练最优时约 } D \\approx 20N \\text{ token）}$$
+          <div class="text-sm text-gray-500 mt-2">$E$ 是不可约损失（数据本身的熵），后两项分别是"模型不够大"与"数据不够多"的代价——给定算力，参数和数据应同步扩大，谁单独膨胀都亏</div>
+        </div>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>例题：算力预算 $C = 10^{21}$ FLOPs 的最优 N/D 分配</strong><br>联立 $C \\approx 6ND$ 与 Chinchilla 最优比 $D = 20N$</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>解出参数量</strong><br>$C = 6 \\times 20N^2 = 120N^2$，$N = \\sqrt{10^{21}/120} \\approx 2.9 \\times 10^9$ ≈ 29 亿参数</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>数据量</strong><br>$D = 20N \\approx 5.8 \\times 10^{10}$ ≈ 580 亿 token</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>解读</strong><br>这就是"小模型+够数据 vs 大模型+少数据"之争的定量答案。但注意推理成本改写了游戏规则：训练完成后模型要被调用亿万次，2023 年后的开源模型普遍"过度训练"（数据量远超 20N）——故意训小一号的模型、喂几倍的 token，训练多花点钱换推理永久便宜。Llama-3-8B 的数据量就超过 Chinchilla 最优配比的十倍以上</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">开源生态版图（截至 2026 年 8 月）</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>家族</th><th>发源</th><th>特色</th><th>常见小尺寸</th><th>本地部署友好度</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">Qwen 通义千问</td><td>阿里</td><td>尺寸谱系最全（0.5B~数百B），中文与代码俱佳，边缘小模型生态成熟</td><td>0.5B / 1.5B / 3B / 7B</td><td>★★★★★</td></tr>
+            <tr><td class="font-medium">DeepSeek</td><td>深度求索</td><td>MoE 架构与推理模型见长，MIT 系宽松许可</td><td>1.5B / 7B 稠密版</td><td>★★★★</td></tr>
+            <tr><td class="font-medium">Llama</td><td>Meta</td><td>开风气之先，英文语料深厚，社区微调版最丰富</td><td>1B / 3B / 8B</td><td>★★★★</td></tr>
+            <tr><td class="font-medium">GLM</td><td>智谱</td><td>中英双语均衡，工具调用训练扎实</td><td>1.5B / 4B / 9B</td><td>★★★★</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>时效声明（本站铁律）</strong>：上表与各节提到的模型型号、尺寸、许可协议均为<strong>截至 2026 年 8 月</strong>的快照，AI 领域半年一轮迭代，选型前务必查最新发布。但三阶段流水线、Scaling Law、KV Cache 公式这类<strong>原理与方法论</strong>寿命长得多——本站内容以此为锚，型号只做举例。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>边缘部署选型口诀</strong>：先算显存再挑模型——开发板内存减去系统占用，除以"每参数字节数"（fp16=2 / int8=1 / int4=0.5，见 <a href="javascript:void(0)" onclick="App.loadDetail('ai-04')">ai-04</a> 的 KV Cache），再留 20% 余量给缓存与激活。4GB 板子跑 0.5B int4 绰绰有余，跑 7B int4 要 8GB 起步。工具箱"人工智能"分类后续将上线内存估算器（批次 6c），一键对照常见硬件。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>开源权重 ≠ 开源数据/代码</strong>：大多数"开源模型"开放的是训练好的权重文件（可下载、可本地推理、可微调），训练数据和代码未必公开，学界称 weights-open。对工程实践这已足够：权重到手，量化、微调、<a href="javascript:void(0)" onclick="App.loadDetail('ai-14')">部署到开发板</a>全由你做主——这也是隐私场景（工业数据不出厂）唯一可行的路线。</div></div>
+      ` },
+
+      // ===== ai-06 提示工程与上下文工程（概览版，完整版随批次 6b 上线）=====
+      { id: 'ai-06', title: '提示工程与上下文工程', desc: '零/少样本、思维链、系统提示词结构；2026 主线：从 prompt 到 context engineering（概览版）', icon: '✍️', tags: ['概览'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">让模型听懂人话的工程学</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          同一个 <a href="javascript:void(0)" onclick="App.loadDetail('ai-04')">LLM</a>，换一句问法，答案质量天差地别——研究"怎么问"的学问叫提示工程（Prompt Engineering）。核心工具箱：零样本直问、少样本给例题、思维链（CoT，让它"一步一步想"再答）。系统提示词有成熟的三段式结构：<strong>角色（你是谁）→ 规则（必须/禁止什么）→ 格式（输出长什么样）</strong>。
+        </p>
+        <h4 class="font-medium mt-6 mb-2">2026 主线：从 Prompt 到 Context Engineering</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          行业共识正在从"打磨一句话"转向<strong>上下文工程（Context Engineering）</strong>：模型能力越强，瓶颈越不在措辞，而在"进入上下文窗口的信息组织"——哪些检索结果、哪段历史、哪个工具说明、按什么顺序放进去。窗口是稀缺资源（<a href="javascript:void(0)" onclick="App.loadDetail('ai-04')">ai-04</a> 的 token 与 KV Cache），上下文工程就是窗口的资源调度器，也是 <a href="javascript:void(0)" onclick="App.loadDetail('ai-09')">Agent Harness</a> 的核心组成。
+        </p>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>概览版说明</strong>：本节完整内容（少样本模板、CoT 变体、结构化输出约束、上下文组装清单与反模式）随批次 6b 上线，当前先建立主线认知。</div></div>
+      ` },
+
+      // ===== ai-07 RAG 检索增强生成（概览版）=====
+      { id: 'ai-07', title: 'RAG 检索增强生成', desc: 'embedding 检索、向量库、分块与重排——用你的资料给模型"开卷考试"（概览版）', icon: '📚', tags: ['概览'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">给模型一本"开卷教材"</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          LLM 的知识冻结在训练截止日，且不认识你的私有资料。RAG（Retrieval-Augmented Generation）的思路朴素：<strong>先检索、后生成</strong>——把用户问题转成 <a href="javascript:void(0)" onclick="App.loadDetail('ai-01')">embedding 向量</a>，在向量库里找回最相关的资料片段，塞进上下文再让模型作答。模型从"闭卷背诵"变"开卷阅读"，幻觉大幅下降，资料更新只需重建索引、不用重训模型。
+        </p>
+        <h4 class="font-medium mt-6 mb-2">流水线与关键抉择</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          离线侧：文档 → 分块（chunk）→ 逐块向量化 → 入库；在线侧：问题向量化 → 最近邻检索（本质是高维<a href="javascript:void(0)" onclick="App.loadDetail('ds-13')">查找</a>问题）→（可选）重排 → 拼提示词 → 生成。两个最影响效果的工程决策：<strong>分块粒度</strong>（太小语义破碎、太大稀释相关性，典型 200~800 token 带重叠）与<strong>重排</strong>（用轻量模型对前 50 条精排出前 5，比一味加大召回量划算）。实例设想：把本站 228 节内容向量化，做一个"课程问答"入口——问"KV Cache 怎么算"，检索回 ai-04 原文作答。
+        </p>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>概览版说明</strong>：完整版（embedding 模型选型、向量库对比、混合检索、评估方法）随批次 6b 上线。</div></div>
+      ` },
+
+      // ===== ai-08 AI Agent 与工具调用（概览版）=====
+      { id: 'ai-08', title: 'AI Agent 与工具调用', desc: 'ReAct 循环、Function Calling、规划与反思——LLM 从"会说"到"会做"（概览版）', icon: '🤖', tags: ['概览'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">从聊天框到执行器</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          模型只能输出文字，怎么"做事"？答案是让它输出<strong>结构化的调用指令</strong>，由外部程序执行后把结果喂回来。<strong>Function Calling</strong>：预先给模型一份工具清单（JSON Schema 描述函数名、参数、用途），模型判断需要时输出一帧调用请求，运行时执行真实函数。<strong>ReAct 循环</strong>把这一切连成圈：思考（Thought）→ 行动（Action）→ 观察（Observation）→ 再思考……直到给出最终答案——这就是 Agent 的心跳。
+        </p>
+        <h4 class="font-medium mt-6 mb-2">写字机会用到的三件工具</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          本站贯穿案例在此登场：给写字机 Agent 定义 move_to(x,y) / draw_line(x1,y1,x2,y2) / home() 三个工具，参数 schema 直接复用 <a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11 设计的通信协议命令表</a>。用户说"画个正方形"，模型输出四次 draw_line 调用，宿主程序翻译成协议帧发给 STM32——<strong>LLM 出脑，协议出手，写字机动笔</strong>。工具越少越准、描述越清楚越稳，是 Agent 工程第一定律。
+        </p>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>概览版说明</strong>：完整版（ReAct 样例轨迹、工具 schema 设计规范、规划-反思模式、多智能体分工、agent-loop 动画图）随批次 6b 上线。</div></div>
+      ` },
+
+      // ===== ai-09 Agent Harness 工程（概览版）=====
+      { id: 'ai-09', title: 'Agent Harness 工程', desc: 'LLM 外围工程层：agent loop、上下文压缩、停止条件、权限模型——2026 热点（概览版）', icon: '🛠️', tags: ['概览', '前沿'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">同一模型，换个"外壳"性能差数倍</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          2026 年工程界的共识：Agent 能力的下限由模型决定，上限由 <strong>Harness</strong>（挽具/外壳）决定——即包裹模型的工程层。以编码 Agent（Claude Code、ZCode 等）为例，harness 五要素：<strong>agent loop</strong>（循环驱动模型-工具-结果直到完成）、<strong>工具与权限</strong>（给什么工具、哪些操作要确认）、<strong>上下文压缩</strong>（长任务历史摘要化，窗口资源调度）、<strong>停止条件</strong>（防无限循环与预算爆炸）、<strong>评估</strong>（怎么知道它做对了）。"同一模型换 harness 表现差数倍"是行业反复复现的现象——就像同一颗 MCU，固件架构决定整机性能（类比 <a href="javascript:void(0)" onclick="App.loadDetail('os-02')">操作系统调度决定程序体验</a>）。
+        </p>
+        <h4 class="font-medium mt-6 mb-2">范式转移三部曲</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          2022~2026 三年三次转向：Prompt Engineering（打磨指令）→ Context Engineering（组织窗口）→ Harness Engineering（设计整个运行时环境）。越往后越"重工程"，越贴近你熟悉的<a href="javascript:void(0)" onclick="App.loadDetail('emb-08')">嵌入式系统设计</a>思维：状态机、看门狗（停止条件）、内存约束（上下文预算）、外设驱动（工具层）。
+        </p>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>概览版说明</strong>：完整版（五要素逐项展开、Claude Code/ZCode 类编码 agent 结构剖析、compaction 策略、agent-loop 状态机动画）随批次 6b 上线。</div></div>
+      ` },
+
+      // ===== ai-10 MCP 与工具生态（概览版）=====
+      { id: 'ai-10', title: 'MCP 与工具生态', desc: 'Model Context Protocol："AI 的 USB-C"——client/server 架构与三原语（概览版）', icon: '🔌', tags: ['概览', '前沿'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">AI 的 USB-C</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          Function Calling 的痛点：每个应用 × 每个工具都要单独对接，M×N 组合爆炸。MCP（Model Context Protocol，Anthropic 2024 年开源）把它变成 M+N：工具方写一次 MCP server，任何支持 MCP 的客户端（Claude、Claude Code、各类 IDE 插件）都能直接用——所以被称作"AI 的 USB-C"。截至 2026 年，MCP 已成为 agent 连接外部工具与数据的事实标准，数据库、浏览器、文件系统、Git 等常用 server 数以千计。
+        </p>
+        <h4 class="font-medium mt-6 mb-2">架构与三原语</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          <strong>Host/Client（模型侧）↔ Server（能力侧）</strong>：client 运行在 host 应用（如编码 agent）里，通过 JSON-RPC（stdio 本地或 HTTP/SSE 远程，协议分层与 <a href="javascript:void(0)" onclick="App.loadDetail('net-05')">应用层协议</a>设计一脉相承）连接 server。三原语：<strong>tools</strong>（模型可调用的函数，同 Function Calling）、<strong>resources</strong>（可读取的数据源，文件/数据库行）、<strong>prompts</strong>（预置提示词模板）。写一个最小 MCP server 只需声明名称、schema 和处理函数，几十行代码就能把你写字机的控制接口挂进任何 MCP 客户端。
+        </p>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>概览版说明</strong>：完整版（最小 server 实现思路、与 Function Calling 的层次关系、安全边界与 2026 版本演进）随批次 6b 上线。</div></div>
+      ` },
+
+      // ===== ai-11 边缘 AI 与 TinyML 概述（概览版，完整版随批次 6c 上线）=====
+      { id: 'ai-11', title: '边缘 AI 与 TinyML 概述', desc: '为什么把模型塞进 MCU：延迟/隐私/功耗/离线；2026 框架版图（概览版）', icon: '🪶', tags: ['概览'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">把智能装进几块钱的芯片</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          云端 AI 要联网、要上行数据、按次计费；而产线电机异响检测、可穿戴手势识别、传感器自诊断这些场景要的是<strong>毫秒级响应、数据不出设备、微安级功耗、断网可用</strong>——把小模型直接跑在 MCU 上（TinyML）是唯一解。约束也前所未有：<a href="javascript:void(0)" onclick="App.loadDetail('emb-03')">嵌入式存储系统</a>的 RAM 通常只有几十~几百 KB、Flash 几百 KB~2MB，没有操作系统兜底、没有动态内存，模型必须小到几十 KB 级——靠的是"小模型 + 量化 + 砍算子"三板斧（<a href="javascript:void(0)" onclick="App.loadDetail('ai-12')">ai-12</a>）。
+        </p>
+        <h4 class="font-medium mt-6 mb-2">2026 框架版图（截至 2026 年）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          <strong>LiteRT</strong>（原 TensorFlow Lite Micro，2024 年更名）是 MCU 端主流运行时，纯 C++、无动态内存；<strong>STM32Cube.AI</strong> 是 ST 官方工具链，能把 Keras/ONNX 模型直接转成 STM32 优化库；<strong>TinyMaix</strong> 是国内极简推理框架，ARM Cortex-M 上几十 KB 即可运行；硬件侧 <strong>NPU MCU</strong>（STM32N6、带 Ethos-U 的 MCU）开始把专用加速器带进单片机。选型逻辑与 <a href="javascript:void(0)" onclick="App.loadDetail('emb-01')">嵌入式系统</a>选型同构：先看 RAM/Flash 预算，再看算子支持，最后看生态。
+        </p>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>概览版说明</strong>：完整版（典型 TinyML 工作流、内存约束计算、框架横向对比、NPU 编程模型）随批次 6c 上线。</div></div>
+      ` },
+
+      // ===== ai-12 模型压缩：量化/剪枝/蒸馏（概览版）=====
+      { id: 'ai-12', title: '模型压缩：量化/剪枝/蒸馏', desc: 'int8/int4 量化原理（scale/zero-point）、PTQ vs QAT、GGUF 格式与内存估算（概览版）', icon: '🗜️', tags: ['概览'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">模型瘦身三板斧</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          <a href="javascript:void(0)" onclick="App.loadDetail('ai-05')">ai-05</a> 的模型动辄几 GB，塞进开发板要靠压缩。<strong>量化</strong>（Quantization）把 fp32/fp16 权重压成 int8/int4——用"缩放因子 + 零点"把浮点区间映射到整数格点：
+        </p>
+        <div class="formula-block">
+          $$q = \\text{round}\\left(\\frac{x}{s}\\right) + z, \\qquad \\hat{x} = s\\,(q - z)$$
+          <div class="text-sm text-gray-500 mt-2">$s$（scale）是浮点步长，$z$（zero-point）让 0 精确对应某个整数——这正是<a href="javascript:void(0)" onclick="App.loadDetail('dig-13')"> ADC/DAC</a> 里定点数的推广：模拟量 ↔ 整数码的映射，思想完全同源</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          <strong>PTQ</strong>（训练后量化）拿现成模型校准几百个样本即得，分钟级完成；<strong>QAT</strong>（量化感知训练）把量化误差模拟进训练过程，精度更高但要训练资源。LLM 侧的事实标准容器是 <strong>GGUF</strong> 格式（llama.cpp 生态），int4 量化后每参数仅 0.5 字节。内存估算一句话公式：<strong>内存 ≈ 参数量 × 每参数字节数</strong>（7B int4 ≈ 3.5 GB，0.5B int4 ≈ 0.25 GB）——加上 <a href="javascript:void(0)" onclick="App.loadDetail('ai-04')">ai-04</a> 的 KV Cache 才是全账。剪枝（删不重要权重）与蒸馏（大模型教小模型）另有妙用，完整版展开。
+        </p>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>概览版说明</strong>：完整版（对称/非对称量化推导、GPTQ/AWQ/GGUF q 系列对比、llm-memory 内存估算器工具）随批次 6c 上线。</div></div>
+      ` },
+
+      // ===== ai-13 MCU 端部署实战（概览版）=====
+      { id: 'ai-13', title: 'MCU 端部署实战', desc: 'Cube.AI / LiteRT / TinyMaix 三路线；写字机电机电流异常检测端到端（概览版）', icon: '⚙️', tags: ['概览'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">在 STM32 上跑一个真模型</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          边缘部署三条路线：<strong>STM32Cube.AI</strong>（模型转 C 库，工具链最顺）、<strong>LiteRT</strong>（跨厂商通用）、<strong>TinyMaix</strong>（极小足迹）。本节的实战任务选得非常"自动化人"：<strong>写字机电机电流异常检测</strong>——堵转、皮带卡滞、丢步这些机械故障，最先反映在相电流波形里（呼应 <a href="javascript:void(0)" onclick="App.loadDetail('emb-07')">ADC 采样</a>与 <a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">信号调理</a>）。
+        </p>
+        <h4 class="font-medium mt-6 mb-2">端到端流水线预览</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          ADC 以 1kHz 采样相电流 → 滑动窗口取 256 点 → 提取时域特征（RMS、峭度、过零率）或直接 1D 卷积 → int8 量化小模型（<a href="javascript:void(0)" onclick="App.loadDetail('ai-12')">ai-12</a> 的 PTQ）推理 → 异常概率超阈值则降速停机、上报 <a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">linux-12 的控制链</a>。数据采集用"正常工况 + 人为制造故障"各录几千窗口，训练在 PC 完成，板端只推理——<strong>训练在云、推理在端</strong>是 TinyML 与 <a href="javascript:void(0)" onclick="App.loadDetail('ai-14')">ai-14 开发板 LLM</a> 共同的部署哲学。
+        </p>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>概览版说明</strong>：完整版（数据集制作、模型结构与训练代码、Cube.AI 转换部署全程、推理耗时实测、关键词唤醒备选方案）随批次 6c 上线。</div></div>
+      ` },
+
+      // ===== ai-14 开发板本地 LLM 实战（概览版，收官项目）=====
+      { id: 'ai-14', title: '开发板本地 LLM 实战', desc: 'llama.cpp 交叉编译、PC 量化→板端推理，收官：自然语言控制写字机（概览版）', icon: '🏁', tags: ['概览', '收官'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">收官：让写字机听懂人话</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          全站三线在此会合：linux 板块造了控制链（<a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">整机联调</a>），print 板块造了机身，本板块补上"智能"。目标：开发板本地跑一个 0.5B 级小模型（如 Qwen 0.5B 的 int4 量化版，约 0.5 GB——截至今日主流 4GB 内存开发板可推理），说"画个正方形"，模型经 <a href="javascript:void(0)" onclick="App.loadDetail('ai-08')">Function Calling</a> 输出 draw_line 调用，宿主程序翻译成 <a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11 协议帧</a>，写字机动笔——<strong>语音/文字 → 模型 → 工具 → 协议 → 轨迹</strong>。
+        </p>
+        <h4 class="font-medium mt-6 mb-2">部署哲学：量化在 PC，板子只推理</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          llama.cpp 用 <a href="javascript:void(0)" onclick="App.loadDetail('linux-04')">交叉编译</a>（呼应工具链一节）产出 ARM 可执行，GGUF 模型在 PC 上量化好拷过去，开发板只承担推理；再包一层 HTTP API（复用 <a href="javascript:void(0)" onclick="App.loadDetail('linux-14')">linux-14 实时上位机</a>的 WebSocket/Web 架构），任何局域网客户端都能指挥写字机。至此，控制、结构、智能三条线在<strong>同一台机器</strong>上闭环——这正是本站区别于普通 AI 教程的招牌。
+        </p>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>概览版说明</strong>：完整版（llama.cpp 交叉编译全流程、上下文/线程数调参、HTTP 服务封装、Function Calling 端到端联调实录与性能数据）随批次 6c 上线，作为全站收官项目。</div></div>
+      ` },
+
+    ],
+  },
+
 };
 
 // 所有可统计进度的知识点 id 清单（用于进度统计）
 // 第 0 期只先放入板块分组入口，待各板块内容填充后这里会自动从 CourseData 派生
 const AllKnowledgeIds = (function () {
   const ids = [];
-  ['advanced-math', 'linear-algebra', 'circuit-basics', 'analog-circuit', 'digital-circuit', 'control', 'data-structure', 'modern-control', 'signals', 'sensor', 'embedded-sys', 'cpp', 'os', 'network', 'robotics', 'probability', 'power-electronics', 'motor-drive', 'linux-dev', 'digital-mfg'].forEach(group => {
+  ['advanced-math', 'linear-algebra', 'circuit-basics', 'analog-circuit', 'digital-circuit', 'control', 'data-structure', 'modern-control', 'signals', 'sensor', 'embedded-sys', 'cpp', 'os', 'network', 'robotics', 'probability', 'power-electronics', 'motor-drive', 'linux-dev', 'digital-mfg', 'ai'].forEach(group => {
     CourseData[group]?.sections?.forEach(s => ids.push(s.id));
   });
   return ids;
@@ -13697,6 +14189,22 @@ const KnowledgeDeps = {
   'print-06': ['print-05', 'print-04', 'circ-11'], // 零件设计 <- 建模 + 材料 + PCB 外壳配合
   'print-07': ['print-03', 'print-04'], // 后处理 <- 切片 + 材料
   'print-08': ['print-06', 'print-02', 'linux-12'], // 整机结构 <- 零件设计 + FDM 结构 + 步进
+
+  // === 人工智能内部链（v1.0.2 批次 6a 新增）===
+  'ai-01': ['la-02', 'prob-03'],        // ML/神经网络基础 <- 矩阵运算 + 随机变量
+  'ai-02': ['ai-01', 'sig-02'],         // CNN/RNN <- ML 基础 + 卷积（信号系统）
+  'ai-03': ['ai-02', 'sig-04'],         // Transformer <- 深度结构 + 傅里叶（位置编码）
+  'ai-04': ['ai-03', 'prob-02'],        // LLM 原理 <- Transformer + 条件概率
+  'ai-05': ['ai-04'],                   // 训练与生态 <- LLM 原理
+  'ai-06': ['ai-04'],                   // 提示/上下文工程 <- LLM 原理
+  'ai-07': ['ai-04', 'ds-13'],          // RAG <- LLM + 查找（最近邻检索）
+  'ai-08': ['ai-06', 'linux-11'],       // Agent/工具调用 <- 提示工程 + 通信协议（命令表）
+  'ai-09': ['ai-08', 'os-02'],          // Harness 工程 <- Agent + 进程（运行时类比）
+  'ai-10': ['ai-08', 'net-05'],         // MCP <- Agent + 应用层协议
+  'ai-11': ['emb-01'],                  // TinyML 概述 <- 嵌入式概述
+  'ai-12': ['ai-05', 'dig-13'],         // 模型压缩 <- 训练生态 + AD/DA（定点数）
+  'ai-13': ['ai-11', 'ai-12', 'emb-07', 'sns-08'], // MCU 部署 <- TinyML + 压缩 + ADC + 信号调理
+  'ai-14': ['ai-12', 'linux-04', 'linux-11', 'linux-14'], // 开发板 LLM <- 压缩 + 交叉编译 + 协议 + 上位机
 };
 
 // 自测题库（按 section id 索引）。每节配 5-8 题，含概念/计算/陷阱三类。

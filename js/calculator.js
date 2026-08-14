@@ -6,7 +6,7 @@ const Calculator = {
   _active: null,
 
   // 分类顺序
-  _categoryOrder: ['电路基础', '模拟电路', '数字电路', '信号处理', '自动控制', '计算机', '工程协议', '电机驱动', '嵌入式', '制造与工艺'],
+  _categoryOrder: ['电路基础', '模拟电路', '数字电路', '信号处理', '自动控制', '计算机', '工程协议', '电机驱动', '嵌入式', '制造与工艺', '人工智能'],
 
   render(containerId) {
     const container = document.getElementById(containerId);
@@ -33,7 +33,7 @@ const Calculator = {
   },
 
   _categoryIcon(cat) {
-    const icons = {'电路基础':'🔵','模拟电路':'🟢','数字电路':'🟡','信号处理':'📡','自动控制':'🟣','计算机':'💻','工程协议':'🔌','电机驱动':'⚡','嵌入式':'🔩','制造与工艺':'🖨️'};
+    const icons = {'电路基础':'🔵','模拟电路':'🟢','数字电路':'🟡','信号处理':'📡','自动控制':'🟣','计算机':'💻','工程协议':'🔌','电机驱动':'⚡','嵌入式':'🔩','制造与工艺':'🖨️','人工智能':'🧠'};
     return icons[cat] || '🔧';
   },
 
@@ -146,6 +146,9 @@ const Calculator = {
     { id: 'shrink-calc', title: '公差计算器', desc: '3D 打印收缩补偿：设计尺寸 × 收缩率 → 打印尺寸', icon: '📐', category: '制造与工艺' },
 
     { id: 'cron-gen', title: 'cron 表达式生成器', desc: '可视化编辑定时任务 + 未来 3 次执行时间预览', icon: '⏰', category: '计算机' },
+
+    // ===== 人工智能 =====
+    { id: 'token-est', title: 'Token 估算器', desc: '中英文本 → token 数 → 4K/8K/32K/128K 上下文窗口占用', icon: '🧮', category: '人工智能' },
   ],
 
   // 各计算器实现
@@ -2595,6 +2598,63 @@ const Calculator = {
             <div class="mt-1">未来 3 次执行：</div>
             ${runs.map(d => `<div class="pl-2">▸ ${fmt(d)}</div>`).join('')}
             <div class="text-xs text-gray-500 mt-1">写入 crontab：crontab -e 后追加该行（脚本路径替换为绝对路径）</div>
+          </div>`;
+      },
+    },
+
+    // ===== 人工智能 =====
+    tokenEst: {
+      _windows: [[4096, '4K'], [8192, '8K'], [32768, '32K'], [131072, '128K']],
+      _sample: '请把笔移动到坐标 (100, 50)，然后画一条直线到 (150, 80)。Move the pen to (100, 50), then draw a line to (150, 80).',
+      render(el) {
+        el.innerHTML = `
+          <div class="space-y-4">
+            <div class="info-box info"><div>经验法则：中文 1 字 ≈ 1~1.5 token，英文 1 词 ≈ 1.3 token。本工具按此估算并给出区间——精确值取决于具体模型的分词器（Qwen/GLM/Llama 各不相同），工程估算够用。</div></div>
+            <textarea id="te-input" rows="6" placeholder="粘贴中英文混合文本……" class="w-full px-3 py-2 rounded text-sm" style="border:1px solid var(--border);background:var(--bg);resize:vertical;font-family:inherit"></textarea>
+            <div class="flex gap-2 flex-wrap">
+              <button onclick="Calculator._calculators.tokenEst.calc()" class="px-4 py-2 rounded font-medium" style="background:var(--primary);color:white">估算 token</button>
+              <button onclick="Calculator._calculators.tokenEst.sample()" class="px-4 py-2 rounded text-sm" style="border:1px solid var(--border);background:var(--bg)">填入示例</button>
+              <button onclick="Calculator._calculators.tokenEst.clear()" class="px-4 py-2 rounded text-sm" style="border:1px solid var(--border);background:var(--bg)">清空</button>
+            </div>
+            <div id="te-result" class="p-3 rounded" style="background:var(--bg-secondary);border:1px solid var(--border);min-height:3rem"></div>
+          </div>`;
+      },
+      sample() {
+        const input = document.getElementById('te-input');
+        if (input) input.value = this._sample;
+        this.calc();
+      },
+      clear() {
+        const input = document.getElementById('te-input');
+        if (input) input.value = '';
+        this.calc();
+      },
+      calc() {
+        const text = document.getElementById('te-input')?.value || '';
+        const result = document.getElementById('te-result');
+        if (!result) return;
+        if (!text.trim()) { result.innerHTML = '<div class="text-gray-500">请先输入文本，或点击"填入示例"</div>'; return; }
+        // 字符构成：CJK 汉字 / 英文单词 / 数字串 / 其他符号（空白不计）
+        const cjk = (text.match(/[\u3400-\u9fff]/g) || []).length;
+        const words = (text.match(/[A-Za-z]+(?:'[A-Za-z]+)?/g) || []).length;
+        const digitRuns = (text.match(/\d+/g) || []).length;
+        const otherChars = text.replace(/[\u3400-\u9fff]/g, '').replace(/[A-Za-z']/g, '').replace(/\d/g, '').replace(/\s/g, '').length;
+        const est = cjk * 1.1 + words * 1.3 + digitRuns * 0.5 + otherChars * 0.4;
+        const lo = Math.round(est * 0.8), hi = Math.round(est * 1.25);
+        result.innerHTML = `
+          <div class="space-y-2">
+            <div>字符数 <b>${text.length}</b>（汉字 ${cjk} / 英文单词 ${words} / 数字串 ${digitRuns} / 符号 ${otherChars}）</div>
+            <div>估算 token：<b style="color:var(--primary);font-size:1.15em">${lo} ~ ${hi}</b>（中值 ${Math.round(est)}）</div>
+            <div class="pt-1">上下文窗口占用：</div>
+            ${this._windows.map(([w, label]) => {
+              const p = est / w * 100;
+              const color = p >= 90 ? '#ef4444' : p >= 60 ? '#f59e0b' : '#059669';
+              return `<div>
+                <div class="flex justify-between text-xs mb-0.5"><span>${label}（${w.toLocaleString()}）</span><span style="color:${color}">${p.toFixed(1)}%</span></div>
+                <div style="height:0.5rem;background:var(--border);border-radius:9999px;overflow:hidden"><div style="height:100%;width:${Math.min(100, p).toFixed(1)}%;background:${color};border-radius:9999px"></div></div>
+              </div>`;
+            }).join('')}
+            <div class="text-xs text-gray-500">上下文窗口 = 提示词 + 模型已生成部分之和；排 Agent 时工具定义与检索片段同样消耗这份预算（详见 ai-04）。</div>
           </div>`;
       },
     },
