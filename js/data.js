@@ -36,7 +36,14 @@ const CourseData = {
       children: [
         { id: 'embedded-sys', label: '嵌入式系统' },
         { id: 'sensor', label: '传感器与检测' },
+        { id: 'linux-dev', label: 'Linux 开发板实战' },
         { id: 'robotics', label: '机器人学导论' },
+      ]
+    },
+    {
+      id: 'mfg', label: '制造与工艺', icon: 'printer', badge: '工程', badgeClass: 'badge-eng',
+      children: [
+        { id: 'digital-mfg', label: '3D 打印与数字化制造' },
       ]
     },
     {
@@ -64,24 +71,26 @@ const CourseData = {
     wrench: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>',
     book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>',
     chip: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v2M15 1v2M9 21v2M15 21v2M1 9h2M1 15h2M21 9h2M21 15h2"/></svg>',
+    printer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>',
+    linux: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2c-2.5 0-4 2.2-4 5 0 1.8.5 3-.5 5C6.2 14.6 4 16 4 19c0 1.7 2 3 3.5 2 .8-.5 1-1.5 2-1.5.8 0 1.2 1 2.5 1s1.7-1 2.5-1c1 0 1.2 1 2 1.5 1.5 1 3.5-.3 3.5-2 0-3-2.2-4.4-3.5-7-1-2-.5-3.2-.5-5 0-2.8-1.5-5-4-5z"/><path d="M10 8h.01M14 8h.01"/></svg>',
   },
 
   // ========== 首页数据 ==========
   home: {
     title: '专业课学习平台 · StudyWeb',
-    subtitle: '应试 + 工程双线并重，覆盖数学、电子、控制、嵌入式、计算机五大领域，系统化学习笔试考点与工程实战知识',
-    intro: '本项目把分散在课本、视频、真题里的专业课知识，系统化、可视化、可交互地组织在一个网站里。数学基础侧重笔试考点与计算训练，电路/控制/嵌入式侧重工程应用与实战仿真，数据结构与信号处理兼顾统考大纲与工程面试。配合交互图表、公式可视化、自测练习，做到"看得懂、记得牢、用得上"。',
+    subtitle: '应试 + 工程双线并重，覆盖数学、电子、控制、嵌入式、计算机、制造工艺六大领域，系统化学习笔试考点与工程实战知识',
+    intro: '本项目把分散在课本、视频、真题里的专业课知识，系统化、可视化、可交互地组织在一个网站里。数学基础侧重笔试考点与计算训练，电路/控制/嵌入式侧重工程应用与实战仿真，数据结构与信号处理兼顾统考大纲与工程面试，Linux 开发板与 3D 打印板块覆盖动手实战。配合交互图表、公式可视化、自测练习，做到"看得懂、记得牢、用得上"。',
     features: [
-      { icon: '📚', label: '系统化知识', desc: '18 大板块、192 知识点按学习路径递进，应试与工程双标签筛选' },
+      { icon: '📚', label: '系统化知识', desc: '20 大板块、206 知识点按学习路径递进，应试与工程双标签筛选' },
       { icon: '🧮', label: '公式与计算', desc: 'KaTeX 渲染全部数学/控制公式，配套矩阵计算器、拉氏变换查表等工具' },
       { icon: '🎮', label: '交互可视化', desc: '伯德图、根轨迹、卡诺图、运放电路、排序算法等可交互原理图' },
       { icon: '✏️', label: '自测与真题', desc: '每节配自测题，数学/数电/模电含笔试真题模块，支持错题记录' },
     ],
     stats: [
-      { label: '知识板块', value: '18', color: 'blue' },
-      { label: '知识点', value: '192', color: 'green' },
-      { label: '交互图表', value: '10+', color: 'purple' },
-      { label: '计算工具', value: '9', color: 'orange' },
+      { label: '知识板块', value: '20', color: 'blue' },
+      { label: '知识点', value: '206', color: 'green' },
+      { label: '交互图表', value: '16', color: 'purple' },
+      { label: '计算工具', value: '28', color: 'orange' },
     ],
     sections: [
       { id: 'advanced-math', title: '高等数学', desc: '极限、微积分、级数、微分方程，工学类高数全考点', icon: '🔴', level: '应试' },
@@ -102,6 +111,8 @@ const CourseData = {
       { id: 'probability', title: '概率论与数理统计', desc: '随机变量、概率分布、大数定律、参数估计、假设检验', icon: '🎲', level: '应试+工程' },
       { id: 'power-electronics', title: '电力电子技术', desc: '整流/逆变/斩波电路、PWM 控制、H 桥驱动', icon: '⚡', level: '工程' },
       { id: 'motor-drive', title: '电机与拖动', desc: '直流/交流/PMSM/步进电机原理与调速控制', icon: '🔧', level: '工程' },
+      { id: 'linux-dev', title: 'Linux 开发板实战', desc: '系统烧录、命令行/Shell、交叉编译、GPIO/I2C 驱动、系统构建', icon: '🐧', level: '工程' },
+      { id: 'digital-mfg', title: '3D 打印与数字化制造', desc: 'FDM/SLA 工艺、切片参数、材料选型、机器人零件制造', icon: '🖨️', level: '工程' },
     ],
   },
 
@@ -11179,13 +11190,887 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
     ],
   },
 
+  // ========== Linux 开发板实战（v0.9.3 新增）==========
+  'linux-dev': {
+    title: 'Linux 开发板实战',
+    subtitle: '从系统烧录、命令行到 GPIO/I2C 驱动与系统构建，MCU 与 Linux 之间的实战桥梁',
+    icon: '🐧',
+    sections: [
+      // ===== linux-01 Linux 开发板入门 =====
+      { id: 'linux-01', title: 'Linux 开发板入门', desc: '主流板子对比、系统烧录、无屏配置与 SSH 远程连接', icon: '🐧', tags: ['核心', '入门'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">从 MCU 到 Linux 开发板：开启系统级开发</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          拿到一块 Linux 开发板（树莓派、RK3568、全志等），意味着开发范式从"寄存器 + 裸机/RTOS"跃迁到"操作系统 + 一切皆文件"。<a href="javascript:void(0)" onclick="App.loadDetail('emb-01')">嵌入式系统概述</a>中区分了 MCU 与 MPU：MCU 片上外设一步到位、上电即运行；而 Linux 开发板的 SoC（Cortex-A 内核）需要先启动 bootloader、加载内核和根文件系统，才能运行你的程序。本节解决"开箱三件事"：选板子、烧系统、连上去。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">开发板选型：主流方案对比</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          入门阶段不必纠结参数，<strong>软件生态优先</strong>：官方系统维护越勤、社区答案越多的板子，踩坑成本越低。
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>板子</th><th>SoC / 内核</th><th>内存</th><th>系统生态</th><th>参考价</th><th>适合场景</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">树莓派 4B / 5</td><td>BCM2712，4×Cortex-A76 @2.4GHz</td><td>4~8GB</td><td>Raspberry Pi OS 官方支持最全</td><td>¥400~600</td><td>学习主力、桌面级性能</td></tr>
+            <tr><td class="font-medium">树莓派 Zero 2 W</td><td>RP3A0，4×Cortex-A53 @1GHz</td><td>512MB</td><td>同官方系统</td><td>¥100~150</td><td>小型采集节点、低功耗</td></tr>
+            <tr><td class="font-medium">RK3568 系列</td><td>4×Cortex-A55 + 1TOPS NPU</td><td>2~4GB</td><td>Ubuntu/Debian/Armbian</td><td>¥200~350</td><td>工业应用、视觉 AI 入门</td></tr>
+            <tr><td class="font-medium">全志 H618/H616</td><td>4×Cortex-A53 @1.5GHz</td><td>1~2GB</td><td>官方 Ubuntu + Armbian</td><td>¥100~200</td><td>性价比口袋服务器</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">烧录前必懂的三个概念</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>系统镜像</strong>：一个 .img/.img.xz 文件，包含完整分区表 + bootloader + 内核 + 根文件系统，按扇区原样写入 SD 卡，不是"复制文件"</li>
+          <li><strong>启动链</strong>：上电 → BootROM（固化）→ SPL/u-boot（SD 卡第一分区）→ Linux 内核 → 挂载 rootfs → systemd 启动服务。任何一环损坏都会"点不亮"</li>
+          <li><strong>串口调试口</strong>：板上 UART0 三根线（TX/RX/GND，3.3V TTL），是"黑盒救援"通道，协议原理见<a href="javascript:void(0)" onclick="App.loadDetail('emb-06')">通信接口协议</a></li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">为什么烧录不走串口</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          串口控制台常用 115200 波特率，UART 每字节含起始/停止位共 10 bit，传输 $N$ 字节需要：
+        </p>
+        <div class="formula-block">
+          $$t = \\frac{10N}{B}$$
+          <div class="text-sm text-gray-500 mt-2">$B$ 为波特率（bit/s）。传 1GB 镜像：$t = 10 \\times 1.07 \\times 10^9 / 115200 \\approx 93000\\,s \\approx 26$ 小时</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          而用 USB 3.0 读卡器写 SD 卡（约 30MB/s）只需约 1 分钟。结论：<strong>镜像整卡写入用读卡器，串口只用于交互和救砖</strong>。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">系统烧录四步（以树莓派为例）</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>选镜像</strong><br>用官方 Raspberry Pi Imager：选择设备型号 → 操作系统（服务器用途选 Lite 无桌面版，资源占用小一半）→ 选择 SD 卡</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>预设账号与网络</strong><br>Imager 的"自定义设置"里提前写好用户名/密码、WiFi 的 SSID 和密码、勾选启用 SSH——这是无屏部署的关键，免去接显示器配置</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>写入并校验</strong><br>写入约 2~5 分钟（自动解压 .xz 并校验）。其他板子可用 balenaEtcher 写官方镜像，全志/RK 部分需用厂商的线刷工具（USB OTG + MaskROM 模式）</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>首启验证</strong><br>上电后 ACT 灯不规则闪烁 = 读卡正常；1~3 分钟后在路由器后台找新设备 IP，或直接 ping raspberrypi.local（mDNS）</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">SSH 远程连接</h4>
+        <div class="code-block"><span class="code-comment"># Windows PowerShell / macOS 终端均可，首次连接输入 yes 指纹确认</span>
+ssh pi@192.168.1.23          <span class="code-comment"># 用户名@板子 IP（路由器后台查）</span>
+ssh pi@raspberrypi.local     <span class="code-comment"># mDNS 主机名，免查 IP（路由器需支持）</span>
+
+<span class="code-comment"># 与板子互传文件</span>
+scp ./hello pi@192.168.1.23:~/        <span class="code-comment"># 上传程序</span>
+scp pi@192.168.1.23:~/datalog.csv ./  <span class="code-comment"># 下载日志</span>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          进阶用法：VS Code 安装 <strong>Remote-SSH</strong> 扩展，把开发板配置为远程主机后，编辑、编译、调试全部在板子上进行，体验与本地一致——这是 Linux 开发板开发的标准姿势。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">MCU 与 Linux 开发板开发范式对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>维度</th><th>MCU（STM32）</th><th>Linux 开发板</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">启动时间</td><td>毫秒级，上电即跑</td><td>10~40s，完整启动链</td></tr>
+            <tr><td class="font-medium">实时性</td><td>μs 级中断响应</td><td>调度延迟 ms 级，需 MCU 补位</td></tr>
+            <tr><td class="font-medium">外设访问</td><td>直接读写寄存器</td><td>内核驱动 + 设备文件 /dev/*</td></tr>
+            <tr><td class="font-medium">调试方式</td><td>SWD/JTAG 仿真器</td><td>SSH + gdb + 日志</td></tr>
+            <tr><td class="font-medium">软件生态</td><td>裸机/RTOS 库有限</td><td>apt 装 Python/OpenCV/ROS 全家桶</td></tr>
+            <tr><td class="font-medium">部署方式</td><td>烧录固件</td><td>scp/git 拉代码，systemd 托管</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>电源是第一故障源</strong>：树莓派 4B/5 要求 5V/3A（15W）以上 USB-C 电源。供电不足的症状是随机死机、USB 掉线、闪电图标报警——很多人误以为是系统问题。廉价 USB 线线阻大，末端可能只剩 4.6V，$P = UI$ 之下压降随负载增大。先用官方电源排除变量，再查系统。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>无屏三件套</strong>：① Imager 预设 SSH + WiFi；② 连不上时插 SD 卡回电脑看 boot 分区的 cmdline；③ 保留一根 USB-TTL 线（3.3V），接板子调试串口，系统起不来时它是唯一的"黑匣子"。旧版树莓派系统的做法：boot 分区放名为 ssh 的空文件启用 SSH，放 wpa_supplicant.conf 写 WiFi。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>系统版本怎么选</strong>：64 位系统（aarch64）是现在的默认推荐，能装 ROCm/新版 Python 包；内存 1GB 以下的板子选 32 位更省内存。做服务器/嵌入式用途一律选 Lite（无桌面），图形界面占用约 300MB 内存并显著增加 SD 卡写入量。</div></div>
+      ` },
+
+      // ===== linux-02 Linux 命令行与文件系统 =====
+      { id: 'linux-02', title: 'Linux 命令行与文件系统', desc: 'FHS 目录结构、权限模型、软硬链接、find/grep/awk 与管道重定向', icon: '📁', tags: ['核心', '高频'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">一切皆文件：Linux 的世界观</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          命令行不是"复古"，而是 Linux 开发板的核心操作界面——SSH 进去以后你面对的就是它。<a href="javascript:void(0)" onclick="App.loadDetail('os-06')">文件系统</a>理论在 OS 课程里讲了 inode 和目录树，本节把它们落到工程实践：设备是文件（/dev/ttyUSB0）、内核参数是文件（/sys/class/...）、进程信息是文件（/proc/cpuinfo）。掌握命令行 = 掌握一切外设的入口。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">FHS 目录结构：每个目录的"职责"</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>目录</th><th>内容</th><th>开发板上的典型用途</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">/home、/root</td><td>用户目录</td><td>你的代码、数据日志</td></tr>
+            <tr><td class="font-medium">/etc</td><td>系统配置（纯文本）</td><td>改网络、改服务自启，改前先备份</td></tr>
+            <tr><td class="font-medium">/dev</td><td>设备文件</td><td>/dev/gpiochip0、/dev/i2c-1、/dev/ttyUSB0</td></tr>
+            <tr><td class="font-medium">/proc、/sys</td><td>内核运行时信息（内存中虚拟）</td><td>cat /proc/cpuinfo、echo 控制 GPIO/温度</td></tr>
+            <tr><td class="font-medium">/boot</td><td>内核、设备树、启动配置</td><td>config.txt、overlays、dtb 文件</td></tr>
+            <tr><td class="font-medium">/usr、/opt</td><td>软件与第三方程序</td><td>apt 安装的包、自编译软件放 /usr/local</td></tr>
+            <tr><td class="font-medium">/var、/tmp</td><td>可变数据与临时文件</td><td>/var/log 看日志（dmesg/syslog）</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">权限模型：rwx 与八进制表示</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          ls -l 输出的 -rw-r--r-- 分三组：<strong>属主(u) / 属组(g) / 其他人(o)</strong>。把 r、w、x 看作二进制位，一组权限就是一个八进制数：
+        </p>
+        <div class="formula-block">
+          $$r=4,\\; w=2,\\; x=1 \\;\\Rightarrow\\; \\text{mode} = \\underbrace{7}_{rwx}\\,\\underbrace{5}_{r-x}\\,\\underbrace{5}_{r-x}$$
+          <div class="text-sm text-gray-500 mt-2">7=rwx（读+写+执行）、6=rw-、5=r-x、4=r--。755 = 属主全权，组和其他人可读可执行</div>
+        </div>
+        <div class="code-block"><span class="code-comment"># chmod 改权限、chown 改属主（需 sudo）</span>
+chmod 755 deploy.sh        <span class="code-comment"># 脚本加可执行权限</span>
+chmod +x deploy.sh         <span class="code-comment"># 等价简写：只加 x 位</span>
+sudo chown pi:pi data/     <span class="code-comment"># 目录移交 pi 用户和 pi 组</span>
+ls -l /dev/gpiochip0       <span class="code-comment"># crw-rw---- root gpio → pi 需加入 gpio 组</span>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">软链接与硬链接</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>硬链接 ln</th><th>软链接 ln -s</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">本质</td><td>同一 inode 的多个名字</td><td>存路径的新文件（快捷方式）</td></tr>
+            <tr><td class="font-medium">跨文件系统</td><td>不能（跨分区/跨盘不行）</td><td>能，可指向任意挂载点</td></tr>
+            <tr><td class="font-medium">指向目录</td><td>不允许</td><td>允许（常用：/lib → /usr/lib）</td></tr>
+            <tr><td class="font-medium">原文件删除后</td><td>仍可访问（引用计数未清零）</td><td>悬空（dangling）失效</td></tr>
+            <tr><td class="font-medium">典型用途</td><td>重要数据多入口</td><td>版本切换（/usr/local/lib/xxx-current）</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">文本三剑客：find / grep / awk</h4>
+        <div class="code-block"><span class="code-comment"># find：按名字/类型/时间找文件</span>
+find ~/project -name "*.c" -newer main.h   <span class="code-comment"># 比 main.h 新的源文件</span>
+find /var/log -size +10M                   <span class="code-comment"># 大于 10M 的日志</span>
+
+<span class="code-comment"># grep：文本内搜索，-r 递归 -i 忽略大小写 -n 显示行号</span>
+grep -rn "gpio" ~/driver/        <span class="code-comment"># 项目里所有提到 gpio 的行</span>
+dmesg | grep -i tty              <span class="code-comment"># 内核日志里过滤串口信息</span>
+
+<span class="code-comment"># awk：按列切分处理（默认空白分隔）</span>
+awk '{print $1, $3}' data.txt    <span class="code-comment"># 打印第 1、3 列</span>
+awk -F, '$2 &gt; 25 {print $1}' temp.csv  <span class="code-comment"># CSV 第 2 列超 25 时打印第 1 列</span>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">管道与重定向：组合的艺术</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>管道 |</strong>：前一个命令的 stdout 接到后一个命令的 stdin——dmesg | grep -i error | wc -l 三连：取内核日志、滤错误、数行数</li>
+          <li><strong>重定向 &gt; 与 &gt;&gt;</strong>：覆盖写入 / 追加写入文件；./a.out &gt; run.log 2&gt;&amp;1 把标准输出和标准错误都收进日志（2&gt;&amp;1 必须写在后面）</li>
+          <li><strong>/dev/null</strong>：黑洞设备，cron 任务常加 &gt;&amp; /dev/null 防止输出堆积</li>
+          <li><strong>tee</strong>：既上屏又入文件，./a.out | tee run.log，看得到也留得下</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">实战：排查"没有权限操作 GPIO"问题</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>复现错误</strong><br>运行 ./led 报错 Permission denied（无权限打开 /dev/gpiochip0）</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>查权限与属组</strong><br>ls -l /dev/gpiochip0 显示 crw-rw---- root gpio：只有 root 和 gpio 组能读写</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>核对自己的组</strong><br>groups 命令查看当前用户所属组，发现不在 gpio 组里</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>加入组并生效</strong><br>sudo usermod -aG gpio pi 把用户追加进 gpio 组，<strong>重新登录</strong>（组变更对新会话才生效）后 ./led 正常运行——不需要用 root 跑程序</div></div>
+        </div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>危险命令黑名单</strong>：sudo rm -rf 带通配符先 ls 确认再执行；chown -R / 会毁掉整个系统；生产板禁用 root 直接 SSH 登录。SD 卡是易损件，重要数据日志定期 rsync 回电脑，而不是等卡坏了再抢救。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>不会就问 man</strong>：man chmod 看完整手册；嫌长就命令 --help 看速览；装 tldr 后 tldr tar 直接给最常用例子。tab 键补全命令和路径、↑↓ 翻历史，这两下能省一半敲键盘时间。</div></div>
+      ` },
+
+      // ===== linux-03 Shell 脚本编程 =====
+      { id: 'linux-03', title: 'Shell 脚本编程', desc: 'bash 语法、变量/条件/循环、sed/awk 文本处理、systemd 与 cron 自启', icon: '📜', tags: ['核心', '实战'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">Shell 脚本：让板子自己干活</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          装好系统、连上 SSH 之后，下一步就是<strong>自动化</strong>：定时采集传感器、开机自动启动服务、日志轮转清理。Shell 脚本是把 <a href="javascript:void(0)" onclick="App.loadDetail('linux-02')">命令行</a>串成程序的胶水语言，也是 <a href="javascript:void(0)" onclick="App.loadDetail('os-01')">操作系统概述</a>中"系统调用之上第一层"的最好观察窗口。嵌入式 Linux 工程师每天都要写几行 shell。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">第一个脚本：shebang 与三种运行方式</h4>
+        <div class="code-block"><span class="code-comment">#!/bin/bash           # shebang：声明用哪个解释器执行</span>
+<span class="code-comment"># 文件名 hello.sh</span>
+<span class="code-func">echo</span> <span class="code-string">"Board: $(hostname), Temp: $(vcgencmd measure_temp)"</span>
+
+<span class="code-comment"># 三种运行方式（效果不同！）</span>
+chmod +x hello.sh &amp;&amp; ./hello.sh   <span class="code-comment"># ① 作为程序执行（需 x 权限）</span>
+bash hello.sh                       <span class="code-comment"># ② 指定解释器执行（不需 x 权限）</span>
+source hello.sh                     <span class="code-comment"># ③ 在当前 shell 里执行，变量/cd 会残留</span>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">变量与特殊变量</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>赋值等号两边不能有空格</strong>：NAME="pi" 对，NAME = "pi" 错（会被当成命令执行）</li>
+          <li><strong>取值要 $</strong>：echo $NAME；字符串里写 "$NAME" 保留变量展开，写 '$NAME' 则原样输出</li>
+          <li><strong>命令替换 $(...)</strong>：把命令输出存进变量：DATE=$(date +%F)</li>
+          <li><strong>特殊变量</strong>：$0 脚本名、$1~$9 位置参数、$# 参数个数、$@ 全部参数、$? 上一条命令退出码（0 = 成功）</li>
+          <li><strong>算术运算</strong>：((count++)) 或 count=$((count+1))，注意等号右侧的 $ 不能少</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">条件、循环与函数</h4>
+        <div class="code-block"><span class="code-comment"># 温度守护脚本：CPU 过热时告警（if/循环/函数全用到）</span>
+<span class="code-keyword">readonly</span> THRESH=60000          <span class="code-comment"># 毫摄氏度</span>
+
+<span class="code-func">read_temp</span>() {
+  <span class="code-comment"># 从 sysfs 读原始温度并去掉末尾的 000</span>
+  t=$(cat /sys/class/thermal/thermal_zone0/temp)
+  <span class="code-func">echo</span> $((t / 1000))
+}
+
+<span class="code-keyword">while</span> <span class="code-keyword">true</span>; <span class="code-keyword">do</span>
+  temp=$(read_temp)
+  <span class="code-keyword">if</span> [ "$temp" -gt "$((THRESH / 1000))" ]; <span class="code-keyword">then</span>
+    logger -t tempd <span class="code-string">"OVERHEAT: $temp C"</span>   <span class="code-comment"># 写入系统日志</span>
+  <span class="code-keyword">fi</span>
+  <span class="code-keyword">sleep</span> 10
+<span class="code-keyword">done</span>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          语法要点：if 与 [ 之间有空格、比较数字用 -gt/-lt/-eq（比较字符串用 =）；[[ ]] 是 bash 增强版，支持 &amp;&amp; 和模式匹配，新脚本建议统一用它。exit 0 表示成功，非零表示失败——systemd 和 cron 靠退出码判断脚本是否正常。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">文本处理实战：从输出中提取数字</h4>
+        <div class="code-block"><span class="code-comment"># vcgencmd measure_temp 输出 temp=47.6'C，提取 47.6</span>
+vcgencmd measure_temp | sed -n <span class="code-string">"s/temp=\\([0-9.]*\\)'C/\\1/p"</span>
+
+<span class="code-comment"># 把 CSV 日志的第 1、2 列转成空格分隔</span>
+awk -F, <span class="code-string">'{print $1, $2}'</span> log.csv
+
+<span class="code-comment"># 批量替换工程里的引脚宏名（-i 直接改文件）</span>
+sed -i <span class="code-string">'s/LED_PIN/STATUS_PIN/g'</span> *.c *.h
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">开机自启：三种方式怎么选</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>方式</th><th>适用</th><th>特点</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">systemd 服务</td><td>常驻程序（推荐）</td><td>崩溃自动重启、看状态/日志一条命令、可声明依赖</td></tr>
+            <tr><td class="font-medium">crontab 定时</td><td>周期性任务</td><td>五字段时间表达式，@reboot 可开机跑一次</td></tr>
+            <tr><td class="font-medium">rc.local</td><td>传统/简单场景</td><td>一条命令追加启动项，无管理能力，逐渐被弃用</td></tr>
+          </tbody>
+        </table></div>
+        <div class="formula-block">
+          $$\\underbrace{*/5}_{\\text{分}} \\; \\underbrace{*}_{\\text{时}} \\; \\underbrace{*}_{\\text{日}} \\; \\underbrace{*}_{\\text{月}} \\; \\underbrace{*}_{\\text{周}} \\;\\Rightarrow\\; \\text{每 5 分钟执行一次}$$
+          <div class="text-sm text-gray-500 mt-2">crontab -e 编辑；*/5 表示"每 5 单位"；0 3 * * 1 = 每周一凌晨 3 点；@reboot = 每次开机</div>
+        </div>
+        <div class="code-block"><span class="code-comment"># /etc/systemd/system/tempd.service —— 常驻脚本托管</span>
+[Unit]
+Description=Temperature daemon
+After=network.target
+
+[Service]
+ExecStart=/home/pi/tempd.sh
+Restart=always                <span class="code-comment"># 崩溃自动拉起</span>
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+
+<span class="code-comment"># 启用三连：改完 .service 必须 daemon-reload</span>
+sudo systemctl daemon-reload
+sudo systemctl enable --now tempd.service
+journalctl -u tempd -f         <span class="code-comment"># 实时看服务日志</span>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">完整例程：每分钟采集温度写入 CSV</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>写采集脚本 log_temp.sh</strong><br>read_temp 函数读 sysfs → echo "$(date +%F' '%T),$temp" >> /home/pi/data/temp.csv，并 mkdir -p /home/pi/data 保证目录存在</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>手动验证</strong><br>bash log_temp.sh 跑一次，cat temp.csv 检查格式（2026-08-14 10:23:01,47）</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>注册 cron</strong><br>crontab -e 添加一行：* * * * * /home/pi/log_temp.sh &gt;&gt; /home/pi/cron.log 2&gt;&amp;1（失败原因留痕）</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>防膨胀</strong><br>再加一行日志清理：0 4 * * * find /home/pi/data -name "*.csv" -mtime +30 -delete，30 天前的旧数据自动删除，SD 卡不被写爆</div></div>
+        </div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>Windows 换行符坑</strong>：在 Windows 编辑器写的脚本传到板子上常报错 /bin/bash^M: bad interpreter——CRLF 的 \r 附着在解释器路径上。解决：板子上跑 sed -i 's/\\r$//' 脚本名，或编辑器切换为 LF 换行。cron 不跑也先查这个。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>两个排查神器</strong>：① bash -x script.sh 逐行回放每条命令和变量展开，逻辑错误现原形；② shellcheck script.sh 静态检查器，未加引号的变量、拼写错误全都指出来。提交前的脚本过一遍 shellcheck 是专业习惯。</div></div>
+      ` },
+
+      // ===== linux-04 交叉编译与工具链 =====
+      { id: 'linux-04', title: '交叉编译与工具链', desc: 'GCC 编译四阶段、Makefile/CMake、ARM 交叉工具链配置与部署', icon: '🔧', tags: ['核心', '实战'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">交叉编译：在电脑上造，到板子上跑</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          板子上也能编译（本机编译），但 Cortex-A 的算力跑一次 OpenCV 级别的构建要几十分钟，而你的 x86 电脑几秒就完成。交叉编译 = 在<strong>宿主机</strong>（build）上生成<strong>目标机</strong>（target，ARM64）可执行文件的过程。它是 <a href="javascript:void(0)" onclick="App.loadDetail('emb-10')">嵌入式开发实践</a>中交叉工具链概念在 Linux 上的完整版，编译原理详见 <a href="javascript:void(0)" onclick="App.loadDetail('cpp-05')">文件与预处理</a>。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">GCC 编译四阶段：源码到可执行文件</h4>
+        <div class="formula-block">
+          hello.c &nbsp;$\\xrightarrow{\\;\\text{预处理 gcc -E\\;}\\;}$&nbsp; hello.i &nbsp;$\\xrightarrow{\\;\\text{编译 gcc -S\\;}\\;}$&nbsp; hello.s &nbsp;$\\xrightarrow{\\;\\text{汇编 gcc -c\\;}\\;}$&nbsp; hello.o &nbsp;$\\xrightarrow{\\;\\text{链接 gcc\\;}\\;}$&nbsp; hello
+          <div class="text-sm text-gray-500 mt-2">-E 展开宏与头文件；-S 生成汇编；-c 生成目标文件（机器码但未定位）；链接把 .o 与库合成可执行文件</div>
+        </div>
+        <div class="code-block"><span class="code-comment"># 单文件：直接 gcc，-Wall 开警告，-g 带调试信息，-O2 优化</span>
+gcc -Wall -O2 -o led led.c -lgpiod      <span class="code-comment"># -l 链接 libgpiod 库</span>
+
+<span class="code-comment"># 常用选项速查</span>
+<span class="code-comment">#   -I./include   头文件搜索路径</span>
+<span class="code-comment">#   -L./lib -lfoo 库文件路径与名字（libfoo.so → -lfoo）</span>
+<span class="code-comment">#   -DDEBUG=1     相当于源码里 #define DEBUG 1</span>
+<span class="code-comment">#   file led      查看目标架构（ELF 64-bit LSB ARM64 aarch64）</span>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">工具链三元组：host / build / target</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          交叉编译器的名字就是它的"说明书"：<strong>aarch64-linux-gnu-gcc</strong> = 生成 aarch64（target）Linux GNU 环境、运行在 x86_64 宿主机（host）上的 gcc。速度差距可以估算：
+        </p>
+        <div class="formula-block">
+          $$S \\;=\\; \\frac{T_{\\text{board}}}{T_{\\text{host}}} \\;\\approx\\; \\frac{f_{\\text{host}} \\cdot n_{\\text{host}}}{f_{\\text{board}} \\cdot n_{\\text{board}}}, \\qquad \\text{例：}\\; \\frac{3.6\\,\\text{GHz} \\times 8}{1.8\\,\\text{GHz} \\times 4} = 4\\times$$
+          <div class="text-sm text-gray-500 mt-2">板子 4 核 A55 @1.8GHz vs 电脑 8 核 @3.6GHz：并行编译下理论快 4 倍以上（磁盘/缓存优势还会放大差距）</div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>三元组</th><th>含义</th><th>对应板子</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">aarch64-linux-gnu-</td><td>64 位 ARM（ARMv8）</td><td>树莓派 3/4/5（64 位系统）、RK3568</td></tr>
+            <tr><td class="font-medium">arm-linux-gnueabihf-</td><td>32 位 ARM 硬浮点（hf）</td><td>树莓派 Zero/2W（32 位系统）</td></tr>
+            <tr><td class="font-medium">arm-linux-gnueabi-</td><td>32 位 ARM 软浮点</td><td>老旧软浮点系统（少见）</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">Makefile：最小可用模板</h4>
+        <div class="code-block"><span class="code-comment"># 交叉编译 Makefile（在 x86 电脑上执行）</span>
+CC      = aarch64-linux-gnu-gcc
+CFLAGS  = -Wall -O2 -I./include
+LDFLAGS = -lgpiod
+OBJS    = main.o led.o sensor.o
+
+app: $(OBJS)                    <span class="code-comment"># 默认目标：链接</span>
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+%.o: %.c                        <span class="code-comment"># 模式规则：同名 .c 编译成 .o</span>
+	$(CC) $(CFLAGS) -c $&lt; -o $@
+
+<span class="code-comment"># $@ 目标名  $^ 全部依赖  $&lt; 第一个依赖</span>
+clean:
+	rm -f $(OBJS) app
+
+.PHONY: clean                   <span class="code-comment"># 声明 clean 不是文件，避免与同名文件冲突</span>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          注意：<strong>命令行必须以 Tab 开头</strong>（不是空格），这是 Makefile 最著名的坑。make -j8 启用 8 线程并行编译。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">CMake：现代工程的标准答案</h4>
+        <div class="code-block"><span class="code-comment"># CMakeLists.txt —— 三行起步</span>
+cmake_minimum_required(VERSION 3.10)
+project(sensor_app C)
+add_executable(app main.c led.c sensor.c)
+target_link_libraries(app gpiod)
+
+<span class="code-comment"># 板子上本机编译（也可以交叉）</span>
+mkdir build &amp;&amp; cd build &amp;&amp; cmake .. &amp;&amp; make -j4
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          交叉编译时传一个工具链文件 cmake -DCMAKE_TOOLCHAIN_FILE=aarch64.cmake，文件里设定 CMAKE_SYSTEM_NAME=Linux 与编译器路径，其余全自动。库依赖查询用 <strong>pkg-config</strong>：gcc main.c $(pkg-config --cflags --libs libgpiod) 一条命令拿到头文件路径和链接参数。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">完整工作流：电脑编译 → 部署到板</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>装工具链</strong><br>电脑（Ubuntu/WSL）：sudo apt install gcc-aarch64-linux-gnu gdb-multiarch；板子上：sudo apt install libgpiod-dev（提供头文件和 .so）</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>交叉编译</strong><br>电脑上 make CC=aarch64-linux-gnu-gcc，产出 ARM64 的 app；file app 确认架构无误</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>部署</strong><br>scp app pi@板子IP:~/ 上传，板子上 chmod +x app 加执行权限</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>远程调试（进阶）</strong><br>板子跑 gdbserver :1234 ./app，电脑 gdb-multiarch 连 target remote 板子IP:1234，断点单步全可用</div></div>
+        </div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>版本不匹配两类报错</strong>：① 运行报 version GLIBC_2.38 not found——工具链的 glibc 比板子系统新，改用老工具链或在板子上编译；② 选了软浮点工具链（gnueabi）链接硬浮点板（需要 hf）——库 ABI 不兼容直接链接失败。装工具链时对准板子系统位数与浮点约定。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>小项目直接板载编译也香</strong>：只编一两个 .c 文件时，直接 ssh 上去 gcc 一条命令完成，省去工具链维护。规模到十几文件、或引入 OpenCV/ROS 等大库时再切交叉编译。判断标准：本机编译超过 1 分钟就该换。</div></div>
+      ` },
+
+      // ===== linux-05 Linux GPIO 控制 =====
+      { id: 'linux-05', title: 'Linux GPIO 控制', desc: 'sysfs（旧）与 libgpiod（新）、命令行操作、C 编程控制 LED 与按键', icon: '💡', tags: ['核心', '实战'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">从"直接捅寄存器"到"向内核申请"</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          在 STM32 上点灯是写寄存器或调 HAL 函数（见 <a href="javascript:void(0)" onclick="App.loadDetail('emb-04')">GPIO 与中断系统</a>）；在 Linux 上，GPIO 由<strong>内核统一管理</strong>，用户程序必须通过驱动接口申请使用。这是两种范式的根本差异：MCU 里你是唯一的主人，Linux 里你是向内核申请资源的客户。理解这一点，后面 I2C/SPI/设备树全部同理。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">两代接口：sysfs 与 libgpiod</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>sysfs（/sys/class/gpio）</th><th>libgpiod（/dev/gpiochipN）</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">状态</td><td>2016 年起标记废弃</td><td>现行标准（内核 4.8+）</td></tr>
+            <tr><td class="font-medium">编号方式</td><td>全局整数编号，跨板不通用</td><td>芯片名+行号（gpiochip0 的 line17），稳定</td></tr>
+            <tr><td class="font-medium">并发安全</td><td>多进程抢同一引脚无保护</td><td>内核仲裁，申请制</td></tr>
+            <tr><td class="font-medium">事件检测</td><td>轮询 value 文件（笨重）</td><td>阻塞/中断式边沿事件</td></tr>
+            <tr><td class="font-medium">使用入口</td><td>echo/cat 文件</td><td>gpiod 工具 + C/Python 库</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">命令行操作：一分钟点亮 LED</h4>
+        <div class="code-block"><span class="code-comment"># libgpiod 自带工具（v1.x 命令名）——先装：sudo apt install gpiod</span>
+gpiodetect                 <span class="code-comment"># 列出所有 GPIO 控制器芯片</span>
+gpioinfo gpiochip0         <span class="code-comment"># 看每根线的编号/名称/当前占用</span>
+
+<span class="code-comment"># line 17 输出高电平（LED 亮），active-low 时自动取反</span>
+gpioset gpiochip0 17=1
+
+<span class="code-comment"># 读按键（输入），x 表示退出前不释放</span>
+gpioget gpiochip0 27
+
+<span class="code-comment"># —— 对照：旧 sysfs 写法（新内核可能已不可用）——</span>
+<span class="code-comment"># echo 17 &gt; /sys/class/gpio/export; echo out &gt; direction; echo 1 &gt; value</span>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">硬件准备：LED 限流电阻</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          GPIO 输出 3.3V、最大安全电流约 8~16mA，LED 压降约 2.0V（红）。限流电阻由欧姆定律（<a href="javascript:void(0)" onclick="App.loadDetail('circ-01')">电路基础</a>）直接得出：
+        </p>
+        <div class="formula-block">
+          $$R = \\frac{V_{cc} - V_f}{I_f} = \\frac{3.3 - 2.0}{10\\,\\text{mA}} = 130\\,\\Omega \\;\\Rightarrow\\; \\text{选 E24 系列 } 150\\,\\Omega$$
+          <div class="text-sm text-gray-500 mt-2">电流取 10mA 留裕量；电阻偏大只是稍暗，偏小则可能损坏 GPIO。工具箱的 LED 限流电阻计算器可直接算</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">C 编程：libgpiod 控制 LED 闪烁</h4>
+        <div class="code-block"><span class="code-comment">// blink.c —— gcc blink.c -o blink -lgpiod 后 sudo 或 gpio 组用户运行</span>
+<span class="code-keyword">#include</span> <span class="code-string">&lt;gpiod.h&gt;</span>
+<span class="code-keyword">#include</span> <span class="code-string">&lt;unistd.h&gt;</span>
+
+<span class="code-keyword">int</span> <span class="code-func">main</span>(<span class="code-keyword">void</span>) {
+    <span class="code-keyword">struct</span> gpiod_chip *chip = <span class="code-func">gpiod_chip_open_by_name</span>(<span class="code-string">"gpiochip0"</span>);
+    <span class="code-keyword">struct</span> gpiod_line *led  = <span class="code-func">gpiod_chip_get_line</span>(chip, 17);
+
+    <span class="code-comment">// 以输出模式独占申请，标签便于排查占用者</span>
+    <span class="code-keyword">if</span> (<span class="code-func">gpiod_line_request_output</span>(led, <span class="code-string">"blink-demo"</span>, 0) &lt; 0)
+        <span class="code-keyword">return</span> 1;
+
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = 0; i &lt; 10; i++) {
+        <span class="code-func">gpiod_line_set_value</span>(led, 1);  <span class="code-comment">// 亮</span>
+        <span class="code-func">sleep</span>(1);
+        <span class="code-func">gpiod_line_set_value</span>(led, 0);  <span class="code-comment">// 灭</span>
+        <span class="code-func">sleep</span>(1);
+    }
+    <span class="code-func">gpiod_line_release</span>(led);         <span class="code-comment">// 释放，别的进程才能申请</span>
+    <span class="code-func">gpiod_chip_close</span>(chip);
+    <span class="code-keyword">return</span> 0;
+}
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">按键输入：轮询 vs 事件</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>轮询</strong>：循环 gpiod_line_get_value 读电平，简单但空耗 CPU；按键需软件消抖——检测到变化后延时 10~20ms 再确认</li>
+          <li><strong>事件等待</strong>：gpiod_line_request_both_edges_events + gpiod_line_event_wait 阻塞休眠，边沿到来才唤醒，CPU 占用为零，等价于 MCU 的外部中断</li>
+          <li><strong>上拉/下拉</strong>：申请时指定 GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_UP 等，按键另一端接地，省掉外部电阻</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">实战五步：从接线到现象</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>接线</strong><br>GPIO17 → 150Ω 电阻 → LED 正极 → LED 负极 → GND（别直接接，烧口）</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>认引脚</strong><br>查板子的引脚图：物理针脚号 ≠ GPIO 编号（40Pin 的 11 号物理脚是 GPIO17）</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>命令行验证</strong><br>gpioset gpiochip0 17=1 / =0 手动切换，LED 应立即响应——硬件链路先通</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>程序验证</strong><br>交叉编译或板载编译 blink，加入 gpio 组后运行，观察 10 次闪烁</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>排查</strong><br>不亮就三查：gpioinfo 里该行是否被占用（显示消费者名）、正负极是否接反、cat /sys/kernel/debug/gpio 看内核视角电平</div></div>
+        </div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>两代接口的坑</strong>：① 新发行版的 sysfs 已被移除，老教程的 echo 17 &gt; export 报错 No such file，改用 gpiod 工具；② libgpiod 1.x 和 2.x 的命令与 API 不兼容（2.x 命令是 gpioset gpiochip0 --mode=wait 17=1 的风格），先用 gpiodetect --version 确认版本再查文档；③ 板子默认引脚可能被串口/I2C 复用占用，gpioinfo 显示 consumer 非空的行不要抢。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>实时性边界</strong>：Linux 用户态翻转 GPIO 的抖动在毫秒级（调度+系统调用开销），做软件 PWM 会看到明显毛刺。需要 μs 级精确定时/波形时：硬件 PWM 外设、内核模块，或干脆交给 STM32——这也是"Linux 大脑 + MCU 实时小脑"混合架构流行的原因。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>Python 快速原型</strong>：sudo apt install python3-libgpiod 后三行代码点灯，适合先验证接线再写 C：import gpiod; line = gpiod.find_line("GPIO17"); line.request(consumer="demo", type=gpiod.LINE_REQ_DIR_OUT); line.set_value(1)。</div></div>
+      ` },
+
+      // ===== linux-06 I2C/SPI/UART 设备驱动（概览版，待扩充）=====
+      { id: 'linux-06', title: 'I2C/SPI/UART 设备访问', desc: 'i2c-tools/spidev/串口设备，用 C 读写传感器芯片（概览版）', icon: '🔌', tags: ['实战'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">总线外设：Linux 把芯片变成文件和命令</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          GPIO 之后，真正的外设世界在三条总线上：<strong>I2C</strong>（传感器标配）、<strong>SPI</strong>（高速器件）、<strong>UART</strong>（调试与模块）。协议时序本身见 <a href="javascript:void(0)" onclick="App.loadDetail('emb-06')">通信接口协议</a>，本节关注 Linux 的访问方式：I2C 走 i2c-dev + 工具，SPI 走 spidev 字符设备，UART 就是 /dev/tty* 文件——与 <a href="javascript:void(0)" onclick="App.loadDetail('linux-05')">GPIO 的 libgpiod</a> 一样，全部遵循"设备即文件"。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">I2C：i2c-tools 四件套</h4>
+        <div class="code-block"><span class="code-comment"># 扫总线 1 上的器件地址（-- 强制扫描，会与正在工作的器件通信）</span>
+sudo i2cdetect -y 1
+<span class="code-comment">#   典型输出：44 是 SHT30 温湿度，76 是 BMP280 气压计</span>
+
+sudo i2cget -y 1 0x44 0x00       <span class="code-comment"># 读 0x44 器件 0x00 寄存器</span>
+sudo i2cset -y 1 0x44 0x30 0xA2  <span class="code-comment"># 写寄存器（配置测量模式）</span>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          C 编程用 &lt;linux/i2c-dev.h&gt; 的 read/write/ioctl 接口；更好的方式是给芯片写/配内核驱动，之后直接 cat /sys/bus/i2c/devices/.../temp1_input 读温度——<a href="javascript:void(0)" onclick="App.loadDetail('sns-02')">电阻式传感器</a>与<a href="javascript:void(0)" onclick="App.loadDetail('sns-06')">温度传感器</a>的原理在传感器板块，Linux 只是换了访问姿势。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">SPI 与 UART</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>SPI</strong>：设备树启用 spi0 后出现 /dev/spidev0.0，ioctl 配模式/速度/位序后全双工 read/write（详见 <a href="javascript:void(0)" onclick="App.loadDetail('linux-07')">设备树</a>一节的启用示例）</li>
+          <li><strong>UART</strong>：USB 转串口是 /dev/ttyUSB0，板载串口是 /dev/ttyTHS1 或 /dev/ttyS0；先 stty -F /dev/ttyUSB0 115200 cs8 -cstopb 配参数，再 cat/&gt; 或 minicom 交互</li>
+          <li><strong>权限</strong>：同 GPIO 的套路，把用户加入 i2c/spi/dialout 组，免 sudo 运行程序</li>
+        </ul>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>🚧 概览版说明</strong>：本节为路线图概览，SHT30/BMP280 完整 C 驱动例程、spidev 全双工传输代码、串口 termios 编程将在 v1.0.x 扩充到 4500+ 字符。当前可先完成 <a href="javascript:void(0)" onclick="App.loadDetail('linux-05')">GPIO 实战</a>，用 i2cdetect 扫到器件即算入门。</div></div>
+      ` },
+
+      // ===== linux-07 设备树（概览版，待扩充）=====
+      { id: 'linux-07', title: '设备树（Device Tree）', desc: 'DTS 语法、节点与属性、Overlay 机制、启用 SPI/I2C 外设（概览版）', icon: '🌳', tags: ['核心', '难点'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">设备树：把硬件清单"写"给内核</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          同一份 Linux 内核镜像要跑几百种板子，板子接了什么硬件怎么告诉内核？答案不是每个板子编一个内核，而是<strong>设备树</strong>：一个描述硬件（CPU、内存、总线、引脚）的数据结构，内核启动时解析它来注册设备——这是 <a href="javascript:void(0)" onclick="App.loadDetail('dig-14')">Verilog HDL</a>式的"硬件描述"思想在软件侧的对应物。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">最小 DTS 语法与编译</h4>
+        <div class="code-block"><span class="code-comment">// 节点 { 属性 = 值; }；label 便于被引用（&amp;label）</span>
+&amp;i2c1 {
+    status = <span class="code-string">"okay"</span>;
+    sht30: sht30@44 {
+        compatible = <span class="code-string">"sensirion,sht30"</span>;
+        reg = <span class="code-number">&lt;0x44&gt;</span>;          <span class="code-comment">/* I2C 地址 */</span>
+    };
+};
+
+<span class="code-comment"># 源码 .dts → 板级包含 .dtsi → 编译成 .dtb 供内核使用</span>
+dtc -I dts -O dtb -o my.dtb my.dts   <span class="code-comment"># 反向：-I dtb -O dts 反编译学习</span>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>compatible</strong>：内核靠这个字符串匹配驱动（平台总线匹配规则），写错驱动不加载</li>
+          <li><strong>Overlay（覆盖片）</strong>：不改动厂商基础树，只追加差量的 .dtbo——树莓派放 /boot/overlays/，config.txt 里 dtoverlay=xxx 启用，是添加自定义外设的标准姿势</li>
+          <li><strong>验证</strong>：改完重启后 ls /sys/bus/i2c/devices/ 应出现 1-0044 节点，dmesg | grep -i sht 看驱动注册日志</li>
+        </ul>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>🚧 概览版说明</strong>：pinctrl 引脚复用、phandle 中断引用、完整自定义 Overlay 实战（给 <a href="javascript:void(0)" onclick="App.loadDetail('linux-06')">I2C 传感器</a>加节点）将在后续版本扩充。入门阶段会改 status/写 overlay 即可覆盖 80% 场景。</div></div>
+      ` },
+
+      // ===== linux-08 进程间通信 IPC（概览版，待扩充）=====
+      { id: 'linux-08', title: '进程间通信（IPC）', desc: '管道/FIFO/共享内存/信号，多进程传感器采集架构（概览版）', icon: '🔄', tags: ['核心'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">IPC：让采集、控制、显示各司其职</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          Linux 的天然优势是<strong>多进程</strong>：传感器采集、数据入库、Web 服务可以拆成独立进程，一个崩溃不影响全局。进程地址空间隔离，协作就需要通信机制——<a href="javascript:void(0)" onclick="App.loadDetail('os-03')">进程同步与通信</a>讲过理论，本节是板子上的落地。
+        </p>
+
+        <div class="formula-block">
+          典型采集架构：<br>[采集进程] --FIFO/共享内存--&gt; [入库进程] --SQLite--&gt; [Web 进程] --HTTP--&gt; 手机<br>进程崩了由 systemd 拉起（见 <a href="javascript:void(0)" onclick="App.loadDetail('linux-03')">Shell 脚本</a>节），数据流单向清晰
+        </div>
+
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>机制</th><th>特点</th><th>适用</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">管道 |</td><td>单向、字节流、仅亲缘进程</td><td>shell 命令链</td></tr>
+            <tr><td class="font-medium">命名管道 FIFO</td><td>文件系统路径、任意进程</td><td>无亲缘进程的简单数据流</td></tr>
+            <tr><td class="font-medium">共享内存 shm</td><td>零拷贝、最快，需配信号量同步</td><td>高频数据（IMU 原始流）</td></tr>
+            <tr><td class="font-medium">消息队列</td><td>带类型边界、有优先级</td><td>命令分发</td></tr>
+            <tr><td class="font-medium">信号 signal</td><td>异步通知、携带信息极少</td><td>优雅退出（SIGTERM 触发清理）</td></tr>
+            <tr><td class="font-medium">Unix socket</td><td>本地全双工、像写网络程序</td><td>同机服务间调用（ROS2 底层）</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="code-block"><span class="code-comment"># FIFO 三行体验：一个终端读，另一个写</span>
+mkfifo /tmp/chan
+cat &gt; /tmp/chan        <span class="code-comment"># 终端 1：写端（回车发送）</span>
+cat /tmp/chan          <span class="code-comment"># 终端 2：读端实时收到</span>
+        </div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>🚧 概览版说明</strong>：共享内存 + 信号量的 C 完整例程（shmget/semctl 或 POSIX shm_open）、信号处理函数写法将在后续扩充。先掌握 FIFO 即可搭建 <a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">实战项目</a>的数据通道。</div></div>
+      ` },
+
+      // ===== linux-09 嵌入式 Linux 系统构建（概览版，待扩充）=====
+      { id: 'linux-09', title: '嵌入式 Linux 系统构建', desc: 'Buildroot/Yocto 入门、内核裁剪、自定义 rootfs 与 SD 卡分区（概览版）', icon: '🏗️', tags: ['进阶'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">从"用系统"到"造系统"</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          官方系统好用但臃肿：几百个你用不到的包占空间、留攻击面。产品化（或纯粹想学透）时要<strong>自己构建整套系统</strong>——这正是 <a href="javascript:void(0)" onclick="App.loadDetail('os-09')">分布式与现代 OS</a>所说"内核 + 用户态分层"的一次亲手组装。
+        </p>
+
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>维度</th><th>Buildroot</th><th>Yocto</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">定位</td><td>简单固件构建框架</td><td>完整发行版工厂</td></tr>
+            <tr><td class="font-medium">上手</td><td>小时级，make menuconfig</td><td>周级，概念多（layer/recipe）</td></tr>
+            <tr><td class="font-medium">产物</td><td>单一固件镜像</td><td>可维护的软件包仓库</td></tr>
+            <tr><td class="font-medium">适合</td><td>个人项目、单板小批量</td><td>公司产品、多板族管理</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="formula-block">
+          SD 卡产物布局：<br>[FAT32 boot 分区] bootloader + 内核 zImage + 设备树 .dtb<br>[EXT4 rootfs 分区] /bin /etc /lib ... + 你的应用（<a href="javascript:void(0)" onclick="App.loadDetail('linux-02')">目录结构</a>那节的 FHS 就在这里成形）<br>构建四步：make defconfig 选板 → menuconfig 裁剪包 → make（下载/交叉编译/打包全自动）→ dd 写卡
+        </div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2 a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>🚧 概览版说明</strong>：Buildroot 完整实操（BR2 包选择、自定义 overlay 添加自己的程序、内核 menuconfig 裁剪、生成 SD 镜像）将在 v1.0.x 扩充。学习路径建议：先玩透 <a href="javascript:void(0)" onclick="App.loadDetail('linux-01')">现成系统</a>，再回来造轮子。</div></div>
+      ` },
+
+      // ===== linux-10 实战项目：传感器 Web 监控（概览版，待扩充）=====
+      { id: 'linux-10', title: '实战项目：传感器 Web 监控', desc: 'GPIO/I2C 采集 + SQLite 存储 + Web 服务器 + 手机查看（项目蓝图）', icon: '🎯', tags: ['实战', '综合'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">毕业项目：把前九节串成一台设备</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          学完命令行、脚本、交叉编译、GPIO/I2C、IPC，就该做一个完整作品了：一台<strong>传感器网络监控终端</strong>——采集温湿度，入库存储，浏览器实时查看曲线，手机也能访问。项目覆盖嵌入式 Linux 工程师岗位 JD 的高频关键词。
+        </p>
+
+        <div class="formula-block">
+          系统架构（数据单向流 + systemd 托管）：<br>[采集器] 每 30s 读 SHT30（<a href="javascript:void(0)" onclick="App.loadDetail('linux-06')">I2C</a>）→ FIFO（<a href="javascript:void(0)" onclick="App.loadDetail('linux-08')">IPC</a>）<br>[入库器] 读 FIFO → INSERT 进 SQLite（时序表 + 每日轮转）<br>[Web] mongoose/nginx + ECharts 画曲线（<a href="javascript:void(0)" onclick="App.loadDetail('net-05')">HTTP 应用层</a>）→ 局域网手机直接访问<br>三个进程各写一个 systemd service，崩溃自动重启
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">数据库表与关键技术点</h4>
+        <div class="code-block"><span class="code-comment">-- SQLite 单文件数据库，交叉编译 sqlite3 或 apt 安装</span>
+<span class="code-keyword">CREATE TABLE</span> logs (
+    id      <span class="code-keyword">INTEGER PRIMARY KEY AUTOINCREMENT</span>,
+    ts      <span class="code-keyword">DATETIME DEFAULT</span> (datetime(<span class="code-string">'now'</span>,<span class="code-string">'localtime'</span>)),
+    temp    <span class="code-keyword">REAL</span>,           <span class="code-comment">-- 温度 ℃</span>
+    humi    <span class="code-keyword">REAL</span>            <span class="code-comment">-- 湿度 %RH</span>
+);
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>Web 选型</strong>：轻量用 mongoose（单文件 C 库，几百行代码起 HTTP 服务）；功能多用 nginx + php/CGI；前后端分离则 Flask/FastAPI</li>
+          <li><strong>安全底线</strong>：只监听局域网、改默认密码、HTTP 加 Basic Auth——公网暴露的 IoT 设备平均存活时间不到 1 小时</li>
+          <li><strong>可靠性</strong>：SQLite WAL 模式抗断电；日志限额清理（<a href="javascript:void(0)" onclick="App.loadDetail('linux-03')">cron</a>）；看门狗重启兜底</li>
+        </ul>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>🚧 项目蓝图说明</strong>：本节给出架构与选型，完整代码工程（采集器 C 源码 + FIFO 协议 + sqlite 函数 + mongoose 路由 + 前端图表页）将在 v1.0.x 分阶段扩充。动手顺序建议：先用 <a href="javascript:void(0)" onclick="App.loadDetail('sns-06')">温度传感器</a>知识接好硬件，跑通"采集→打印"再逐层加存储和 Web。</div></div>
+      ` },
+
+    ],
+  },
+
+  // ========== 3D 打印与数字化制造（v0.9.3 新增）==========
+  'digital-mfg': {
+    title: '3D 打印与数字化制造',
+    subtitle: 'FDM 工艺、切片参数、材料选型——机器人与电子项目零件的快速制造',
+    icon: '🖨️',
+    sections: [
+      // ===== print-01 3D 打印技术概述 =====
+      { id: 'print-01', title: '3D 打印技术概述', desc: 'FDM/SLA/SLM 工艺对比、打印全流程、机器人零件应用场景', icon: '🖨️', tags: ['核心', '入门'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">从数字模型到实体零件：增材制造入门</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          传统加工是"减材"——从一整块料上切削掉多余部分；3D 打印是"增材"——一层一层堆出零件。对机器人爱好者这意味着：<strong>晚上画的支架，早上就能装上机器人</strong>。它与你已学的课程天然互补——<a href="javascript:void(0)" onclick="App.loadDetail('robo-01')">机器人学导论</a>里的结构件、<a href="javascript:void(0)" onclick="App.loadDetail('circ-11')">运放电路</a>的外壳、传感器支架，都能自己造。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">主流工艺对比：选型先选原理</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>工艺</th><th>原理</th><th>层精度</th><th>材料</th><th>整机价</th><th>适合场景</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">FDM 熔融挤出</td><td>热塑线材熔化挤出，逐层堆积</td><td>0.1~0.3mm</td><td>PLA/PETG/ABS/TPU</td><td>¥800~3000</td><td>功能件、外壳、夹具（入门首选）</td></tr>
+            <tr><td class="font-medium">SLA/DLP 光固化</td><td>紫外激光/投影逐层固化树脂</td><td>0.025~0.05mm</td><td>光敏树脂</td><td>¥1500~5000</td><td>手板模型、精细纹理、牙科</td></tr>
+            <tr><td class="font-medium">SLS 粉末烧结</td><td>激光烧结尼龙粉末</td><td>0.1mm</td><td>尼龙 PA12</td><td>数十万级</td><td>工业小批量、复杂内腔</td></tr>
+            <tr><td class="font-medium">SLM 金属熔融</td><td>激光熔化金属粉末</td><td>0.03~0.1mm</td><td>钛/铝/不锈钢</td><td>百万元级</td><td>航空航天、医疗植入</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">FDM 为什么是入门首选</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          FDM（Fused Deposition Modeling，熔融沉积成型）的原理一句话讲完：<strong>数控的热熔胶枪</strong>——步进电机把线材推进喷头，加热到熔点后从 0.4mm 喷嘴挤出，三轴运动系统按轨迹铺出一层，工作台下降一个层高，再铺下一层。整个过程就是 <a href="javascript:void(0)" onclick="App.loadDetail('motor-05')">步进电机</a> + 温控 + 运动控制的综合应用，学 3D 打印顺带复习机电知识。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">耗材量怎么算：挤出体积守恒</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          挤出机送进多少体积，喷嘴就必须铺出多少体积（体积守恒）。已知线材直径 $d$、打印线宽 $w$、层高 $h$，走完路径长度 $l_{path}$ 需要送进的线材长度为：
+        </p>
+        <div class="formula-block">
+          $$L_{filament} = \\frac{w \\cdot h \\cdot l_{path}}{\\pi (d/2)^2}$$
+          <div class="text-sm text-gray-500 mt-2">例：1.75mm 线材（$A=2.405\\,mm^2$），线宽 0.45、层高 0.2，走 1m 路径需 $\\frac{0.45 \\times 0.2 \\times 1000}{2.405} \\approx 37\\,mm$ 线材——切片器就是按这个式子算耗材和成本的</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">打印全流程五步</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>建模</strong><br>Fusion 360 / FreeCAD 建三维模型，导出 STL/OBJ 网格文件（后续 <a href="javascript:void(0)" onclick="App.loadDetail('print-02')">建模节</a>详述）</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>切片</strong><br>切片器把模型切成一层层轨迹，生成 G-code（详见 <a href="javascript:void(0)" onclick="App.loadDetail('print-03')">切片参数</a>节）</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>打印</strong><br>机器解析 G-code：调平、加热、逐层铺设；小件 30 分钟~几小时</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>后处理</strong><br>取件、去支撑、打磨/攻丝；SLA 还需清洗+二次固化</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>验证装配</strong><br>卡尺量关键尺寸，装到机构上试配，偏差超差则调参数或改模型重打</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">机器人/电子项目的典型应用</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>传感器支架</strong>：摄像头/激光雷达的可调角度底座，钻孔装 M3 螺丝即可固定</li>
+          <li><strong>电子外壳</strong>：<a href="javascript:void(0)" onclick="App.loadDetail('circ-11')">电路实验</a>的防护盒，留 USB/网线开口，卡扣或螺丝柱闭合</li>
+          <li><strong>电池盒/线缆管理</strong>：扎线座、走线槽，机器人内部整洁全靠它</li>
+          <li><strong>传动零件</strong>：联轴器、齿轮（PLA 够用，受力件用 PETG/尼龙）</li>
+          <li><strong>快速夹具</strong>：装配定位工装，比铝件加工便宜两个数量级、快两天</li>
+        </ul>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>SLA 的隐形门槛</strong>：光固化打印件必须酒精清洗 + 紫外二次固化才能用，未固化树脂有皮肤刺激性，操作要戴手套、房间通风。FDM 的 PLA 则几乎无异味、可堆肥——这也是入门选 FDM 的重要理由。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>选购口诀</strong>：入门 FDM 看"三线一点"——直线导轨/光轴、同步带质量、整机刚度，加一个"首层自动调平"。预算千元内已有带自动调平和断电续打的可靠机型；别为遥控车式的花哨功能买单。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>增材 vs 减材的本质区别</strong>：3D 打印的成本对复杂度不敏感——镂空、内腔、随形结构几乎不多花钱；CNC 则复杂度越高越贵。所以设计思路要反过来：优先利用镂空减重、一体打印铰链/柔性结构，这是"面向制造的设计"（DFM）在增材时代的版本。</div></div>
+      ` },
+
+      // ===== print-02 FDM 打印机结构与原理 =====
+      { id: 'print-02', title: 'FDM 打印机结构与原理', desc: '运动系统、步进电机与脉冲当量、挤出/热端/热床、Marlin/Klipper 固件', icon: '⚙️', tags: ['核心', '工程'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">拆一台 FDM 打印机：五大部分</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          把打印机拆开看，就是一门机电综合实践课：<strong>运动系统</strong>（三轴 + 限位）、<strong>挤出系统</strong>（送丝 + 热端）、<strong>热床</strong>（恒温平台）、<strong>控制主板</strong>（驱动 + 温控 + G-code 解释）、<strong>电源</strong>（24V/350W 左右）。每一部分都能在课程里找到对应章节，其中步进电机与你的 <a href="javascript:void(0)" onclick="App.loadDetail('motor-05')">步进电机</a>知识完全同源。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">运动系统四种架构</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>架构</th><th>结构</th><th>特点</th><th>代表机型</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">笛卡尔 i3</td><td>龙门移动，床前后走 Y</td><td>结构直观、易改装，床在动影响高速</td><td>Ender 系列</td></tr>
+            <tr><td class="font-medium">CoreXY</td><td>皮带交叉，喷头动床不动</td><td>轻快精准，高速主流</td><td>Voron、Bambu X1</td></tr>
+            <tr><td class="font-medium">H-bot</td><td>单皮带 U 形布局</td><td>结构简单但有力矩不对称</td><td>早期 DIY</td></tr>
+            <tr><td class="font-medium">Delta 三角洲</td><td>三臂并联</td><td>颜值高、Z 向快，标定复杂</td><td>Kossel</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">脉冲当量：步进系统如何走出 0.01mm</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          1.8° 步距角的电机每转 200 整步，配 16 细分驱动器后每转 3200 微步。丝杠导程 $P$（mm/转）下，<strong>一个脉冲对应的位移</strong>：
+        </p>
+        <div class="formula-block">
+          $$\\Delta s = \\frac{P}{200 \\, n_{micro}}, \\qquad \\text{例：} \\Delta s = \\frac{8\\,mm}{200 \\times 16} = 2.5\\,\\mu m$$
+          <div class="text-sm text-gray-500 mt-2">$n_{micro}$ 为细分数。皮带传动则 $\\Delta s = \\frac{z \\cdot p_{belt}}{200\\,n}$（20 齿×2mm 皮带 ≈ 8mm/转，与例同值）——这就是固件里 M92 步数标定的数学来源</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          注意精度 ≠ 准确度：微步分辨率 2.5μm，但机械回差/皮带弹性让实际定位精度在 ±0.05~0.1mm——比 <a href="javascript:void(0)" onclick="App.loadDetail('print-01')">SLA</a> 粗，装夹具够用，做精密配合就要靠 <a href="javascript:void(0)" onclick="App.loadDetail('print-03')">参数与公差</a>补偿。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">挤出系统与热端</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>直接挤出 vs 远程（Bowden）</strong>：挤出机装在喷头上（推得准、能打 TPU）vs 装在机身上用特氟龙管传力（喷头轻、能高速，但柔性料难打）——现在新机主流回归直接挤出</li>
+          <li><strong>热端三件套</strong>：加热块（铝块+加热棒+热敏电阻）、喷嘴（黄铜 0.4mm 默认，硬化钢打碳纤料）、散热鳍片+风扇（防止线材在熔区上方提前软化堵塞）</li>
+          <li><strong>热床</strong>：PEI 弹性板是主流，第一层粘附靠温度——PLA 60℃ / PETG 80℃ / ABS 100℃；温度不足是翘边首因</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">温控：一路 PID 调温回路</h4>
+        <div class="formula-block">
+          $$u(t) = K_p e(t) + K_i \\int_0^t e(\\tau)\\,d\\tau + K_d \\frac{de(t)}{dt}$$
+          <div class="text-sm text-gray-500 mt-2">喷嘴目标 200℃ 时 PID 以约 10Hz 周期调加热棒功率（PWM），把温度波动压在 ±1℃ 内。温度震荡（PID 参数差）会周期性改变挤出粘度，表现为表面"年轮"纹——原理详见<a href="javascript:void(0)" onclick="App.loadDetail('act-14')">PID 控制</a></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">固件：Marlin vs Klipper</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>维度</th><th>Marlin</th><th>Klipper</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">运行位置</td><td>8 位主板单片机</td><td>树莓派等主机 + 单片机分工</td></tr>
+            <tr><td class="font-medium">运算能力</td><td>有限，高细分步频受限</td><td>主机算力，轻松 256 细分</td></tr>
+            <tr><td class="font-medium">特色</td><td>成熟稳定、装机即用</td><td>输入整形（消除振纹）、压力提前、CAN 工具板</td></tr>
+            <tr><td class="font-medium">适合</td><td>普通用户、老机器</td><td>追求速度与表面质量的玩家</td></tr>
+          </tbody>
+        </table></div>
+        <div class="code-block"><span class="code-comment"># G-code 一瞥：切片器输出的机器语言（详见下一节）</span>
+G28                 <span class="code-comment"># 回原点（三轴碰限位开关）</span>
+M104 S200           <span class="code-comment"># 喷嘴升温到 200℃</span>
+M190 S60            <span class="code-comment"># 热床升温到 60℃（等到位）</span>
+G1 Z0.2 F3000       <span class="code-comment"># Z 抬到 0.2（首层层高），速度 3000mm/min</span>
+G1 X50 Y50 E5 F1500 <span class="code-comment"># 移动并挤出 5mm 线材（画线段）</span>
+M107                <span class="code-comment"># 关风扇</span>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">新机首次调试五步</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>机械检查</strong><br>皮带张力（手指拨动回弹清脆）、螺丝紧固、导轨油润滑</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>调平</strong><br>自动调平后仍需纸片法微调四角：A4 纸在喷嘴下能抽动但有阻尼</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>Z 偏移校准</strong><br>打印单层方块，首层过压（透明/起楞）调高，不粘（散线）调低，一次到位终身受益</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>进料测试</strong><br>升温后手动进 50mm，退料量卡尺核对——挤出标定不准则一切尺寸都歪</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>首层试打</strong><br>切片一个 20mm 单层方块，表面均匀无间隙即交付使用；再打一个 3DBenchy 小船综合验收</div></div>
+        </div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>高温与堵头</strong>：喷嘴 200~260℃、热床 60~110℃，裸手别碰加热区；降温后再清喷嘴。堵头多因散热风扇坏了或换料时拉断在喉管里——症状是电机"咔哒"空转不出料，处理：升温到料温+10℃ 用针通喷嘴、或整段拆热端清理。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>跨节互链</strong>：步进电机矩频特性、细分驱动原理详见 <a href="javascript:void(0)" onclick="App.loadDetail('motor-05')">步进电机</a>；温控回路就是 <a href="javascript:void(0)" onclick="App.loadDetail('act-14')">PID 控制</a>的实物案例；Klipper 主机正好可以是 <a href="javascript:void(0)" onclick="App.loadDetail('linux-01')">Linux 开发板</a>——两块学习内容一台机器全串起来了。</div></div>
+      ` },
+
+      // ===== print-03 切片软件与参数 =====
+      { id: 'print-03', title: '切片软件与参数', desc: 'Cura/PrusaSlicer/Orca、层高/填充/支撑/速度调参、G-code 结构', icon: '🍰', tags: ['核心', '实战'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">切片：把模型翻译成机器语言</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          同一台打印机，参数不同打出来的零件能差出一个等级——<strong>切片是 3D 打印的"驾驶技术"</strong>。切片器（Slicer）读入 STL 网格，用水平面逐层截交得到轮廓，轮廓内规划填充轨迹，最后输出 G-code 给 <a href="javascript:void(0)" onclick="App.loadDetail('print-02')">打印机</a>执行。理解每个参数对质量和时间的影响，比换机器更划算。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">三大切片器对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>软件</th><th>特点</th><th>适合</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">UltiMaker Cura</td><td>用户最多、教程海量、插件生态全</td><td>入门与通用场景</td></tr>
+            <tr><td class="font-medium">PrusaSlicer</td><td>参数体系严谨、支撑丰富、组织打印强</td><td>进阶用户</td></tr>
+            <tr><td class="font-medium">OrcaSlicer</td><td>新锐，校准向导全、多机适配、速度快</td><td>追求效率的玩家</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">核心参数详解</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>参数</th><th>常用范围</th><th>对质量的影响</th><th>对时间的影响</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">层高</td><td>0.12/0.2/0.28mm</td><td>越小表面越细、Z 精度越高</td><td>近似反比（0.12 比 0.2 慢 60%+）</td></tr>
+            <tr><td class="font-medium">壁厚（外墙数）</td><td>0.8~1.2mm（2~3 墙）</td><td>决定零件强度大头与尺寸稳定性</td><td>增加外墙线性增加时间</td></tr>
+            <tr><td class="font-medium">填充率</td><td>15~25%（网格/Gyroid）</td><td>超 30% 强度收益骤减（强度主要在外壳）</td><td>15%→40% 时间约 +1/4</td></tr>
+            <tr><td class="font-medium">速度</td><td>外墙面 30~60mm/s</td><td>过快→振纹、堵头、层间粘接差</td><td>正比（首层建议减半）</td></tr>
+            <tr><td class="font-medium">支撑</td><td>默认/树状</td><td>接触面留疤；树状耗材少疤痕小</td><td>增加打印与拆除时间</td></tr>
+            <tr><td class="font-medium">裙边/筏</td><td>Skirt/Brim</td><td>Brim 防翘边首推（只多 3mm 边）</td><td>几乎忽略</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">两个估算公式：层数与时间</h4>
+        <div class="formula-block">
+          $$N_{layers} = \\left\\lceil \\frac{H}{h_{layer}} \\right\\rceil, \\qquad T \\;\\approx\\; N_{layers} \\cdot \\bar t_{layer} \\;\\Rightarrow\\; \\frac{T_{0.12}}{T_{0.2}} \\approx \\frac{0.2}{0.12} \\approx 1.67$$
+          <div class="text-sm text-gray-500 mt-2">模型高 H=20mm：0.2mm 层高 100 层，0.12mm 要 167 层——精细模式时间 +67%，切片器预估时间即由此累加而来</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          <strong>45° 悬垂规则</strong>：相对竖直面外扩不超过 45° 的悬垂可以免支撑直接打（每层压住下层约 50%）；水平桥接超过 ~5mm 才需要支撑。建模时把悬空结构设计成 45° 内的斜面，能省下整个支撑后处理——这是"面向打印的设计"的核心法则。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">G-code 文件结构</h4>
+        <div class="code-block"><span class="code-comment">;FLAVOR:Marlin —— 头部是注释元数据（切片器/参数快照）</span>
+M104 S200                        <span class="code-comment"># 起始：设喷嘴温度（不等温）</span>
+G28                              <span class="code-comment"># 三轴归零</span>
+M190 S60                         <span class="code-comment"># 等热床到 60℃</span>
+;TYPE:WALL-OUTER                <span class="code-comment"># 分段注释：外墙段开始</span>
+G1 F1800 X12.3 Y45.6 E1.2345     <span class="code-comment"># 挤出移动：E 是累计送丝量(mm)</span>
+;LAYER:1                         <span class="code-comment"># 第 1 层开始</span>
+;TYPE:INFILL                     <span class="code-comment"># 填充段</span>
+M104 S0                          <span class="code-comment"># 结束代码：关加热、抬喷头、退料</span>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">实战：手机支架一次切好</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>摆件</strong><br>承重面朝向热床打印（省支撑、表面好）；旋转到最小投影面积朝下，再确认无 &gt;45° 悬垂</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>选参数</strong><br>功能件：0.2 层高 + 3 外墙 + 20% Gyroid + 树状支撑自动；展示件换 0.12 层高</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>检查预估</strong><br>看切片预览：耗材重量（估成本）、总时间、支撑是否压到外观面</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>导出打印</strong><br>U 盘 / WiFi 传到机器；前 5 分钟盯首层——首层失败占全部失败的 70%</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>复盘归档</strong><br>把成功参数"另存为配置"（如 PLA_结构件_0.2），下次一键复用</div></div>
+        </div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>参数冲突的连锁反应</strong>：速度 ↑ 配回抽不变 → 拉丝；层高 0.28 配 0.4 喷嘴 → 层间粘不牢（层高别超喷嘴直径 75%）；温度不变速度 ↑ → 挤出不足表面发白。调参一次只动一个变量，否则找不到病根。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>首层万能口诀</strong>：看"线的形状"——首层应是微微压扁的扁线，相邻线刚好相接。线圆分离 = Z 太高；透明有楞 = Z 太低。先调 Z 偏移再查 <a href="javascript:void(0)" onclick="App.loadDetail('print-02')">热床温度</a>，首层稳了成功率立涨。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>可变层高</strong>：PrusaSlicer/Orca 支持同一模型分区域不同层高——平缓面 0.12、陡峭面 0.2，配合"自适应层高"，表面质量敏感件的打印时间可省 30%。</div></div>
+      ` },
+
+      // ===== print-04 材料选择 =====
+      { id: 'print-04', title: '材料选择', desc: 'PLA/PETG/ABS/TPU/PC 特性对比、收缩补偿、选材决策与干燥存储', icon: '🧵', tags: ['核心', '工程'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">材料决定零件的"性格"</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          同一个模型，PLA 打出来是硬而脆的展示件，TPU 打出来是可以弯折的缓冲垫，PC 打出来是能上 120℃ 环境的结构件。<strong>选材 = 选机械性能 + 选打印难度</strong>的折中。本节给出对比表、收缩补偿公式和一条决策路线，把 <a href="javascript:void(0)" onclick="App.loadDetail('print-01')">工艺概述</a>里的应用场景直接对号入座。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">五大常用材料对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>材料</th><th>喷嘴/热床</th><th>强度与韧性</th><th>耐温</th><th>难度</th><th>典型用途</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">PLA</td><td>200℃/60℃</td><td>硬而脆，不易翘</td><td>~55℃</td><td>★ 最易</td><td>外壳、支架、手板（入门首选）</td></tr>
+            <tr><td class="font-medium">PETG</td><td>235℃/80℃</td><td>韧性优于 PLA</td><td>~70℃</td><td>★★ 易拉丝</td><td>功能件、户外件、防护罩</td></tr>
+            <tr><td class="font-medium">ABS</td><td>250℃/100℃</td><td>强韧、可打磨</td><td>~95℃</td><td>★★★ 翘边</td><td>机械件、车用件（需封闭腔）</td></tr>
+            <tr><td class="font-medium">TPU</td><td>225℃/50℃</td><td>弹性体（95A~85A）</td><td>~80℃</td><td>★★★ 柔料</td><td>缓冲垫、柔性联轴、轮胎</td></tr>
+            <tr><td class="font-medium">PC</td><td>270℃/110℃</td><td>最强最韧耐冲击</td><td>~120℃</td><td>★★★★</td><td>工程受力件、高温环境</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">收缩补偿：让尺寸打准</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          材料从熔点冷到室温会收缩，收缩率 $\\epsilon$ 由材料决定（PLA ≈ 0.3%、ABS ≈ 0.5~0.8%、PC ≈ 0.8%）。要让成品达到设计尺寸 $D_{model}$，需<strong>放大后打印</strong>：
+        </p>
+        <div class="formula-block">
+          $$D_{print} = D_{model}\\,(1 + \\epsilon), \\qquad \\text{例：ABS 件 } D_{model} = 100\\,mm \\Rightarrow D_{print} = 100 \\times 1.006 = 100.6\\,mm$$
+          <div class="text-sm text-gray-500 mt-2">配套成本估算：$C = \\dfrac{m}{1000} \\cdot c_{kg}$，切片器给出耗材克数 $m$，1kg PLA 约 ¥60~90——手机支架约 30g 合 ¥2</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">选材决策路线</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>问温度</strong><br>环境 &gt;60℃（车内、电机旁）直接排除 PLA，转 PETG/ABS/PC</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>问载荷</strong><br>静态轻载→PLA；冲击/反复弯折→PETG；重载连接件→ABS 或 PC；要弹性变形→TPU</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>问环境</strong><br>户外 UV/雨水→PETG（PLA 晒久变脆）；化学接触查材料兼容表</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>问设备</strong><br>开放式机器慎选 ABS（翘边几乎必败）；TPU 需直接挤出机 + 慢速 20~30mm/s</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">吸水与干燥：被忽视的质量杀手</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          所有热塑线材都吸湿，吸水后打印时水汽汽化产生气泡、拉丝、表面粗糙、层间强度下降（PETG/TPU/PA 尤其严重）。干燥参数：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>材料</th><th>干燥温度</th><th>干燥时长</th><th>保存方式</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">PLA</td><td>45~50℃</td><td>4~6h</td><td rowspan="4">密封袋/箱 + 干燥剂；打印中可放烘干盒恒湿</td></tr>
+            <tr><td class="font-medium">PETG</td><td>60~65℃</td><td>4~6h</td></tr>
+            <tr><td class="font-medium">TPU</td><td>50~55℃</td><td>6~8h</td></tr>
+            <tr><td class="font-medium">ABS/PC</td><td>70~80℃</td><td>4~6h</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">特殊材料速览</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>碳纤维增强（PLA-CF/PETG-CF）</strong>：刚度极高、表面哑光质感，但磨蚀喷嘴——必须换硬化钢喷嘴</li>
+          <li><strong>PVA / HIPS 支撑料</strong>：水溶（PVA）/柠檬烯溶（HIPS），双喷头打印复杂内腔后泡掉支撑，接触面光洁</li>
+          <li><strong>PA 尼龙</strong>：强度/耐磨之王但吸水极快，打印前必须彻底干燥，建议进阶后再玩</li>
+        </ul>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>ABS 双坑</strong>：① 收缩大 → 大平底件四角翘起，必须热床 100℃ + 封闭腔体 + Brim；② 打印过程释放苯乙烯气味，房间要通风或装活性炭过滤。另外外观件注意"同材料不同批次色差"，一次买够同批号。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>一卷 PLA 走天下</strong>：学习期 90% 的件（支架/外壳/齿轮盒）用 PLA 就够，难伺候的材料等有明确需求再上。判断线材质量的土办法：线径波动 ±0.05mm 内、盘绕无死弯、打印 2h 无气泡声——好料比神秘参数更能提升成功率。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>食品安全误区</strong>："PLA 食品级"指树脂本体合规，但打印层间缝隙藏菌、黄铜喷嘴含铅，成品并不适合长期直接接触食品。真有需求：成品涂食品级环氧封孔，或换不锈钢喷嘴并专机专用。</div></div>
+      ` },
+
+    ],
+  },
+
 };
 
 // 所有可统计进度的知识点 id 清单（用于进度统计）
 // 第 0 期只先放入板块分组入口，待各板块内容填充后这里会自动从 CourseData 派生
 const AllKnowledgeIds = (function () {
   const ids = [];
-  ['advanced-math', 'linear-algebra', 'circuit-basics', 'analog-circuit', 'digital-circuit', 'control', 'data-structure', 'modern-control', 'signals', 'sensor', 'embedded-sys', 'cpp', 'os', 'network', 'robotics', 'probability', 'power-electronics', 'motor-drive'].forEach(group => {
+  ['advanced-math', 'linear-algebra', 'circuit-basics', 'analog-circuit', 'digital-circuit', 'control', 'data-structure', 'modern-control', 'signals', 'sensor', 'embedded-sys', 'cpp', 'os', 'network', 'robotics', 'probability', 'power-electronics', 'motor-drive', 'linux-dev', 'digital-mfg'].forEach(group => {
     CourseData[group]?.sections?.forEach(s => ids.push(s.id));
   });
   return ids;
@@ -11404,6 +12289,24 @@ const KnowledgeDeps = {
   'robo-08': ['robo-05', 'act-12'],     // 动力学控制 <- 动力学 + 系统校正
   'robo-09': ['robo-04', 'sns-07'],     // 力控制 <- 雅可比 + 运动传感器
   'robo-10': ['robo-06', 'motor-08'],   // 移动机器人 <- 轨迹 + 伺服
+
+  // === Linux 开发板实战内部链（v0.9.3 新增）===
+  'linux-01': ['emb-01'],               // 入门 <- 嵌入式概述
+  'linux-02': ['linux-01', 'os-06'],    // 命令行/文件系统 <- 入门 + 文件系统
+  'linux-03': ['linux-02', 'os-01'],    // Shell 脚本 <- 命令行 + OS 概述
+  'linux-04': ['linux-02', 'cpp-05'],   // 交叉编译 <- 命令行 + 预处理
+  'linux-05': ['linux-04', 'emb-04'],   // GPIO <- 交叉编译 + GPIO 与中断
+  'linux-06': ['linux-05', 'emb-06', 'sns-02'],  // I2C/SPI/UART <- GPIO + 通信协议 + 传感器
+  'linux-07': ['linux-06', 'dig-14'],   // 设备树 <- 总线访问 + HDL
+  'linux-08': ['linux-03', 'os-03'],    // IPC <- Shell + 进程同步
+  'linux-09': ['linux-04', 'os-09'],    // 系统构建 <- 交叉编译 + 现代 OS
+  'linux-10': ['linux-05', 'linux-06', 'net-05'], // 实战项目 <- GPIO + 总线 + 应用层
+
+  // === 3D 打印内部链（v0.9.3 新增）===
+  'print-01': [],                       // 工艺概述（无前置）
+  'print-02': ['print-01', 'motor-05'], // FDM 结构 <- 概述 + 步进电机
+  'print-03': ['print-02'],             // 切片 <- FDM 结构
+  'print-04': ['print-03'],             // 材料 <- 切片
 };
 
 // 自测题库（按 section id 索引）。每节配 5-8 题，含概念/计算/陷阱三类。

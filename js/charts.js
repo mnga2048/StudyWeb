@@ -515,13 +515,14 @@ Charts.register('rc-waveform', function(el) {
 Charts.register('knowledge-graph', function(el) {
   if (typeof echarts === 'undefined' || typeof KnowledgeDeps === 'undefined') return;
 
-  const SECTION_GROUPS = ['advanced-math','linear-algebra','probability','circuit-basics','analog-circuit','digital-circuit','power-electronics','motor-drive','control','modern-control','embedded-sys','sensor','robotics','data-structure','signals','cpp','os','network'];
+  const SECTION_GROUPS = ['advanced-math','linear-algebra','probability','circuit-basics','analog-circuit','digital-circuit','power-electronics','motor-drive','control','modern-control','embedded-sys','sensor','linux-dev','robotics','digital-mfg','data-structure','signals','cpp','os','network'];
   const groupColors = {
     'advanced-math': '#dc2626', 'linear-algebra': '#d97706', 'probability': '#be185d',
     'circuit-basics': '#2563eb', 'analog-circuit': '#059669', 'digital-circuit': '#eab308',
     'power-electronics': '#0d9488', 'motor-drive': '#ea580c',
     'control': '#7c3aed', 'modern-control': '#6d28d9',
     'embedded-sys': '#475569', 'sensor': '#0891b2', 'robotics': '#be123c',
+    'linux-dev': '#111827', 'digital-mfg': '#c026d3',
     'data-structure': '#1e293b', 'signals': '#0369a1',
     'cpp': '#b91c1c', 'os': '#15803d', 'network': '#1d4ed8'
   };
@@ -621,7 +622,7 @@ Charts.register('knowledge-graph', function(el) {
 Charts.register('mastery-heatmap', function(el) {
   if (typeof echarts === 'undefined') return;
 
-  const SECTION_GROUPS = ['advanced-math','linear-algebra','probability','circuit-basics','analog-circuit','digital-circuit','power-electronics','motor-drive','control','modern-control','embedded-sys','sensor','robotics','data-structure','signals','cpp','os','network'];
+  const SECTION_GROUPS = ['advanced-math','linear-algebra','probability','circuit-basics','analog-circuit','digital-circuit','power-electronics','motor-drive','control','modern-control','embedded-sys','sensor','linux-dev','robotics','digital-mfg','data-structure','signals','cpp','os','network'];
 
   function getMasteryScore(sectionId) {
     const status = Progress.get(sectionId) || 'pending';
@@ -715,7 +716,7 @@ Charts.register('progress-ring', function(el) {
 Charts.register('group-progress-bar', function(el) {
   if (typeof echarts === 'undefined') return;
 
-  const SECTION_GROUPS = ['advanced-math','linear-algebra','probability','circuit-basics','analog-circuit','digital-circuit','power-electronics','motor-drive','control','modern-control','embedded-sys','sensor','robotics','data-structure','signals','cpp','os','network'];
+  const SECTION_GROUPS = ['advanced-math','linear-algebra','probability','circuit-basics','analog-circuit','digital-circuit','power-electronics','motor-drive','control','modern-control','embedded-sys','sensor','linux-dev','robotics','digital-mfg','data-structure','signals','cpp','os','network'];
   const labels = [];
   const completed = [];
   const learning = [];
@@ -757,7 +758,7 @@ Charts.register('group-progress-bar', function(el) {
 Charts.register('accuracy-bar', function(el) {
   if (typeof echarts === 'undefined') return;
 
-  const SECTION_GROUPS = ['advanced-math','linear-algebra','probability','circuit-basics','analog-circuit','digital-circuit','power-electronics','motor-drive','control','modern-control','embedded-sys','sensor','robotics','data-structure','signals','cpp','os','network'];
+  const SECTION_GROUPS = ['advanced-math','linear-algebra','probability','circuit-basics','analog-circuit','digital-circuit','power-electronics','motor-drive','control','modern-control','embedded-sys','sensor','linux-dev','robotics','digital-mfg','data-structure','signals','cpp','os','network'];
   const data = [];
 
   SECTION_GROUPS.forEach(gId => {

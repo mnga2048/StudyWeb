@@ -6,7 +6,10 @@ const Search = {
   // 构建搜索索引：遍历所有板块的知识点
   buildIndex() {
     this.index = [];
-    const groups = ['advanced-math', 'linear-algebra', 'circuit-basics', 'analog-circuit', 'digital-circuit', 'control', 'data-structure'];
+    // v0.9.3 修复：原来只索引 7 个旧板块，漏掉 prob/os/net/cpp 等 11 个板块。
+    // 改为从 CourseData.nav 派生分组清单，后续新增板块自动纳入索引。
+    const groups = [];
+    (CourseData.nav || []).forEach(n => { if (n.children) n.children.forEach(c => groups.push(c.id)); });
     groups.forEach(g => {
       CourseData[g]?.sections?.forEach(s => {
         this.index.push({ id: s.id, title: s.title, desc: s.desc, tags: s.tags || [], target: s.id });

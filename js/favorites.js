@@ -28,7 +28,7 @@ const Favorites = {
     const groups = ['advanced-math', 'linear-algebra', 'probability',
       'circuit-basics', 'analog-circuit', 'digital-circuit', 'power-electronics',
       'motor-drive', 'control', 'modern-control',
-      'embedded-sys', 'sensor', 'robotics',
+      'embedded-sys', 'sensor', 'linux-dev', 'robotics', 'digital-mfg',
       'data-structure', 'signals', 'cpp', 'os', 'network'];
     for (const g of groups) {
       const section = CourseData[g]?.sections?.find(s => s.id === id);

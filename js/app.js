@@ -7,7 +7,8 @@
   const SECTION_GROUPS = ['advanced-math', 'linear-algebra', 'probability',
     'circuit-basics', 'analog-circuit', 'digital-circuit', 'power-electronics',
     'motor-drive', 'control', 'modern-control',
-    'embedded-sys', 'sensor', 'robotics',
+    'embedded-sys', 'sensor', 'linux-dev', 'robotics',
+    'digital-mfg',
     'data-structure', 'signals', 'cpp', 'os', 'network'];
   // 分组中文名映射（用于面包屑）
   const GROUP_LABELS = {
@@ -18,7 +19,9 @@
     'motor-drive': '电机与拖动',
     'control': '自动控制原理', 'modern-control': '现代控制理论',
     'embedded-sys': '嵌入式系统', 'sensor': '传感器与检测',
+    'linux-dev': 'Linux 开发板实战',
     'robotics': '机器人学导论',
+    'digital-mfg': '3D 打印与数字化制造',
     'data-structure': '数据结构', 'signals': '信号与系统',
     'cpp': 'C/C++ 程序设计', 'os': '操作系统', 'network': '计算机网络',
   };
@@ -716,6 +719,15 @@
     renderPage(pageId);
     if (window.innerWidth < 1024) closeSidebar();
     return false;
+  };
+
+  // 跨节互链入口（v0.9.3 修复：data.js 全站 570+ 处 onclick="App.loadDetail(...)" 此前未定义，点击无效）
+  window.App = {
+    loadDetail(id) {
+      renderPage(id);            // renderPage 对知识点 id 自动走 renderDetailPage 分支
+      window.scrollTo({ top: 0 });
+      return false;
+    }
   };
 
   // ========== 侧边栏（桌面折叠 + 移动抽屉） ==========
