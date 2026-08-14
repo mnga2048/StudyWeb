@@ -3340,6 +3340,50 @@ const CourseData = {
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <div><strong>线性化的意义</strong>：线性系统可以用拉氏变换、传递函数、叠加原理等强大工具分析。非线性系统则很难有通用解法。工程中"先在工作点线性化，再用线性理论分析"是最常用的方法论——但要注意线性化只在工作点附近有效，大幅偏离时结果不可靠。</div>
         </div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：直流电机的微分方程（写字机的主线对象）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          写字机/打印机/3D 打印机的执行核心都是直流电机（<a href="javascript:void(0)" onclick="App.loadDetail('motor-01')">电机与拖动</a>）。以电枢电压 $u_a$ 为输入、角速度 $\\omega$ 为输出，列写两个方程：
+        </p>
+        <div class="formula-block">
+          回路方程（KVL）：$u_a = R_a i_a + L_a \\frac{di_a}{dt} + e_a$，其中反电动势 $e_a = C_e\\omega$<br>
+          机械方程（牛顿）：$J\\frac{d\\omega}{dt} = T_e - B\\omega$，其中电磁转矩 $T_e = C_T i_a$
+          <div class="text-sm text-gray-500 mt-2">电气侧与机械侧通过 $e_a = C_e\\omega$、$T_e = C_T i_a$ 两条机电耦合定律连接——"能量守恒"在电机里的化身</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          消去中间变量 $i_a$、$e_a$、$T_e$，得到二阶微分方程（电感 $L_a$ 常可忽略，退化为一阶）：
+        </p>
+        <div class="formula-block">
+          $$L_a J \\frac{d^2\\omega}{dt^2} + (R_a J + L_a B)\\frac{d\\omega}{dt} + (R_a B + C_e C_T)\\omega = C_T u_a$$
+          <div class="text-sm text-gray-500 mt-2">忽略 $L_a$ 后即典型一阶系统：$T_m \\dot{\\omega} + \\omega = K u_a$，机电时间常数 $T_m = \\frac{R_a J}{R_a B + C_e C_T}$——这正是 <a href="javascript:void(0)" onclick="App.loadDetail('act-05')">act-05 一阶系统</a>分析的工程原型</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">线性化数值例题：阀门流量特性</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>问题设定</strong><br>阀门流量 $Q = f(a)$ 与开度 $a$ 呈非线性：$Q = 2\\sqrt{a}$（单位归一）。工作点 $a_0 = 0.25$（$Q_0 = 1$），求小偏差模型</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>求导</strong><br>$f'(a) = \\frac{1}{\\sqrt{a}}$，在工作点处 $f'(0.25) = \\frac{1}{0.5} = 2$</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>线性化模型</strong><br>$\\Delta Q \\approx 2\\,\\Delta a$——工作点附近，开度每增 1%，流量约增 2%（相对量）</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>有效性检查</strong><br>开度偏离 ±10%（$\\Delta a = 0.025$）：真实 $Q(0.275) = 1.0488$，线性估计 $Q = 1.05$，误差 &lt;0.2% ✓；偏离 ±50% 时误差超 10% ✗——线性化"管小不管大"</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">一张表看透四大物理系统</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>系统</th><th>惯性元件</th><th>阻尼元件</th><th>弹性元件</th><th>激励源</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">机械平移</td><td>质量 m</td><td>阻尼器 b</td><td>弹簧 k</td><td>力 f</td></tr>
+            <tr><td class="font-medium">机械转动</td><td>转动惯量 J</td><td>粘性摩擦 B</td><td>扭簧</td><td>转矩 T</td></tr>
+            <tr><td class="font-medium">电气 RLC</td><td>电感 L</td><td>电阻 R</td><td>电容 1/C</td><td>电压 u</td></tr>
+            <tr><td class="font-medium">热系统</td><td>热容 C</td><td>热阻</td><td>—</td><td>热流</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          同构的意义：写字机笔架（m-b-k）的振荡问题，可以直接套用 <a href="javascript:void(0)" onclick="App.loadDetail('circ-05')">RLC 电路</a>的结论（阻尼比、谐振），反之亦然——<strong>换元件不换方程</strong>，这是建模能力的杠杆。
+        </p>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>建模三陷阱</strong>：① 忘记标定正方向——力与位移反向列方程，符号全错，先画受力图定坐标系；② 随手忽略小参数——$L_a$ 忽略要给条件（电气时间常数远小于机电时间常数），<a href="javascript:void(0)" onclick="App.loadDetail('act-04')">结构图</a>里被降阶的极点在高速时会复活；③ 拿线性化模型外推大工况——工作点变了斜率 $f'(x_0)$ 就变，增益调度（分段线性化）才是正解。</div>
+        </div>
       ` },
       { id: 'act-03', title: '拉普拉斯变换与传递函数', desc: '拉氏变换查表、性质、传函', icon: 'ℒ', tags: ['核心工具'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">拉氏变换：把微分方程变成代数方程</h3>
@@ -3448,9 +3492,75 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
           一个典型的电机速度-电流双闭环系统：外环速度控制器 $G_1$，内环电流控制器 $G_2$，电机 $G_3$，电流反馈 $H_1$，速度反馈 $H_2$。用等效变换：
         </p>
+        <div class="svg-figure">
+          <svg width="620" height="150" viewBox="0 0 620 150">
+            <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="currentColor"/></marker></defs>
+            <text x="10" y="42" font-size="13" fill="currentColor">R(s)→</text>
+            <circle cx="52" cy="38" r="10" fill="none" stroke="currentColor" stroke-width="1.5"/>
+            <text x="49" y="42" font-size="11" fill="currentColor">−</text>
+            <line x1="62" y1="38" x2="95" y2="38" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+            <rect x="95" y="23" width="52" height="30" rx="4" fill="none" stroke="#7c3aed" stroke-width="1.5"/>
+            <text x="121" y="42" text-anchor="middle" font-size="12" fill="currentColor">G₁</text>
+            <line x1="147" y1="38" x2="175" y2="38" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+            <circle cx="185" cy="38" r="10" fill="none" stroke="currentColor" stroke-width="1.5"/>
+            <text x="182" y="42" font-size="11" fill="currentColor">−</text>
+            <line x1="195" y1="38" x2="222" y2="38" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+            <rect x="222" y="23" width="52" height="30" rx="4" fill="none" stroke="#7c3aed" stroke-width="1.5"/>
+            <text x="248" y="42" text-anchor="middle" font-size="12" fill="currentColor">G₂</text>
+            <line x1="274" y1="38" x2="300" y2="38" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+            <rect x="300" y="23" width="52" height="30" rx="4" fill="none" stroke="#7c3aed" stroke-width="1.5"/>
+            <text x="326" y="42" text-anchor="middle" font-size="12" fill="currentColor">G₃</text>
+            <line x1="352" y1="38" x2="420" y2="38" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+            <text x="424" y="42" font-size="13" fill="currentColor">Y(s)</text>
+            <circle cx="386" cy="38" r="3" fill="currentColor"/>
+            <line x1="386" y1="38" x2="386" y2="90" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="355" y="75" width="52" height="30" rx="4" fill="none" stroke="#059669" stroke-width="1.5"/>
+            <text x="381" y="94" text-anchor="middle" font-size="12" fill="currentColor">H₁</text>
+            <line x1="386" y1="105" x2="386" y2="122" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="386" y1="122" x2="185" y2="122" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="185" y1="122" x2="185" y2="48" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+            <circle cx="386" cy="38" r="3" fill="currentColor"/>
+            <line x1="386" y1="38" x2="386" y2="14" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="386" y1="14" x2="52" y2="14" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="26" y="0" width="52" height="28" rx="4" fill="none" stroke="#059669" stroke-width="1.5"/>
+            <text x="52" y="18" text-anchor="middle" font-size="12" fill="currentColor">H₂</text>
+            <line x1="52" y1="28" x2="52" y2="28" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="52" y1="14" x2="52" y2="28" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="52" y1="14" x2="52" y2="28" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="52" y1="0" x2="52" y2="14" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          <p class="svg-caption">图：速度-电流双闭环结构图（外环 H₂ 包住内环 H₁——写字机 <a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">linux-12 电流环</a>即此结构）</p>
+        </div>
         <div class="formula-block">
           先化简内环：$G_{inner} = \\frac{G_2 G_3}{1 + G_2 G_3 H_1}$<br>
           再化简外环：$T(s) = \\frac{G_1 G_{inner}}{1 + G_1 G_{inner} H_2} = \\frac{G_1 G_2 G_3}{1 + G_2 G_3 H_1 + G_1 G_2 G_3 H_2}$
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          展开后分母只有三项是因为两个回路<strong>相互接触</strong>（共享 G₂→G₃ 这段通路）——若互不接触还会多出 $L_1 L_2$ 乘积项，这正是梅逊公式要处理的情况。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">等效变换实战：引出点跨方框移动</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>目标</strong><br>把"从 $G_2$ 输出端引出的信号"改为"从 $G_2$ 输入端引出"，且保证引出信号不变</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>引出点前移（跨过 $G_2$）</strong><br>原引出信号 = $G_2 \\times$（输入）。从输入端引出后再补一个 $\\frac{1}{G_2}$ 环节，两者等价——<strong>前移除以 G</strong></div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>对偶：比较点移动</strong><br>比较点前移乘 $G$（前移后的支路要补 $G$ 才能在新位置减出同样的差），后移除以 $G$；引出点前移除以 $G$、后移乘 $G$——两组规律方向相反，最易记混</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>自检方法</strong><br>变换后任取一个外部输入，沿信号路标走到每个输出端点，验证传递关系与变换前一致——不等就错了，别背口诀靠验证</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">梅逊公式数值例题（含不接触回路）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          某信号流图：两条前向通路 $P_1 = G_1 G_2 G_3$、$P_2 = G_1 G_4$；三个回路 $L_1 = -G_2 H_1$、$L_2 = -G_3 H_2$、$L_3 = -G_4 H_3$，其中 $L_3$ 与 $L_1$、$L_2$ 均不接触，$L_1$ 与 $L_2$ 相互接触。
+        </p>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>特征式</strong><br>$\\Delta = 1 - (L_1 + L_2 + L_3) + L_3(L_1 + L_2)$ 的符号展开：$\\Delta = 1 + G_2 H_1 + G_3 H_2 + G_4 H_3 + G_4 H_3(G_2 H_1 + G_3 H_2)$——注意不接触对 $L_1 L_3$、$L_2 L_3$ 取<strong>正号</strong>（两个负号相乘）</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>余因子</strong><br>$P_1$ 与所有回路接触 → $\\Delta_1 = 1$；$P_2 = G_1 G_4$ 不接触 $L_1, L_2$ → $\\Delta_2 = 1 - (L_1 + L_2) = 1 + G_2 H_1 + G_3 H_2$</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>结果</strong><br>$T(s) = \\frac{G_1 G_2 G_3 \\cdot 1 + G_1 G_4 (1 + G_2 H_1 + G_3 H_2)}{\\Delta}$——如果漏掉 $\\Delta_2 \\ne 1$ 这一项，答案必然错</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>验算技巧</strong><br>令所有 $H = 0$（去掉反馈）：应退化为两条并联前向通路 $T = G_1(G_2 G_3 + G_4)$——一步就能查出前向通路是否找全</div></div>
+        </div>
+
+        <div class="info-box tip">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>结构图 ↔ 信号流图怎么选</strong>：结构图保留"物理模块"（控制器/电机/传感器），适合工程设计沟通；信号流图只剩节点与增益，回路一目了然，适合套梅逊公式。<strong>考试先用 30 秒把结构图翻译成信号流图再数回路</strong>，漏项率大降。求出的 $T(s)$ 接着进 <a href="javascript:void(0)" onclick="App.loadDetail('act-05')">时域分析</a>或 <a href="javascript:void(0)" onclick="App.loadDetail('act-10')">频域分析</a>。</div>
         </div>
       ` },
       { id: 'act-05', title: '时域分析', desc: '一阶/二阶系统、σ%/ts/tr', icon: '📈', tags: ['核心'], goals: { eng: true }, content: `
