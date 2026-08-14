@@ -81,14 +81,14 @@ const CourseData = {
     subtitle: '应试 + 工程双线并重，覆盖数学、电子、控制、嵌入式、计算机、制造工艺六大领域，系统化学习笔试考点与工程实战知识',
     intro: '本项目把分散在课本、视频、真题里的专业课知识，系统化、可视化、可交互地组织在一个网站里。数学基础侧重笔试考点与计算训练，电路/控制/嵌入式侧重工程应用与实战仿真，数据结构与信号处理兼顾统考大纲与工程面试，Linux 开发板与 3D 打印板块覆盖动手实战。配合交互图表、公式可视化、自测练习，做到"看得懂、记得牢、用得上"。',
     features: [
-      { icon: '📚', label: '系统化知识', desc: '20 大板块、208 知识点按学习路径递进，应试与工程双标签筛选' },
+      { icon: '📚', label: '系统化知识', desc: '20 大板块、210 知识点按学习路径递进，应试与工程双标签筛选' },
       { icon: '🧮', label: '公式与计算', desc: 'KaTeX 渲染全部数学/控制公式，配套矩阵计算器、拉氏变换查表等工具' },
       { icon: '🎮', label: '交互可视化', desc: '伯德图、根轨迹、卡诺图、运放电路、排序算法等可交互原理图' },
       { icon: '✏️', label: '自测与真题', desc: '每节配自测题，数学/数电/模电含笔试真题模块，支持错题记录' },
     ],
     stats: [
       { label: '知识板块', value: '20', color: 'blue' },
-      { label: '知识点', value: '208', color: 'green' },
+      { label: '知识点', value: '210', color: 'green' },
       { label: '交互图表', value: '16', color: 'purple' },
       { label: '计算工具', value: '28', color: 'orange' },
     ],
@@ -615,7 +615,7 @@ const CourseData = {
         </div>
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <div><strong>画图先行</strong>：求面积一定要先画草图，确定曲线的交点和上下位置关系。上方函数减下方函数，不能搞反。极坐标面积公式中的 $\frac{1}{2}$ 容易遗忘。</div>
+          <div><strong>画图先行</strong>：求面积一定要先画草图，确定曲线的交点和上下位置关系。上方函数减下方函数，不能搞反。极坐标面积公式中的 $\\frac{1}{2}$ 容易遗忘。</div>
         </div>
 
         <h4 class="font-medium mt-6 mb-2">旋转体的体积</h4>
@@ -6308,7 +6308,7 @@ const CourseData = {
         </ul>
 
         <h4 class="font-medium mt-6 mb-2">核心性能指标</h4>
-        <div class="formula-block">传感器的六项关键指标：<br><strong>精度</strong>：测量值与真值的接近程度，用满量程误差表示：$\delta = \frac{\Delta_{max}}{y_{FS}} \times 100\%$<br><strong>灵敏度</strong>：输出变化量与输入变化量之比：$S = \frac{\Delta y}{\Delta x}$<br><strong>线性度</strong>：实际特性曲线偏离理想直线的最大程度<br><strong>分辨率</strong>：能检测到的最小输入变化量<div class="text-sm text-gray-500 mt-2">精度是系统级指标，灵敏度是器件级指标，两者不可混淆</div></div>
+        <div class="formula-block">传感器的六项关键指标：<br><strong>精度</strong>：测量值与真值的接近程度，用满量程误差表示：$\\delta = \\frac{\\Delta_{max}}{y_{FS}} \\times 100\%$<br><strong>灵敏度</strong>：输出变化量与输入变化量之比：$S = \\frac{\\Delta y}{\\Delta x}$<br><strong>线性度</strong>：实际特性曲线偏离理想直线的最大程度<br><strong>分辨率</strong>：能检测到的最小输入变化量<div class="text-sm text-gray-500 mt-2">精度是系统级指标，灵敏度是器件级指标，两者不可混淆</div></div>
 
         <h4 class="font-medium mt-6 mb-2">性能指标详解</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>指标</th><th>定义</th><th>单位</th><th>越高越好</th><th>影响因素</th></tr></thead><tbody><tr><td class="font-medium">精度</td><td>测量误差占满量程百分比</td><td>%FS</td><td>✓</td><td>非线性、迟滞、重复性综合</td></tr><tr><td class="font-medium">灵敏度</td><td>输出/输入变化量之比</td><td>mV/V 等</td><td>✓</td><td>转换原理、结构参数</td></tr><tr><td class="font-medium">线性度</td><td>实际曲线与拟合直线最大偏差</td><td>%FS</td><td>✓（越小越好）</td><td>传感器原理、制造工艺</td></tr><tr><td class="font-medium">分辨率</td><td>可检测最小输入变化</td><td>与输入同</td><td>✓（越小越好）</td><td>噪声、A/D 位数</td></tr><tr><td class="font-medium">响应时间</td><td>输出达到稳态 63.2% 的时间</td><td>ms/s</td><td>✓（越小越好）</td><td>热惯性、机械惯性</td></tr><tr><td class="font-medium">漂移</td><td>零点或灵敏度随时间/温度变化</td><td>%/°C</td><td>✓（越小越好）</td><td>材料老化、温度变化</td></tr></tbody></table></div>
@@ -6328,31 +6328,31 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">电阻式传感器通过改变电阻值来反映被测量的变化——应变片反映力/形变，热电阻反映温度，电位器反映位移。它们结构简单、成本低、可靠性高，是工业检测中应用最广泛的传感器类型。配合<a href="javascript:void(0)" onclick="App.loadDetail('circ-06')">惠斯通电桥</a>和<a href="javascript:void(0)" onclick="App.loadDetail('ana-07')">仪表放大器</a>，可实现高精度测量。</p>
 
         <h4 class="font-medium mt-6 mb-2">电阻应变片</h4>
-        <div class="formula-block">电阻应变效应：导体受力变形时电阻变化<br>$\frac{\Delta R}{R} = K \cdot \varepsilon$<br>其中 $K$ 为灵敏度系数（金属丝约 2，半导体约 50~200）<br>$\varepsilon = \frac{\Delta L}{L}$ 为应变（无量纲）<div class="text-sm text-gray-500 mt-2">金属应变片线性好、稳定；半导体应变片灵敏度高但温漂大</div></div>
+        <div class="formula-block">电阻应变效应：导体受力变形时电阻变化<br>$\\frac{\\Delta R}{R} = K \\cdot \\varepsilon$<br>其中 $K$ 为灵敏度系数（金属丝约 2，半导体约 50~200）<br>$\\varepsilon = \\frac{\\Delta L}{L}$ 为应变（无量纲）<div class="text-sm text-gray-500 mt-2">金属应变片线性好、稳定；半导体应变片灵敏度高但温漂大</div></div>
 
         <h4 class="font-medium mt-6 mb-2">惠斯通电桥</h4>
-        <div class="formula-block">惠斯通电桥输出电压：<br>$U_o = U_i \cdot \frac{R_1 R_3 - R_2 R_4}{(R_1+R_2)(R_3+R_4)}$<br>单臂工作（$R_1$ 变化 $\Delta R$）：$U_o \approx \frac{U_i}{4} \cdot \frac{\Delta R}{R}$<br>全桥工作（四臂均变化）：$U_o \approx U_i \cdot \frac{\Delta R}{R}$<div class="text-sm text-gray-500 mt-2">全桥灵敏度是单臂的 4 倍，且具有温度补偿功能</div></div>
+        <div class="formula-block">惠斯通电桥输出电压：<br>$U_o = U_i \\cdot \\frac{R_1 R_3 - R_2 R_4}{(R_1+R_2)(R_3+R_4)}$<br>单臂工作（$R_1$ 变化 $\\Delta R$）：$U_o \\approx \\frac{U_i}{4} \\cdot \\frac{\\Delta R}{R}$<br>全桥工作（四臂均变化）：$U_o \\approx U_i \\cdot \\frac{\\Delta R}{R}$<div class="text-sm text-gray-500 mt-2">全桥灵敏度是单臂的 4 倍，且具有温度补偿功能</div></div>
 
         <h4 class="font-medium mt-6 mb-2">常用电阻式传感器</h4>
         <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
-          <li><strong>金属应变片</strong>：测力/应力/扭矩，灵敏度系数 $K\approx 2$，需配合电桥使用</li>
-          <li><strong>半导体应变片</strong>：压阻效应，灵敏度系数 $K\approx 100$，但温度系数大</li>
+          <li><strong>金属应变片</strong>：测力/应力/扭矩，灵敏度系数 $K\\approx 2$，需配合电桥使用</li>
+          <li><strong>半导体应变片</strong>：压阻效应，灵敏度系数 $K\\approx 100$，但温度系数大</li>
           <li><strong>热电阻（RTD）</strong>：Pt100（0°C 时 100Ω），测温范围 -200~650°C，精度高</li>
           <li><strong>电位器式</strong>：滑动变阻器测位移，输出电压与位移成正比，结构最简单</li>
         </ul>
 
         <h4 class="font-medium mt-6 mb-2">电桥的三种工作方式</h4>
-        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>方式</th><th>桥臂数</th><th>输出电压</th><th>灵敏度</th><th>温度补偿</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">单臂</td><td>1 臂工作</td><td>$\frac{U_i}{4}\cdot\frac{\Delta R}{R}$</td><td>低</td><td>无</td><td>简单测量</td></tr><tr><td class="font-medium">半桥</td><td>2 臂工作</td><td>$\frac{U_i}{2}\cdot\frac{\Delta R}{R}$</td><td>中</td><td>部分</td><td>弯曲测量</td></tr><tr><td class="font-medium">全桥</td><td>4 臂工作</td><td>$U_i\cdot\frac{\Delta R}{R}$</td><td>最高</td><td>完全</td><td>高精度测量</td></tr></tbody></table></div>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>方式</th><th>桥臂数</th><th>输出电压</th><th>灵敏度</th><th>温度补偿</th><th>应用</th></tr></thead><tbody><tr><td class="font-medium">单臂</td><td>1 臂工作</td><td>$\\frac{U_i}{4}\\cdot\\frac{\\Delta R}{R}$</td><td>低</td><td>无</td><td>简单测量</td></tr><tr><td class="font-medium">半桥</td><td>2 臂工作</td><td>$\\frac{U_i}{2}\\cdot\\frac{\\Delta R}{R}$</td><td>中</td><td>部分</td><td>弯曲测量</td></tr><tr><td class="font-medium">全桥</td><td>4 臂工作</td><td>$U_i\\cdot\\frac{\\Delta R}{R}$</td><td>最高</td><td>完全</td><td>高精度测量</td></tr></tbody></table></div>
 
         <h4 class="font-medium mt-6 mb-2">实例：应变片测量梁的弯曲</h4>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">用全桥方式测量悬臂梁末端受力，电桥供电 $U_i=5V$，应变片 $R=120\Omega$，$K=2$，梁受力后应变 $\varepsilon=500\mu\varepsilon$。</p>
-        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>计算电阻变化</strong><br>$\frac{\Delta R}{R}=K\cdot\varepsilon=2\times500\times10^{-6}=0.001$</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>计算电桥输出</strong><br>$U_o=U_i\cdot\frac{\Delta R}{R}=5\times0.001=5mV$</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>评估信号调理需求</strong><br>5mV 信号极微弱，需要仪表放大器放大 500~1000 倍至 2.5~5V，再送 <a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">A/D 转换</a></div></div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">用全桥方式测量悬臂梁末端受力，电桥供电 $U_i=5V$，应变片 $R=120\\Omega$，$K=2$，梁受力后应变 $\\varepsilon=500\\mu\\varepsilon$。</p>
+        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>计算电阻变化</strong><br>$\\frac{\\Delta R}{R}=K\\cdot\\varepsilon=2\\times500\\times10^{-6}=0.001$</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>计算电桥输出</strong><br>$U_o=U_i\\cdot\\frac{\\Delta R}{R}=5\\times0.001=5mV$</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>评估信号调理需求</strong><br>5mV 信号极微弱，需要仪表放大器放大 500~1000 倍至 2.5~5V，再送 <a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">A/D 转换</a></div></div></div>
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>跨节互链</strong>：惠斯通电桥的平衡条件和计算方法，详见 <a href="javascript:void(0)" onclick="App.loadDetail('circ-06')">电路基础·正弦稳态</a>。微弱信号放大需要 <a href="javascript:void(0)" onclick="App.loadDetail('ana-07')">集成运放·仪表放大器</a>。</div></div>
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>导线电阻误差</strong>：应变片到电桥之间长导线的电阻会叠加到桥臂中，引起测量误差。三线制接法可消除导线电阻影响——两根线分属相邻桥臂，第三根供激励，导线电阻变化被抵消。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>Pt100 分度表</strong>：Pt100 热电阻是最常用的工业温度传感器，0°C 时阻值恰好 100Ω，阻值与温度近似线性关系：$R_T = R_0(1+\alpha T)$，其中 $\alpha \approx 0.00385\Omega/\Omega/°C$。详见 <a href="javascript:void(0)" onclick="App.loadDetail('sns-06')">温度传感器</a>。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>Pt100 分度表</strong>：Pt100 热电阻是最常用的工业温度传感器，0°C 时阻值恰好 100Ω，阻值与温度近似线性关系：$R_T = R_0(1+\\alpha T)$，其中 $\\alpha \\approx 0.00385\\Omega/\\Omega/°C$。详见 <a href="javascript:void(0)" onclick="App.loadDetail('sns-06')">温度传感器</a>。</div></div>
       ` },
 
       { id: 'sns-03', title: '电容与电感式传感器', desc: '电容式位移、LVDT、涡流传感器', icon: '🧲', tags: ['核心'], goals: { eng: true }, content: `
@@ -6361,10 +6361,10 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">电容和电感的阻抗特性与频率密切相关，分析时需要用到<a href="javascript:void(0)" onclick="App.loadDetail('circ-06')">正弦稳态分析</a>和<a href="javascript:void(0)" onclick="App.loadDetail('circ-08')">谐振电路</a>的知识。</p>
 
         <h4 class="font-medium mt-6 mb-2">电容式传感器原理</h4>
-        <div class="formula-block">平行板电容器：$C = \frac{\varepsilon_0 \varepsilon_r A}{d}$<br>变间距型：$C = \frac{\varepsilon_0 \varepsilon_r A}{d_0 - \Delta d}$，灵敏度随间距增大而降低<br>变面积型：$C = \frac{\varepsilon_0 \varepsilon_r (A_0 - \Delta A)}{d}$，线性度好<br>变介质型：$C = \frac{\varepsilon_0 (A_1 \varepsilon_{r1} + A_2 \varepsilon_{r2})}{d}$，用于液位测量<div class="text-sm text-gray-500 mt-2">$\varepsilon_0 = 8.85\times10^{-12}$ F/m，$\varepsilon_r$ 为相对介电常数</div></div>
+        <div class="formula-block">平行板电容器：$C = \\frac{\\varepsilon_0 \\varepsilon_r A}{d}$<br>变间距型：$C = \\frac{\\varepsilon_0 \\varepsilon_r A}{d_0 - \\Delta d}$，灵敏度随间距增大而降低<br>变面积型：$C = \\frac{\\varepsilon_0 \\varepsilon_r (A_0 - \\Delta A)}{d}$，线性度好<br>变介质型：$C = \\frac{\\varepsilon_0 (A_1 \\varepsilon_{r1} + A_2 \\varepsilon_{r2})}{d}$，用于液位测量<div class="text-sm text-gray-500 mt-2">$\\varepsilon_0 = 8.85\\times10^{-12}$ F/m，$\\varepsilon_r$ 为相对介电常数</div></div>
 
         <h4 class="font-medium mt-6 mb-2">LVDT（线性可变差动变压器）</h4>
-        <div class="formula-block">LVDT 输出电压与铁芯位移关系：<br>$E_o = E_1 - E_2 = k \cdot x$（$x$ 在线性范围内）<br>零位时 $E_1 = E_2$，输出为零<br>铁芯向左或向右移动时输出反相<div class="text-sm text-gray-500 mt-2">LVDT 分辨率可达 0.1μm，量程从 ±0.1mm 到 ±250mm</div></div>
+        <div class="formula-block">LVDT 输出电压与铁芯位移关系：<br>$E_o = E_1 - E_2 = k \\cdot x$（$x$ 在线性范围内）<br>零位时 $E_1 = E_2$，输出为零<br>铁芯向左或向右移动时输出反相<div class="text-sm text-gray-500 mt-2">LVDT 分辨率可达 0.1μm，量程从 ±0.1mm 到 ±250mm</div></div>
 
         <h4 class="font-medium mt-6 mb-2">电涡流传感器</h4>
         <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
@@ -6378,8 +6378,8 @@ const CourseData = {
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>测量量</th><th>量程</th><th>精度</th><th>特点</th><th>典型应用</th></tr></thead><tbody><tr><td class="font-medium">电容式位移</td><td>位移/间距</td><td>0~数百 mm</td><td>0.01μm</td><td>非接触、高分辨</td><td>精密定位</td></tr><tr><td class="font-medium">LVDT</td><td>位移</td><td>±0.1~250mm</td><td>0.1%</td><td>线性好、无摩擦</td><td>阀门位置反馈</td></tr><tr><td class="font-medium">电涡流</td><td>位移/厚度</td><td>0~50mm</td><td>1%</td><td>只测金属、响应快</td><td>轴振动监测</td></tr></tbody></table></div>
 
         <h4 class="font-medium mt-6 mb-2">实例：电容式传感器测量微小位移</h4>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">变间距型电容传感器，极板面积 $A=1cm^2$，初始间距 $d_0=1mm$，$\varepsilon_r=1$，当间距减小 $\Delta d=10\mu m$ 时，求电容变化率和灵敏度。</p>
-        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>计算初始电容</strong><br>$C_0=\frac{8.85\times10^{-12}\times10^{-4}}{10^{-3}}=0.885pF$</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>计算变化后电容</strong><br>$C=\frac{8.85\times10^{-12}\times10^{-4}}{0.99\times10^{-3}}=0.894pF$</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>计算变化率</strong><br>$\frac{\Delta C}{C_0}=\frac{0.009}{0.885}\approx 1.02\%$，即 $\Delta d/d_0=1\%$ 对应约 1% 的电容变化</div></div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">变间距型电容传感器，极板面积 $A=1cm^2$，初始间距 $d_0=1mm$，$\\varepsilon_r=1$，当间距减小 $\\Delta d=10\\mu m$ 时，求电容变化率和灵敏度。</p>
+        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>计算初始电容</strong><br>$C_0=\\frac{8.85\\times10^{-12}\\times10^{-4}}{10^{-3}}=0.885pF$</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>计算变化后电容</strong><br>$C=\\frac{8.85\\times10^{-12}\\times10^{-4}}{0.99\\times10^{-3}}=0.894pF$</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>计算变化率</strong><br>$\\frac{\\Delta C}{C_0}=\\frac{0.009}{0.885}\\approx 1.02\%$，即 $\\Delta d/d_0=1\%$ 对应约 1% 的电容变化</div></div></div>
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>记忆要点</strong>：变间距型灵敏度不恒定（非线性），变面积型线性好。LVDT 是差动结构，零位输出为零——过零反相可判断移动方向。涡流传感器只对金属有效。</div></div>
 
@@ -6393,10 +6393,10 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">压电传感器利用<strong>压电效应</strong>——某些晶体受力变形时产生电荷，实现力到电信号的直接转换。磁电传感器利用<strong>霍尔效应</strong>或<strong>磁阻效应</strong>——磁场引起材料电学特性变化。两者都是自源型（有源）传感器，广泛用于振动测量、加速度测量、磁场检测、电流检测等场景。</p>
 
         <h4 class="font-medium mt-6 mb-2">压电效应</h4>
-        <div class="formula-block">正压电效应（传感器用）：晶体受力 → 产生电荷<br>$Q = d \cdot F$（$d$ 为压电常数，单位 pC/N）<br>开路电压：$V = \frac{Q}{C_p} = \frac{d \cdot F}{C_p}$（$C_p$ 为传感器电容）<br>等效电路：电荷源 $Q$ 并联 $C_p$ 和泄漏电阻 $R_p$<div class="text-sm text-gray-500 mt-2">逆压电效应（执行器用）：施加电场 → 晶体变形，用于压电驱动器、超声换能器</div></div>
+        <div class="formula-block">正压电效应（传感器用）：晶体受力 → 产生电荷<br>$Q = d \\cdot F$（$d$ 为压电常数，单位 pC/N）<br>开路电压：$V = \\frac{Q}{C_p} = \\frac{d \\cdot F}{C_p}$（$C_p$ 为传感器电容）<br>等效电路：电荷源 $Q$ 并联 $C_p$ 和泄漏电阻 $R_p$<div class="text-sm text-gray-500 mt-2">逆压电效应（执行器用）：施加电场 → 晶体变形，用于压电驱动器、超声换能器</div></div>
 
         <h4 class="font-medium mt-6 mb-2">霍尔传感器</h4>
-        <div class="formula-block">霍尔效应：载流导体在磁场中产生横向电压<br>$V_H = \frac{R_H \cdot I \cdot B}{d} = K_H \cdot I \cdot B$<br>$R_H$ 为霍尔系数，$d$ 为导体厚度<br>$K_H = R_H/d$ 为灵敏度系数（mV/mA·T）<div class="text-sm text-gray-500 mt-2">霍尔电压方向由左手定则判断：四指→电流方向，掌心→磁场穿入，拇指→霍尔电压正端</div></div>
+        <div class="formula-block">霍尔效应：载流导体在磁场中产生横向电压<br>$V_H = \\frac{R_H \\cdot I \\cdot B}{d} = K_H \\cdot I \\cdot B$<br>$R_H$ 为霍尔系数，$d$ 为导体厚度<br>$K_H = R_H/d$ 为灵敏度系数（mV/mA·T）<div class="text-sm text-gray-500 mt-2">霍尔电压方向由左手定则判断：四指→电流方向，掌心→磁场穿入，拇指→霍尔电压正端</div></div>
 
         <h4 class="font-medium mt-6 mb-2">常用压电/磁电传感器</h4>
         <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
@@ -6411,11 +6411,11 @@ const CourseData = {
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>特性</th><th>压电传感器</th><th>霍尔传感器</th></tr></thead><tbody><tr><td class="font-medium">转换效应</td><td>力 → 电荷（压电效应）</td><td>磁场 → 电压（霍尔效应）</td></tr><tr><td class="font-medium">信号类型</td><td>电荷（高阻抗）</td><td>电压（低阻抗）</td></tr><tr><td class="font-medium">静态测量</td><td>不能（电荷泄漏）</td><td>可以</td></tr><tr><td class="font-medium">频率响应</td><td>极宽（0.5Hz~MHz）</td><td>中（DC~100kHz）</td></tr><tr><td class="font-medium">典型量</td><td>振动/冲击/力</td><td>磁场/位置/电流</td></tr><tr><td class="font-medium">信号调理</td><td>电荷/电压放大器</td><td>差分放大器</td></tr></tbody></table></div>
 
         <h4 class="font-medium mt-6 mb-2">压电传感器信号调理</h4>
-        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>电荷放大器</strong><br>输出电压 $V_o = -\frac{Q}{C_f}$（$C_f$ 为反馈电容），输出与电缆电容无关，是压电传感器的标准接口</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>电压放大器</strong><br>输入电阻需极高（$>10^9\Omega$），否则低频信号泄漏。适合高频振动测量</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>滤波与数字化</strong><br>高通滤波去除直流偏移，低通滤波防混叠，再经 A/D 转换送入 <a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">数据采集系统</a></div></div></div>
+        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>电荷放大器</strong><br>输出电压 $V_o = -\\frac{Q}{C_f}$（$C_f$ 为反馈电容），输出与电缆电容无关，是压电传感器的标准接口</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>电压放大器</strong><br>输入电阻需极高（$>10^9\\Omega$），否则低频信号泄漏。适合高频振动测量</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>滤波与数字化</strong><br>高通滤波去除直流偏移，低通滤波防混叠，再经 A/D 转换送入 <a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">数据采集系统</a></div></div></div>
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>跨节互链</strong>：压电传感器的电荷放大器本质是<a href="javascript:void(0)" onclick="App.loadDetail('ana-07')">集成运放的积分应用</a>。霍尔传感器用于 BLDC 电机换向，与<a href="javascript:void(0)" onclick="App.loadDetail('act-14')">自动控制·执行器</a>密切关联。</div></div>
 
-        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>压电传感器不能测静态量</strong>：压电材料虽然能产生电荷，但电荷会通过泄漏电阻逐渐消失（时间常数 $\tau = R_p C_p$）。因此只能测量<strong>动态信号</strong>（振动、冲击），不能用于静态力/压力的长时间测量。</div></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>压电传感器不能测静态量</strong>：压电材料虽然能产生电荷，但电荷会通过泄漏电阻逐渐消失（时间常数 $\\tau = R_p C_p$）。因此只能测量<strong>动态信号</strong>（振动、冲击），不能用于静态力/压力的长时间测量。</div></div>
 
         <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>常见压电材料</strong>：石英（SiO₂）稳定性好但灵敏度低，PZT（锆钛酸铅）灵敏度高是主力材料，PVDF（聚偏氟乙烯）柔性薄膜适合大面积传感。GMR/TMR 磁阻传感器灵敏度远超霍尔，已用于硬盘磁头。</div></div>
       ` },
@@ -6425,12 +6425,12 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">光电传感器将光信号转换为电信号，或利用光作为媒介进行测量。从简单的光电开关到高精度的 CCD/CMOS 图像传感器，光电传感覆盖了工业自动化、机器视觉、通信、医疗等几乎所有领域。光电传感器的核心是<a href="javascript:void(0)" onclick="App.loadDetail('ana-01')">光电二极管</a>——PN 结在光照下产生光电流。</p>
 
         <h4 class="font-medium mt-6 mb-2">光电效应基础</h4>
-        <div class="formula-block">光电效应三种类型：<br><strong>外光电效应</strong>：光子使电子逸出金属表面（光电倍增管 PMT）<br><strong>内光电效应</strong>：光子在半导体中激发电子-空穴对（光电二极管/三极管）<br><strong>光生伏特效应</strong>：PN 结在光照下产生电动势（光电池/太阳能电池）<div class="text-sm text-gray-500 mt-2">光子能量 $E=h\nu = hc/\lambda$，必须大于半导体禁带宽度 $E_g$ 才能激发载流子</div></div>
+        <div class="formula-block">光电效应三种类型：<br><strong>外光电效应</strong>：光子使电子逸出金属表面（光电倍增管 PMT）<br><strong>内光电效应</strong>：光子在半导体中激发电子-空穴对（光电二极管/三极管）<br><strong>光生伏特效应</strong>：PN 结在光照下产生电动势（光电池/太阳能电池）<div class="text-sm text-gray-500 mt-2">光子能量 $E=h\\nu = hc/\\lambda$，必须大于半导体禁带宽度 $E_g$ 才能激发载流子</div></div>
 
         <h4 class="font-medium mt-6 mb-2">常用光电传感器</h4>
         <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
-          <li><strong>光电二极管（PD）</strong>：反偏工作，光照产生光电流 $I_p = R \cdot P$（$R$ 为响应度 A/W，$P$ 为光功率）</li>
-          <li><strong>光电三极管</strong>：比光电二极管多了电流增益 $\beta$，灵敏度更高但速度较慢</li>
+          <li><strong>光电二极管（PD）</strong>：反偏工作，光照产生光电流 $I_p = R \\cdot P$（$R$ 为响应度 A/W，$P$ 为光功率）</li>
+          <li><strong>光电三极管</strong>：比光电二极管多了电流增益 $\\beta$，灵敏度更高但速度较慢</li>
           <li><strong>CCD 传感器</strong>：电荷耦合器件，逐行转移电荷读出，动态范围大、噪声低</li>
           <li><strong>CMOS 传感器</strong>：每个像素独立读出，功耗低、集成度高、速度快，主流图像传感器</li>
           <li><strong>光纤传感器</strong>：光纤既是传输介质又是敏感元件，可测温度、应变、压力等</li>
@@ -6454,19 +6454,19 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">温度是最常被测量的物理量——从工业过程控制、汽车发动机管理到医疗体温检测，无处不在。温度传感器种类繁多，各有适用场景：热电偶测高温（可达 2000°C），RTD 精度高（±0.1°C），热敏电阻响应快，红外测温实现非接触。选型的关键是<strong>量程、精度、响应速度、成本</strong>的综合权衡。</p>
 
         <h4 class="font-medium mt-6 mb-2">热电偶</h4>
-        <div class="formula-block">塞贝克效应：两种不同金属构成回路，结点温差产生电动势<br>$E = \int_{T_0}^{T} (S_A - S_B) dT \approx \alpha(T - T_0)$<br>其中 $S_A, S_B$ 为塞贝克系数，$\alpha$ 为热电势率（μV/°C）<br>常用类型：K 型（镍铬-镍硅，$\alpha \approx 41\mu V/°C$），S 型（铂铑-铂）<div class="text-sm text-gray-500 mt-2">热电偶需要冷端补偿——参考端温度 $T_0$ 必须已知（通常用冰点或 IC 补偿）</div></div>
+        <div class="formula-block">塞贝克效应：两种不同金属构成回路，结点温差产生电动势<br>$E = \\int_{T_0}^{T} (S_A - S_B) dT \\approx \\alpha(T - T_0)$<br>其中 $S_A, S_B$ 为塞贝克系数，$\\alpha$ 为热电势率（μV/°C）<br>常用类型：K 型（镍铬-镍硅，$\\alpha \\approx 41\\mu V/°C$），S 型（铂铑-铂）<div class="text-sm text-gray-500 mt-2">热电偶需要冷端补偿——参考端温度 $T_0$ 必须已知（通常用冰点或 IC 补偿）</div></div>
 
         <h4 class="font-medium mt-6 mb-2">热电阻（RTD）</h4>
-        <div class="formula-block">金属电阻随温度变化：<br>$R_T = R_0(1 + \alpha T + \beta T^2 + \cdots)$（Callendar-Van Dusen 方程）<br>简化线性近似：$R_T \approx R_0(1 + \alpha T)$<br>Pt100：$R_0=100\Omega$，$\alpha=0.00385\Omega/\Omega/°C$，测温 -200~650°C<div class="text-sm text-gray-500 mt-2">铂电阻是工业测温的标准传感器，IEC 60751 规定了分度表</div></div>
+        <div class="formula-block">金属电阻随温度变化：<br>$R_T = R_0(1 + \\alpha T + \\beta T^2 + \\cdots)$（Callendar-Van Dusen 方程）<br>简化线性近似：$R_T \\approx R_0(1 + \\alpha T)$<br>Pt100：$R_0=100\\Omega$，$\\alpha=0.00385\\Omega/\\Omega/°C$，测温 -200~650°C<div class="text-sm text-gray-500 mt-2">铂电阻是工业测温的标准传感器，IEC 60751 规定了分度表</div></div>
 
         <h4 class="font-medium mt-6 mb-2">热敏电阻</h4>
-        <div class="formula-block">NTC 热敏电阻（负温度系数）：<br>$R_T = R_{25} \cdot e^{B(\frac{1}{T} - \frac{1}{298})}$<br>$B$ 值通常 2000~5000K，$R_{25}$ 为 25°C 时的标称阻值<br>灵敏度高但非线性严重，需要查表或线性化<div class="text-sm text-gray-500 mt-2">PTC（正温度系数）热敏电阻在居里温度附近阻值剧增，常用作过流/过温保护</div></div>
+        <div class="formula-block">NTC 热敏电阻（负温度系数）：<br>$R_T = R_{25} \\cdot e^{B(\\frac{1}{T} - \\frac{1}{298})}$<br>$B$ 值通常 2000~5000K，$R_{25}$ 为 25°C 时的标称阻值<br>灵敏度高但非线性严重，需要查表或线性化<div class="text-sm text-gray-500 mt-2">PTC（正温度系数）热敏电阻在居里温度附近阻值剧增，常用作过流/过温保护</div></div>
 
         <h4 class="font-medium mt-6 mb-2">四种温度传感器对比</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>类型</th><th>量程</th><th>精度</th><th>响应速度</th><th>线性度</th><th>成本</th><th>典型应用</th></tr></thead><tbody><tr><td class="font-medium">热电偶</td><td>-200~2000°C</td><td>±1~2°C</td><td>中</td><td>中</td><td>低</td><td>炉温、发动机</td></tr><tr><td class="font-medium">RTD(Pt100)</td><td>-200~650°C</td><td>±0.1°C</td><td>慢</td><td>好</td><td>中</td><td>工业过程控制</td></tr><tr><td class="font-medium">NTC热敏电阻</td><td>-40~125°C</td><td>±0.5°C</td><td>快</td><td>差</td><td>低</td><td>家电、电池温度</td></tr><tr><td class="font-medium">红外测温</td><td>-50~3000°C</td><td>±2°C</td><td>极快</td><td>中</td><td>高</td><td>非接触、移动目标</td></tr></tbody></table></div>
 
         <h4 class="font-medium mt-6 mb-2">实例：Pt100 测温电路设计</h4>
-        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>选择测量方法</strong><br>恒流源法：流过 Pt100 的电流恒定（1mA），测两端电压。或用电桥法</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>计算分辨率</strong><br>0~100°C 对应 100~138.5Ω，$\Delta R=38.5\Omega$，1mA 恒流源输出 100~138.5mV</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>信号调理</strong><br>用 <a href="javascript:void(0)" onclick="App.loadDetail('ana-07')">仪表放大器</a>放大至 0~3.3V，再经 12bit ADC 采样，分辨率 = 3300/4096 ≈ 0.08mV ≈ 0.02°C</div></div><div class="step"><span class="step-num">4</span><div class="step-content"><strong>线性化处理</strong><br>在 MCU 中用查表法或多项式拟合进行非线性补偿，最终输出温度值</div></div></div>
+        <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>选择测量方法</strong><br>恒流源法：流过 Pt100 的电流恒定（1mA），测两端电压。或用电桥法</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>计算分辨率</strong><br>0~100°C 对应 100~138.5Ω，$\\Delta R=38.5\\Omega$，1mA 恒流源输出 100~138.5mV</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>信号调理</strong><br>用 <a href="javascript:void(0)" onclick="App.loadDetail('ana-07')">仪表放大器</a>放大至 0~3.3V，再经 12bit ADC 采样，分辨率 = 3300/4096 ≈ 0.08mV ≈ 0.02°C</div></div><div class="step"><span class="step-num">4</span><div class="step-content"><strong>线性化处理</strong><br>在 MCU 中用查表法或多项式拟合进行非线性补偿，最终输出温度值</div></div></div>
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>选型速记</strong>：高温（>600°C）选热电偶，高精度工业选 RTD，快速响应/低成本选 NTC，非接触选红外。热电偶看分度表（K/J/T 型），RTD 看 IEC 60751。</div></div>
 
@@ -6480,15 +6480,15 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">运动传感器测量物体的加速度、角速度、方向和磁场，是无人机飞控、手机姿态检测、惯性导航的核心器件。MEMS 技术使这些传感器微型化到芯片级，成本大幅降低。但每种传感器都有其局限性——加速度计受振动干扰，陀螺仪有漂移，磁力计受磁场干扰——因此需要<strong>传感器融合</strong>算法综合利用。</p>
 
         <h4 class="font-medium mt-6 mb-2">MEMS 加速度计</h4>
-        <div class="formula-block">工作原理：牛顿第二定律 $F=ma$<br>MEMS 结构：弹簧-质量块-阻尼器系统<br>电容式检测：$C_1 - C_2 \propto x \propto a$（差动电容变化正比于位移，正比于加速度）<br>固有频率：$\omega_n = \sqrt{\frac{k}{m}}$（通常 1~10kHz）<div class="text-sm text-gray-500 mt-2">量程可选 ±2g（高精度）到 ±200g（冲击测量），分辨率可达 μg 级</div></div>
+        <div class="formula-block">工作原理：牛顿第二定律 $F=ma$<br>MEMS 结构：弹簧-质量块-阻尼器系统<br>电容式检测：$C_1 - C_2 \\propto x \\propto a$（差动电容变化正比于位移，正比于加速度）<br>固有频率：$\\omega_n = \\sqrt{\\frac{k}{m}}$（通常 1~10kHz）<div class="text-sm text-gray-500 mt-2">量程可选 ±2g（高精度）到 ±200g（冲击测量），分辨率可达 μg 级</div></div>
 
         <h4 class="font-medium mt-6 mb-2">MEMS 陀螺仪</h4>
-        <div class="formula-block">科里奥利效应：旋转参考系中运动物体受惯性力<br>$\vec{F}_c = -2m(\vec{\omega} \times \vec{v})$<br>MEMS 陀螺仪：振动质量块在旋转时受科里奥利力，引起垂直方向位移<br>输出正比于角速度 $\omega$（°/s）<div class="text-sm text-gray-500 mt-2">零偏稳定性是关键指标，消费级约 1~10°/h，战术级 &lt; 0.01°/h</div></div>
+        <div class="formula-block">科里奥利效应：旋转参考系中运动物体受惯性力<br>$\\vec{F}_c = -2m(\\vec{\\omega} \\times \\vec{v})$<br>MEMS 陀螺仪：振动质量块在旋转时受科里奥利力，引起垂直方向位移<br>输出正比于角速度 $\\omega$（°/s）<div class="text-sm text-gray-500 mt-2">零偏稳定性是关键指标，消费级约 1~10°/h，战术级 &lt; 0.01°/h</div></div>
 
         <h4 class="font-medium mt-6 mb-2">IMU 惯性测量单元</h4>
         <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
           <li><strong>组成</strong>：3 轴加速度计 + 3 轴陀螺仪 = 6 轴 IMU；再加 3 轴磁力计 = 9 轴</li>
-          <li><strong>输出</strong>：线加速度 ($a_x, a_y, a_z$)、角速度 ($\omega_x, \omega_y, \omega_z$)、磁场 ($B_x, B_y, B_z$)</li>
+          <li><strong>输出</strong>：线加速度 ($a_x, a_y, a_z$)、角速度 ($\\omega_x, \\omega_y, \\omega_z$)、磁场 ($B_x, B_y, B_z$)</li>
           <li><strong>融合算法</strong>：互补滤波、卡尔曼滤波、Madgwick/Mahony 算法，融合多传感器数据</li>
           <li><strong>典型芯片</strong>：MPU6050（6 轴，I²C/SPI）、ICM-20948（9 轴）、BMI270</li>
         </ul>
@@ -6497,13 +6497,13 @@ const CourseData = {
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>传感器</th><th>测量量</th><th>优势</th><th>局限</th><th>典型应用</th></tr></thead><tbody><tr><td class="font-medium">加速度计</td><td>线加速度/倾斜角</td><td>无漂移、可测重力</td><td>振动敏感、噪声大</td><td>计步、倾角</td></tr><tr><td class="font-medium">陀螺仪</td><td>角速度</td><td>动态响应好</td><td>零偏漂移、需校准</td><td>姿态控制</td></tr><tr><td class="font-medium">磁力计</td><td>磁场/航向角</td><td>绝对方向参考</td><td>磁场干扰严重</td><td>电子罗盘</td></tr><tr><td class="font-medium">IMU（融合）</td><td>6/9 轴姿态</td><td>互补优势</td><td>算法复杂</td><td>无人机飞控</td></tr></tbody></table></div>
 
         <h4 class="font-medium mt-6 mb-2">传感器融合：互补滤波</h4>
-        <div class="formula-block">互补滤波融合加速度计和陀螺仪：<br>$\theta = \alpha(\theta + \omega \cdot \Delta t) + (1-\alpha)\theta_{acc}$<br>陀螺仪积分：短期准确（无噪声），长期漂移<br>加速度计：长期稳定（无漂移），短期振动噪声大<br>$\alpha$ 取 0.95~0.98，以陀螺仪为主、加速度计修正<div class="text-sm text-gray-500 mt-2">卡尔曼滤波是更优方案——自适应权重，但计算量更大。详见 <a href="javascript:void(0)" onclick="App.loadDetail('act-09')">现代控制理论·状态估计</a></div></div>
+        <div class="formula-block">互补滤波融合加速度计和陀螺仪：<br>$\\theta = \\alpha(\\theta + \\omega \\cdot \\Delta t) + (1-\\alpha)\\theta_{acc}$<br>陀螺仪积分：短期准确（无噪声），长期漂移<br>加速度计：长期稳定（无漂移），短期振动噪声大<br>$\\alpha$ 取 0.95~0.98，以陀螺仪为主、加速度计修正<div class="text-sm text-gray-500 mt-2">卡尔曼滤波是更优方案——自适应权重，但计算量更大。详见 <a href="javascript:void(0)" onclick="App.loadDetail('act-09')">现代控制理论·状态估计</a></div></div>
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>跨节互链</strong>：IMU 融合算法中的卡尔曼滤波是<a href="javascript:void(0)" onclick="App.loadDetail('act-09')">现代控制理论·状态观测器</a>的工程应用。传感器数据通过 <a href="javascript:void(0)" onclick="App.loadDetail('emb-06')">I²C/SPI 接口</a>传输至 MCU，在 <a href="javascript:void(0)" onclick="App.loadDetail('emb-08')">RTOS</a> 中周期性采集。</div></div>
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>陀螺仪零偏漂移</strong>：MEMS 陀螺仪存在温度相关的零偏（bias），上电后零偏还会缓慢变化。不做校准和补偿，角度积分几分钟就会偏离几十度。工程中必须做上电零偏校准 + 温度补偿 + 融合修正。</div></div>
 
-        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>加速度计测倾角</strong>：静止时加速度计只测到重力分量，可直接算出倾斜角：$\theta = \arctan(\frac{a_x}{a_z})$。但运动时加速度计包含运动加速度和重力，无法区分——这正是需要陀螺仪融合的根本原因。</div></div>
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>加速度计测倾角</strong>：静止时加速度计只测到重力分量，可直接算出倾斜角：$\\theta = \\arctan(\\frac{a_x}{a_z})$。但运动时加速度计包含运动加速度和重力，无法区分——这正是需要陀螺仪融合的根本原因。</div></div>
       ` },
 
       { id: 'sns-08', title: '信号调理与数据采集', desc: '放大、滤波、A/D 转换、抗干扰技术', icon: '⚙️', tags: ['工程应用'], goals: { eng: true }, content: `
@@ -6666,10 +6666,10 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">定时器是嵌入式系统中最灵活的外设——它不仅能精确计时，还能生成 PWM 波形（电机控制、LED 调光）、测量输入信号频率和脉宽（输入捕获）、触发 ADC 采样。STM32 的通用定时器功能极其丰富，是工程应用中使用频率最高的外设之一。</p>
 
         <h4 class="font-medium mt-6 mb-2">定时器基本原理</h4>
-        <div class="formula-block">定时器核心：16/32 位计数器 + 预分频器（PSC）+ 自动重载寄存器（ARR）<br>定时周期：$T = \frac{(PSC+1) \times (ARR+1)}{f_{timer}}$<br>计数模式：向上计数、向下计数、中央对齐（向上-向下）<br>溢出事件：计数器达到 ARR 值时产生更新事件（UEV）<div class="text-sm text-gray-500 mt-2">STM32F103 通用定时器时钟为 72MHz，PSC=7199 时每 0.1ms 计数一次</div></div>
+        <div class="formula-block">定时器核心：16/32 位计数器 + 预分频器（PSC）+ 自动重载寄存器（ARR）<br>定时周期：$T = \\frac{(PSC+1) \\times (ARR+1)}{f_{timer}}$<br>计数模式：向上计数、向下计数、中央对齐（向上-向下）<br>溢出事件：计数器达到 ARR 值时产生更新事件（UEV）<div class="text-sm text-gray-500 mt-2">STM32F103 通用定时器时钟为 72MHz，PSC=7199 时每 0.1ms 计数一次</div></div>
 
         <h4 class="font-medium mt-6 mb-2">PWM 输出</h4>
-        <div class="formula-block">PWM 波形生成：<br>$\text{占空比} = \frac{CCR}{ARR+1} \times 100\%$<br>CCR（捕获/比较寄存器）决定高电平持续时间<br>PWM 频率：$f_{PWM} = \frac{f_{timer}}{(PSC+1)(ARR+1)}$<br>分辨率：$\frac{1}{ARR+1}$（如 ARR=999 则 0.1% 分辨率）<div class="text-sm text-gray-500 mt-2">改变 CCR 即可改变占空比——用于电机调速（需 <a href="javascript:void(0)" onclick="App.loadDetail('act-14')">PID 控制</a>）、LED 调光、DAC 替代</div></div>
+        <div class="formula-block">PWM 波形生成：<br>$\\text{占空比} = \\frac{CCR}{ARR+1} \\times 100\%$<br>CCR（捕获/比较寄存器）决定高电平持续时间<br>PWM 频率：$f_{PWM} = \\frac{f_{timer}}{(PSC+1)(ARR+1)}$<br>分辨率：$\\frac{1}{ARR+1}$（如 ARR=999 则 0.1% 分辨率）<div class="text-sm text-gray-500 mt-2">改变 CCR 即可改变占空比——用于电机调速（需 <a href="javascript:void(0)" onclick="App.loadDetail('act-14')">PID 控制</a>）、LED 调光、DAC 替代</div></div>
 
         <h4 class="font-medium mt-6 mb-2">定时器功能模式</h4>
         <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
@@ -6698,7 +6698,7 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">嵌入式系统需要与传感器、显示器、存储器、上位机等外部设备通信。UART、SPI、I²C 是三种最基本的串行通信协议，各有优缺点。掌握它们的时序特征、配置方法和适用场景，是嵌入式工程师的核心技能。实际项目中，一个系统通常同时使用多种通信协议。</p>
 
         <h4 class="font-medium mt-6 mb-2">UART 串口通信</h4>
-        <div class="formula-block">UART（通用异步收发器）：点对点、全双工、异步通信<br>帧格式：起始位(1) + 数据位(5~9) + 校验位(0/1) + 停止位(1~2)<br>波特率：$Baud = \frac{f_{clk}}{16 \times \text{BRR}}$<br>常用波特率：9600、115200 bps<div class="text-sm text-gray-500 mt-2">无需时钟线，双方约定波特率即可通信。TTL 电平（3.3V/5V），长距离需转 RS-232/RS-485</div></div>
+        <div class="formula-block">UART（通用异步收发器）：点对点、全双工、异步通信<br>帧格式：起始位(1) + 数据位(5~9) + 校验位(0/1) + 停止位(1~2)<br>波特率：$Baud = \\frac{f_{clk}}{16 \\times \\text{BRR}}$<br>常用波特率：9600、115200 bps<div class="text-sm text-gray-500 mt-2">无需时钟线，双方约定波特率即可通信。TTL 电平（3.3V/5V），长距离需转 RS-232/RS-485</div></div>
 
         <h4 class="font-medium mt-6 mb-2">SPI 串行外设接口</h4>
         <div class="formula-block">SPI：同步、全双工、主从架构<br>四线制：SCK（时钟）+ MOSI（主出从入）+ MISO（主入从出）+ CS（片选）<br>时钟极性 CPOL：0（空闲低）或 1（空闲高）<br>时钟相位 CPHA：0（第一个边沿采样）或 1（第二个边沿采样）<div class="text-sm text-gray-500 mt-2">速度可达数十 MHz（远快于 I²C/UART），适合 Flash、LCD、ADC 等高速器件</div></div>
@@ -6724,7 +6724,7 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">ADC（模数转换器）将传感器的模拟信号数字化，DAC（数模转换器）将数字信号还原为模拟量。MCU 内置的 ADC 通常为逐次逼近型（SAR），分辨率 10~16 位，采样率可达数 MSPS。配合 DMA 传输，可实现高速、连续的数据采集——这是数字信号处理和<a href="javascript:void(0)" onclick="App.loadDetail('act-14')">闭环控制</a>的基础。</p>
 
         <h4 class="font-medium mt-6 mb-2">ADC 基本原理（逐次逼近型 SAR）</h4>
-        <div class="formula-block">SAR ADC 转换过程（$n$ 位分辨率）：<br>1. 采样保持电路捕获输入电压 $V_{in}$<br>2. 逐位比较：从 MSB 开始，DAC 输出 $V_{dac}$ 与 $V_{in}$ 比较<br>3. 若 $V_{in} \geq V_{dac}$，该位为 1；否则为 0<br>4. $n$ 个比较周期完成转换<br>转换时间：$T_{conv} = n \times T_{clk}$（如 12 位，14 周期）<div class="text-sm text-gray-500 mt-2">SAR ADC 在速度和精度之间取得良好平衡，是 MCU 内置 ADC 的主流架构</div></div>
+        <div class="formula-block">SAR ADC 转换过程（$n$ 位分辨率）：<br>1. 采样保持电路捕获输入电压 $V_{in}$<br>2. 逐位比较：从 MSB 开始，DAC 输出 $V_{dac}$ 与 $V_{in}$ 比较<br>3. 若 $V_{in} \\geq V_{dac}$，该位为 1；否则为 0<br>4. $n$ 个比较周期完成转换<br>转换时间：$T_{conv} = n \\times T_{clk}$（如 12 位，14 周期）<div class="text-sm text-gray-500 mt-2">SAR ADC 在速度和精度之间取得良好平衡，是 MCU 内置 ADC 的主流架构</div></div>
 
         <h4 class="font-medium mt-6 mb-2">ADC 关键参数</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>参数</th><th>含义</th><th>STM32F103 ADC</th><th>工程影响</th></tr></thead><tbody><tr><td class="font-medium">分辨率</td><td>$V_{ref}/2^n$</td><td>12 位 → 0.8mV (3.3V)</td><td>可分辨最小信号</td></tr><tr><td class="font-medium">采样率</td><td>每秒转换次数</td><td>1 MSPS</td><td>可测信号最高频率</td></tr><tr><td class="font-medium">INL/DNL</td><td>积分/微分非线性</td><td>±2 LSB / ±1 LSB</td><td>转换精度上限</td></tr><tr><td class="font-medium">采样时间</td><td>采样保持时间</td><td>1.5~239.5 周期可选</td><td>源阻抗匹配</td></tr><tr><td class="font-medium">通道数</td><td>多路复用输入</td><td>16 外部 + 2 内部</td><td>可采集信号数量</td></tr></tbody></table></div>
@@ -6738,7 +6738,7 @@ const CourseData = {
         <h4 class="font-medium mt-6 mb-2">实例：ADC + DMA 连续采样配置</h4>
         <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>配置 ADC</strong><br>选择通道、采样时间、触发源（定时器触发或软件触发）、连续/扫描模式</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>配置 DMA</strong><br>外设地址 = ADC_DR，内存地址 = 缓冲数组，传输长度，循环模式</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>启动采集</strong><br>使能 ADC DMA 请求 → 启动 ADC → DMA 自动搬运数据到数组</div></div><div class="step"><span class="step-num">4</span><div class="step-content"><strong>数据处理</strong><br>DMA 半传输/全传输中断通知 CPU：一半缓冲区已满，可安全处理另一半数据（双缓冲）</div></div></div>
 
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>跨节互链</strong>：ADC 是 <a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">传感器信号调理</a>链路的最后一环。ADC 触发源常使用 <a href="javascript:void(0)" onclick="App.loadDetail('emb-05')">定时器</a>，确保等间隔采样。采样定理（$f_s \geq 2f_{max}$）在 <a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">信号调理与数据采集</a>中详细讨论。</div></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>跨节互链</strong>：ADC 是 <a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">传感器信号调理</a>链路的最后一环。ADC 触发源常使用 <a href="javascript:void(0)" onclick="App.loadDetail('emb-05')">定时器</a>，确保等间隔采样。采样定理（$f_s \\geq 2f_{max}$）在 <a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">信号调理与数据采集</a>中详细讨论。</div></div>
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>ADC 输入源阻抗</strong>：源阻抗过高时，采样电容来不及充电到稳态，造成转换误差。STM32 要求源阻抗 &lt; 10kΩ（最短采样时间 1.5 周期），若源阻抗较大需增大采样时间或加运放缓冲。</div></div>
 
@@ -6784,7 +6784,7 @@ const CourseData = {
         <div class="formula-block">功耗递减模式：<br><strong>运行模式（Run）</strong>：全速执行，全时钟，最高功耗<br><strong>睡眠模式（Sleep）</strong>：CPU 停止，外设继续运行，唤醒延迟最短（~μs）<br><strong>停止模式（Stop）</strong>：所有时钟停止，SRAM 保留，唤醒延迟较长（~μs~ms）<br><strong>待机模式（Standby）</strong>：最低功耗，仅 WKUP 引脚/RTC 唤醒，复位后重启<div class="text-sm text-gray-500 mt-2">STM32L4 系列停止模式功耗仅 3μA，待机模式 30nA</div></div>
 
         <h4 class="font-medium mt-6 mb-2">功耗组成分析</h4>
-        <div class="formula-block">总功耗 = 动态功耗 + 静态功耗<br>动态功耗：$P_{dynamic} = C \cdot V_{DD}^2 \cdot f$（$C$=负载电容，$V_{DD}$=供电电压，$f$=时钟频率）<br>静态功耗：$P_{static} = V_{DD} \cdot I_{leak}$（漏电流，随温度指数增长）<div class="text-sm text-gray-500 mt-2">降压是最有效的减功耗手段——$V_{DD}$ 从 3.3V 降到 1.8V，动态功耗降低 70%</div></div>
+        <div class="formula-block">总功耗 = 动态功耗 + 静态功耗<br>动态功耗：$P_{dynamic} = C \\cdot V_{DD}^2 \\cdot f$（$C$=负载电容，$V_{DD}$=供电电压，$f$=时钟频率）<br>静态功耗：$P_{static} = V_{DD} \\cdot I_{leak}$（漏电流，随温度指数增长）<div class="text-sm text-gray-500 mt-2">降压是最有效的减功耗手段——$V_{DD}$ 从 3.3V 降到 1.8V，动态功耗降低 70%</div></div>
 
         <h4 class="font-medium mt-6 mb-2">低功耗设计策略</h4>
         <ul class="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400 mb-4">
@@ -6802,7 +6802,7 @@ const CourseData = {
         <h4 class="font-medium mt-6 mb-2">实例：传感器节点低功耗方案</h4>
         <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>唤醒采集</strong><br>RTC 唤醒（每 60 秒）→ 切换到 8MHz → 开启传感器电源 → 等待稳定</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>数据采集处理</strong><br>ADC DMA 采样 100 点 → 滤波取均值 → 关闭传感器电源</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>无线发送</strong><br>唤醒射频模块 → 发送数据包 → 等待 ACK → 关闭射频模块</div></div><div class="step"><span class="step-num">4</span><div class="step-content"><strong>进入深度睡眠</strong><br>配置下次 RTC 唤醒 → 进入 Stop/Standby 模式，电流降至 μA 级</div></div></div>
 
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>功耗预算公式</strong>：$电池寿命 = \frac{电池容量(mAh)}{平均电流(mA)}$。若传感器节点平均电流 100μA（大部分睡眠），200mAh 电池可工作 2000 小时 ≈ 83 天。优化到 10μA 则可工作 830 天（>2 年）。</div></div>
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>功耗预算公式</strong>：$电池寿命 = \\frac{电池容量(mAh)}{平均电流(mA)}$。若传感器节点平均电流 100μA（大部分睡眠），200mAh 电池可工作 2000 小时 ≈ 83 天。优化到 10μA 则可工作 830 天（>2 年）。</div></div>
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>外设时钟门控</strong>：忘记关闭不用外设的时钟是最常见的功耗浪费。例如配置完 GPIO 后未关闭 AFIO 时钟，或调试口 SWD 未用但仍占用功耗。量产固件应禁用 SWD（PA13/PA14 改为 GPIO）并关闭所有未用外设时钟。</div></div>
 
@@ -6829,7 +6829,7 @@ const CourseData = {
         <div class="formula-block">两级引导架构：<br>Bootloader（Flash 前 16~64KB）→ 应用程序（Flash 后半部分）<br>上电流程：Bootloader 检查更新标志 → 有更新则刷写 Flash → 无更新则跳转应用<br>OTA 流程：新固件下载到 Flash 临时区 → 校验 CRC/SHA → 替换旧固件<div class="text-sm text-gray-500 mt-2">Bootloader 需要自己的中断向量表和栈，与应用程序完全独立</div></div>
 
         <h4 class="font-medium mt-6 mb-2">看门狗保护</h4>
-        <div class="formula-block">独立看门狗（IWDG）：独立时钟（LSI 40kHz），不受主时钟影响<br>窗口看门狗（WWDG）：必须在指定窗口内喂狗，防止"过快"喂狗<br>$T_{IWDG} = \frac{PR \times 4096}{f_{LSI}} \times RLR$（PR=预分频，RLR=重载值）<div class="text-sm text-gray-500 mt-2">看门狗是嵌入式系统的"最后防线"——程序跑飞/死锁时自动复位 MCU</div></div>
+        <div class="formula-block">独立看门狗（IWDG）：独立时钟（LSI 40kHz），不受主时钟影响<br>窗口看门狗（WWDG）：必须在指定窗口内喂狗，防止"过快"喂狗<br>$T_{IWDG} = \\frac{PR \\times 4096}{f_{LSI}} \\times RLR$（PR=预分频，RLR=重载值）<div class="text-sm text-gray-500 mt-2">看门狗是嵌入式系统的"最后防线"——程序跑飞/死锁时自动复位 MCU</div></div>
 
         <h4 class="font-medium mt-6 mb-2">开发流程完整步骤</h4>
         <div class="step-list"><div class="step"><span class="step-num">1</span><div class="step-content"><strong>环境搭建</strong><br>安装工具链 + IDE → 配置芯片型号 → 选择调试器 → 编译下载空工程验证</div></div><div class="step"><span class="step-num">2</span><div class="step-content"><strong>BSP 驱动开发</strong><br>GPIO/UART/SPI/ADC 驱动 → HAL 库或寄存器操作 → 逐个外设验证</div></div><div class="step"><span class="step-num">3</span><div class="step-content"><strong>系统集成</strong><br>RTOS 移植 → 任务划分 → 中间件（FatFS/LwIP/mbedTLS）集成</div></div><div class="step"><span class="step-num">4</span><div class="step-content"><strong>可靠性保障</strong><br>看门狗 → 异常处理 → 低功耗优化 → Bootloader + OTA → 量产测试</div></div></div>
@@ -12221,8 +12221,8 @@ uint64_t last_hb = now_ms();
           写字机 X/Y 轴配置：42 步进电机（步距角 1.8°，即 200 步/转）、驱动器 16 细分、GT2 同步带 + 20 齿带轮（导程 = 2mm × 20 = 40mm/转）。脉冲当量与所需脉冲频率：
         </p>
         <div class="formula-block">
-          $$\delta = \\frac{L}{N \cdot m} = \\frac{40\\,\\text{mm}}{200 \\times 16} = 0.0125\\,\\text{mm/脉冲}$$
-          $$f_{step} = \\frac{v}{\delta} = \\frac{100\\,\\text{mm/s}}{0.0125\\,\\text{mm}} = 8\\,\\text{kHz} \\;\\;(T = 125\\,\\mu s)$$
+          $$\\delta = \\frac{L}{N \\cdot m} = \\frac{40\\,\\text{mm}}{200 \\times 16} = 0.0125\\,\\text{mm/脉冲}$$
+          $$f_{step} = \\frac{v}{\\delta} = \\frac{100\\,\\text{mm/s}}{0.0125\\,\\text{mm}} = 8\\,\\text{kHz} \\;\\;(T = 125\\,\\mu s)$$
           <div class="text-sm text-gray-500 mt-2">若升到 32 细分：f = 16kHz、T = 62.5μs，对定时的要求更苛刻。步进电机本体原理见 <a href="javascript:void(0)" onclick="App.loadDetail('motor-05')">motor-05</a></div>
         </div>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
@@ -12246,7 +12246,7 @@ uint64_t last_hb = now_ms();
           主流步进驱动器（A4988/DRV8825/TMC2209）对外都是同一套接口：<strong>STEP</strong>（每个上升沿走一步）、<strong>DIR</strong>（方向电平）、<strong>ENA</strong>（使能，多数低有效）、<strong>GND</strong>。共阳接法：STEP+/DIR+/ENA+ 并接 3.3V，MCU 引脚分别驱动 STEP-/DIR-/ENA-。驱动器电流由 Vref 分压设定（以 A4988 为例）：
         </p>
         <div class="formula-block">
-          $$I_{coil} = \\frac{V_{ref}}{8 R_s} = \\frac{0.4\\,\\text{V}}{8 \\times 0.1\\,\Omega} = 0.5\\,\\text{A}$$
+          $$I_{coil} = \\frac{V_{ref}}{8 R_s} = \\frac{0.4\\,\\text{V}}{8 \\times 0.1\\,\\Omega} = 0.5\\,\\text{A}$$
           <div class="text-sm text-gray-500 mt-2">R_s 为驱动器检流电阻（0.1Ω 常见）。42 步进额定 1.2~1.7A，写字机空载 0.5A 足够——发热小、噪音低，力度不够再加</div>
         </div>
         <div class="overflow-x-auto"><table class="compare-table">
@@ -12344,6 +12344,250 @@ uint64_t last_hb = now_ms();
         <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>升级路径：CAN 指令模式</strong>：轴数多、走线远时，每轴一块 CAN 接口驱动器挂总线，Linux 用 SocketCAN（ip link set can0 up + cansend）直接发 CiA 402 风格指令，STM32 退位为纯实时节点之一（<a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11 选型表</a>的第三列）。步进电机矩频特性见 <a href="javascript:void(0)" onclick="App.loadDetail('motor-05')">motor-05</a>。</div></div>
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>工具与承接</strong>：TIM 的 ARR/PSC 组合可用工具箱嵌入式分类的 PWM 参数计算器换算验证。轨迹如何切成连续运动段（直线插补、S 曲线）是 <a href="javascript:void(0)" onclick="App.loadDetail('linux-13')">linux-13</a> 的主题；位置曲线实时上屏是 <a href="javascript:void(0)" onclick="App.loadDetail('linux-14')">linux-14</a>；脉冲当量的算法与 <a href="javascript:void(0)" onclick="App.loadDetail('print-02')">print-02 FDM 结构</a>里的同款计算遥相呼应。</div></div>
+      ` },
+
+      // ===== linux-13 运动规划与加减速（主线：轨迹→脉冲流）=====
+      { id: 'linux-13', title: '运动规划与加减速', desc: '梯形/S 曲线速度剖面推导、Bresenham 两轴插补、lookahead 衔接、Klipper 运动系统案例', icon: '🎢', tags: ['核心', '主线'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">运动规划与加减速：从"能走一段"到"写出一个字"</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          <a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">linux-12</a>让一段运动动了起来，但写一个汉字是几十段连续折线：每段多长、走多快、两轴怎么配合、段与段怎么衔接而不停顿——这就是<strong>运动规划</strong>。<a href="javascript:void(0)" onclick="App.loadDetail('robo-08')">robo-08 轨迹规划</a>讲过数学理论（路径与时序分离），本节是它在 Linux 工程侧的完整落地：速度剖面计算 → 多轴插补 → 轨迹到脉冲流的管线，并剖析 Klipper 的工业级实现。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">为什么必须加减速：矩频特性与脉冲阶跃</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          直觉上"全速起步"最快，但对步进电机是灾难：<a href="javascript:void(0)" onclick="App.loadDetail('motor-05')">motor-05 矩频特性</a>表明输出力矩随转速升高而下降——从 0 瞬间跳到 8kHz 脉冲，电机需要的加速力矩远超低速时的供给能力，直接<strong>丢步堵转</strong>；即使转起来了，速度阶跃还会激励皮带-笔架机械系统的振动，字迹出现波纹。所以脉冲频率必须"爬"上去再"滑"下来——加减速规划的本质是<strong>把力矩约束翻译成速度曲线</strong>。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">梯形速度剖面：三段式与判据</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          最常用的剖面是"加速—匀速—减速"三段梯形。延续 linux-12 的参数（频率单位 Hz，加速度 a 单位 Hz/s，f_start 起步 700Hz，f_max 上限 8000Hz，a = 200Hz/ms = 200000Hz/s），三个关键量：
+        </p>
+        <div class="formula-block">
+          $$n_a = \\frac{f_{max}^2 - f_{start}^2}{2a},\\quad n_d = \\frac{f_{max}^2}{2a},\\quad n_c = n_{total} - n_a - n_d$$
+          <div class="text-sm text-gray-500 mt-2">n_a/n_d 是加/减速段消耗的脉冲数；n_c 是匀速段脉冲数。<strong>n_c ≥ 0 → 梯形剖面；n_c &lt; 0 → 距离不够，退化为三角形剖面</strong>（见下）</div>
+        </div>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>例题：写一横 80mm</strong><br>位移→脉冲：n_total = 80mm ÷ 0.0125mm/脉冲 = 6400 脉冲（当量公式见 <a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">linux-12</a>）</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>算加速段</strong><br>n_a = (8000² − 700²) ÷ (2×200000) = 63,510,000 ÷ 400,000 ≈ 159 脉冲（≈ 2.0mm）</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>算减速段并判型</strong><br>n_d = 8000² ÷ 400,000 = 160 脉冲；n_a + n_d = 319 &lt; 6400 → 有匀速段，n_c = 6081 脉冲（梯形）</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>算时间</strong><br>t_a = (8000−700)/200000 = 36.5ms；t_c = 6081/8000 ≈ 760ms；t_d = 8000/200000 = 40ms；总时 ≈ 836ms</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>校验</strong><br>平均速度 = 80mm ÷ 0.836s ≈ 95.6mm/s，接近上限 100mm/s——长直线段效率高；这一横的剖面曲线可在 <a href="javascript:void(0)" onclick="App.loadDetail('linux-14')">linux-14 面板</a>上实测对照</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">短段三角形剖面与 S 曲线：平滑的代价</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          短笔画（如"点"、"提"）跑不满加减速：2mm 只有 160 脉冲 &lt; 319，到不了 8000Hz 就得减速——剖面变成等腰三角形，峰值频率：
+        </p>
+        <div class="formula-block">
+          $$f_{peak} = \\sqrt{n_{total} \\cdot a} = \\sqrt{160 \\times 200000} \\approx 5657\\,\\text{Hz}\\;(70.7\\,\\text{mm/s})$$
+          <div class="text-sm text-gray-500 mt-2">由对称性（一半加速一半减速）直接推出；f_peak 超过 f_max 时按梯形截断</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          梯形剖面有一个隐患：加速度在拐点处<strong>阶跃</strong>（0→a→0），激励机械共振让字迹出"竹节纹"。S 曲线（七段式）限制加加速度 $J = da/dt$，让加速度平滑线性过渡——代价是参数与计算量翻倍：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>维度</th><th>梯形剖面</th><th>S 曲线剖面</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">受限量</td><td>加速度 a（J→∞ 特例）</td><td>加加速度 J（a 线性变化）</td></tr>
+            <tr><td class="font-medium">计算量</td><td>每段 O(1) 几次乘加</td><td>七段状态机，边界求解复杂</td></tr>
+            <tr><td class="font-medium">参数</td><td>2 个（a、f_max）</td><td>4 个（J、a、f_max、边界）</td></tr>
+            <tr><td class="font-medium">平滑度</td><td>加速度阶跃，中高速有振纹</td><td>力矩连续，字面光洁</td></tr>
+            <tr><td class="font-medium">典型用户</td><td>GRBL/Marlin（低配 MCU）</td><td>Klipper/高级伺服驱动器</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          写字机策略：先用梯形跑通，字迹有振纹时限制<strong>拐点处的速度变化率</strong>或直接换 S 曲线；伺服系统里 S 曲线还与电流环带宽相关（<a href="javascript:void(0)" onclick="App.loadDetail('motor-07')">motor-07</a>）。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">多轴直线插补：Bresenham 让两轴走出斜线</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          写"撇"时 X 走 60mm、Y 走 40mm——两个电机按比例出脉冲才能走出直线。工程标准解法是<strong>整数 Bresenham</strong>：定时器按主轴（步数多的轴）频率中断，每拍让主轴出一步，误差累加项决定副轴是否同拍出一步（对角步）。副轴频率自然满足 $f_{minor} = f_{major} \\cdot |d_{minor}|/|d_{major}|$，插补误差不超过半个脉冲当量（0.00625mm ≪ 笔尖 0.5mm）。算法全部用加减法、无乘除——正适合塞进每 125μs 一次的定时器中断：
+        </p>
+        <div class="code-block"><span class="code-comment">// interp_stm32.c —— 两轴 Bresenham 插补（扩展 linux-12 的 TIM3 中断）</span>
+<span class="code-keyword">static</span> int32_t g_ddx, g_ddy, g_err;       <span class="code-comment">// ddy 取负（Bresenham 符号约定）</span>
+<span class="code-keyword">static</span> int8_t  g_sx, g_sy;              <span class="code-comment">// 各轴方向 ±1</span>
+<span class="code-keyword">static</span> int32_t g_ticks;                 <span class="code-comment">// 剩余拍数 = max(|dx|, |dy|)</span>
+
+<span class="code-keyword">void</span> <span class="code-func">seg_load</span>(int32_t dx, int32_t dy) {   <span class="code-comment">// 本段相对位移（脉冲）</span>
+    g_ddx = dx &gt;= 0 ? dx : -dx;
+    g_ddy = -(dy &gt;= 0 ? dy : -dy);
+    g_sx = dx &gt;= 0 ? 1 : -1;   g_sy = dy &gt;= 0 ? 1 : -1;
+    g_err = g_ddx + g_ddy;
+    g_ticks = g_ddx &gt; -g_ddy ? g_ddx : -g_ddy;   <span class="code-comment">// 主轴步数</span>
+    __HAL_TIM_ENABLE_IT(&amp;htim3, TIM_IT_UPDATE);
+}
+
+<span class="code-comment">// TIM3 更新中断：一拍出主轴脉冲，误差项决定副轴是否同拍出（GRBL 同款）</span>
+<span class="code-keyword">void</span> HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+    <span class="code-keyword">if</span> (htim != &amp;htim3) <span class="code-keyword">return</span>;
+    int32_t e2 = 2 * g_err;
+    <span class="code-keyword">if</span> (e2 &gt;= g_ddy) { g_err += g_ddy; pulse(X_AXIS, g_sx); }
+    <span class="code-keyword">if</span> (e2 &lt;= g_ddx) { g_err += g_ddx; pulse(Y_AXIS, g_sy); }
+    <span class="code-keyword">if</span> (--g_ticks &lt;= 0) __HAL_TIM_DISABLE_IT(&amp;htim3, TIM_IT_UPDATE);
+    <span class="code-comment">// TIM 周期仍由 accel_tick_1ms 按路径速度剖面调整（linux-12）</span>
+}
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          手验一遍 dx=4、dy=2：四拍依次出 (X+Y)、(X)、(X+Y)、(X)——两轴脉冲严格落在理想直线上。圆弧（G02/G03）不必写专用算法：按<strong>弦高误差</strong>0.05mm 切成短折线即可，字体轮廓（SVG/TTF 贝塞尔曲线）同样这样离散——与 <a href="javascript:void(0)" onclick="App.loadDetail('print-03')">print-03 切片</a>把曲面切成层的思想一致。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">段间衔接：拐角速度与 lookahead</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          最朴素的错误是每段都"从零加速到零减速"——字写得又慢又顿。正确做法：<strong>前瞻（lookahead）</strong>——规划第 i 段的出口速度时看向第 i+1 段的入口约束。拐角处允许的速度由向心加速度模型给出（GRBL 式）：
+        </p>
+        <div class="formula-block">
+          $$v_{j} = \\sqrt{\\frac{a\\,\\delta\\,\\cos(\\theta/2)}{1 - \\cos(\\theta/2)}}$$
+          <div class="text-sm text-gray-500 mt-2">θ 为偏转角：0°（直线通过）→ v→∞ 即不限速；180°（原路折返）→ v = 0 必停。δ 为拐角偏差（经验值 0.02~0.1mm）。数值例：a = 2500mm/s²（200Hz/ms × 0.0125mm）、δ = 0.05mm、θ = 60° → v_j ≈ 28mm/s</div>
+        </div>
+        <div class="code-block"><span class="code-comment">// planner.c（Linux 侧）—— 从后往前回填衔接速度（lookahead 骨架）</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = n - 1; i &gt;= 0; i--) {
+    <span class="code-comment">// 出口速度：不高于本段减速极限，也不高于下一段的入口</span>
+    m[i].v_exit = <span class="code-func">min</span>(<span class="code-func">v_limit</span>(m[i]), i + 1 &lt; n ? m[i + 1].v_entry : 0);
+    <span class="code-comment">// 入口速度：受上一拐角约束（junction 公式，上框）</span>
+    <span class="code-keyword">if</span> (i &gt; 0) m[i].v_entry = <span class="code-func">min</span>(m[i].v_entry, <span class="code-func">junction_speed</span>(&amp;m[i - 1], &amp;m[i]));
+}
+<span class="code-comment">// 提笔/落笔处 v_entry = v_exit = 0；完成的段经 linux-11 的 CMD_TRAJ_SEG 分包下发</span>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">Klipper 运动系统案例剖析</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>主机侧（Linux）</strong>：move 队列 + 迭代式 lookahead——新 move 入队时反推调整前面若干段的加速起点，保证整条链速度连续；随后把每个 move 翻译成带时间戳的<strong>步进事件</strong>流</li>
+          <li><strong>MCU 侧（步进压缩 step compression）</strong>：连续同方向步合并成"起始时刻 + 步间隔 + 步数"的等差级数队列项，加减速段用二次包络——定时器中断从"每步一次"降到"每段常数速度一次"，8kHz 脉冲率下 MCU 负载依然极低</li>
+          <li><strong>时钟同步</strong>：主机用一串"在 T 时刻应处于第 N 步"的查询与 MCU 对表，消除两侧时钟偏差——这是它比"每段发指令"方案精度更高的关键</li>
+          <li><strong>对照本节</strong>：我们写的梯形+lookahead 是 Klipper 的入门子集；把 CMD_TRAJ_SEG 的 payload 从"段参数"升级为"步进事件流"，就完成了向 Klipper 架构的进化（<a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11 分包</a>正好承接）</li>
+        </ul>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>规划三大坑</strong>：① 没做 lookahead——每段都减速到零，整字耗时翻倍、顿挫明显；至少回看 5 段；② 位置用浮点反复累加——0.0125 这类小数累积误差让最后一笔歪掉，位置一律 int32 脉冲累计，只在显示层换算 mm；③ 拐角速度给太高——皮带弹性 + 笔的惯性会在拐角甩出墨团，δ 从 0.02 起步慢慢放大。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>理论延伸</strong>：本节只做了"折线 + 梯形/S"这一层；B 样条路径、时间最优规划（Bang-Bang）、五次多项式过渡等在 <a href="javascript:void(0)" onclick="App.loadDetail('robo-08')">robo-08 轨迹规划</a>的系统讲解里——工程上 90% 的写字机/打印机就停在本节这一层。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>调参与承接</strong>：字迹振纹先降 a 再降 f_max（降幅各一半试起）；速度剖面和位置曲线画在 <a href="javascript:void(0)" onclick="App.loadDetail('linux-14')">linux-14 实时面板</a>上对照，比看数字直观十倍。规划好的段队列经 <a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11 协议</a>下发、由 <a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">linux-12 电机层</a>执行——三节合起来就是写字机的"运动神经"。</div></div>
+      ` },
+
+      // ===== linux-14 实时上位机（主线：WebSocket 推送 + Canvas 面板）=====
+      { id: 'linux-14', title: '实时上位机', desc: 'WebSocket 实时推送 vs 轮询、Canvas 画 XY 轨迹、点动/回零/急停面板、三级安全链', icon: '🖥️', tags: ['实战', '主线'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">实时上位机：给写字机一张脸</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          <a href="javascript:void(0)" onclick="App.loadDetail('linux-08')">linux-08 三层架构</a>里的 UI 进程到这里补全：一个浏览器页面，实时看到笔尖位置、画出写字轨迹、按下按钮就能点动/回零/急停——局域网内手机平板都能用。核心技术选型是 <strong>WebSocket 推送</strong>：浏览器与服务器建立一条 TCP 长连接（<a href="javascript:void(0)" onclick="App.loadDetail('net-04')">net-04 TCP</a>），之后双向随时发消息。本节从"为什么不用轮询"讲起，服务端、前端、安全链三块给全。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">轮询 vs 推送：为什么选 WebSocket</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>维度</th><th>HTTP 轮询</th><th>WebSocket 推送</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">平均延迟</td><td>≈ 轮询间隔的一半（百 ms~秒级）</td><td>≈ RTT + 推送周期（ms 级）</td></tr>
+            <tr><td class="font-medium">开销</td><td>每次带完整 HTTP 头（数百字节）+ 反复建连</td><td>一次握手，之后帧头 2~14 字节</td></tr>
+            <tr><td class="font-medium">方向</td><td>单向拉取（控制命令要另开请求）</td><td>全双工：状态上行 + 控制下行同通道</td></tr>
+            <tr><td class="font-medium">服务器负担</td><td>95% 的请求空转应答</td><td>有数据才发</td></tr>
+            <tr><td class="font-medium">写字机面板</td><td>曲线卡成阶梯</td><td><strong>✅ 标准选择</strong></td></tr>
+          </tbody>
+        </table></div>
+        <div class="formula-block">
+          $$\\bar{T}_{lat}^{poll} = \\frac{T_{poll}}{2} + T_{rtt},\\quad \\bar{T}_{lat}^{ws} = T_{rtt} + \\frac{T_{push}}{2}$$
+          <div class="text-sm text-gray-500 mt-2">轮询 1s 一次 → 平均延迟 500ms+；WebSocket 局域网 RTT &lt; 2ms、推送周期 50ms → 平均约 27ms，差近 20 倍。带宽账也轻松：20 帧/s × 约 40B 的 JSON = 800B/s，Wi-Fi 下九牛一毛</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">服务端：从共享内存到浏览器</h4>
+        <div class="formula-block">
+          [STM32] --50ms CMD_STATUS--&gt; [通信进程]（<a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11</a>）--写槽--&gt; [共享内存环形缓冲]（<a href="javascript:void(0)" onclick="App.loadDetail('linux-08')">linux-08</a>）<br>
+          --mmap 直读--&gt; [WS 服务进程] --广播 JSON--&gt; 浏览器　　控制命令反向：浏览器 --JSON--&gt; WS --命令队列--&gt; 规划进程
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          注意 WS 服务只是共享内存的一个<strong>只读消费者</strong>——它挂了不影响通信与规划进程，这就是分层的红利。原型用 Python 的 asyncio + websockets 三十分钟跑通（POSIX 共享内存就是 /dev/shm 下的文件，mmap 直读 C 结构体）：
+        </p>
+        <div class="code-block"><span class="code-comment"># ws_server.py —— 读 shm 状态流广播 + 接收控制命令（原型；产品化换 C/libwebsockets）</span>
+<span class="code-keyword">import</span> asyncio, json, mmap, struct, websockets
+
+f = <span class="code-func">open</span>(<span class="code-string">"/dev/shm/writer_status"</span>, <span class="code-string">"r+b"</span>)   <span class="code-comment"># POSIX 共享内存对象</span>
+SHM = mmap.<span class="code-func">mmap</span>(f.fileno(), 0)
+SLOT = struct.<span class="code-func">Struct</span>(<span class="code-string">"&lt;IiiH2x"</span>)      <span class="code-comment"># 16B/槽：ms,x,y,flags（对齐 linux-08 的 C 结构体）</span>
+clients = <span class="code-func">set</span>()
+
+<span class="code-keyword">async def</span> <span class="code-func">handler</span>(ws):
+    clients.<span class="code-func">add</span>(ws)
+    <span class="code-keyword">try</span>:
+        <span class="code-keyword">async for</span> msg <span class="code-keyword">in</span> ws:            <span class="code-comment"># 上行：控制命令</span>
+            cmd = json.<span class="code-func">loads</span>(msg)
+            <span class="code-keyword">if</span> cmd[<span class="code-string">"type"</span>] == <span class="code-string">"jog"</span>: <span class="code-keyword">pass</span>    <span class="code-comment"># 落到命令队列（mq_send），由通信进程发往 STM32</span>
+    <span class="code-keyword">finally</span>:
+        clients.<span class="code-func">discard</span>(ws)
+
+<span class="code-keyword">async def</span> <span class="code-func">pusher</span>():
+    tail = 0
+    <span class="code-keyword">while</span> <span class="code-keyword">True</span>:
+        head = struct.<span class="code-func">unpack_from</span>(<span class="code-string">"&lt;I"</span>, SHM, 4)[0]     <span class="code-comment"># 追 head 消费，不改它</span>
+        <span class="code-keyword">while</span> tail != head:
+            ms, x, y, flags = SLOT.<span class="code-func">unpack_from</span>(SHM, 12 + (tail % 64) * SLOT.size)
+            frame = json.<span class="code-func">dumps</span>({<span class="code-string">"ms"</span>: ms, <span class="code-string">"x"</span>: x * 0.0125,
+                                 <span class="code-string">"y"</span>: y * 0.0125, <span class="code-string">"flags"</span>: flags})   <span class="code-comment"># 脉冲→mm</span>
+            <span class="code-keyword">if</span> clients: websockets.<span class="code-func">broadcast</span>(clients, frame)
+            tail += 1
+        <span class="code-keyword">await</span> asyncio.<span class="code-func">sleep</span>(0.05)          <span class="code-comment"># 与 STM32 上报同频</span>
+
+<span class="code-keyword">async def</span> <span class="code-func">main</span>():
+    <span class="code-keyword">async with</span> websockets.<span class="code-func">serve</span>(handler, <span class="code-string">"0.0.0.0"</span>, 8765):
+        <span class="code-keyword">await</span> <span class="code-func">pusher</span>()
+
+asyncio.<span class="code-func">run</span>(<span class="code-func">main</span>())
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">前端：Canvas 画 XY 轨迹</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          不需要任何前端框架：一个 canvas 逐帧画点，笔尖就是最新一点，走过的路径自然留下"字"。坐标映射 mm→像素是唯一要小心的换算（Y 轴屏幕向下，要翻转）：
+        </p>
+        <div class="code-block"><span class="code-comment">&lt;!-- index.html —— 轨迹画布 + 控制面板（骨架，所有标签已转义显示） --&gt;</span>
+&lt;canvas id=<span class="code-string">"traj"</span> width=<span class="code-string">"400"</span> height=<span class="code-string">"400"</span>&gt;&lt;/canvas&gt;
+&lt;span id=<span class="code-string">"pos"</span>&gt;x=0.0, y=0.0&lt;/span&gt;
+&lt;button onmousedown=<span class="code-string">"jog('x', 5)"</span> onmouseup=<span class="code-string">"stop()"</span>&gt;X+&lt;/button&gt;
+&lt;button onclick=<span class="code-string">"send({type:'home'})"</span>&gt;回零&lt;/button&gt;
+&lt;button onclick=<span class="code-string">"send({type:'estop'})"</span> style=<span class="code-string">"background:#dc2626;color:#fff"</span>&gt;急停&lt;/button&gt;
+
+&lt;script&gt;
+const cv = document.getElementById(<span class="code-string">'traj'</span>), ctx = cv.getContext(<span class="code-string">'2d'</span>);
+const RANGE = 200;                              <span class="code-comment">// 行程 200mm 映射 400px</span>
+const ws = new WebSocket(<span class="code-string">'ws://'</span> + location.hostname + <span class="code-string">':8765'</span>);
+ws.onmessage = function (e) {
+    const s = JSON.parse(e.data);
+    const px = s.x / RANGE * cv.width;               <span class="code-comment">// mm → 像素</span>
+    const py = cv.height - s.y / RANGE * cv.height;  <span class="code-comment">// Y 轴向上翻转</span>
+    ctx.fillStyle = <span class="code-string">'rgba(99,102,241,0.6)'</span>;
+    ctx.fillRect(px - 1, py - 1, 2, 2);              <span class="code-comment">// 轨迹点，笔尖即最新点</span>
+    document.getElementById(<span class="code-string">'pos'</span>).textContent = <span class="code-string">'x='</span> + s.x.toFixed(1);
+};
+function send(o) { if (ws.readyState === 1) ws.send(JSON.stringify(o)); }
+function jog(axis, mm) { send({ type: <span class="code-string">'jog'</span>, axis: axis, mm: mm }); }
+&lt;/script&gt;
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">控制面板：点动/回零/调速</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          命令的完整路径：按钮事件 → JSON 下行（同一条 WebSocket）→ WS 服务写<strong>命令队列</strong>（<a href="javascript:void(0)" onclick="App.loadDetail('linux-08')">linux-08 消息队列</a>，急停高优先级插队）→ 通信进程组帧 <a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">CMD_JOG/CMD_HOME</a> → STM32 执行（<a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">linux-12 电机层</a>）。点动按钮用 onmousedown/onmouseup 配对：按住以固定间隔连续发、松开即停，避免"一次点击飞出去"。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">三级安全链：急停设计</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>第一级：面板急停按钮</strong>——红色置顶，发送 estop 命令走最高优先级队列，路径最短、响应最快</li>
+          <li><strong>第二级：通信进程 ESTOP</strong>——任何进程异常退出前都发 CMD_ESTOP（<a href="javascript:void(0)" onclick="App.loadDetail('linux-08')">linux-08 信号处理</a>里的收尾动作）</li>
+          <li><strong>第三级：STM32 心跳超时</strong>——300ms 无心跳自动失能电机（<a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11</a>）。就算整台 Linux 板断电，机器也会自己停下来</li>
+        </ul>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          反向的降级同样重要：<strong>WS 断开只是"看不到"不是"失控"</strong>——UI 是纯观察者，掉线不影响通信与规划进程；面板上显示"已断线"并停发点动即可。绝不能把安全逻辑放在浏览器里。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">上位机搭建五步</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>起 WS 服务</strong><br>装 python3-websockets 后跑 ws_server.py；板子防火墙放行 8765 端口</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>验证数据流</strong><br>浏览器 DevTools → Network → WS → Messages：应看到 50ms 一帧的 JSON；没有帧先查共享内存 magic 与槽结构对齐</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>标定画布</strong><br>手推笔架走满行程一圈，屏幕轨迹应恰好占满 canvas 且不镜像——镜像就是 X/Y 接反或 Y 翻转漏了</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>接通控制</strong><br>点动 X+5 实测位移 5mm（方向定义对照 <a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">linux-12 上电五步</a>）；回零按钮触发限位流程</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>安全演练</strong><br>三连测：按急停（立即停）、杀通信进程（2s 内 systemd 拉起 + 期间 STM32 心跳超时自停）、拔网线（机器继续写完，只是看不到）——三条路都通才算过关</div></div>
+        </div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>面板三大坑</strong>：① 点动按住狂发命令——mousedown 只发一帧或以固定频率发，mouseup/leave 必须停，命令队列还要限流；② Canvas 不清屏导致拖影/糊成一团——轨迹用半透明点叠加、笔尖用高亮圆每帧重画，或加"清屏"按钮；③ WebSocket 裸奔公网——默认无认证，只监听局域网，要远程用就加 token 或套反向代理 + HTTPS（<a href="javascript:void(0)" onclick="App.loadDetail('net-05')">net-05 应用层安全</a>）。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>这就是 Klipper 前端的同构</strong>：fluidd/mainsail 面板 ↔ moonraker（WebSocket API）↔ klipper 主机进程 ↔ MCU——与我们的"浏览器 ↔ ws_server ↔ 共享内存 ↔ 通信进程 ↔ STM32"一一对应，只是人家加了鉴权、G-code 解析和更漂亮的 Vue 界面。想加 3D 视图就换 three.js，把 s.x/s.y 换成模型坐标即可。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>联调与收束</strong>：写 UI 之前先用工具箱的 uart-debug 工具手搓几条命令确认链路，再让 <a href="javascript:void(0)" onclick="App.loadDetail('linux-13')">linux-13 的速度剖面</a>数据一起上报（把 f(t) 加进状态帧），面板上同时画位置和速度曲线——至此 linux-08 分层、linux-11 协议、linux-12/13 运动链全部有了可视化窗口，整机收束在 <a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">linux-10 联调</a>。</div></div>
       ` },
 
     ],
@@ -12861,6 +13105,8 @@ const KnowledgeDeps = {
   'linux-10': ['linux-05', 'linux-06', 'net-05'], // 实战项目 <- GPIO + 总线 + 应用层
   'linux-11': ['linux-06', 'emb-06', 'emb-10'],  // 协议设计 <- 串口访问 + 接口协议 + 开发实践
   'linux-12': ['linux-11', 'emb-05', 'motor-05', 'motor-07'], // 电机控制 <- 协议 + 定时器 + 步进 + 双闭环
+  'linux-13': ['linux-12', 'robo-08', 'motor-07'],  // 运动规划 <- 电机控制 + 轨迹规划 + 调速
+  'linux-14': ['linux-11', 'linux-08', 'net-05'],   // 实时上位机 <- 协议 + IPC + 应用层
 
   // === 3D 打印内部链（v0.9.3 新增）===
   'print-01': [],                       // 工艺概述（无前置）
