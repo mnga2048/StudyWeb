@@ -12005,57 +12005,211 @@ mqd_t q = <span class="code-func">mq_open</span>(<span class="code-string">"/wri
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>承接主线</strong>：进程间"消息"定好了，跨机器的消息（浏览器实时看曲线）交给 <a href="javascript:void(0)" onclick="App.loadDetail('linux-14')">linux-14 WebSocket 上位机</a>；STM32 侧的语言（帧协议、心跳）在 <a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11</a>；网络基础回看 <a href="javascript:void(0)" onclick="App.loadDetail('net-05')">HTTP 应用层</a>。</div></div>
       ` },
 
-      // ===== linux-09 嵌入式 Linux 系统构建（概览版，待扩充）=====
-      { id: 'linux-09', title: '嵌入式 Linux 系统构建', desc: 'Buildroot/Yocto 入门、内核裁剪、自定义 rootfs 与 SD 卡分区（概览版）', icon: '🏗️', tags: ['进阶'], goals: { eng: true }, content: `
-        <h3 class="text-lg font-semibold mb-3">从"用系统"到"造系统"</h3>
+      // ===== linux-09 嵌入式 Linux 系统构建（主线：写字机产品化打包）=====
+      { id: 'linux-09', title: '嵌入式 Linux 系统构建', desc: 'Buildroot 实操、内核裁剪、rootfs overlay 打包写字机三进程与设备树覆盖片', icon: '🏗️', tags: ['进阶', '主线'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">从"用系统"到"造系统"：写字机的产品化打包</h3>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          官方系统好用但臃肿：几百个你用不到的包占空间、留攻击面。产品化（或纯粹想学透）时要<strong>自己构建整套系统</strong>——这正是 <a href="javascript:void(0)" onclick="App.loadDetail('os-09')">分布式与现代 OS</a>所说"内核 + 用户态分层"的一次亲手组装。
+          到目前为止，写字机跑在官方系统上：SSH 手动登录、手动拉起三个进程、<a href="javascript:void(0)" onclick="App.loadDetail('linux-07')">设备树覆盖片</a>手动安装。做演示可以，交付不行——产品化的目标是<strong>一张 SD 卡镜像，烧上即用</strong>：上电自动回零、自动起服务、插上网线就能打开面板。这正是 <a href="javascript:void(0)" onclick="App.loadDetail('os-09')">os-09</a>所说"内核 + 用户态分层"的一次亲手组装，也把 <a href="javascript:void(0)" onclick="App.loadDetail('linux-04')">linux-04 交叉编译</a>从"编一个程序"升级成"编一整个系统"。
         </p>
 
+        <h4 class="font-medium mt-6 mb-2">自建系统的三个动机</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>裁剪</strong>：官方镜像里的桌面、蓝牙、几十个后台服务写字机全用不到——占 2GB+ 空间、拖慢启动、扩大攻击面；自建镜像可压到 100MB 级，上电几秒内服务就绪</li>
+          <li><strong>可复现</strong>：一份 defconfig 就是系统的完整定义，换 SD 卡、换板子，make 一次得到一致的镜像——"在我机器上是好的"从此不再是借口</li>
+          <li><strong>可控</strong>：知道镜像里每一个文件从哪来，出问题能定位到包；配合双分区 A/B 升级，坏一块还能启动另一块</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">Buildroot vs Yocto：先学哪个</h4>
         <div class="overflow-x-auto"><table class="compare-table">
           <thead><tr><th>维度</th><th>Buildroot</th><th>Yocto</th></tr></thead>
           <tbody>
             <tr><td class="font-medium">定位</td><td>简单固件构建框架</td><td>完整发行版工厂</td></tr>
-            <tr><td class="font-medium">上手</td><td>小时级，make menuconfig</td><td>周级，概念多（layer/recipe）</td></tr>
-            <tr><td class="font-medium">产物</td><td>单一固件镜像</td><td>可维护的软件包仓库</td></tr>
-            <tr><td class="font-medium">适合</td><td>个人项目、单板小批量</td><td>公司产品、多板族管理</td></tr>
+            <tr><td class="font-medium">上手</td><td>小时级，make menuconfig</td><td>周级，概念多（layer/recipe/bitbake）</td></tr>
+            <tr><td class="font-medium">产物</td><td>单一固件镜像</td><td>可维护的软件包仓库 + 镜像</td></tr>
+            <tr><td class="font-medium">增量构建</td><td>弱（改配置常需全清重来）</td><td>强（任务级缓存）</td></tr>
+            <tr><td class="font-medium">适合</td><td><strong>写字机这类单板小批量 ✅</strong></td><td>公司产品、多板族管理</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          结论明确：写字机用 Buildroot。Yocto 等你同时维护三个以上板型、有专职团队时再学——两者思想相通（都是"配方 → 工具链 → 镜像"），先会 Buildroot，Yocto 的学习曲线会平缓很多。RK/全志板子另有厂商 SDK（本质是 Yocto/Debian 的定制版），思路同源。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">Buildroot 五步走</h4>
+        <div class="code-block"><span class="code-comment"># 1. 获取与选板（x86_64 主机上进行，预留约 30GB 磁盘）</span>
+git clone https://github.com/buildroot/buildroot.git &amp;&amp; cd buildroot
+make raspberrypi4_64_defconfig        <span class="code-comment"># 官方板级配置；其他板查 configs/ 目录</span>
+
+<span class="code-comment"># 2. 裁剪与选包（界面与内核 menuconfig 同款）</span>
+make menuconfig
+<span class="code-comment">#   Target packages 勾选：libgpiod / i2c-tools / dropbear(SSH)</span>
+<span class="code-comment">#   Filesystem: ext4；System: 主机名 writer、开机默认 DHCP</span>
+
+<span class="code-comment"># 3. 内核裁剪（可选）</span>
+make linux-menuconfig
+<span class="code-comment">#   关掉 Bluetooth / Sound / Camera 等写字机用不到的子系统</span>
+
+<span class="code-comment"># 4. 一键构建（首次 1~3 小时：下载源码→工具链→内核→rootfs→镜像）</span>
+make -j8
+
+<span class="code-comment"># 5. 写卡（产物在 output/images/sdcard.img）</span>
+sudo dd if=output/images/sdcard.img of=/dev/sdX bs=4M status=progress &amp;&amp; sync
+        </div>
+        <div class="formula-block">
+          SD 卡产物布局：<br>[FAT32 boot 分区] bootloader + 内核 Image + 设备树 .dtb + overlays/writer-addon.dtbo + config.txt（含 dtoverlay=writer-addon）<br>[EXT4 rootfs 分区] /bin /etc /lib ...（<a href="javascript:void(0)" onclick="App.loadDetail('linux-02')">FHS 目录结构</a>在这里成形）+ /usr/bin/writer_* 三个程序 + systemd 服务<br>关键认知：构建系统 = 决定这两个分区里<strong>每一个文件</strong>的来源
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">写字机产品化：BR2_ROOTFS_OVERLAY</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          最重要的一块拼图是 <strong>rootfs overlay</strong>：一个目录树，构建时原样拷进 rootfs。写字机的全部"私货"——三个进程、systemd 服务、设备树覆盖片、上位机前端页面——都从这里进镜像：
+        </p>
+        <div class="code-block"><span class="code-comment"># 项目目录 writer-overlay/（进 Git，与 defconfig 一起版本化）</span>
+writer-overlay/
+├── usr/bin/writer_comms          <span class="code-comment"># linux-11 通信进程（交叉编译产物）</span>
+├── usr/bin/writer_planner        <span class="code-comment"># linux-13 规划进程</span>
+├── usr/bin/ws_server             <span class="code-comment"># linux-14 上位机服务</span>
+├── usr/share/writer/index.html   <span class="code-comment"># 前端面板</span>
+├── etc/systemd/system/writer-comms.service
+├── etc/systemd/system/writer-planner.service
+└── etc/systemd/system/ws-server.service
+
+<span class="code-comment"># menuconfig 挂载：System configuration →</span>
+<span class="code-comment">#   Root filesystem overlay directories = writer-overlay</span>
+
+<span class="code-comment"># writer-comms.service —— 三进程托管模板（其余两个同款改名）</span>
+[Unit]
+Description=Writer MCU link
+After=dev-writer_mcu.device
+[Service]
+ExecStart=/usr/bin/writer_comms
+Restart=always
+RestartSec=1
+[Install]
+WantedBy=multi-user.target
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          三进程互不拖累地自愈（<a href="javascript:void(0)" onclick="App.loadDetail('linux-08')">linux-08 崩溃策略</a>）；启动顺序用 After/Requires 声明——udev 为 /dev/writer_mcu 生成 dev-writer_mcu.device 单元，通信进程等设备就绪再启动——别用 sleep 脚本硬等。程序源码也可以做成 Buildroot 自定义 package（package/Config.in + .mk）让构建系统接管编译，小批量阶段直接放 overlay 二进制更省事。
+        </p>
+        <div class="formula-block">
+          可复现性等式：sdcard.img = Buildroot(defconfig@tag) + writer-overlay@tag + writer-addon.dtbo@tag<br>三样进 Git 打 tag，任何人任何时候 make 都得到一致的镜像（Buildroot 默认不锁全部源码版本，严格场景用 BR2_PRIMARY_SITE 镜像源 + defconfig 固定版本号）
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">产测与升级：镜像出厂前做什么</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>镜像校验</strong>：sha256sum sdcard.img 存档；每张卡烧完回读比对首尾 1MB，防"半烧"卡流入产线</li>
+          <li><strong>上电自检</strong>：再加一个 writer-selftest.service——两轴各点动 100 脉冲、读回位置比对、舵机抬落一次，板载 LED 绿=过红=坏，产线不看日志也能分拣</li>
+          <li><strong>OTA 升级</strong>：单分区镜像升级等于全卡重烧；讲究做法是 A/B 双 rootfs + SWUpdate/U-Boot 引导切换，升级失败自动回滚——写字机小批量可先不做，但要知道路在哪</li>
+          <li><strong>安全收敛</strong>：root 改密或仅密钥登录（dropbear）、关掉用不到的网络服务、产线串口 console 能断则断（<a href="javascript:void(0)" onclick="App.loadDetail('net-05')">net-05</a>的安全底线同款）</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">从零构建写字机镜像六步</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>装环境</strong><br>x86_64 Linux 主机（WSL2 亦可）+ 30GB 磁盘；装 gcc/make/git/rsync 基础工具</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>跑通最小镜像</strong><br>板级 defconfig 直接 make → 烧卡 → 能 SSH 登录，证明工具链全通</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>裁剪选包</strong><br>menuconfig 勾 libgpiod/i2c-tools/dropbear；内核关蓝牙音频；make savedefconfig 固化配置</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>接 overlay</strong><br>三个交叉编译产物 + systemd 服务 + <a href="javascript:void(0)" onclick="App.loadDetail('linux-07')">writer-addon.dtbo</a> 放进 overlay 目录并在 menuconfig 挂载</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>整机验证</strong><br>烧卡上电：服务自起、面板可开、点动可用——全程不接显示器键盘，按"无头"方式验收</div></div>
+          <div class="step"><span class="step-num">6</span><div class="step-content"><strong>版本化</strong><br>defconfig + overlay 目录 + 构建脚本进 Git，打 tag；任何人 make 一次即复现镜像</div></div>
+        </div>
+
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>构建三大坑</strong>：① 别用 root 构建——权限污染 output/ 目录后患无穷；② 直接改生成产物会被下次 make 覆盖——一切修改进 defconfig 或 overlay，"配置即代码"；③ 首次构建下载源码慢且偶发校验失败——配国内镜像源或手动补齐 dl/ 目录再重试。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>什么时候才值得上 Yocto</strong>：板型 ≥3、需要长期维护软件包仓库、团队按层分工时——它的 layer 机制让"公司公共层 + 产品差异层"分得很干净，代价是学习曲线与构建资源。个人项目和单板产品，Buildroot 一直够用。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>承接主线</strong>：镜像就绪，写字机的"灵魂"（软件）全部装箱——整机装配、分层验收、标定与写出第一个字，就是 <a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">linux-10 整机联调</a>的毕业礼；结构件的 3D 打印在 <a href="javascript:void(0)" onclick="App.loadDetail('print-08')">print-08</a>。</div></div>
+      ` },
+
+      // ===== linux-10 实战项目：两轴写字机整机联调（主线收官）=====
+      { id: 'linux-10', title: '实战项目：两轴写字机整机联调', desc: '机械→电气→固件→软件分层验收、脉冲当量标定补偿、写字参数调优、故障速查表', icon: '🎯', tags: ['实战', '综合', '主线'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">毕业项目：让写字机写出第一个字</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          前面十三节各造了一个零件：<a href="javascript:void(0)" onclick="App.loadDetail('linux-06')">串口</a>通了、<a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">协议</a>定了、<a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">电机</a>转了、<a href="javascript:void(0)" onclick="App.loadDetail('linux-13')">轨迹</a>会规划了、<a href="javascript:void(0)" onclick="App.loadDetail('linux-14')">面板</a>能看了、<a href="javascript:void(0)" onclick="App.loadDetail('linux-09')">镜像</a>能产品化了。本节把它们装配成一台真正的机器。联调的核心方法论只有一句：<strong>分层验收，逐层叠加</strong>——每层单独证明自己没问题，再往上层走；出了问题立刻知道该去哪层查。这套方法从写字机到任何机电产品通用。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">整机架构与物料清单</h4>
+        <div class="formula-block">
+          [浏览器面板]（linux-14）⇄ [ws_server] ⇄ 共享内存/命令队列（linux-08）⇄ [规划进程]（linux-13）<br>
+          ⇄ [通信进程]（linux-11）⇄ USB CDC ⇄ [STM32：协议解析 + 运动队列 + TIM 脉冲]（linux-12）<br>
+          ⇄ STEP/DIR ⇄ [TMC2209 ×2] → 42 步进 ×2 → GT2 同步带 → 龙门架（print-08）<br>
+          附件：抬笔舵机（PWM，linux-07）｜X/Y 限位开关 ×2（GPIO，linux-05）｜24V/5V 电源
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>类别</th><th>物料</th><th>来源/章节</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">机械</td><td>龙门架、笔架、轴承座、联轴器、限位挡块</td><td>3D 打印（print-05~08）</td></tr>
+            <tr><td class="font-medium">传动</td><td>42 步进 ×2、GT2 同步带 + 20 齿带轮、光轴导轨</td><td>采购（选型见 linux-12）</td></tr>
+            <tr><td class="font-medium">驱动</td><td>TMC2209 ×2（16 细分、Vref 0.4V）、24V 电源</td><td>采购（linux-12 对比表）</td></tr>
+            <tr><td class="font-medium">控制</td><td>Linux 开发板（含 linux-09 镜像）+ STM32 最小系统</td><td>linux-01 / linux-09</td></tr>
+            <tr><td class="font-medium">附件</td><td>抬笔舵机 SG90、限位开关 ×2、0.5mm 笔</td><td>采购</td></tr>
           </tbody>
         </table></div>
 
-        <div class="formula-block">
-          SD 卡产物布局：<br>[FAT32 boot 分区] bootloader + 内核 zImage + 设备树 .dtb<br>[EXT4 rootfs 分区] /bin /etc /lib ... + 你的应用（<a href="javascript:void(0)" onclick="App.loadDetail('linux-02')">目录结构</a>那节的 FHS 就在这里成形）<br>构建四步：make defconfig 选板 → menuconfig 裁剪包 → make（下载/交叉编译/打包全自动）→ dd 写卡
+        <h4 class="font-medium mt-6 mb-2">六层验收清单（自下而上）</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>机械层</strong><br>皮带张紧（按压 5~10mm 挠度）、手推滑块全行程无卡滞、限位可靠触发（print-08 的装配要求）</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>电气层</strong><br>全系统单点共地、Vref 0.4V、ENA 使能/失能验证——<a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">linux-12 上电五步</a>原样执行</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>固件层</strong><br>心跳超时自停、ESTOP 立即失能、限位触发即停——<a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">linux-11 联调五步</a>的第 4 步故障注入全过</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>通信层</strong><br>udev 别名稳定、握手成功、状态帧 50ms 准时、10 万帧压力误帧率 &lt; 0.01%</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>软件层</strong><br>三进程 systemd 拉起、杀规划进程后通信进程与 STM32 均安全、<a href="javascript:void(0)" onclick="App.loadDetail('linux-08')">linux-08 拆分五步</a>收尾</div></div>
+          <div class="step"><span class="step-num">6</span><div class="step-content"><strong>界面层</strong><br>面板轨迹与实际运动吻合、急停按钮响应 &lt; 100ms、断线降级正确——<a href="javascript:void(0)" onclick="App.loadDetail('linux-14')">linux-14 搭建五步</a>的标定与演练</div></div>
         </div>
 
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2 a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>🚧 概览版说明</strong>：Buildroot 完整实操（BR2 包选择、自定义 overlay 添加自己的程序、内核 menuconfig 裁剪、生成 SD 镜像）将在 v1.0.x 扩充。学习路径建议：先玩透 <a href="javascript:void(0)" onclick="App.loadDetail('linux-01')">现成系统</a>，再回来造轮子。</div></div>
-      ` },
-
-      // ===== linux-10 实战项目：传感器 Web 监控（概览版，待扩充）=====
-      { id: 'linux-10', title: '实战项目：传感器 Web 监控', desc: 'GPIO/I2C 采集 + SQLite 存储 + Web 服务器 + 手机查看（项目蓝图）', icon: '🎯', tags: ['实战', '综合'], goals: { eng: true }, content: `
-        <h3 class="text-lg font-semibold mb-3">毕业项目：把前九节串成一台设备</h3>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-          学完命令行、脚本、交叉编译、GPIO/I2C、IPC，就该做一个完整作品了：一台<strong>传感器网络监控终端</strong>——采集温湿度，入库存储，浏览器实时查看曲线，手机也能访问。项目覆盖嵌入式 Linux 工程师岗位 JD 的高频关键词。
+        <h4 class="font-medium mt-6 mb-2">标定：脉冲当量实测与补偿</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          理论当量 0.0125mm/脉冲来自"20 齿 × 2mm 齿距 ÷ 3200 步/转"，但同步带爬齿、带轮加工误差会让实际值偏离 0.1~0.5%——累积到 200mm 行程末端就是约 1mm，字直接写歪。标定五步：
         </p>
-
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>指令走已知距离</strong><br>面板点动 X 轴 +8000 脉冲（理论 100mm），从回零位出发</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>实测</strong><br>卡尺量笔尖实际位移，往返测 3 次取均值（示例：100.32mm）</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>求补偿系数</strong><br>k = 实测 ÷ 指令 = 1.0032（见下式）</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>修正参数</strong><br>当量改为 δ×k 或规划时脉冲数 ÷ k，写入配置文件重启规划进程</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>复验</strong><br>全行程往返 3 次首尾漂移 &lt; 0.1mm；Y 轴同法；最后回零后手移笔尖到纸面角点设书写原点</div></div>
+        </div>
         <div class="formula-block">
-          系统架构（数据单向流 + systemd 托管）：<br>[采集器] 每 30s 读 SHT30（<a href="javascript:void(0)" onclick="App.loadDetail('linux-06')">I2C</a>）→ FIFO（<a href="javascript:void(0)" onclick="App.loadDetail('linux-08')">IPC</a>）<br>[入库器] 读 FIFO → INSERT 进 SQLite（时序表 + 每日轮转）<br>[Web] mongoose/nginx + ECharts 画曲线（<a href="javascript:void(0)" onclick="App.loadDetail('net-05')">HTTP 应用层</a>）→ 局域网手机直接访问<br>三个进程各写一个 systemd service，崩溃自动重启
+          $$k_{comp} = \\frac{L_{\\text{实测}}}{L_{\\text{指令}}},\\quad \\delta' = \\delta \\cdot k_{comp}$$
+          <div class="text-sm text-gray-500 mt-2">补偿后残余误差 &lt; 0.2% 时肉眼已不可辨；若 k 偏离 1 超过 1%，先查机械（皮带齿跳、带轮松动）而不是改软件</div>
         </div>
 
-        <h4 class="font-medium mt-6 mb-2">数据库表与关键技术点</h4>
-        <div class="code-block"><span class="code-comment">-- SQLite 单文件数据库，交叉编译 sqlite3 或 apt 安装</span>
-<span class="code-keyword">CREATE TABLE</span> logs (
-    id      <span class="code-keyword">INTEGER PRIMARY KEY AUTOINCREMENT</span>,
-    ts      <span class="code-keyword">DATETIME DEFAULT</span> (datetime(<span class="code-string">'now'</span>,<span class="code-string">'localtime'</span>)),
-    temp    <span class="code-keyword">REAL</span>,           <span class="code-comment">-- 温度 ℃</span>
-    humi    <span class="code-keyword">REAL</span>            <span class="code-comment">-- 湿度 %RH</span>
-);
-        </div>
+        <h4 class="font-medium mt-6 mb-2">写一个字：从 SVG 到脉冲流</h4>
         <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
-          <li><strong>Web 选型</strong>：轻量用 mongoose（单文件 C 库，几百行代码起 HTTP 服务）；功能多用 nginx + php/CGI；前后端分离则 Flask/FastAPI</li>
-          <li><strong>安全底线</strong>：只监听局域网、改默认密码、HTTP 加 Basic Auth——公网暴露的 IoT 设备平均存活时间不到 1 小时</li>
-          <li><strong>可靠性</strong>：SQLite WAL 模式抗断电；日志限额清理（<a href="javascript:void(0)" onclick="App.loadDetail('linux-03')">cron</a>）；看门狗重启兜底</li>
+          <li><strong>字模</strong>：手绘 SVG 路径或单线字体（笔画即路径，不用描边填充字体），一个笔画一条折线</li>
+          <li><strong>离散</strong>：贝塞尔曲线按 0.05mm 弦高误差切成短折线（与 <a href="javascript:void(0)" onclick="App.loadDetail('linux-13')">linux-13</a> 圆弧离散同法）</li>
+          <li><strong>笔序</strong>：笔画间抬笔（舵机 duty 1000→2000μs）、空移快速定位不落笔，笔顺按书法习惯排</li>
+          <li><strong>参数</strong>：落笔速度 40~60mm/s、空移 100mm/s、加速度 200Hz/ms 起步——字迹发虚降速度，出现抖纹降加速度</li>
+          <li><strong>下发</strong>：CMD_TRAJ_SEG 分包 + 滑窗 4 段背压（linux-11/13 的管线原样使用）</li>
+        </ul>
+        <div class="code-block"><span class="code-comment"># writer_cli —— 规划进程的命令行入口（走命令队列，面板之外也能用）</span>
+./writer_cli home                            <span class="code-comment"># 回零</span>
+./writer_cli text <span class="code-string">"永"</span> --font kai.svg --speed 50   <span class="code-comment"># 写字</span>
+./writer_cli estop                           <span class="code-comment"># 急停</span>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">故障速查表：现象 → 层 → 动作</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>现象</th><th>嫌疑层</th><th>排查动作</th></tr></thead>
+          <tbody>
+            <tr><td>串口收到乱码</td><td>通信</td><td>波特率/共地（<a href="javascript:void(0)" onclick="App.loadDetail('linux-06')">linux-06 四大坑</a>）</td></tr>
+            <tr><td>电机嗡嗡不转</td><td>电气/规划</td><td>降加速度、查 Vref、查四线接线顺序</td></tr>
+            <tr><td>字整体放大/缩小</td><td>标定</td><td>重测补偿系数 k（本节上文五步）</td></tr>
+            <tr><td>拐角有墨团</td><td>规划</td><td>junction δ 调小、拐角降速（<a href="javascript:void(0)" onclick="App.loadDetail('linux-13')">linux-13</a>）</td></tr>
+            <tr><td>面板曲线卡顿</td><td>界面</td><td>共享内存槽覆盖/UI 重绘阻塞（linux-08/14）</td></tr>
+            <tr><td>运行中突然失能</td><td>固件（多为正常防护）</td><td>dmesg 查 USB 断连；心跳超时停机是设计行为（linux-11）</td></tr>
+            <tr><td>回零位置漂移</td><td>机械</td><td>皮带张紧、限位挡块螺丝打胶（print-08）</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">扩展方向</h4>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>抬笔升级</strong>：舵机 → 电磁铁吸放 → 电动 Z 轴——离三轴闭环机器只差一步</li>
+          <li><strong>激光雕刻</strong>：换 2.5W 光纤模块做 engraver，PWM 功率控制复用本套架构；<strong>必须</strong>配护目镜 + 封闭罩 + 钥匙开关</li>
+          <li><strong>视觉闭环</strong>：摄像头 + AprilTag 定位纸面，写字前自动对齐坐标系（RK3568 的 NPU 派上用场，呼应 linux-01 选型）</li>
+          <li><strong>远程化</strong>：MQTT 上报状态、手机远程下发字帖——公网暴露的安全要求见 <a href="javascript:void(0)" onclick="App.loadDetail('net-05')">net-05</a></li>
         </ul>
 
-        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>🚧 项目蓝图说明</strong>：本节给出架构与选型，完整代码工程（采集器 C 源码 + FIFO 协议 + sqlite 函数 + mongoose 路由 + 前端图表页）将在 v1.0.x 分阶段扩充。动手顺序建议：先用 <a href="javascript:void(0)" onclick="App.loadDetail('sns-06')">温度传感器</a>知识接好硬件，跑通"采集→打印"再逐层加存储和 Web。</div></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>急停演练是验收的一部分</strong>：三连测缺一不可——面板急停按钮（&lt;100ms）、拔 USB（STM32 心跳超时自停）、断 Linux 电源（同样心跳兜底）。上激光模块之前，把急停链路、外壳联锁、护目镜制度全部过一遍再通电。</div></div>
+
+        <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>简历价值</strong>：这一个项目就能覆盖嵌入式岗位的核心关键词——嵌入式 Linux（Buildroot/设备树/systemd）、C 通信协议（CRC/状态机/心跳）、电机控制（定时器/梯形加减速）、运动规划（插补/lookahead）、上位机（WebSocket/Canvas）。面试官从任何一层追问，你都有实物和参数可讲。</div></div>
+
+        <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>收官与下一站</strong>：linux 板块 14 节到此闭环——从烧系统到写出第一个字。结构件的建模、公差与整机结构在 <a href="javascript:void(0)" onclick="App.loadDetail('print-05')">print-05~08</a>（同一台机器的另一半）；想深入实时性对比回看 <a href="javascript:void(0)" onclick="App.loadDetail('os-09')">os-09</a>。录一段写字视频存档——这是学习路径上第一个"摸得着"的里程碑。</div></div>
       ` },
 
       // ===== linux-11 Linux↔MCU 通信协议设计（主线：双侧 C 实现）=====
@@ -13102,7 +13256,7 @@ const KnowledgeDeps = {
   'linux-07': ['linux-06', 'dig-14'],   // 设备树 <- 总线访问 + HDL
   'linux-08': ['linux-03', 'os-03'],    // IPC <- Shell + 进程同步
   'linux-09': ['linux-04', 'os-09'],    // 系统构建 <- 交叉编译 + 现代 OS
-  'linux-10': ['linux-05', 'linux-06', 'net-05'], // 实战项目 <- GPIO + 总线 + 应用层
+  'linux-10': ['linux-09', 'linux-12', 'linux-13', 'linux-14'], // 整机联调 <- 镜像 + 电机 + 规划 + 上位机
   'linux-11': ['linux-06', 'emb-06', 'emb-10'],  // 协议设计 <- 串口访问 + 接口协议 + 开发实践
   'linux-12': ['linux-11', 'emb-05', 'motor-05', 'motor-07'], // 电机控制 <- 协议 + 定时器 + 步进 + 双闭环
   'linux-13': ['linux-12', 'robo-08', 'motor-07'],  // 运动规划 <- 电机控制 + 轨迹规划 + 调速
