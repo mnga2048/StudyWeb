@@ -365,6 +365,7 @@
       </div>
       ${hasContent ? `<div class="prose max-w-none">${section.content}</div>` : renderPlaceholder('本节内容建设中', '📝', '该知识点的详细讲解正在编写，可先收藏，或前往已完成的板块学习。')}
       ${quiz ? Quiz.render(section.id, quiz) : ''}
+      ${Notes.render(section.id)}
       <div class="mt-8 pt-6 border-t flex items-center justify-between" style="border-color:var(--border)">
         <div class="flex items-center gap-2 text-sm" style="color:var(--text-secondary)">
           <span>学习状态：</span>
