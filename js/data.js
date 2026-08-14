@@ -10287,6 +10287,22 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           <li><strong>德摩根律</strong>：$\\overline{A \\cup B} = \\bar{A} \\cap \\bar{B}$，$\\overline{A \\cap B} = \\bar{A} \\cup \\bar{B}$</li>
         </ul>
 
+        <h4 class="font-medium mt-6 mb-2">实例：配对问题（古典概型）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          将 $n$ 封信随机装入 $n$ 个信封，求<strong>至少有一封信装对</strong>的概率。这是经典的"错排问题"逆向应用，用对立事件 + 容斥原理求解最简。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：取对立事件</strong>。"至少一封对" = 1 - "全装错"。记 $A_i$ 为第 $i$ 封装对，求 $P(A_1 \\cup \\cdots \\cup A_n)$</div></div>
+          <div class="step-item"><div><strong>第二步：容斥原理</strong>。$P(\\cup A_i) = \\sum P(A_i) - \\sum P(A_iA_j) + \\cdots$，其中 $P(A_i) = 1/n$，$P(A_iA_j) = 1/[n(n-1)]$</div></div>
+          <div class="step-item"><div><strong>第三步：求和</strong>。$C_n^k \\cdot \\frac{1}{n(n-1)\\cdots(n-k+1)} = \\frac{1}{k!}$，求和 $\\sum_{k=1}^{n} (-1)^{k+1}/k!$</div></div>
+          <div class="step-item"><div><strong>第四步：结论</strong>。$P = 1 - \\sum_{k=2}^{n} (-1)^k/k! \\approx 1 - 1/e \\approx 0.632$（$n$ 大时）</div></div>
+        </div>
+
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>高频考点</strong>：① 加法公式逆用 $P(A \\cup B) = P(A)+P(B)-P(AB)$（知三求一）；② "至少"类问题优先用对立事件转化；③ 古典概型关键是<strong>正确计数</strong>——区分"排列"（有序）和"组合"（无序），$n$ 个不同元素取 $k$ 个：排列 $A_n^k$、组合 $C_n^k$。</div>
+        </div>
+
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <div><strong>跨节互链</strong>：概率论是<a href="javascript:void(0)" onclick="App.loadDetail('robo-09')">卡尔曼滤波</a>和<a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">最优状态估计</a>的数学基础。条件概率是贝叶斯推理的起点，详见<a href="javascript:void(0)" onclick="App.loadDetail('prob-02')">条件概率与贝叶斯</a>。</div>
@@ -10345,6 +10361,17 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           <div class="step-item"><div><strong>第三步：全概率</strong>。$P(D) = 0.30 \\times 0.01 + 0.95 \\times 0.99 = 0.9435$</div></div>
           <div class="step-item"><div><strong>第四步：贝叶斯</strong>。$P(\\bar{F}|D) = \\frac{0.95 \\times 0.99}{0.9435} = 0.9958$</div></div>
         </div>
+
+        <h4 class="font-medium mt-6 mb-2">三大公式选用对照</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>场景特征</th><th>选用公式</th><th>识别关键</th><th>典型题目</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">"分阶段/多原因→结果"</td><td>全概率公式</td><td>有完备事件组 $B_i$</td><td>产品来自多个工厂求次品率</td></tr>
+            <tr><td class="font-medium">"已知结果→推断原因"</td><td>贝叶斯公式</td><td>求 $P(B_j|A)$，逆向</td><td>检测阳性求患病概率</td></tr>
+            <tr><td class="font-medium">"依次/同时发生"</td><td>乘法公式</td><td>$P(AB) = P(B|A)P(A)$</td><td>不放回抽样连抽</td></tr>
+            <tr><td class="font-medium">"至少有一个"</td><td>对立事件 + 全概率</td><td>先求 $P(\\bar{A})$ 再 $1-$</td><td>多次射击至少命中一次</td></tr>
+          </tbody>
+        </table></div>
 
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -10406,6 +10433,17 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           <li><strong>标准化</strong>：$Z = (X-\\mu)/\\sigma \\sim N(0,1)$，利用标准正态分布表查概率</li>
           <li><strong>线性组合</strong>：$X \\sim N(\\mu_1,\\sigma_1^2)$，$Y \\sim N(\\mu_2,\\sigma_2^2)$ 独立，则 $aX+bY \\sim N(a\\mu_1+b\\mu_2, a^2\\sigma_1^2+b^2\\sigma_2^2)$</li>
         </ul>
+
+        <h4 class="font-medium mt-6 mb-2">实例：正态分布标准化与查表</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          某零件长度 $X \\sim N(50, 4)$（单位 mm，故 $\\sigma=2$）。求：① 长度在 48~52mm 的概率；② 长度超过 54mm 的概率。已知 $\\Phi(1)=0.8413$。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：标准化</strong>。令 $Z = (X-50)/2 \\sim N(0,1)$</div></div>
+          <div class="step-item"><div><strong>第二步：① 区间转换</strong>。$P(48&lt;X&lt;52) = P(-1&lt;Z&lt;1) = \\Phi(1)-\\Phi(-1) = 2\\Phi(1)-1 = 2(0.8413)-1 = 0.6826$</div></div>
+          <div class="step-item"><div><strong>第三步：② 尾概率</strong>。$P(X&gt;54) = P(Z&gt;2) = 1-\\Phi(2) = 1-0.9772 = 0.0228$</div></div>
+          <div class="step-item"><div><strong>第四步：工程解读</strong>。超差（&gt;54mm）概率仅 2.28%，若公差要求 ±2σ，合格率约 95.4%（即 $2\\Phi(2)-1$）</div></div>
+        </div>
 
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -10469,6 +10507,22 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           <li>线性组合仍为正态：$aX+bY \\sim N(a\\mu_1+b\\mu_2, a^2\\sigma_1^2+b^2\\sigma_2^2+2ab\\rho\\sigma_1\\sigma_2)$</li>
         </ul>
 
+        <h4 class="font-medium mt-6 mb-2">实例：二维正态的条件期望</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          设 $(X,Y) \\sim N(0, 0, 1, 4, 0.8)$，即 $\\mu_1=\\mu_2=0, \\sigma_1=1, \\sigma_2=2, \\rho=0.8$。已知 $X=1$，求 $Y$ 的条件期望与方差。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：套条件分布公式</strong>。$E(Y|X=x) = \\mu_2 + \\rho\\frac{\\sigma_2}{\\sigma_1}(x-\\mu_1)$</div></div>
+          <div class="step-item"><div><strong>第二步：代入</strong>。$E(Y|X=1) = 0 + 0.8 \\times \\frac{2}{1} \\times (1-0) = 1.6$</div></div>
+          <div class="step-item"><div><strong>第三步：条件方差</strong>。$D(Y|X=x) = \\sigma_2^2(1-\\rho^2) = 4(1-0.64) = 1.44$</div></div>
+          <div class="step-item"><div><strong>第四步：结论</strong>。$Y|X=1 \\sim N(1.6, 1.44)$。观测到 $X$ 后 $Y$ 的不确定性减小（方差从 4 降到 1.44），这正是<a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">卡尔曼滤波</a>"观测降低不确定"的本质</div></div>
+        </div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>易错点</strong>：边缘分布独立不能反推联合独立。$f_X \\cdot f_Y = f(x,y)$ 必须对所有 $(x,y)$ 成立才算独立。另外，一般分布"边缘为正态"推不出"联合正态"，但"联合正态"的边缘必为正态。</div>
+        </div>
+
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <div><strong>跨节互链</strong>：二维正态分布的协方差矩阵是<a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">卡尔曼滤波</a>中状态协方差矩阵 $P$ 的数学基础。条件分布公式是卡尔曼增益推导的关键步骤。</div>
@@ -10520,6 +10574,22 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           $$\\text{Cov}(X,Y) = E[(X-E(X))(Y-E(Y))] = E(XY) - E(X)E(Y)$$
           $$\\rho_{XY} = \\frac{\\text{Cov}(X,Y)}{\\sqrt{D(X)D(Y)}}$$
           <div class="text-sm text-gray-500 mt-2">$\\rho_{XY}$：相关系数，$|\\rho| \\le 1$。$\\rho=0$ 不相关，$|\\rho|=1$ 完全线性相关</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：期望与方差的计算技巧</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          已知 $X \\sim U(0, 2)$（均匀分布），求 $Y = X^2$ 的期望与方差。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：求 $E(X)$ 和 $E(X^2)$</strong>。均匀分布 $f(x)=1/2$（$0&lt;x&lt;2$）。$E(X) = \\int_0^2 x/2\\,dx = 1$；$E(X^2) = \\int_0^2 x^2/2\\,dx = 4/3$</div></div>
+          <div class="step-item"><div><strong>第二步：求 $E(Y)=E(X^2)$</strong>。直接 $E(Y) = E(X^2) = 4/3$</div></div>
+          <div class="step-item"><div><strong>第三步：求 $E(Y^2)=E(X^4)$</strong>。$E(X^4) = \\int_0^2 x^4/2\\,dx = 16/5$</div></div>
+          <div class="step-item"><div><strong>第四步：方差</strong>。$D(Y) = E(Y^2)-[E(Y)]^2 = 16/5 - 16/9 = 64/45 \\approx 1.42$</div></div>
+        </div>
+
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>高频考点</strong>：① <strong>随机变量函数的期望</strong>——不必先求 $Y$ 的分布，直接 $E[g(X)] = \\int g(x)f(x)dx$；② <strong>方差简化公式</strong> $D(X)=E(X^2)-(EX)^2$ 几乎所有计算都用它；③ <strong>协方差计算</strong> $\\text{Cov}(X,Y) = E(XY)-E(X)E(Y)$，先算 $E(XY)$ 是关键。</div>
         </div>
 
         <div class="info-box tip">
@@ -10575,6 +10645,33 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           <li><strong>置信区间</strong>：利用正态近似构造参数的置信区间</li>
         </ul>
 
+        <h4 class="font-medium mt-6 mb-2">实例：用 CLT 估算抽样概率</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          某电池寿命 $X$ 的 $E(X)=40$ 小时，$\\sigma=10$ 小时（分布未知）。随机抽取 100 节，求平均寿命 $\\bar{X}$ 超过 42 小时的概率。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：识别 CLT 条件</strong>。$n=100 \\ge 30$，独立同分布，可用 CLT：$\\bar{X} \\dot{\\sim} N(\\mu, \\sigma^2/n)$</div></div>
+          <div class="step-item"><div><strong>第二步：标准化</strong>。$\\bar{X} \\dot{\\sim} N(40, 1)$（因 $\\sigma^2/n = 100/100 = 1$）。$Z = (\\bar{X}-40)/1$</div></div>
+          <div class="step-item"><div><strong>第三步：求概率</strong>。$P(\\bar{X}&gt;42) = P(Z&gt;2) = 1-\\Phi(2) = 0.0228$</div></div>
+          <div class="step-item"><div><strong>第四步：结论</strong>。尽管原始分布未知，100 次抽样的均值超过 42h 的概率仅 2.28%——平均值远比单次稳定</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">大数定律 vs 中心极限定理对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>维度</th><th>大数定律（LLN）</th><th>中心极限定理（CLT）</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">结论类型</td><td>$\\bar{X}_n \\to \\mu$（收敛到常数）</td><td>$\\sqrt{n}(\\bar{X}_n-\\mu)/\\sigma \\to N(0,1)$（收敛到分布）</td></tr>
+            <tr><td class="font-medium">回答什么</td><td>"均值趋近何值"</td><td>"均值偏离的分布/概率"</td></tr>
+            <tr><td class="font-medium">应用</td><td>蒙特卡洛、频率收敛</td><td>置信区间、假设检验</td></tr>
+            <tr><td class="font-medium">精度</td><td>只说"趋近"，不给误差</td><td>给出 $O(1/\\sqrt{n})$ 的量化误差</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box warning">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>易错点</strong>：CLT 适用的是<strong>和或均值</strong>的分布，不是单个 $X_i$。另外 CLT 要求独立同分布且有有限方差——柯西分布（无方差）不满足。$n \\ge 30$ 是经验法则，严重偏态分布可能需要更大 $n$。</div>
+        </div>
+
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <div><strong>跨节互链</strong>：CLT 解释了为什么<a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">卡尔曼滤波</a>假设噪声为高斯分布是合理的——大量微小独立扰动之和近似正态。大数定律是<a href="javascript:void(0)" onclick="App.loadDetail('prob-08')">最大似然估计</a>一致性的理论基础。</div>
@@ -10627,6 +10724,27 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           <div class="text-sm text-gray-500 mt-2">$\\bar{X}$ 与 $S^2$ 独立（正态总体特有性质）</div>
         </div>
 
+        <h4 class="font-medium mt-6 mb-2">实例：构造抽样分布统计量</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          设 $X_1, \\ldots, X_{16} \\sim N(2, 4)$（$\\mu=2, \\sigma=2$），$\\bar{X}$ 为样本均值，$S^2$ 为样本方差。识别以下统计量的分布。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：样本均值</strong>。$\\bar{X} \\sim N(\\mu, \\sigma^2/n) = N(2, 1/4)$，故 $\\frac{\\bar{X}-2}{1/2} \\sim N(0,1)$</div></div>
+          <div class="step-item"><div><strong>第二步：方差的 χ² 统计量</strong>。$\\frac{(n-1)S^2}{\\sigma^2} = \\frac{15S^2}{4} \\sim \\chi^2(15)$（自由度 $n-1=15$）</div></div>
+          <div class="step-item"><div><strong>第三步：均值的 t 统计量</strong>（$\\sigma$ 未知时）。$\\frac{\\bar{X}-\\mu}{S/\\sqrt{n}} = \\frac{\\bar{X}-2}{S/4} \\sim t(15)$</div></div>
+          <div class="step-item"><div><strong>第四步：查表应用</strong>。若 $\\frac{15S^2}{4} = 25$，查 $\\chi^2(15)$ 表判断是否异常——25 接近期望值 15，属正常范围</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">三大抽样分布对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>分布</th><th>构造</th><th>自由度</th><th>用途</th><th>关键性质</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">$\\chi^2$</td><td>$\\sum Z_i^2$（$Z_i$ iid $N(0,1)$）</td><td>$n$（正整数）</td><td>方差检验、拟合优度</td><td>$E=n$, $D=2n$，可加性</td></tr>
+            <tr><td class="font-medium">$t$</td><td>$Z/\\sqrt{\\chi^2/n}$</td><td>$n$</td><td>小样本均值检验</td><td>$n \\to \\infty$ 时趋 $N(0,1)$，厚尾</td></tr>
+            <tr><td class="font-medium">$F$</td><td>$(\\chi^2_1/m)/(\\chi^2_2/n)$</td><td>$(m,n)$</td><td>方差比检验、ANOVA</td><td>$1/F(m,n) \\sim F(n,m)$</td></tr>
+          </tbody>
+        </table></div>
+
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <div><strong>跨节互链</strong>：χ² 分布与<a href="javascript:void(0)" onclick="App.loadDetail('la-08')">二次型</a>密切相关——$X^T A X$ 在 $X \\sim N(0,I)$ 时服从 χ² 分布。t 分布用于小样本下的<a href="javascript:void(0)" onclick="App.loadDetail('prob-08')">参数估计</a>和假设检验。</div>
@@ -10678,6 +10796,22 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           <div class="step-item"><div><strong>第二步：选择检验统计量</strong>。根据已知条件选择 $z$、$t$、$\\chi^2$ 或 $F$ 统计量。</div></div>
           <div class="step-item"><div><strong>第三步：确定拒绝域</strong>。给定显著性水平 $\\alpha$（通常 0.05），查表确定临界值。</div></div>
           <div class="step-item"><div><strong>第四步：做出判断</strong>。统计量落入拒绝域则拒绝 $H_0$，否则不拒绝。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：正态总体参数的最大似然估计</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          设 $X_1, \\ldots, X_n \\sim N(\\mu, \\sigma^2)$（$\\mu, \\sigma^2$ 均未知），求 $\\mu$ 与 $\\sigma^2$ 的 MLE。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：写似然函数</strong>。$L = \\prod_{i=1}^{n} \\frac{1}{\\sqrt{2\\pi}\\sigma} e^{-\\frac{(x_i-\\mu)^2}{2\\sigma^2}}$，取对数 $\\ln L = -\\frac{n}{2}\\ln(2\\pi) - \\frac{n}{2}\\ln\\sigma^2 - \\frac{1}{2\\sigma^2}\\sum(x_i-\\mu)^2$</div></div>
+          <div class="step-item"><div><strong>第二步：对 $\\mu$ 求导令零</strong>。$\\frac{\\partial \\ln L}{\\partial \\mu} = \\frac{1}{\\sigma^2}\\sum(x_i-\\mu) = 0$，解得 $\\hat{\\mu} = \\bar{X}$</div></div>
+          <div class="step-item"><div><strong>第三步：对 $\\sigma^2$ 求导令零</strong>。$\\frac{\\partial \\ln L}{\\partial \\sigma^2} = -\\frac{n}{2\\sigma^2} + \\frac{1}{2\\sigma^4}\\sum(x_i-\\mu)^2 = 0$，解得 $\\hat{\\sigma}^2 = \\frac{1}{n}\\sum(X_i-\\bar{X})^2$</div></div>
+          <div class="step-item"><div><strong>第四步：无偏性检验</strong>。$\\hat{\\mu}=\\bar{X}$ 无偏；但 $\\hat{\\sigma}^2$ 是<strong>有偏</strong>的（除以 $n$ 而非 $n-1$），无偏估计为 $S^2=\\frac{1}{n-1}\\sum(X_i-\\bar{X})^2$。MLE 常有偏但渐近无偏</div></div>
+        </div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>点估计方法对比</strong>：① <strong>矩估计</strong>——用样本矩等于总体矩列方程，简单但效率低；② <strong>MLE</strong>——大样本下最优（渐近无偏、有效、一致），是工程首选；③ <strong>贝叶斯估计</strong>——结合先验，适合小样本。<a href="javascript:void(0)" onclick="App.loadDetail('prob-02')">贝叶斯公式</a>是其理论基础。</div>
         </div>
 
         <div class="info-box tip">
