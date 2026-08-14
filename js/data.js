@@ -96,7 +96,7 @@ const CourseData = {
     stats: [
       { label: '知识板块', value: '21', color: 'blue' },
       { label: '知识点', value: '229', color: 'green' },
-      { label: '交互图表', value: '18', color: 'purple' },
+      { label: '交互图表', value: '22', color: 'purple' },
       { label: '计算工具', value: '35', color: 'orange' },
     ],
     sections: [
@@ -3881,6 +3881,9 @@ const CourseData = {
           <div><strong>最常见情况</strong>：开环稳定（P=0），则稳定条件简化为 $N=0$——奈奎斯特曲线不包围 $(-1,j0)$ 点，闭环系统就稳定。这就是为什么奈奎斯特图上 $(-1,j0)$ 这个点如此关键。</div>
         </div>
 
+        <div data-chart="nyquist-plot" class="chart-container" style="height:540px"></div>
+        <div class="text-xs text-center mt-1 mb-4" style="color:var(--text-secondary)">奈奎斯特图交互实验：换系统、拖 K，观察包围圈数 N 与闭环稳定性的联动</div>
+
         <h4 class="font-medium mt-6 mb-2">稳定裕度（衡量"离不稳定有多远"）</h4>
         <div class="overflow-x-auto"><table class="compare-table">
           <thead><tr><th>裕度</th><th>定义</th><th>物理意义</th><th>工程典型值</th></tr></thead>
@@ -4957,6 +4960,9 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
           散列表是空间换时间的典型代表。Java 的 HashMap、Python 的 dict、Redis 的键值存储底层都是散列表。设计好的散列表需要选择合适的散列函数、控制装填因子、选择冲突解决策略。
         </p>
+
+        <div data-chart="hashtable-vis" class="chart-container" style="height:470px"></div>
+        <div class="text-xs text-center mt-1 mb-4" style="color:var(--text-secondary)">冲突处理动画：切"线性探测/链地址法"逐步插入，观察聚集形成与链长增长</div>
         <h4 class="font-medium mt-6 mb-2">散列函数构造</h4>
         <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
           <li><strong>直接定址法</strong>：$H(key)=a \\cdot key + b$（关键字分布连续时）</li>
@@ -5896,6 +5902,9 @@ const CourseData = {
           <li><strong>翻转-平移-乘积-积分</strong>：卷积的操作步骤——把 $h(\\tau)$ 翻转成 $h(-\\tau)$，平移 $t$ 得 $h(t-\\tau)$，与 $x(\\tau)$ 逐点相乘后积分。</li>
         </ul>
 
+        <div data-chart="convolution" class="chart-container" style="height:500px"></div>
+        <div class="text-xs text-center mt-1 mb-4" style="color:var(--text-secondary)">卷积动画：换信号组合 + 播放/拖动 t，亲眼看"翻转-平移-乘积-积分"四步如何扫出 y(t)</div>
+
         <h4 class="font-medium mt-6 mb-2">卷积的性质</h4>
         <div class="overflow-x-auto"><table class="compare-table">
           <thead><tr><th>性质</th><th>公式</th><th>说明</th></tr></thead>
@@ -6057,6 +6066,9 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
           傅里叶变换是信号处理的灵魂工具。在<a href="javascript:void(0)" onclick="App.loadDetail('sig-07')">滤波器设计</a>中，频域相乘比时域卷积更直观；在<a href="javascript:void(0)" onclick="App.loadDetail('sig-08')">采样定理</a>中，频谱搬移解释了混叠现象；在通信中，调制解调的本质就是频谱搬移。
         </p>
+
+        <div data-chart="fft-spectrum" class="chart-container" style="height:500px"></div>
+        <div class="text-xs text-center mt-1 mb-4" style="color:var(--text-secondary)">周期信号频谱实验（<a href="javascript:void(0)" onclick="App.loadDetail('sig-03')">sig-03 傅里叶级数</a>的可视化延续）：拉谐波数 N，看离散谱线如何合成时域波形</div>
 
         <h4 class="font-medium mt-6 mb-2">傅里叶变换对</h4>
         <div class="formula-block">

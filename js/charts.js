@@ -2115,3 +2115,432 @@ Charts.register('agent-loop', function(el) {
 
   el.querySelector('#alp-scens button').click();
 });
+
+// 奈奎斯特图（act-10）：预置开环传函 + K 滑块，画 Nyquist 曲线，N/P/Z 判稳
+Charts.register('nyquist-plot', function(el) {
+  const SYS = [
+    { name: '三阶 I 型', P: 0, f: (s, K) => K / (s * (s + 1) * (s + 2)) },
+    { name: '二阶振荡', P: 0, f: (s, K) => K / (s * s + s + 1) },
+    { name: '带积分二阶', P: 0, f: (s, K) => K / (s * s * (s + 0.5)) },
+    { name: '不稳定开环', P: 1, f: (s, K) => K / ((s - 1) * (s + 2) * (s + 3)) },
+  ];
+  let sysIdx = 0, K = 2;
+
+  el.innerHTML = `
+    <div style="padding:0.5rem 0 0">
+      <div id="nyq-btns" style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.5rem"></div>
+      <div style="display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center;padding:0.5rem 0.75rem;background:var(--bg-secondary);border-radius:0.5rem;font-size:0.8rem">
+        <label style="display:flex;align-items:center;gap:0.5rem">增益 K
+          <input type="range" id="nyq-k" min="0.3" max="12" step="0.1" value="2" style="width:120px">
+          <span id="nyq-kv" style="min-width:2.2rem;font-weight:600">2.0</span>
+        </label>
+        <span style="color:var(--text-secondary)">P（开环右极点）=<b id="nyq-p"></b></span>
+        <span style="color:var(--text-secondary)">N（-1 点顺时针包围圈数）=<b id="nyq-n"></b></span>
+        <span style="color:var(--text-secondary)">Z=N+P（闭环右极点）=<b id="nyq-z"></b></span>
+        <b id="nyq-verdict"></b>
+      </div>
+      <canvas id="nyq-cv" width="640" height="420" style="width:100%;max-width:680px;height:auto;margin-top:0.6rem"></canvas>
+      <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:0.4rem;line-height:1.55">红点 (-1, j0) 是判据核心：实线为 ω: 0⁺→+∞ 分支，虚线为其镜像（ω: -∞→0⁻）。Z = N + P = 0 ⇔ 闭环稳定。拖大 K 看三阶系统由稳转不稳的全过程；"不稳定开环"预置 P=1，必须反向包围一圈才能稳。</div>
+    </div>`;
+  const $ = id => el.querySelector('#' + id);
+  $('nyq-btns').innerHTML = SYS.map((s, i) => `<button data-i="${i}" style="padding:0.28rem 0.8rem;border-radius:9999px;font-size:0.78rem;border:1px solid var(--border);background:var(--bg-primary);cursor:pointer">${s.name}</button>`).join('');
+
+  // 复数辅助
+  const cmul = (a, b) => ({ r: a.r * b.r - a.i * b.i, i: a.r * b.i + a.i * b.r });
+  const cadd = (a, b) => ({ r: a.r + b.r, i: a.i + b.i });
+  const cscale = (a, k) => ({ r: a.r * k, i: a.i * k });
+  const cdiv = (a, b) => { const d = b.r * b.r + b.i * b.i; return { r: (a.r * b.r + a.i * b.i) / d, i: (a.i * b.r - a.r * b.i) / d }; };
+  const csub = (a, b) => ({ r: a.r - b.r, i: a.i - b.i });
+
+  function draw() {
+    const cv = $('nyq-cv'), ctx = cv.getContext('2d');
+    const W = cv.width, H = cv.height;
+    const sys = SYS[sysIdx];
+    // 采样 ω（对数分布），正负分支
+    const NPT = 600, pos = [];
+    for (let i = 0; i < NPT; i++) pos.push(Math.pow(10, -2 + 4.5 * i / (NPT - 1)));
+    const evalG = w => { const jw = { r: 0, i: w }; return sys.f(jw, K); };
+    const pts = pos.map(evalG);
+    // 全闭曲线：正分支 + 镜像反向（ω: +∞ → -∞ 经共轭）
+    const curve = pts.concat(pts.slice().reverse().map(p => ({ r: p.r, i: -p.i })));
+    // 包围圈数：绕 (-1,0) 的累计幅角
+    let ang = 0;
+    for (let i = 0; i < curve.length; i++) {
+      const a = csub(curve[i], { r: -1, i: 0 }), b = csub(curve[(i + 1) % curve.length], { r: -1, i: 0 });
+      let d = Math.atan2(b.r * a.i - b.i * a.r, b.r * a.r + b.i * a.i);
+      if (d > Math.PI) d -= 2 * Math.PI;
+      if (d < -Math.PI) d += 2 * Math.PI;
+      ang += d;
+    }
+    const Nw = Math.round(-ang / (2 * Math.PI));   // 逆时针为正 → 顺时针 N 取负
+    const N = Nw, P = sys.P, Z = N + P;
+
+    // 视窗：包含曲线与 (-1,0)
+    let xmax = 1.5, ymax = 1.5;
+    pts.forEach(p => { xmax = Math.max(xmax, Math.abs(p.r)); ymax = Math.max(ymax, Math.abs(p.i)); });
+    xmax = Math.min(xmax, 12); ymax = Math.min(ymax, 12);
+    const scale = Math.min(W / (2 * xmax * 1.15), H / (2 * ymax * 1.15));
+    const cx = W / 2, cy = H / 2;
+    const X = p => cx + p.r * scale, Y = p => cy - p.i * scale;
+
+    const dark = document.body.classList.contains('dark');
+    const cAxis = dark ? '#555' : '#bbb', cText = dark ? '#aaa' : '#666';
+    ctx.clearRect(0, 0, W, H);
+    // 网格与轴
+    ctx.strokeStyle = cAxis; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(W, cy); ctx.moveTo(cx, 0); ctx.lineTo(cx, H); ctx.stroke();
+    // 刻度
+    ctx.fillStyle = cText; ctx.font = '10px sans-serif';
+    for (let v = -Math.floor(xmax); v <= xmax; v++) {
+      if (v === 0) continue;
+      ctx.fillText(v, X({ r: v, i: 0 }) - 5, cy + 12);
+    }
+    for (let v = -Math.floor(ymax); v <= ymax; v++) {
+      if (v === 0) continue;
+      ctx.fillText(v, cx + 4, Y({ r: 0, i: v }) + 3);
+    }
+    // 单位圆
+    ctx.strokeStyle = cAxis; ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.arc(cx, cy, scale, 0, Math.PI * 2); ctx.stroke();
+    // Nyquist 正分支（实线）
+    ctx.setLineDash([]); ctx.strokeStyle = '#7c3aed'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    pts.forEach((p, i) => i ? ctx.lineTo(X(p), Y(p)) : ctx.moveTo(X(p), Y(p)));
+    ctx.stroke();
+    // 镜像分支（虚线）
+    ctx.setLineDash([6, 4]); ctx.lineWidth = 1.3;
+    ctx.beginPath();
+    pts.forEach((p, i) => { const q = { r: p.r, i: -p.i }; i ? ctx.lineTo(X(q), Y(q)) : ctx.moveTo(X(q), Y(q)); });
+    ctx.stroke();
+    ctx.setLineDash([]);
+    // (-1, 0) 判据点
+    ctx.fillStyle = '#ef4444';
+    ctx.beginPath(); ctx.arc(X({ r: -1, i: 0 }), cy, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = cText; ctx.fillText('(-1, j0)', X({ r: -1, i: 0 }) - 14, cy - 10);
+    ctx.fillText('Re', W - 18, cy - 6); ctx.fillText('Im', cx + 6, 14);
+
+    $('nyq-p').textContent = P; $('nyq-n').textContent = N; $('nyq-z').textContent = Z;
+    const ok = Z === 0;
+    const vd = $('nyq-verdict');
+    vd.textContent = ok ? '✅ 闭环稳定' : '❌ 闭环不稳定';
+    vd.style.color = ok ? '#059669' : '#ef4444';
+  }
+
+  el.querySelectorAll('#nyq-btns button').forEach(b => b.addEventListener('click', () => {
+    el.querySelectorAll('#nyq-btns button').forEach(x => { x.style.background = 'var(--bg-primary)'; x.style.borderColor = 'var(--border)'; x.style.color = ''; });
+    b.style.background = 'var(--primary)'; b.style.borderColor = 'var(--primary)'; b.style.color = '#fff';
+    sysIdx = +b.dataset.i; draw();
+  }));
+  $('nyq-k').addEventListener('input', e => { K = +e.target.value; $('nyq-kv').textContent = K.toFixed(1); draw(); });
+  el.querySelector('#nyq-btns button').click();
+});
+
+// 卷积动画（sig-02）：x(τ) 固定、h(t-τ) 翻转平移，乘积积分逐点生成 y(t)
+Charts.register('convolution', function(el) {
+  const SIG = {
+    rect: { name: '矩形脉冲', f: t => (t >= 0 && t <= 2) ? 1 : 0 },
+    tri: { name: '三角脉冲', f: t => (t >= 0 && t <= 2) ? (t < 1 ? t : 2 - t) : 0 },
+    exp: { name: '单边指数', f: t => t >= 0 ? Math.exp(-t) : 0 },
+    sin: { name: '截断正弦', f: t => (t >= 0 && t <= 4) ? Math.sin(Math.PI * t / 2) : 0 },
+  };
+  let xk = 'rect', hk = 'exp', t = 0, playing = false, timer = null;
+
+  el.innerHTML = `
+    <div style="padding:0.5rem 0 0">
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;padding:0.5rem 0.75rem;background:var(--bg-secondary);border-radius:0.5rem;font-size:0.8rem">
+        <label>x(τ) <select id="cvx" style="padding:0.15rem 0.3rem;border:1px solid var(--border);background:var(--bg);border-radius:0.25rem">
+          ${Object.entries(SIG).map(([k, s]) => `<option value="${k}">${s.name}</option>`).join('')}</select></label>
+        <label>h(τ) <select id="cvh" style="padding:0.15rem 0.3rem;border:1px solid var(--border);background:var(--bg);border-radius:0.25rem">
+          ${Object.entries(SIG).map(([k, s], i) => `<option value="${k}" ${i === 1 ? 'selected' : ''}>${s.name}</option>`).join('')}</select></label>
+        <label style="display:flex;align-items:center;gap:0.5rem">t = <span id="cvt-v" style="min-width:2.4rem;font-weight:600;color:var(--primary)">0.0</span></label>
+        <label style="display:flex;align-items:center;gap:0.4rem">平移
+          <input type="range" id="cvt" min="0" max="8" step="0.05" value="0" style="width:130px"></label>
+        <button id="cv-play" style="padding:0.25rem 0.8rem;border-radius:0.4rem;border:1px solid var(--primary);background:var(--primary);color:#fff;cursor:pointer;font-size:0.78rem">▶ 播放</button>
+      </div>
+      <canvas id="cv-cv" width="640" height="430" style="width:100%;max-width:680px;height:auto;margin-top:0.6rem"></canvas>
+      <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:0.4rem;line-height:1.55">上图：x(τ)（蓝）与翻转平移的 h(t-τ)（绿），重叠区乘积曲线（紫，即被积函数）；下图：y(t) = ∫ x(τ)h(t-τ)dτ 随 t 增长逐步"扫"出来，圆点为当前值。换信号组合观察：矩形×指数 = 单边充电曲线；三角×三角 = 光滑钟形。</div>
+    </div>`;
+  const $ = id => el.querySelector('#' + id);
+
+  function draw() {
+    const cv = $('cv-cv'), ctx = cv.getContext('2d');
+    const W = cv.width, H = cv.height;
+    const T = 8, dt = 0.02;
+    const fx = SIG[xk].f, fh = SIG[hk].f;
+    const dark = document.body.classList.contains('dark');
+    const cAxis = dark ? '#555' : '#bbb', cText = dark ? '#aaa' : '#666';
+    ctx.clearRect(0, 0, W, H);
+
+    // ---- 上图：τ 域 ----
+    const H1 = 190, x0 = 40, x1 = W - 12, yAmax = 1.35;
+    const px = tau => x0 + (tau / T) * (x1 - x0);
+    const pyA = v => H1 - 18 - v / yAmax * (H1 - 40);
+    ctx.strokeStyle = cAxis; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x0, H1 - 18); ctx.lineTo(x1, H1 - 18); ctx.stroke();
+    ctx.fillStyle = cText; ctx.font = '10px sans-serif';
+    for (let tv = 0; tv <= T; tv += 1) ctx.fillText(tv, px(tv) - 3, H1 - 5);
+    ctx.fillText('τ', x1 - 8, H1 - 5);
+
+    // x(τ)
+    ctx.strokeStyle = '#2563eb'; ctx.lineWidth = 2; ctx.beginPath(); let st = false;
+    for (let tau = -3; tau <= T + 3; tau += dt) { const v = fx(tau); const X = px(tau), Y = pyA(v); st ? ctx.lineTo(X, Y) : (ctx.moveTo(X, Y), st = true); }
+    ctx.stroke();
+    // h(t-τ)
+    ctx.strokeStyle = '#059669'; ctx.lineWidth = 2; ctx.beginPath(); st = false;
+    for (let tau = -3; tau <= T + 3; tau += dt) { const v = fh(t - tau); const X = px(tau), Y = pyA(v); st ? ctx.lineTo(X, Y) : (ctx.moveTo(X, Y), st = true); }
+    ctx.stroke();
+    // 乘积曲线（紫色）+ 填充
+    ctx.beginPath(); st = false;
+    for (let tau = -3; tau <= T + 3; tau += dt) { const v = fx(tau) * fh(t - tau); const X = px(tau), Y = pyA(v); st ? ctx.lineTo(X, Y) : (ctx.moveTo(X, Y), st = true); }
+    ctx.strokeStyle = '#7c3aed'; ctx.lineWidth = 1.6; ctx.stroke();
+    ctx.lineTo(px(T + 3), H1 - 18); ctx.lineTo(px(-3), H1 - 18); ctx.closePath();
+    ctx.fillStyle = 'rgba(124,58,237,0.18)'; ctx.fill();
+    ctx.fillStyle = cText; ctx.font = '11px sans-serif';
+    ctx.fillText('x(τ)', x0 + 4, 14); ctx.fillStyle = '#059669'; ctx.fillText('h(t-τ)', x0 + 46, 14);
+    ctx.fillStyle = '#7c3aed'; ctx.fillText('乘积（被积函数）', x0 + 108, 14);
+
+    // ---- 下图：y(t) ----
+    const H2 = H, y0 = H2 - (H2 - H1 - 16), yTop = H1 + 26;
+    ctx.strokeStyle = cAxis; ctx.beginPath(); ctx.moveTo(x0, H2 - 24); ctx.lineTo(x1, H2 - 24); ctx.stroke();
+    ctx.fillStyle = cText;
+    for (let tv = 0; tv <= T; tv += 1) ctx.fillText(tv, px(tv) - 3, H2 - 11);
+    ctx.fillText('t', x1 - 8, H2 - 11);
+    // 数值卷积（梯形）
+    let ymax = 1e-6;
+    const ys = [];
+    for (let ti = 0; ti <= t + 1e-9; ti += dt) {
+      let s = 0;
+      for (let tau = 0; tau <= T; tau += dt) s += fx(tau) * fh(ti - tau) * dt;
+      ys.push([ti, s]); ymax = Math.max(ymax, s);
+    }
+    ymax *= 1.15;
+    const pyB = v => (H2 - 24) - v / ymax * (H2 - 24 - yTop);
+    ctx.strokeStyle = '#dc2626'; ctx.lineWidth = 2.2; ctx.beginPath();
+    ys.forEach(([ti, v], i) => i ? ctx.lineTo(px(ti), pyB(v)) : ctx.moveTo(px(ti), pyB(v)));
+    ctx.stroke();
+    if (ys.length) {
+      const last = ys[ys.length - 1];
+      ctx.fillStyle = '#dc2626';
+      ctx.beginPath(); ctx.arc(px(last[0]), pyB(last[1]), 4, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = cText; ctx.font = '11px sans-serif';
+      ctx.fillText('y(' + last[0].toFixed(2) + ') = ' + last[1].toFixed(3), Math.min(px(last[0]) + 8, x1 - 90), pyB(last[1]) - 8);
+    }
+    ctx.fillStyle = cText; ctx.fillText('y(t) = (x * h)(t)', x0 + 4, yTop + 4);
+    $('cvt-v').textContent = t.toFixed(1);
+  }
+
+  function stop() { playing = false; clearInterval(timer); $('cv-play').textContent = '▶ 播放'; }
+  $('cv-play').addEventListener('click', () => {
+    if (playing) { stop(); return; }
+    playing = true; $('cv-play').textContent = '⏸ 暂停';
+    if (t >= 8) t = 0;
+    timer = setInterval(() => { t = +(t + 0.04).toFixed(2); if (t >= 8) { t = 8; stop(); } $('cvt').value = t; draw(); }, 40);
+  });
+  $('cvt').addEventListener('input', e => { stop(); t = +e.target.value; draw(); });
+  $('cvx').addEventListener('change', e => { xk = e.target.value; draw(); });
+  $('cvh').addEventListener('change', e => { hk = e.target.value; draw(); });
+  draw();
+});
+
+// FFT 频谱（sig-04）：方波/三角/锯齿的傅里叶级数重构 + 谐波振幅谱
+Charts.register('fft-spectrum', function(el) {
+  const WAVES = {
+    square: { name: '方波', coef: k => (k % 2 === 1) ? 4 / (Math.PI * k) : 0 },
+    triangle: { name: '三角波', coef: k => (k % 2 === 1) ? 8 / (Math.PI * Math.PI * k * k) * (((k - 1) / 2) % 2 === 0 ? 1 : -1) : 0 },
+    sawtooth: { name: '锯齿波', coef: k => (k % 2 === 1 ? 1 : -1) * 2 / (Math.PI * k) },
+    sine: { name: '正弦波', coef: k => k === 1 ? 1 : 0 },
+  };
+  let wv = 'square', nh = 3;
+
+  el.innerHTML = `
+    <div style="padding:0.5rem 0 0">
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;padding:0.5rem 0.75rem;background:var(--bg-secondary);border-radius:0.5rem;font-size:0.8rem">
+        <label>波形 <select id="ff-w" style="padding:0.15rem 0.3rem;border:1px solid var(--border);background:var(--bg);border-radius:0.25rem">
+          ${Object.entries(WAVES).map(([k, w]) => `<option value="${k}">${w.name}</option>`).join('')}</select></label>
+        <label style="display:flex;align-items:center;gap:0.5rem">谐波数 N = <span id="ff-nv" style="min-width:1.4rem;font-weight:600;color:var(--primary)">3</span>
+          <input type="range" id="ff-n" min="1" max="41" step="2" value="3" style="width:130px"></label>
+        <span id="ff-note" style="color:var(--text-secondary)"></span>
+      </div>
+      <canvas id="ff-cv" width="640" height="430" style="width:100%;max-width:680px;height:auto;margin-top:0.6rem"></canvas>
+      <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:0.4rem;line-height:1.55">上图：前 N 次谐波合成的时域波形（灰为理想波形）；下图：各次谐波振幅 |c_k|。方波只含奇次谐波、幅度 1/k 衰减——把 N 拉满观察吉布斯现象：跳变沿附近 ~9% 的过冲不随 N 消失；三角波幅度 1/k² 衰减，收敛快得多（这也是同一系统方波比三角波"刺耳"的原因）。</div>
+    </div>`;
+  const $ = id => el.querySelector('#' + id);
+
+  function draw() {
+    const cv = $('ff-cv'), ctx = cv.getContext('2d');
+    const W = cv.width, H = cv.height;
+    const wave = WAVES[wv];
+    const dark = document.body.classList.contains('dark');
+    const cAxis = dark ? '#555' : '#bbb', cText = dark ? '#aaa' : '#666';
+    ctx.clearRect(0, 0, W, H);
+    const x0 = 40, x1 = W - 14;
+
+    // ---- 上图：时域（两个周期） ----
+    const H1 = 200, yA = 40, tMax = 4 * Math.PI;
+    const px = th => x0 + th / tMax * (x1 - x0);
+    const ideal = th => wv === 'square' ? Math.sign(Math.sin(th)) : wv === 'sawtooth' ? (((th / Math.PI) % 2 + 2) % 2 - 1) : wv === 'sine' ? Math.sin(th) : (() => { const u = ((th / Math.PI) % 2 + 2) % 2; return u < 1 ? u : 2 - u; })();
+    const recon = th => { let s = 0; for (let k = 1; k <= nh; k++) s += wave.coef(k) * Math.sin(k * th); return s; };
+    ctx.strokeStyle = cAxis; ctx.beginPath(); ctx.moveTo(x0, H1 / 2 + 6); ctx.lineTo(x1, H1 / 2 + 6); ctx.stroke();
+    ctx.fillStyle = cText; ctx.font = '10px sans-serif';
+    ctx.fillText('t（两个周期）', x1 - 70, H1 / 2 + 18);
+    // 理想波形（灰）
+    ctx.strokeStyle = cAxis; ctx.lineWidth = 1; ctx.setLineDash([3, 3]); ctx.beginPath();
+    for (let th = 0; th <= tMax; th += 0.02) { const X = px(th), Y = H1 / 2 + 6 - ideal(th) * yA * 0.85; th ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }
+    ctx.stroke(); ctx.setLineDash([]);
+    // 合成波形（紫）
+    ctx.strokeStyle = '#7c3aed'; ctx.lineWidth = 2; ctx.beginPath();
+    for (let th = 0; th <= tMax; th += 0.02) { const X = px(th), Y = H1 / 2 + 6 - recon(th) * yA * 0.85; th ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }
+    ctx.stroke();
+    ctx.fillStyle = '#7c3aed'; ctx.font = '11px sans-serif'; ctx.fillText('前 ' + nh + ' 次谐波合成', x0 + 4, 14);
+
+    // ---- 下图：频谱 stem ----
+    const y0 = H - 26, yTop = H1 + 30, maxC = 4 / Math.PI;
+    const KMAX = 21;
+    const kx = k => x0 + (k - 0.5) / KMAX * (x1 - x0);
+    ctx.strokeStyle = cAxis; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y0); ctx.stroke();
+    ctx.fillStyle = cText;
+    for (let k = 1; k <= KMAX; k += 2) ctx.fillText(k, kx(k) - 4, y0 + 14);
+    ctx.fillText('谐波序次 k', x1 - 60, y0 + 14);
+    for (let k = 1; k <= KMAX; k++) {
+      const c = wave.coef(k);
+      if (c === 0) continue;
+      const X = kx(k), Yk = y0 - Math.abs(c) / maxC * (y0 - yTop);
+      ctx.strokeStyle = k <= nh ? '#dc2626' : '#999';
+      ctx.lineWidth = k <= nh ? 3 : 2;
+      ctx.beginPath(); ctx.moveTo(X, y0); ctx.lineTo(X, Yk); ctx.stroke();
+      ctx.fillStyle = k <= nh ? '#dc2626' : '#aaa';
+      ctx.beginPath(); ctx.arc(X, Yk, 3, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.fillStyle = cText; ctx.font = '11px sans-serif';
+    ctx.fillText('|c_k|（谐波振幅）', x0 + 4, yTop - 6);
+
+    const notes = {
+      square: '奇次谐波，幅度 ∝ 1/k；跳变沿过冲 ≈ 9%（吉布斯现象）',
+      triangle: '奇次谐波，幅度 ∝ 1/k²，收敛最快',
+      sawtooth: '奇偶次都有，幅度 ∝ 1/k',
+      sine: '单一谱线——正弦是唯一"纯净"的波形',
+    };
+    $('ff-note').textContent = notes[wv];
+    $('ff-nv').textContent = nh;
+  }
+
+  $('ff-w').addEventListener('change', e => { wv = e.target.value; draw(); });
+  $('ff-n').addEventListener('input', e => { nh = +e.target.value; draw(); });
+  draw();
+});
+
+// 散列表冲突处理动画（ds-13）：线性探测 vs 链地址法，逐步插入
+Charts.register('hashtable-vis', function(el) {
+  const KEYSETS = {
+    '基础': ['PID', 'PLC', 'ADC', 'PWM', 'KVL', 'RAM', 'ROM', 'CRC', 'DMA', 'ALU'],
+    '冲突多': ['AA', 'AB', 'BA', 'BB', 'CA', 'AC', 'DA', 'AD', 'EA', 'AE'],
+  };
+  let method = 'linear', m = 7, keys = KEYSETS['基础'].slice(), step = 0, playing = false, timer = null;
+
+  el.innerHTML = `
+    <div style="padding:0.5rem 0 0">
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;padding:0.5rem 0.75rem;background:var(--bg-secondary);border-radius:0.5rem;font-size:0.8rem">
+        <div id="ht-mth" style="display:flex;gap:0.4rem">
+          <button data-m="linear" style="padding:0.28rem 0.8rem;border-radius:9999px;font-size:0.78rem;border:1px solid var(--border);background:var(--bg-primary);cursor:pointer">线性探测</button>
+          <button data-m="chain" style="padding:0.28rem 0.8rem;border-radius:9999px;font-size:0.78rem;border:1px solid var(--border);background:var(--bg-primary);cursor:pointer">链地址法</button>
+        </div>
+        <label>表长 m
+          <select id="ht-m" style="padding:0.15rem 0.3rem;border:1px solid var(--border);background:var(--bg);border-radius:0.25rem">
+            <option>7</option><option>11</option><option>13</option>
+          </select></label>
+        <label>键集
+          <select id="ht-ks" style="padding:0.15rem 0.3rem;border:1px solid var(--border);background:var(--bg);border-radius:0.25rem">
+            <option>基础</option><option>冲突多</option>
+          </select></label>
+        <button id="ht-play" style="padding:0.25rem 0.8rem;border-radius:0.4rem;border:1px solid var(--primary);background:var(--primary);color:#fff;cursor:pointer;font-size:0.78rem">▶ 逐步插入</button>
+        <button id="ht-reset" style="padding:0.25rem 0.8rem;border-radius:0.4rem;border:1px solid var(--border);background:var(--bg-primary);cursor:pointer;font-size:0.78rem">↺ 重置</button>
+        <span id="ht-stat" style="color:var(--text-secondary)"></span>
+      </div>
+      <div id="ht-log" style="margin-top:0.6rem;font-family:ui-monospace,Consolas,monospace;font-size:0.74rem;line-height:1.7;background:var(--bg-secondary);border-radius:0.5rem;padding:0.5rem 0.65rem;height:120px;overflow-y:auto"></div>
+      <div id="ht-table" style="margin-top:0.5rem"></div>
+      <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:0.4rem;line-height:1.55">哈希函数 h(k) = (各字符 ASCII 之和) mod m。线性探测：冲突后 +1 逐格找空位（注意"聚集"如何形成）；链地址法：同槽挂链表，永不溢出但链长影响查找。切到"冲突多"键集（首字母相同的键哈希相近）对比两种方法的代价。</div>
+    </div>`;
+  const $ = id => el.querySelector('#' + id);
+
+  const hash = k => [...k].reduce((s, c) => s + c.charCodeAt(0), 0) % m;
+  let slots = [], chains = [], logLines = [], collisions = 0, probes = 0;
+
+  function reset() {
+    stop(); step = 0;
+    slots = Array.from({ length: m }, () => null);
+    chains = Array.from({ length: m }, () => []);
+    logLines = []; collisions = 0; probes = 0;
+    $('ht-log').innerHTML = '';
+    render();
+  }
+  function stop() { playing = false; clearInterval(timer); timer = null; $('ht-play').textContent = '▶ 逐步插入'; }
+
+  function insertOne(k) {
+    const h = hash(k);
+    let line = '插入 ' + k + ' → h(' + k + ') = ' + h;
+    if (method === 'linear') {
+      let i = h, n = 0;
+      while (slots[i] !== null && n < m) { line += '，槽 ' + i + ' 被 ' + slots[i] + ' 占用'; i = (i + 1) % m; n++; collisions++; probes++; }
+      if (n >= m) { line += ' → 表满！'; }
+      else { slots[i] = k; line += ' → 落位槽 ' + i + (n ? '（探测 ' + n + ' 次）' : ''); }
+    } else {
+      if (chains[h].length) { line += '，链上已有 ' + chains[h].length + ' 个：' + chains[h].join('→'); collisions++; probes += chains[h].length; }
+      chains[h].push(k);
+      line += ' → 链尾追加（链长 ' + chains[h].length + '）';
+    }
+    logLines.push(line);
+    const d = document.createElement('div');
+    d.textContent = (step + 1) + '. ' + line;
+    $('ht-log').appendChild(d);
+    $('ht-log').scrollTop = $('ht-log').scrollHeight;
+  }
+
+  function render() {
+    let html = '';
+    if (method === 'linear') {
+      html = '<div style="display:grid;grid-template-columns:repeat(' + m + ',minmax(3.4rem,1fr));gap:5px">';
+      for (let i = 0; i < m; i++) {
+        const k = slots[i];
+        const isHash = keys.slice(0, step).some(key => hash(key) === i);
+        html += '<div style="text-align:center"><div style="font-size:0.66rem;color:var(--text-secondary);margin-bottom:2px">' + i + '</div>' +
+          '<div style="border:1.5px solid ' + (k ? '#7c3aed' : isHash ? '#f59e0b' : 'var(--border)') + ';border-radius:0.45rem;padding:0.5rem 0.15rem;font-size:0.78rem;font-weight:600;background:' + (k ? 'rgba(124,58,237,0.12)' : 'transparent') + '">' + (k || '·') + '</div></div>';
+      }
+      html += '</div>';
+    } else {
+      html = '<div style="display:flex;flex-direction:column;gap:4px">';
+      for (let i = 0; i < m; i++) {
+        const list = chains[i];
+        html += '<div style="display:flex;align-items:center;gap:6px">' +
+          '<div style="flex:0 0 2.2rem;font-size:0.7rem;color:var(--text-secondary);text-align:right">' + i + '</div>' +
+          '<div style="flex:0 0 2.6rem;border:1.5px solid var(--border);border-radius:0.35rem;padding:0.3rem 0;text-align:center;font-size:0.75rem">头</div>' +
+          list.map((k, j) => '<span style="color:var(--text-secondary)">→</span><div style="flex:0 0 3.4rem;border:1.5px solid #7c3aed;border-radius:0.35rem;padding:0.3rem 0;text-align:center;font-size:0.75rem;font-weight:600;background:rgba(124,58,237,0.12)">' + k + '</div>').join('') +
+          '</div>';
+      }
+      html += '</div>';
+    }
+    $('ht-table').innerHTML = html;
+    $('ht-stat').textContent = '已插入 ' + step + '/' + keys.length + '　冲突 ' + collisions + '　累计探测 ' + probes;
+  }
+
+  function tick() {
+    if (step >= keys.length) { stop(); return; }
+    insertOne(keys[step]); step++; render();
+  }
+
+  $('ht-mth').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    method = b.dataset.m;
+    $('ht-mth').querySelectorAll('button').forEach(x => { x.style.background = 'var(--bg-primary)'; x.style.borderColor = 'var(--border)'; x.style.color = ''; });
+    b.style.background = 'var(--primary)'; b.style.borderColor = 'var(--primary)'; b.style.color = '#fff';
+    reset();
+  }));
+  $('ht-m').addEventListener('change', e => { m = +e.target.value; reset(); });
+  $('ht-ks').addEventListener('change', e => { keys = KEYSETS[e.target.value].slice(); reset(); });
+  $('ht-play').addEventListener('click', () => {
+    if (playing) { stop(); return; }
+    playing = true; $('ht-play').textContent = '⏸ 暂停';
+    if (step >= keys.length) reset();
+    timer = setInterval(tick, 700);
+  });
+  $('ht-reset').addEventListener('click', reset);
+  el.querySelector('#ht-mth button').click();
+});
