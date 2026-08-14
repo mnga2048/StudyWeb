@@ -65,15 +65,20 @@
       }
     });
 
-    // 收藏分区
+    // 收藏分区（按 3 分类分组：待复习/已掌握/易错点）
     const favs = Favorites.getAll();
     if (favs.length > 0) {
-      html += `<div class="sidebar-section-title">★ 我的收藏</div>`;
-      favs.forEach(id => {
-        const info = Favorites.getInfo(id);
-        html += `<a class="nav-item" data-page="${id}" onclick="navigateTo('${id}')">
-          <span class="nav-icon">${info.icon || '📄'}</span><span>${info.title}</span></a>`;
-      });
+      const catIcons = { review: '🔁', mastered: '✅', mistakes: '⚠️' };
+      for (const [k, label] of Object.entries(Favorites.CATS)) {
+        const items = Favorites.getByCategory(k);
+        if (items.length === 0) continue;
+        html += `<div class="sidebar-section-title">${catIcons[k]} ${label} <span class="text-xs" style="opacity:0.6">${items.length}</span></div>`;
+        items.forEach(id => {
+          const info = Favorites.getInfo(id);
+          html += `<a class="nav-item" data-page="${id}" onclick="navigateTo('${id}')">
+            <span class="nav-icon">${info.icon || '📄'}</span><span>${info.title}</span></a>`;
+        });
+      }
     }
 
     // 最近浏览分区
@@ -377,6 +382,11 @@
           }).join('')}
           <span class="mx-1">|</span>
           <button class="star-btn ${isFav ? 'starred' : ''}" onclick="toggleFav('${section.id}')">${isFav ? '★ 已收藏' : '☆ 收藏'}</button>
+          ${isFav ? `<span class="mx-1">|</span><span class="text-xs">分类：</span>${Object.entries(Favorites.CATS).map(([k, label]) => {
+            const cur = Favorites.getCategory(section.id) || 'review';
+            const active = cur === k;
+            return `<button class="fav-cat-btn ${active ? 'fav-cat-active' : ''}" onclick="setFavCategory('${section.id}','${k}')">${label}</button>`;
+          }).join('')}` : ''}
         </div>
         <button class="text-sm hover:underline" style="color:var(--primary)" onclick="navigateTo('${section.parent}')">← 返回${section.parentTitle}</button>
       </div>
@@ -688,7 +698,16 @@
   };
 
   window.toggleFav = function (id) {
-    Favorites.toggle(id);
+    const nowFav = Favorites.toggle(id);
+    // 收藏时默认归入"待复习"；取消收藏时清除分类
+    if (nowFav && !Favorites.getCategory(id)) Favorites.setCategory(id, 'review');
+    if (!nowFav) Favorites.setCategory(id, null);
+    renderSidebar();
+    renderPage(currentPage);
+  };
+
+  window.setFavCategory = function (id, cat) {
+    Favorites.setCategory(id, cat);
     renderSidebar();
     renderPage(currentPage);
   };

@@ -668,3 +668,9 @@
 .notes-preview ul { margin: 0.5rem 0; padding-left: 1.5rem; list-style: disc; }
 .notes-preview code { padding: 0.1rem 0.3rem; background: var(--bg); border-radius: 0.2rem; font-family: Consolas, 'Courier New', monospace; font-size: 0.85em; }
 
+/* ==================== 收藏分类按钮（v0.9.2） ==================== */
+.fav-cat-btn { padding: 0.2rem 0.55rem; border: 1px solid var(--border); border-radius: 0.25rem; background: var(--bg-secondary); color: var(--text); cursor: pointer; font-size: 0.75rem; transition: all 0.15s; }
+.fav-cat-btn:hover { border-color: var(--primary); color: var(--primary); }
+.fav-cat-active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.fav-cat-active:hover { color: #fff; }
+
