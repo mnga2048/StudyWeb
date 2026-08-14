@@ -90,7 +90,7 @@ const CourseData = {
       { label: '知识板块', value: '20', color: 'blue' },
       { label: '知识点', value: '214', color: 'green' },
       { label: '交互图表', value: '16', color: 'purple' },
-      { label: '计算工具', value: '28', color: 'orange' },
+      { label: '计算工具', value: '33', color: 'orange' },
     ],
     sections: [
       { id: 'advanced-math', title: '高等数学', desc: '极限、微积分、级数、微分方程，工学类高数全考点', icon: '🔴', level: '应试' },

@@ -1,12 +1,12 @@
 // 公式计算器模块
-// 提供 23 个实用计算器工具，覆盖电路、控制、信号、数电、计算机、协议、电机等领域
+// 提供 33 个实用计算器工具，覆盖电路、控制、信号、数电、计算机、协议、电机、嵌入式、制造工艺等领域
 
 const Calculator = {
   // 当前活动的计算器
   _active: null,
 
   // 分类顺序
-  _categoryOrder: ['电路基础', '模拟电路', '数字电路', '信号处理', '自动控制', '计算机', '工程协议', '电机驱动', '嵌入式'],
+  _categoryOrder: ['电路基础', '模拟电路', '数字电路', '信号处理', '自动控制', '计算机', '工程协议', '电机驱动', '嵌入式', '制造与工艺'],
 
   render(containerId) {
     const container = document.getElementById(containerId);
@@ -33,7 +33,7 @@ const Calculator = {
   },
 
   _categoryIcon(cat) {
-    const icons = {'电路基础':'🔵','模拟电路':'🟢','数字电路':'🟡','信号处理':'📡','自动控制':'🟣','计算机':'💻','工程协议':'🔌','电机驱动':'⚡','嵌入式':'🔩'};
+    const icons = {'电路基础':'🔵','模拟电路':'🟢','数字电路':'🟡','信号处理':'📡','自动控制':'🟣','计算机':'💻','工程协议':'🔌','电机驱动':'⚡','嵌入式':'🔩','制造与工艺':'🖨️'};
     return icons[cat] || '🔧';
   },
 
@@ -139,6 +139,13 @@ const Calculator = {
     { id: 'led-resistor', title: 'LED 限流电阻', desc: 'Vs/Vf/If → 阻值、功耗、E24 标称值', icon: '💡', category: '嵌入式' },
     { id: 'battery-life', title: '电池续航估算', desc: '容量/负载 → 工作时长、放电倍率', icon: '🔋', category: '嵌入式' },
     { id: 'uart-debug', title: '串口调试助手', desc: '十六进制收发模拟 + CRC 校验 + Web Serial 真机', icon: '🔌', category: '嵌入式' },
+    { id: 'linux-cheat', title: 'Linux 命令速查', desc: '文件/进程/网络/设备常用命令卡片，可搜索', icon: '🐧', category: '嵌入式' },
+
+    { id: 'gcode-gen', title: 'G-code 生成器', desc: '矩形/圆形轮廓、螺旋下刀圆孔 → 基础 G-code', icon: '📜', category: '制造与工艺' },
+    { id: 'print-cost', title: '打印成本估算', desc: '体积/填充率/材料 → 耗材重量+成本+时间', icon: '💰', category: '制造与工艺' },
+    { id: 'shrink-calc', title: '公差计算器', desc: '3D 打印收缩补偿：设计尺寸 × 收缩率 → 打印尺寸', icon: '📐', category: '制造与工艺' },
+
+    { id: 'cron-gen', title: 'cron 表达式生成器', desc: '可视化编辑定时任务 + 未来 3 次执行时间预览', icon: '⏰', category: '计算机' },
   ],
 
   // 各计算器实现
@@ -2159,6 +2166,436 @@ const Calculator = {
         const rxEl = document.getElementById('ud-rx');
         if (txEl) txEl.textContent = '0';
         if (rxEl) rxEl.textContent = '0';
+      },
+    },
+
+    // ==================== v1.0.5 新增：Linux 速查 / G-code / 打印成本 / 公差 / cron ====================
+
+    // Linux 命令速查（分类卡片 + 搜索）
+    linuxCheat: {
+      _cmds: [
+        ['文件与目录', 'ls -lh', '长格式列目录，大小人类可读'],
+        ['文件与目录', 'cd / cd -', '切换目录 / 回上一个目录'],
+        ['文件与目录', 'cp -a src dst', '递归复制并保留属性'],
+        ['文件与目录', 'mv old new', '移动/重命名'],
+        ['文件与目录', 'rm -rf dir', '递归强制删除（危险，想清楚再敲）'],
+        ['文件与目录', 'mkdir -p a/b/c', '递归建目录'],
+        ['文件与目录', 'ln -s target link', '建软链接'],
+        ['文件与目录', 'df -h / du -sh .', '磁盘空间 / 当前目录占用'],
+        ['文件与目录', 'tar czf x.tar.gz dir/', '打包压缩（xzf 解包）'],
+        ['查找与文本', 'find / -name "*.dts"', '按名字全盘找文件'],
+        ['查找与文本', 'grep -rn "TODO" src/', '递归列行号搜文本'],
+        ['查找与文本', 'grep -iE "a|b" f', '忽略大小写 + 扩展正则'],
+        ['查找与文本', 'awk \'{print $1,$3}\' f', '按列输出（空格分隔）'],
+        ['查找与文本', "sed -i 's/old/new/g' f", '就地全局替换'],
+        ['查找与文本', 'cat / head / tail -f log', '查看 / 追踪日志尾部'],
+        ['查找与文本', 'wc -l / sort / uniq -c', '计数、排序、去重统计'],
+        ['查找与文本', 'diff -u a b', '对比两个文件'],
+        ['进程与系统', 'ps aux | grep app', '查进程（全用户 + 命令名过滤）'],
+        ['进程与系统', 'top / htop', '交互式资源监视'],
+        ['进程与系统', 'kill -9 PID', '强杀进程（先试 -15）'],
+        ['进程与系统', 'systemctl status/start/stop svc', '服务管理三连'],
+        ['进程与系统', 'journalctl -u svc -f', '跟踪某服务日志'],
+        ['进程与系统', 'dmesg | tail -20', '内核最近日志（插拔设备先看它）'],
+        ['进程与系统', 'uname -a / lsmod / free -h', '内核版本 / 模块 / 内存'],
+        ['进程与系统', 'crontab -e / -l', '编辑 / 列出定时任务'],
+        ['网络与远程', 'ip addr / ip route', '新式网卡与路由查看'],
+        ['网络与远程', 'ping -c 4 host', '连通性测试'],
+        ['网络与远程', 'ss -tulpn', '端口监听与进程对应'],
+        ['网络与远程', 'ssh user@host', '远程登录（-L 端口转发）'],
+        ['网络与远程', 'scp f user@host:/path', '远程拷贝（-r 递归）'],
+        ['网络与远程', 'curl -X POST -d @f url', '发 HTTP 请求'],
+        ['网络与远程', 'nmap -sn 192.168.1.0/24', '扫局域网存活主机'],
+        ['设备与外设', 'lsusb / lspci', '列出 USB / PCI 设备'],
+        ['设备与外设', 'lsblk / sudo fdisk -l', '看磁盘与分区'],
+        ['设备与外设', 'dmesg | grep tty', '确认串口设备注册'],
+        ['设备与外设', 'sudo i2cdetect -y 1', '扫描 I2C 总线器件'],
+        ['设备与外设', 'gpiodetect / gpioinfo', '列出 GPIO 芯片与引脚状态'],
+        ['设备与外设', 'vcgencmd measure_temp', '树莓派温度'],
+        ['设备与外设', 'udevadm info -a -n /dev/ttyUSB0', '查设备属性（写规则用）'],
+        ['设备与外设', 'sudo dd if=img of=/dev/sdX bs=4M', '烧写镜像（of 别写反！）'],
+      ],
+      _cats: ['全部', '文件与目录', '查找与文本', '进程与系统', '网络与远程', '设备与外设'],
+      _cat: '全部',
+      _kw: '',
+      render(el) {
+        el.innerHTML = `
+          <div class="space-y-3">
+            <input type="text" id="lc-kw" placeholder="搜索命令或说明，如：串口 / grep / 日志..." class="w-full px-3 py-2 rounded" style="border:1px solid var(--border);background:var(--bg)">
+            <div id="lc-cats" class="flex flex-wrap gap-2"></div>
+            <div id="lc-list" class="space-y-2"></div>
+          </div>`;
+        document.getElementById('lc-kw')?.addEventListener('input', e => {
+          this._kw = e.target.value.trim().toLowerCase();
+          this._refresh();
+        });
+        this._refreshCats();
+        this._refresh();
+      },
+      _refreshCats() {
+        const box = document.getElementById('lc-cats');
+        if (!box) return;
+        box.innerHTML = this._cats.map(c => `
+          <button onclick="Calculator._calculators.linuxCheat._setCat('${c}')" class="px-3 py-1 rounded-full text-sm font-medium"
+            style="border:1px solid var(--border);background:${this._cat === c ? 'var(--primary)' : 'var(--bg)'};color:${this._cat === c ? 'white' : 'inherit'}">${c}</button>`).join('');
+      },
+      _setCat(c) { this._cat = c; this._refreshCats(); this._refresh(); },
+      _refresh() {
+        const box = document.getElementById('lc-list');
+        if (!box) return;
+        const list = this._cmds.filter(([cat, cmd, d]) =>
+          (this._cat === '全部' || cat === this._cat) &&
+          (!this._kw || cmd.toLowerCase().includes(this._kw) || d.toLowerCase().includes(this._kw)));
+        box.innerHTML = list.length === 0
+          ? '<div class="text-sm text-gray-500 py-4 text-center">没有匹配的命令</div>'
+          : list.map(([cat, cmd, d]) => `
+            <div class="p-2 rounded" style="background:var(--bg-secondary);border:1px solid var(--border)">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                <code class="text-sm font-medium" style="color:var(--primary)">${cmd.replace(/</g, '&lt;')}</code>
+                <span class="text-xs px-2 py-0.5 rounded-full" style="background:var(--bg);border:1px solid var(--border)">${cat}</span>
+              </div>
+              <div class="text-sm mt-1" style="color:var(--text-secondary)">${d}</div>
+            </div>`).join('');
+      },
+    },
+
+    // G-code 生成器（矩形/圆形轮廓 + 螺旋下刀圆孔）
+    gcodeGen: {
+      render(el) {
+        el.innerHTML = `
+          <div class="space-y-4">
+            <div class="info-box info"><div>基础轮廓 G-code 生成：适用于雕刻机 / 写字机扩展练习。下刀半速进给，生成后请按机床实际配置核对 F/S 与安全高度。</div></div>
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="text-sm">轮廓类型</label>
+                <select id="gg-shape" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)">
+                  <option value="rect">矩形轮廓（长 × 宽）</option>
+                  <option value="circle">圆形轮廓（整圆 IJ）</option>
+                  <option value="hole">圆孔（螺旋下刀）</option>
+                </select></div>
+              <div><label class="text-sm">安全高度 Z (mm)</label>
+                <input type="number" id="gg-safe" value="5" step="0.5" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div id="gg-rect-a"><label class="text-sm">长 L (mm)</label>
+                <input type="number" id="gg-len" value="80" step="1" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+              <div id="gg-rect-b"><label class="text-sm">宽 W (mm)</label>
+                <input type="number" id="gg-wid" value="50" step="1" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+              <div id="gg-circ-a" style="display:none"><label class="text-sm">半径 R (mm)</label>
+                <input type="number" id="gg-rad" value="20" step="1" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+              <div><label class="text-sm">总深度 (mm)</label>
+                <input type="number" id="gg-depth" value="2" step="0.5" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+              <div><label class="text-sm">每层切深 (mm)</label>
+                <input type="number" id="gg-ap" value="0.5" step="0.1" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+              <div><label class="text-sm">进给 F (mm/min)</label>
+                <input type="number" id="gg-feed" value="600" step="10" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+              <div><label class="text-sm">主轴 S (rpm)</label>
+                <input type="number" id="gg-spindle" value="10000" step="500" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+            </div>
+            <button onclick="Calculator._calculators.gcodeGen.calc()" class="w-full px-4 py-2 rounded font-medium" style="background:var(--primary);color:white">生成 G-code</button>
+            <div id="gg-result"></div>
+          </div>`;
+        document.getElementById('gg-shape')?.addEventListener('change', e => {
+          const isRect = e.target.value === 'rect';
+          document.getElementById('gg-rect-a').style.display = isRect ? 'block' : 'none';
+          document.getElementById('gg-rect-b').style.display = isRect ? 'block' : 'none';
+          document.getElementById('gg-circ-a').style.display = isRect ? 'none' : 'block';
+        });
+      },
+      calc() {
+        const shape = document.getElementById('gg-shape')?.value || 'rect';
+        const safe = parseFloat(document.getElementById('gg-safe')?.value || 5);
+        const L = parseFloat(document.getElementById('gg-len')?.value || 0);
+        const W = parseFloat(document.getElementById('gg-wid')?.value || 0);
+        const R = parseFloat(document.getElementById('gg-rad')?.value || 0);
+        const depth = parseFloat(document.getElementById('gg-depth')?.value || 0);
+        const ap = parseFloat(document.getElementById('gg-ap')?.value || 0);
+        const F = parseFloat(document.getElementById('gg-feed')?.value || 0);
+        const S = parseFloat(document.getElementById('gg-spindle')?.value || 0);
+        const result = document.getElementById('gg-result');
+        if (!result) return;
+        if (!(depth > 0 && ap > 0 && F > 0 && S > 0 && safe > 0) ||
+            (shape === 'rect' ? !(L > 0 && W > 0) : !(R > 0))) {
+          result.innerHTML = '<span class="text-red-500">请输入有效参数（均须 &gt; 0）</span>';
+          return;
+        }
+        const g = [];
+        g.push('(StudyWeb gcode-gen)');
+        g.push('G21 G90 G17        (mm / 绝对坐标 / XY 平面)');
+        g.push('M3 S' + S);
+        if (shape === 'rect') {
+          g.push('G0 X0 Y0');
+          g.push('G0 Z' + safe.toFixed(1));
+          const layers = Math.ceil(depth / ap);
+          for (let i = 1; i <= layers; i++) {
+            const z = Math.min(depth, i * ap).toFixed(2);
+            g.push('G1 Z-' + z + ' F' + Math.round(F / 2));
+            g.push('G1 X' + L.toFixed(2) + ' Y0 F' + F);
+            g.push('G1 X' + L.toFixed(2) + ' Y' + W.toFixed(2));
+            g.push('G1 X0 Y' + W.toFixed(2));
+            g.push('G1 X0 Y0');
+          }
+        } else {
+          g.push('G0 X' + R.toFixed(2) + ' Y0');
+          g.push('G0 Z' + safe.toFixed(1));
+          const layers = Math.ceil(depth / ap);
+          for (let i = 1; i <= layers; i++) {
+            const z = Math.min(depth, i * ap).toFixed(2);
+            g.push('G1 Z-' + z + ' F' + Math.round(F / 2));
+            g.push((shape === 'hole' ? 'G2 ' : 'G3 ') + 'X' + R.toFixed(2) + ' Y0 I-' + R.toFixed(2) + ' J0 F' + F);
+          }
+        }
+        g.push('G0 Z' + safe.toFixed(1));
+        g.push('M5');
+        g.push('M30');
+        const code = g.join('\n');
+        result.innerHTML = `
+          <div class="text-sm mb-2">共 ${g.length} 行</div>
+          <pre id="gg-pre" class="p-3 rounded text-xs overflow-x-auto" style="background:var(--bg-secondary);border:1px solid var(--border);max-height:300px">${code.replace(/</g, '&lt;')}</pre>
+          <button onclick="Calculator._calculators.gcodeGen.copy()" class="mt-2 px-4 py-1.5 rounded text-sm font-medium" style="background:var(--primary);color:white">复制代码</button>`;
+        this._code = code;
+      },
+      copy() {
+        if (this._code && navigator.clipboard) navigator.clipboard.writeText(this._code).catch(() => {});
+      },
+    },
+
+    // 3D 打印成本估算
+    printCost: {
+      _mats: { 'PLA': 1.24, 'PETG': 1.27, 'ABS': 1.04, 'TPU': 1.21, 'PC': 1.20 },
+      render(el) {
+        el.innerHTML = `
+          <div class="space-y-4">
+            <div class="info-box info"><div>模型体积可由切片软件读取（STL 属性），或用长×宽×高 × 0.4 粗估实心外壳件。实际耗材量 ≈ 体积 ×（填充率 + 壳体系数）。</div></div>
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="text-sm">模型体积 (cm³)</label>
+                <input type="number" id="pc-v" value="50" step="1" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+              <div><label class="text-sm">材料</label>
+                <select id="pc-mat" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)">
+                  ${Object.keys(this._mats).map(m => `<option value="${m}">${m}</option>`).join('')}
+                </select></div>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+              <div><label class="text-sm">填充率 (%)</label>
+                <input type="number" id="pc-infill" value="20" min="0" max="100" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+              <div><label class="text-sm">壳体系数</label>
+                <input type="number" id="pc-shell" value="0.15" step="0.05" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+              <div><label class="text-sm">线材单价 (¥/kg)</label>
+                <input type="number" id="pc-price" value="60" step="1" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+              <div><label class="text-sm">层高 (mm)</label>
+                <input type="number" id="pc-layer" value="0.2" step="0.05" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+              <div><label class="text-sm">喷嘴 (mm)</label>
+                <input type="number" id="gc-nozzle" value="0.4" step="0.1" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+              <div><label class="text-sm">速度 (mm/s)</label>
+                <input type="number" id="pc-speed" value="60" step="5" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+            </div>
+            <button onclick="Calculator._calculators.printCost.calc()" class="w-full px-4 py-2 rounded font-medium" style="background:var(--primary);color:white">估算</button>
+            <div id="pc-result" class="p-3 rounded" style="background:var(--bg-secondary);border:1px solid var(--border);min-height:3rem"></div>
+          </div>`;
+      },
+      calc() {
+        const V = parseFloat(document.getElementById('pc-v')?.value || 0);
+        const mat = document.getElementById('pc-mat')?.value || 'PLA';
+        const infill = parseFloat(document.getElementById('pc-infill')?.value || 0);
+        const shell = parseFloat(document.getElementById('pc-shell')?.value || 0);
+        const price = parseFloat(document.getElementById('pc-price')?.value || 0);
+        const layer = parseFloat(document.getElementById('pc-layer')?.value || 0);
+        const nozzle = parseFloat(document.getElementById('gc-nozzle')?.value || 0);
+        const speed = parseFloat(document.getElementById('pc-speed')?.value || 0);
+        const result = document.getElementById('pc-result');
+        if (!result) return;
+        if (!(V > 0 && price > 0 && layer > 0 && nozzle > 0 && speed > 0) || !(infill >= 0 && shell >= 0)) {
+          result.innerHTML = '<span class="text-red-500">请输入有效参数</span>'; return;
+        }
+        const ratio = Math.min(1, infill / 100 + shell);
+        const Veff = V * ratio;                     // 实际耗材体积 cm³
+        const weight = Veff * this._mats[mat];      // g
+        const lenM = (Veff * 1000) / (Math.PI * 0.875 * 0.875) / 1000;  // 1.75mm 线长 m
+        const flow = nozzle * layer * speed;        // mm³/s
+        const timeS = (Veff * 1000) / flow * 1.15;  // 15% 空程系数
+        const cost = weight / 1000 * price;
+        const perRoll = Math.floor(1000 / weight);
+        const h = Math.floor(timeS / 3600), m = Math.round(timeS % 3600 / 60);
+        result.innerHTML = `
+          <div class="space-y-1">
+            <div>实际耗材体积：<strong>${Veff.toFixed(1)} cm³</strong>（体积利用率 ${(ratio * 100).toFixed(0)}%）</div>
+            <div>耗材重量：<strong>${weight.toFixed(1)} g</strong>　线长：约 <strong>${lenM.toFixed(1)} m</strong></div>
+            <div>材料成本：<strong style="color:var(--primary)">¥${cost.toFixed(2)}</strong>　一卷 1kg 约打 <strong>${perRoll}</strong> 件</div>
+            <div>预计时间：约 <strong>${h} 小时 ${m} 分</strong>（流量 ${flow.toFixed(1)} mm³/s，含 15% 空程）</div>
+            <div class="text-xs text-gray-500 mt-1">估算模型不含支撑与失败重打；复杂件建议再加 10~20% 余量</div>
+          </div>`;
+      },
+    },
+
+    // 3D 打印收缩公差计算器
+    shrinkCalc: {
+      _eps: { 'PLA（0.4%）': 0.4, 'PETG（0.5%）': 0.5, 'ABS（0.8%）': 0.8, 'PC（0.8%）': 0.8, '自定义': -1 },
+      render(el) {
+        el.innerHTML = `
+          <div class="space-y-4">
+            <div class="info-box info"><div>正向：D<sub>打印</sub> = D<sub>目标</sub> × (1 + ε) + c（孔再加 c，外轮廓 c=0）。反向：用实测偏差反推 c，配合阶梯试块一次标定（print-06 六步法）。</div></div>
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="text-sm">模式</label>
+                <select id="sc-mode" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)">
+                  <option value="fwd">正向：设计尺寸 → 打印尺寸</option>
+                  <option value="rev">反向：实测 → 修正建议</option>
+                </select></div>
+              <div><label class="text-sm">材料（线收缩率 ε）</label>
+                <select id="sc-mat" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)">
+                  ${Object.keys(this._eps).map(m => `<option value="${m}">${m}</option>`).join('')}
+                </select></div>
+            </div>
+            <div id="sc-eps-custom" style="display:none"><label class="text-sm">自定义 ε (%)</label>
+              <input type="number" id="sc-eps-val" value="0.4" step="0.05" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+            <div class="grid grid-cols-2 gap-3">
+              <div id="sc-d-wrap"><label class="text-sm">目标尺寸 D (mm)</label>
+                <input type="number" id="sc-d" value="22" step="0.1" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+              <div id="sc-c-wrap"><label class="text-sm">孔工艺常量 c (mm)</label>
+                <input type="number" id="sc-c" value="0.3" step="0.05" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+              <div id="sc-a-wrap" style="display:none"><label class="text-sm">实测尺寸 A (mm)</label>
+                <input type="number" id="sc-a" value="21.8" step="0.01" class="w-full px-3 py-2 rounded mt-1" style="border:1px solid var(--border);background:var(--bg)"></div>
+            </div>
+            <button onclick="Calculator._calculators.shrinkCalc.calc()" class="w-full px-4 py-2 rounded font-medium" style="background:var(--primary);color:white">计算</button>
+            <div id="sc-result" class="p-3 rounded" style="background:var(--bg-secondary);border:1px solid var(--border);min-height:3rem"></div>
+          </div>`;
+        document.getElementById('sc-mat')?.addEventListener('change', e => {
+          document.getElementById('sc-eps-custom').style.display = (this._eps[e.target.value] < 0) ? 'block' : 'none';
+        });
+        document.getElementById('sc-mode')?.addEventListener('change', e => {
+          const rev = e.target.value === 'rev';
+          document.getElementById('sc-a-wrap').style.display = rev ? 'block' : 'none';
+          document.getElementById('sc-c-wrap').style.display = rev ? 'none' : 'block';
+        });
+      },
+      calc() {
+        const mode = document.getElementById('sc-mode')?.value || 'fwd';
+        const mat = document.getElementById('sc-mat')?.value || 'PLA（0.4%）';
+        let eps = this._eps[mat];
+        if (eps < 0) eps = parseFloat(document.getElementById('sc-eps-val')?.value || 0);
+        const D = parseFloat(document.getElementById('sc-d')?.value || 0);
+        const result = document.getElementById('sc-result');
+        if (!result) return;
+        if (!(D > 0) || !(eps >= 0)) {
+          result.innerHTML = '<span class="text-red-500">请输入有效参数</span>'; return;
+        }
+        if (mode === 'fwd') {
+          const c = parseFloat(document.getElementById('sc-c')?.value || 0);
+          const out = D * (1 + eps / 100) + c;
+          result.innerHTML = `
+            <div class="space-y-1">
+              <div>打印尺寸：<strong style="color:var(--primary)">${out.toFixed(3)} mm</strong>　（D=${D}，ε=${eps}%${c ? '，c=' + c : ''}）</div>
+              <div>阶梯试块建议：同板打 <strong>${(out - 0.1).toFixed(2)} / ${out.toFixed(2)} / ${(out + 0.1).toFixed(2)}</strong> 三档，实测选型（print-06）</div>
+              <div class="text-xs text-gray-500 mt-1">配合性质参考：压入 +0.2~0.4 / 滑动 +0.3~0.5 / 快换 +0.5</div>
+            </div>`;
+        } else {
+          const A = parseFloat(document.getElementById('sc-a')?.value || 0);
+          if (!(A > 0)) { result.innerHTML = '<span class="text-red-500">请输入实测尺寸</span>'; return; }
+          const dev = A - D;
+          const cAdj = -dev;  // 下次在该打印值上加的修正量
+          result.innerHTML = `
+            <div class="space-y-1">
+              <div>实测偏差：<strong style="color:${Math.abs(dev) <= 0.2 ? '#059669' : '#d97706'}">${dev >= 0 ? '+' : ''}${dev.toFixed(3)} mm</strong>（${Math.abs(dev) <= 0.2 ? '公差内，可用' : '超差，需修正'}）</div>
+              <div>修正建议：当前打印值 ${A}mm，下版改为 <strong>${A.toFixed(2)} ${cAdj >= 0 ? '+' : '−'} ${Math.abs(cAdj).toFixed(2)} = ${(A + cAdj).toFixed(2)} mm</strong></div>
+              <div class="text-xs text-gray-500 mt-1">即把 c 值调整 ${cAdj >= 0 ? '+' : '−'}${Math.abs(cAdj).toFixed(2)}mm 后重打首件复验；偏差 &gt; 1% 先查机械（皮带/带轮）</div>
+            </div>`;
+        }
+      },
+    },
+
+    // cron 表达式生成器 + 未来 3 次执行预览
+    cronGen: {
+      _fields: [['min', '分 (0-59)'], ['hour', '时 (0-23)'], ['dom', '日 (1-31)'], ['mon', '月 (1-12)'], ['dow', '周 (0-6)']],
+      _presets: [
+        ['每 5 分钟', '*/5 * * * *'],
+        ['每小时 30 分', '30 * * * *'],
+        ['每天 09:00', '0 9 * * *'],
+        ['每周一 08:30', '30 8 * * 1'],
+        ['每月 1 号 00:00', '0 0 1 * *'],
+        ['每季度首日', '0 0 1 */3 *'],
+      ],
+      render(el) {
+        el.innerHTML = `
+          <div class="space-y-4">
+            <div class="info-box info"><div>五个字段依次为：分 时 日 月 周。支持 <code>*</code> / <code>*/n</code> / <code>a-b</code> / <code>a,b</code> 组合，如 <code>0,30 8-18 * * 1-5</code> = 工作日 8~18 点的整点与半点。</div></div>
+            <div class="flex flex-wrap gap-2">
+              ${this._presets.map(([n, e]) => `<button onclick="Calculator._calculators.cronGen._preset('${e}')" class="px-3 py-1 rounded-full text-sm" style="border:1px solid var(--border);background:var(--bg)">${n}</button>`).join('')}
+            </div>
+            <div class="grid grid-cols-5 gap-2">
+              ${this._fields.map(([k, label]) => `
+                <div><label class="text-xs">${label}</label>
+                  <input type="text" id="cg-${k}" value="*" class="w-full px-2 py-2 rounded mt-1 text-sm text-center" style="border:1px solid var(--border);background:var(--bg)"></div>`).join('')}
+            </div>
+            <button onclick="Calculator._calculators.cronGen.calc()" class="w-full px-4 py-2 rounded font-medium" style="background:var(--primary);color:white">解析并预览</button>
+            <div id="cg-result" class="p-3 rounded" style="background:var(--bg-secondary);border:1px solid var(--border);min-height:3rem"></div>
+          </div>`;
+      },
+      _preset(e) {
+        const parts = e.split(' ');
+        this._fields.forEach(([k], i) => {
+          const input = document.getElementById('cg-' + k);
+          if (input) input.value = parts[i] || '*';
+        });
+        this.calc();
+      },
+      _match(val, expr, min, max) {
+        if (!expr || expr.trim() === '*') return true;
+        return expr.split(',').some(part => {
+          part = part.trim();
+          if (!part) return false;
+          const seg = part.split('/');
+          const step = seg.length === 2 ? parseInt(seg[1]) : 1;
+          if (!(step > 0)) return false;
+          let lo, hi;
+          if (seg[0] === '*') { lo = min; hi = max; }
+          else if (seg[0].includes('-')) { const [a, b] = seg[0].split('-'); lo = parseInt(a); hi = parseInt(b); }
+          else { lo = hi = parseInt(seg[0]); }
+          if (isNaN(lo) || isNaN(hi) || val < lo || val > hi) return false;
+          return step === 1 || (val - lo) % step === 0;
+        });
+      },
+      _describe(fields) {
+        const names = ['分', '时', '日', '月', '周'];
+        const parts = fields.map((f, i) => f.trim() === '*' ? null : `${names[i]}=${f.trim()}`).filter(Boolean);
+        return parts.length === 0 ? '每分钟执行' : parts.join('，');
+      },
+      calc() {
+        const fields = this._fields.map(([k]) => document.getElementById('cg-' + k)?.value.trim() || '*');
+        const result = document.getElementById('cg-result');
+        if (!result) return;
+        const expr = fields.join(' ');
+        // 未来 3 次执行时间：逐分钟匹配，最多向前找 3 年
+        const now = new Date();
+        now.setSeconds(0, 0);
+        now.setMinutes(now.getMinutes() + 1);
+        const runs = [];
+        const limit = 3 * 366 * 24 * 60;
+        for (let i = 0; i < limit && runs.length < 3; i++) {
+          const dow = now.getDay();
+          if (this._match(now.getMinutes(), fields[0], 0, 59) &&
+              this._match(now.getHours(), fields[1], 0, 23) &&
+              this._match(now.getDate(), fields[2], 1, 31) &&
+              this._match(now.getMonth() + 1, fields[3], 1, 12) &&
+              this._match(dow === 0 && fields[4].includes('7') ? 7 : dow, fields[4], 0, 7)) {
+            runs.push(new Date(now));
+          }
+          now.setMinutes(now.getMinutes() + 1);
+        }
+        if (runs.length === 0) {
+          result.innerHTML = `<div class="text-red-500">⚠ 3 年内无匹配时刻——请检查字段合法性（如 2 月 30 日）</div>`;
+          return;
+        }
+        const fmt = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}（${'日一二三四五六'[d.getDay()]}）`;
+        result.innerHTML = `
+          <div class="space-y-1">
+            <div>表达式：<code style="color:var(--primary);font-size:1.05em">${expr.replace(/</g, '&lt;')}</code></div>
+            <div>含义：${this._describe(fields)}</div>
+            <div class="mt-1">未来 3 次执行：</div>
+            ${runs.map(d => `<div class="pl-2">▸ ${fmt(d)}</div>`).join('')}
+            <div class="text-xs text-gray-500 mt-1">写入 crontab：crontab -e 后追加该行（脚本路径替换为绝对路径）</div>
+          </div>`;
       },
     },
   },
