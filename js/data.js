@@ -95,7 +95,7 @@ const CourseData = {
     ],
     stats: [
       { label: '知识板块', value: '21', color: 'blue' },
-      { label: '知识点', value: '228', color: 'green' },
+      { label: '知识点', value: '229', color: 'green' },
       { label: '交互图表', value: '18', color: 'purple' },
       { label: '计算工具', value: '35', color: 'orange' },
     ],
@@ -106,7 +106,7 @@ const CourseData = {
       { id: 'analog-circuit', title: '模拟电路', desc: '二极管、三极管、运放、反馈、功率放大、电源', icon: '🟢', level: '应试+工程' },
       { id: 'digital-circuit', title: '数字电路', desc: '逻辑代数、组合/时序、卡诺图、触发器、HDL', icon: '🟡', level: '应试+工程' },
       { id: 'control', title: '自动控制原理', desc: '时域/频域/根轨迹/校正，工程应用侧重', icon: '🟣', level: '工程' },
-      { id: 'modern-control', title: '现代控制理论', desc: '状态空间、能控能观、LQR、卡尔曼滤波', icon: '🔮', level: '工程' },
+      { id: 'modern-control', title: '现代控制理论', desc: '状态空间、能控能观、LQR、卡尔曼滤波、传感器融合', icon: '🔮', level: '工程' },
       { id: 'data-structure', title: '数据结构', desc: '线性表→树→图→查找→排序，统考大纲与工程实战', icon: '⚫', level: '应试+工程' },
       { id: 'signals', title: '信号与系统', desc: '傅里叶/拉氏/Z 变换、LTI 系统、采样定理', icon: '📡', level: '应试+工程' },
       { id: 'embedded-sys', title: '嵌入式系统', desc: 'ARM 架构、GPIO/中断、RTOS、通信接口', icon: '🔩', level: '工程' },
@@ -5540,6 +5540,8 @@ const CourseData = {
           <div class="step"><span class="step-num">3</span><div class="step-content"><strong>第 1 次测量</strong><br>$y_1=5.1$：$K_1=\\frac{100}{100+R_n}$，$\\hat{x}_1=K_1 \\cdot 5.1$</div></div>
           <div class="step"><span class="step-num">4</span><div class="step-content"><strong>收敛</strong><br>随着测量次数增加，$P_k$ 递减，$K_k$ 减小，估计趋于平稳</div></div>
         </div>
+
+        <div class="info-box tip">💡 <strong>承上启下</strong>：卡尔曼滤波的五条公式是"怎么算"；它背后的贝叶斯递推框架、多传感器证据融合（互补滤波/紧耦合/ESKF）与工程实践（时间同步、坐标系对齐）在<a href="javascript:void(0)" onclick="App.loadDetail('mct-11')">mct-11 状态估计与传感器融合</a>展开——那一节也是概率论、信号、传感器、机器人四门课的会师点。</div>
       ` },
       { id: 'mct-10', title: '离散状态空间', desc: '连续系统离散化、离散 Lyapunov 方程', icon: '💻', tags: ['工程应用'], goals: { eng: true }, content: `
         <h3 class="text-lg font-semibold mb-3">为什么要离散化？</h3>
@@ -5592,6 +5594,79 @@ const CourseData = {
           <div class="step"><span class="step-num">3</span><div class="step-content"><strong>求 H</strong><br>$H=A^{-1}(G-I)B$</div></div>
           <div class="step"><span class="step-num">4</span><div class="step-content"><strong>验证稳定性</strong><br>$|\\lambda(G)|=|e^{\\lambda_c T_s}|<1$（$\\lambda_c=-1,-2$），单位圆内 ✓</div></div>
         </div>
+      ` },
+
+      // ===== mct-11 状态估计与传感器融合 =====
+      { id: 'mct-11', title: '状态估计与传感器融合', desc: '贝叶斯滤波框架、互补滤波、多传感器融合架构与工程实践——连接概率论/信号/传感器/机器人学的桥梁', icon: '🧭', tags: ['核心', '工程应用'], goals: { eng: true }, content: `
+        <h3 class="text-lg font-semibold mb-3">一个状态，多份证据</h3>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          <a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">mct-09</a> 把卡尔曼滤波的五条公式讲清楚了，但它回答的是"怎么算"；本节回答"为什么这么算"以及工程里真正难的部分——<strong>手里的传感器各有脾气，怎么把它们的证据拧成一股绳</strong>。编码器说笔架在 100.2mm，电机电流反推在 99.1mm，限位开关刚刚弹了一下——三个证据，一个位置，信谁？这正是状态估计（State Estimation）与传感器融合（Sensor Fusion）的用武之地，也是<a href="javascript:void(0)" onclick="App.loadDetail('prob-02')">概率论</a>、<a href="javascript:void(0)" onclick="App.loadDetail('sig-07')">信号处理</a>、<a href="javascript:void(0)" onclick="App.loadDetail('sns-07')">传感器</a>、<a href="javascript:void(0)" onclick="App.loadDetail('robo-10')">机器人控制</a>四门课在本板块的会师点。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">贝叶斯滤波：一切估计的总纲</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          把状态 $\\boldsymbol{x}_k$ 当作随机变量（而不只是一个未知数），估计的目标是它的<strong>后验分布</strong>——给定全部历史测量 $\\boldsymbol{y}_{1:k}$ 时状态的概率分布。<a href="javascript:void(0)" onclick="App.loadDetail('prob-02')">贝叶斯公式</a>给出递推链：
+        </p>
+        <div class="formula-block">
+          $$\\underbrace{p(\\boldsymbol{x}_k \\mid \\boldsymbol{y}_{1:k})}_{\\text{后验}} \\;\\propto\\; \\underbrace{p(\\boldsymbol{y}_k \\mid \\boldsymbol{x}_k)}_{\\text{似然：传感器多准}} \\cdot \\underbrace{p(\\boldsymbol{x}_k \\mid \\boldsymbol{y}_{1:k-1})}_{\\text{先验：模型预测}}$$
+          <div class="text-sm text-gray-500 mt-2">先验由上一步后验经状态模型"传播"而来：$p(\\boldsymbol{x}_k|\\boldsymbol{y}_{1:k-1}) = \\int p(\\boldsymbol{x}_k|\\boldsymbol{x}_{k-1})\\, p(\\boldsymbol{x}_{k-1}|\\boldsymbol{y}_{1:k-1})\\, d\\boldsymbol{x}_{k-1}$——预测与更新的交替就是"模型推一步、测量修一把"</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          这条递推是<strong>一切滤波器的总纲</strong>：线性高斯假设下积分有闭式解——恰是 <a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">mct-09 的卡尔曼滤波</a>（后验恒为高斯，只需传均值 $\\hat{\\boldsymbol{x}}$ 与协方差 $P$）；非线性系统线性化 → EKF；用有限个采样点逼近积分 → UKF（无迹卡尔曼）；分布多峰非高斯（机器人 kidnapped 在两个走廊分不清）→ 粒子滤波（用随机样本逼近任意分布）。<strong>KF 不是发明，是贝叶斯递推在最有利假设下的特例</strong>——理解这一层，工程选型就有了地图。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">传感器特性：先懂证据，再谈融合</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>传感器</th><th>直接给出</th><th>误差特性</th><th>频率特性</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">编码器（增量）</td><td>位移增量 → 位置</td><td>量化误差 + 丢步累积漂移</td><td>高带宽，误差随时间累积</td></tr>
+            <tr><td class="font-medium">陀螺仪（MEMS）</td><td>角速度</td><td>零偏漂移（积分后角度发散）</td><td>高频好，低频漂</td></tr>
+            <tr><td class="font-medium">加速度计</td><td>比力（含重力）</td><td>振动噪声大</td><td>低频好（静态得重力方向），高频噪</td></tr>
+            <tr><td class="font-medium">GPS/UWB</td><td>绝对位置</td><td>低频更新 + 多径跳变</td><td>低带宽，无累积误差</td></tr>
+            <tr><td class="font-medium">电机电流</td><td>负载转矩（间接）</td><td>受电气噪声影响</td><td>kHz 级，可反推运动阻力</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          规律一眼可见：<strong>没有全能传感器，只有互补的误差谱</strong>——相对传感器（编码器/陀螺）高频好但漂移，绝对传感器（GPS/加速度计静态/限位）低频准但慢且粗。融合的本质就是<strong>在频域/概率域把各传感器最可信的那一段拼起来</strong>（<a href="javascript:void(0)" onclick="App.loadDetail('sig-07')">滤波器的频域视角</a>在这里落地）。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">互补滤波：一行代码的融合哲学</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          IMU 姿态估计的经典入门：陀螺积分得角度 $\\theta_{gyro}$（高频可信、低频漂移），加速度计得倾角 $\\theta_{acc}$（低频可信、高频被振动污染）。按频率互补加权：
+        </p>
+        <div class="formula-block">
+          $$\\hat{\\theta}_k = \\alpha\\left(\\hat{\\theta}_{k-1} + \\omega_k \\Delta t\\right) + (1 - \\alpha)\\, \\theta_{acc,k}, \\qquad \\alpha = \\frac{\\tau}{\\tau + \\Delta t}$$
+          <div class="text-sm text-gray-500 mt-2">$\\tau$ 是时间常数：陀螺管 $\\tau$ 以上的快变成分，加速度计管 $\\tau$ 以下的慢变（绝对基准）——高通 + 低通 = 互补，一行代码实现</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          它就是卡尔曼滤波的稳态简化版（<a href="javascript:void(0)" onclick="App.loadDetail('mct-09')">mct-09 稳态 KF</a>：增益收敛为常值）——当噪声特性稳定、不需要协方差输出时，互补滤波足够好且极便宜（飞控里至今大量使用）。<strong>先互补、后卡尔曼、再 EKF</strong>，是工程复杂度递进的合理路线。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">融合架构：三对选择</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>架构选择</th><th>方案 A</th><th>方案 B</th><th>怎么选</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">耦合程度</td><td>松耦合：各传感器先各自出结果再融合</td><td>紧耦合：原始测量统一进一个滤波器</td><td>紧耦合精度高但状态维数大；松耦合易调试、易换件</td></tr>
+            <tr><td class="font-medium">滤波器位置</td><td>集中式：一个 EKF 吃全部测量</td><td>分布式：各节点本地估计+协方差上传</td><td>实时性要求高/总线带宽受限 → 分布式（与 <a href="javascript:void(0)" onclick="App.loadDetail('net-08')">工业网络/CAN</a> 配合）</td></tr>
+            <tr><td class="font-medium">误差参数化</td><td>EKF：线性化</td><td>ESKF：误差状态，名义轨迹+小误差</td><td>姿态等流形状态用 ESKF 更稳（IMU/GPS 融合主流）</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">实战：写字机笔架位置的融合估计</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>状态定义</strong><br>$\\boldsymbol{x} = [p, v, f]^T$：位置、速度、等效摩擦力（把"皮带卡滞"建为缓变状态，可估计可跟踪——增广状态的妙用）</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>预测（1kHz 控制周期内 100Hz 跑）</strong><br>运动学模型推进 $p, v$；$f$ 按随机游走（$Q_f$ 小）——模型说"如果没人捣乱，下一刻在哪"</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>测量更新①：编码器（100Hz）</strong><br>增量换算位置，$R_{enc}$ 按量化误差定；长期漂移靠②③抑制</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>测量更新②：电流（1kHz，经低通）</strong><br>稳态电压方程反推负载转矩 → 摩擦力 $f$ 的观测（<a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">linux-12 电流环</a>的读数直接可用），$R_f$ 放大些（这条证据间接）</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>测量更新③：限位开关（事件触发）</strong><br>回零瞬间把位置方差 $P_p$ 直接压到接近 0——离散事件的"硬证据"用方差塌缩处理，比调增益干净</div></div>
+          <div class="step"><span class="step-num">6</span><div class="step-content"><strong>收益</strong><br>丢步时电流证据拉高 $f$ 估计 → 位置预测自动补偿；编码器坏一个周期，速度估计不断崖。输出的 $P$ 矩阵还能给 <a href="javascript:void(0)" onclick="App.loadDetail('ai-13')">ai-13 的异常检测</a>当先验：新息超 $3\\sigma$ 才报警，误报大降</div></div>
+        </div>
+
+        <div class="info-box warning">⚠️ <strong>融合翻车前三名</strong>：① <strong>时间不同步</strong>——编码器时间戳差 5ms，在 500mm/s 速度下就是 2.5mm 系统误差，先把各路测量对齐到同一时钟（硬件触发或时间戳补偿）；② <strong>坐标系没对齐</strong>——IMU 装在笔架上的杆臂效应、安装角偏差，都是"融合后更歪"的经典来源（外参标定）；③ <strong>Q/R 凭感觉拍</strong>——mct-09 的整定原则在多传感器下更要紧：从 datasheet 噪声指标出发，再按新息序列是否白噪微调。</div>
+
+        <div class="info-box tip">💡 <strong>一句话总结</strong>：状态估计 = 概率的语言（<a href="javascript:void(0)" onclick="App.loadDetail('prob-02')">贝叶斯</a>）+ 信号的视野（<a href="javascript:void(0)" onclick="App.loadDetail('sig-07')">频域互补</a>）+ 传感器的知识（<a href="javascript:void(0)" onclick="App.loadDetail('sns-08')">误差模型</a>）+ 控制的框架（状态空间）。学完本节往两个方向走都通：机器人定位与 SLAM（<a href="javascript:void(0)" onclick="App.loadDetail('robo-10')">robo-10</a>），或工业设备的观测器+AI 双看门狗（<a href="javascript:void(0)" onclick="App.loadDetail('ai-13')">ai-13</a>）。</div>
+
+        <div class="info-box info">📘 <strong>为什么 Covariance 输出很重要</strong>：滤波器不只给"最可能的位置"，还给"不确定度多大"（$P$ 矩阵）。上层决策用它做风险加权：不确定度高时降速、拒绝规划中的激进轨迹；多机协作时按各自 $P$ 加权共享状态——<strong>把不确定性当一等信息输出，是现代估计与经典观测器的分水岭</strong>。</div>
       ` },
     ]
   },
@@ -14745,6 +14820,7 @@ const KnowledgeDeps = {
   'mct-08': ['mct-06'],       // 最优控制 <- 极点配置
   'mct-09': ['mct-07'],       // 卡尔曼滤波 <- 观测器
   'mct-10': ['mct-03', 'act-13'], // 离散 <- 求解 + 离散系统
+  'mct-11': ['mct-09', 'mct-10', 'prob-02', 'sns-07'], // 状态估计与融合 <- KF + 离散化 + 贝叶斯 + 运动传感器
 
   // === 信号与系统内部链 ===
   'sig-02': ['sig-01'],       // LTI 系统 <- 概述
