@@ -2768,9 +2768,19 @@ const CourseData = {
         <h4 class="font-medium mt-6 mb-2">常用编码</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>编码</th><th>规则</th><th>用途</th><th>示例（十进制 9）</th></tr></thead><tbody><tr><td class="font-medium">8421 BCD</td><td>每位十进制用 4 位二进制</td><td>显示（数码管）</td><td>1001</td></tr><tr><td class="font-medium">格雷码</td><td>相邻数只有 1 位不同</td><td>防错（旋转编码器）</td><td>1101</td></tr><tr><td class="font-medium">余 3 码</td><td>8421 BCD + 3</td><td>运算方便</td><td>1100</td></tr></tbody></table></div>
 
+        <h4 class="font-medium mt-6 mb-2">工程视角：格雷码与旋转编码器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">写字机闭环控制要读电机位置，常用增量式/绝对式旋转编码器，码盘上刻的就是格雷码。为什么不用普通二进制？从 $7=(0111)_2$ 变到 $8=(1000)_2$ 时四位<strong>同时翻转</strong>，若采样恰好落在跳变瞬间，某一位先到就会读出完全错误的值；而格雷码相邻数只有一位变化，最坏误差也只有 1 个 LSB——这就是"防错"的含义。</p>
+        <div class="formula-block">二进制 → 格雷码：$G_{n-1} = B_{n-1}$，$G_i = B_{i+1} \\oplus B_i$<br>格雷码 → 二进制：$B_{n-1} = G_{n-1}$，$B_i = B_{i+1} \\oplus G_i$（高位照抄，逐位异或向下恢复）<br>例：$13 = (1101)_2 \\Rightarrow G = 1,\ 1\\oplus1{=}0,\ 0\\oplus0{=}0,\ 1\\oplus0{=}1 = (1001)_2$<div class="text-sm text-gray-500 mt-2">编码器接口芯片读格雷码后，用组合逻辑（异或门链）一步转回二进制再参与运算</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">增量式编码器 A/B 两路相位差 90° 的方波，谁先到谁后到决定转向，计数值乘以脉冲当量就是位移——这套"脉冲计数 + 方向判别"电路正是<a href="javascript:void(0)" onclick="App.loadDetail('dig-09')">计数器</a>与<a href="javascript:void(0)" onclick="App.loadDetail('dig-07')">触发器</a>的组合应用，工程实例见<a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">电机控制实战</a>。</p>
+
         <h4 class="font-medium mt-6 mb-2">实例计算：补码运算</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">用 8 位补码计算 $15 - 27 = ?$</p>
         <div class="step-list"><div class="step-item"><div><strong>第一步：转补码</strong>。$+15 = 00001111$，$+27 = 00011011$</div></div><div class="step-item"><div><strong>第二步：求 -27 的补码</strong>。$27$ 的原码 $= 00011011$，取反 $= 11100100$，加 1 $= 11100101$</div></div><div class="step-item"><div><strong>第三步：补码相加</strong>。$00001111 + 11100101 = 11110100$</div></div><div class="step-item"><div><strong>第四步：判断结果</strong>。最高位为 1（负数），取反加 1 得原码 $= 00001100 = -12$。验证：$15-27=-12$ ✓</div></div></div>
+
+        <div class="info-box exam">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <div><strong>考点提示</strong>：十进制小数转二进制（乘 2 取整）与补码求法是必考计算。注意 $(0.1)_{10}$ 在二进制下是无限循环小数——这正是"0.1 + 0.2 ≠ 0.3"的根源，也解释了为何 MCU 定点运算（<a href="javascript:void(0)" onclick="App.loadDetail('dig-13')">A/D 转换</a>的量化、ai 板块的 int8 量化）必须小心处理舍入与溢出。</div>
+        </div>
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>补码的意义</strong>：用补码表示负数，减法可转成加法（$A-B=A+(-B)_{补}$），运算器只需加法器。这就是计算机内部用补码的原因。n 位补码范围 $-2^{n-1}$ 到 $2^{n-1}-1$。</div></div>
 
@@ -2797,9 +2807,18 @@ const CourseData = {
         <h4 class="font-medium mt-6 mb-2">卡诺图画圈原则</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>原则</th><th>说明</th><th>示例</th></tr></thead><tbody><tr><td class="font-medium">圈尽量大</td><td>2 的幂次（1/2/4/8）</td><td>8 格圈消 3 变量</td></tr><tr><td class="font-medium">圈尽量少</td><td>覆盖所有 1 的最少圈数</td><td>最简表达式</td></tr><tr><td class="font-medium">可重叠</td><td>同一个 1 可被多个圈覆盖</td><td>不违反规则</td></tr><tr><td class="font-medium">必须包含</td><td>每个 1 至少被圈一次</td><td>保证覆盖</td></tr><tr><td class="font-medium">边缘相邻</td><td>左右边缘、上下边缘相邻</td><td>卡诺图是环形结构</td></tr></tbody></table></div>
 
+        <h4 class="font-medium mt-6 mb-2">逻辑函数的五种表示及互换</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>表示法</th><th>形式</th><th>互相转换</th><th>工程用途</th></tr></thead><tbody><tr><td class="font-medium">真值表</td><td>穷举所有输入组合</td><td>→ 表达式：取 1 的行写最小项之和</td><td>唯一、规范，设计起点</td></tr><tr><td class="font-medium">表达式</td><td>与或 / 或与式</td><td>→ 真值表：逐行代入求值</td><td>化简与推演的对象</td></tr><tr><td class="font-medium">卡诺图</td><td>几何相邻 = 逻辑相邻</td><td>→ 由真值表按格雷码序填图</td><td>≤4 变量化简最直观</td></tr><tr><td class="font-medium">逻辑图</td><td>门电路符号连接</td><td>→ 表达式：从输入到输出逐门写式</td><td>硬件实现（EDA 输入）</td></tr><tr><td class="font-medium">波形图</td><td>时间轴上的电平序列</td><td>→ 真值表：按时刻对齐读值</td><td>仿真与时序调试</td></tr></tbody></table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">五者可以互相转换且真值表唯一——笔试常考"给波形写表达式""给电路写真值表"，套路都是先对齐输入取值、再逐行求输出，本质只是同一张真值表的不同视图。</p>
+
         <h4 class="font-medium mt-6 mb-2">实例化简：4 变量卡诺图</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">化简 $F(A,B,C,D) = \\sum m(0,1,2,4,5,6,8,9,12,13,14)$</p>
         <div class="step-list"><div class="step-item"><div><strong>第一步：填图</strong>。在 4×4 卡诺图中，对应最小项格填 1。</div></div><div class="step-item"><div><strong>第二步：画圈</strong>。圈 1：$m(0,1,4,5)$（消 AB）；圈 2：$m(0,2,4,6)$（消 AD）；圈 3：$m(8,12)$（消 BD）；圈 4：$m(0,8)$（消 CD）。</div></div><div class="step-item"><div><strong>第三步：写表达式</strong>。$F = \\bar{A}\\bar{C} + \\bar{A}\\bar{D} + B\\bar{D} + \\bar{B}\\bar{C}\\bar{D}$</div></div><div class="step-item"><div><strong>第四步：验证</strong>。检查所有最小项都被覆盖，没有多余圈。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">工程视角：两级与非门实现</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">化简出的最简与或式通常要用"与门 + 或门"两种门实现，但工程上（尤其是 FPGA/标准单元库）更喜欢<strong>全用与非门（NAND）</strong>——NAND 是"通用门"，任何逻辑函数都能只用它实现，且在多数工艺里速度更快、面积更省。转换只需两次取反 + 德摩根：</p>
+        <div class="formula-block">$F = AB + CD$<br>$F = \\overline{\\overline{AB + CD}} = \\overline{\\overline{AB} \\cdot \\overline{CD}}$<br>即第一级两个与非门产生 $\\overline{AB}$、$\\overline{CD}$，第二级一个与非门完成"非·或"——恰好两级延迟<div class="text-sm text-gray-500 mt-2">口诀：与或式 → 与非-与非式，"每个与项套非，最外层或变与非"。或与式同理可两级或非（NOR）实现</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">这一步是<a href="javascript:void(0)" onclick="App.loadDetail('dig-03')">组合逻辑电路设计</a>流程的最后一环：真值表 → 卡诺图化简 → 与或式 → 按器件库改写为与非-与非式 → 画逻辑图。工具箱「数字电路」分类的卡诺图化简器可以直接验证手化结果。</p>
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>无关项（X）的利用</strong>：无关项可当 0 或 1，灵活使用可使圈更大、表达式更简。在真值表中用 X 表示不会出现的输入组合。</div></div>
 
@@ -2827,6 +2846,10 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">设计三人表决器：3 人投票，多数同意（≥2 票）则通过。</p>
         <div class="step-list"><div class="step-item"><div><strong>第一步：逻辑抽象</strong>。输入 A、B、C（1=同意），输出 Y（1=通过）。</div></div><div class="step-item"><div><strong>第二步：列真值表</strong>。$Y=1$ 当 ABC=011,101,110,111（4 个最小项）。</div></div><div class="step-item"><div><strong>第三步：写表达式</strong>。$Y=\\bar{A}BC+A\\bar{B}C+AB\\bar{C}+ABC=AB+AC+BC$（卡诺图化简）。</div></div><div class="step-item"><div><strong>第四步：画逻辑图</strong>。3 个与门 + 1 个或门，或用与非门实现（$Y=\\overline{\\overline{AB} \\cdot \\overline{AC} \\cdot \\overline{BC}}$）。</div></div></div>
 
+        <h4 class="font-medium mt-6 mb-2">实例分析：判奇电路</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">分析 $Y = A \\oplus B \\oplus C$ 的功能（笔试常考"给电路/表达式说功能"）。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：列真值表</strong>。000→0、001→1、010→1、011→0、100→1、101→0、110→0、111→1。</div></div><div class="step-item"><div><strong>第二步：找规律</strong>。输入中 1 的个数为奇数（1 个或 3 个）时 $Y=1$。</div></div><div class="step-item"><div><strong>第三步：描述功能</strong>。这是<strong>判奇电路</strong>（奇校验发生器）——级联到 n 位即得奇偶校验码，串口通信（<a href="javascript:void(0)" onclick="App.loadDetail('linux-11')">通信协议设计</a>里的奇偶校验位）就是用它产生的。</div></div><div class="step-item"><div><strong>第四步：工程延伸</strong>。异或链是"模 2 加法"，也用于 CRC 校验的硬件实现——判奇是校验电路的最小单元。</div></div></div>
+
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与非门万能</strong>：任何组合逻辑都可用与非门实现——先写与或式，再用德摩根定律转为与非-与非形式。实际芯片（如 74LS00 四 2 输入与非门）就是基于这个原理。</div></div>
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>竞争冒险</strong>：组合逻辑中，由于门电路延迟，输入变化时输出可能出现短暂毛刺。消除方法：①加冗余项；②加滤波电容；③用<a href="javascript:void(0)" onclick="App.loadDetail('dig-06')">选通脉冲</a>。详见<a href="javascript:void(0)" onclick="App.loadDetail('dig-06')">竞争冒险</a>。</div></div>
@@ -2846,9 +2869,17 @@ const CourseData = {
         <h4 class="font-medium mt-6 mb-2">数据选择器实现逻辑函数</h4>
         <div class="step-list"><div class="step-item"><div><strong>第一步：确定地址变量</strong>。n 选 1 选择器有 $\\log_2 n$ 个地址线，选作函数变量。</div></div><div class="step-item"><div><strong>第二步：确定数据端</strong>。数据端 $D_i$ 接 0、1、剩余变量或其反。</div></div><div class="step-item"><div><strong>第三步：列真值表</strong>。根据函数值确定每个 $D_i$ 的接法。</div></div></div>
 
+        <h4 class="font-medium mt-6 mb-2">两种实现方案对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>维度</th><th>译码器 + 与非门</th><th>数据选择器</th></tr></thead><tbody><tr><td class="font-medium">适用变量数</td><td>受地址线限制（3-8 管 3 变量）</td><td>8 选 1 管 3 变量，剩余变量放数据端可管 4 变量</td></tr><tr><td class="font-medium">多输出函数</td><td>✓ 一片译码器多个门共享最小项</td><td>✗ 每个输出要一片选择器</td></tr><tr><td class="font-medium">附加门</td><td>需与非门（多输出共享划算）</td><td>几乎不用（数据端直接接 0/1/变量）</td></tr><tr><td class="font-medium">笔试选择</td><td>多输出、最小项密集</td><td>单输出、变量比地址多 1 个</td></tr></tbody></table></div>
+
         <h4 class="font-medium mt-6 mb-2">实例：用译码器实现全加器</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">用 74LS138（3-8 译码器）实现全加器：$S=\\sum m(1,2,4,7)$，$C_{out}=\\sum m(3,5,6,7)$。</p>
         <div class="step-list"><div class="step-item"><div><strong>第一步：接线</strong>。A、B、$C_{in}$ 接译码器地址 $A_2$、$A_1$、$A_0$。</div></div><div class="step-item"><div><strong>第二步：求和输出</strong>。$S = \\overline{Y_1 \\cdot Y_2 \\cdot Y_4 \\cdot Y_7}$（与非门）</div></div><div class="step-item"><div><strong>第三步：进位输出</strong>。$C_{out} = \\overline{Y_3 \\cdot Y_5 \\cdot Y_6 \\cdot Y_7}$（与非门）</div></div><div class="step-item"><div><strong>第四步：验证</strong>。检查所有 8 种输入组合，输出与真值表一致。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">工程实例：数码管动态扫描</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">写字机的状态界面用 4 位数码管显示坐标，若每位独立配一套<a href="javascript:void(0)" onclick="App.loadDetail('dig-04')">译码器</a>和段驱动，引脚马上耗光。动态扫描只留<strong>一套</strong>段信号，靠"分时复用 + 人眼余晖"工作：</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：位选</strong>。2 位地址接 74LS138 译码器，4 个输出轮流选中一位数码管的公共端（低有效）。</div></div><div class="step-item"><div><strong>第二步：段选</strong>。同一时刻把该位的 BCD 码送 7 段译码器（74LS48），点亮对应段。</div></div><div class="step-item"><div><strong>第三步：刷新</strong>。地址由<a href="javascript:void(0)" onclick="App.loadDetail('dig-09')">计数器</a>自动循环（如 1 kHz），每位点亮 1/4 时间。</div></div><div class="step-item"><div><strong>第四步：亮度权衡</strong>。占空比 1/4，段电流要相应加大（如静态 5 mA → 动态 20 mA），刷新率 &gt; 50 Hz 则无闪烁。</div></div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">MCU 上这套逻辑用定时器中断 + 一张段码表实现（见<a href="javascript:void(0)" onclick="App.loadDetail('emb-05')">定时器与 PWM</a>），"译码器"退化成软件查表——硬件芯片与软件查表是同一张真值表的两种载体。</p>
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>译码器实现任意组合逻辑</strong>：译码器输出是最小项，配合或门/与非门可实现任意逻辑函数。3-8 译码器可实现任意 3 变量函数，4-16 译码器可实现任意 4 变量函数。</div></div>
 
@@ -2876,6 +2907,13 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">用 74LS283（4 位超前进位加法器）计算 $1011 + 0110 = ?$</p>
         <div class="step-list"><div class="step-item"><div><strong>第一步：接线</strong>。$A_3A_2A_1A_0 = 1011$，$B_3B_2B_1B_0 = 0110$，$C_0 = 0$</div></div><div class="step-item"><div><strong>第二步：逐位计算</strong>。$S_0=1\\oplus0\\oplus0=1$，$S_1=1\\oplus1\\oplus0=0$，$C_1=1$；$S_2=0\\oplus1\\oplus1=0$，$C_2=1$；$S_3=1\\oplus0\\oplus1=0$，$C_3=1$</div></div><div class="step-item"><div><strong>第三步：结果</strong>。$C_3S_3S_2S_1S_0 = 10001 = (17)_{10}$</div></div><div class="step-item"><div><strong>第四步：验证</strong>。$(1011)_2 = 11$，$(0110)_2 = 6$，$11+6=17$ ✓</div></div></div>
 
+        <h4 class="font-medium mt-6 mb-2">实例设计：加减可控的 ALU 位</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">设计一个 4 位电路：控制端 $M=0$ 时算 $A+B$，$M=1$ 时算 $A-B$（经典考题，也是 ALU 的雏形）。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：统一成加法</strong>。$A - B = A + \\bar{B} + 1$（补码），减法就是把 B 逐位取反且最低进位置 1。</div></div><div class="step-item"><div><strong>第二步：用异或门做"可控取反"</strong>。每位接 $B_i \\oplus M$：$M=0$ 时原样通过，$M=1$ 时取反。</div></div><div class="step-item"><div><strong>第三步：控制低位进位</strong>。加法器 $C_0$ 直接接 $M$——$M=1$ 时自动补那个"+1"。</div></div><div class="step-item"><div><strong>第四步：验证</strong>。$M=0$：$1011+0110=10001$（17）；$M=1$：$1011+1001+1=10101$，最高位是溢出/借位标志，低 4 位 $0101=5$，即 $11-6=5$ ✓</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">工程视角：加减法无处不在的控制内核</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">写字机的运动控制里，加减法器是最忙的部件：<a href="javascript:void(0)" onclick="App.loadDetail('linux-13')">Bresenham 插补</a>每步做"误差 $e = e + \\Delta y - \\Delta x \\cdot s$"的累加，决定下一步走 X 还是 Y；<a href="javascript:void(0)" onclick="App.loadDetail('act-14')">增量式 PID</a> 每个采样周期算 $\\Delta u = K_p(e_k - e_{k-1}) + K_i e_k + K_d(e_k - 2e_{k-1} + e_{k-2})$，输出是"上次值 + 增量"。定点实现时每次加法后都要做饱和与溢出检查（$V$ 标志），否则一次溢出会让电机瞬间飞车——ALU 的一位之差，在机械上是毫米级的危险。</p>
+
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>加法器实现减法</strong>：减法通过补码加法实现——$A-B = A + \\bar{B} + 1$。硬件上，将 B 取反（异或门），进位置 1，用加法器求和。这就是<a href="javascript:void(0)" onclick="App.loadDetail('dig-01')">补码</a>的工程实现。</div></div>
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>溢出检测</strong>：有符号加法中，两个正数相加得负数（或反之）表示溢出。检测方法：$V = C_{n-1} \\oplus C_{n-2}$（最高位进位与次高位进位异或）。</div></div>
@@ -2895,9 +2933,17 @@ const CourseData = {
         <h4 class="font-medium mt-6 mb-2">消除冒险的方法</h4>
         <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>方法</th><th>原理</th><th>优缺点</th></tr></thead><tbody><tr><td class="font-medium">加冗余项</td><td>卡诺图加冗余圈覆盖缝隙</td><td>简单，但增加门电路</td></tr><tr><td class="font-medium">选通脉冲</td><td>等信号稳定后才采样输出</td><td>有效，但增加延迟</td></tr><tr><td class="font-medium">触发器同步</td><td>时钟边沿采样，毛刺被滤除</td><td>最可靠，现代设计首选</td></tr></tbody></table></div>
 
+        <h4 class="font-medium mt-6 mb-2">毛刺有多宽：定量估算</h4>
+        <div class="formula-block">毛刺宽度 $\\approx |t_{pd1} - t_{pd2}|$（两条路径的传播延迟差）<br>例：一路经 2 个门（$2 \\times 10\\,\\mathrm{ns}$）、一路经 3 个门（$3 \\times 10\\,\\mathrm{ns}$），毛刺宽度约 $10\\,\\mathrm{ns}$<br>毛刺幅度取决于门驱动能力与负载电容<div class="text-sm text-gray-500 mt-2">ns 级毛刺滤除靠 RC（$RC \\gg$ 毛刺宽度）或同步触发器；ms 级抖动（按键）必须专门消抖</div></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">估算毛刺宽度的意义在于<strong>选对策</strong>：ns 级的门延迟毛刺，一个 RC 或一拍触发器同步就够；而机械按键闭合时的抖动长达 5~10 ms，比门延迟慢一百万倍，已经不能叫"毛刺"而要当作多次翻转来处理。</p>
+
         <h4 class="font-medium mt-6 mb-2">实例分析：$F = AB + \\bar{A}C$</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">当 $B=C=1$ 时，$F = A + \\bar{A}$，存在冒险。</p>
         <div class="step-list"><div class="step-item"><div><strong>第一步：识别冒险</strong>。$B=C=1$ 时，$F = A + \\bar{A}$，A 变化时可能出现毛刺。</div></div><div class="step-item"><div><strong>第二步：加冗余项</strong>。增加冗余项 $BC$，$F = AB + \\bar{A}C + BC$。</div></div><div class="step-item"><div><strong>第三步：验证</strong>。$B=C=1$ 时，$F = A + \\bar{A} + 1 = 1$（恒为 1），无冒险。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">工程实例：按键抖动——现实世界的"慢毛刺"</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">写字机的"回零"按键按下一次，触点机械抖动会产生 5~10 ms 的多次通断——若直接接到<a href="javascript:void(0)" onclick="App.loadDetail('dig-07')">触发器</a>时钟端，一次按压可能被计数好几次。工程上三招组合：</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：RC 低通</strong>。$R=10\\,\\mathrm{k\\Omega}$、$C=100\\,\\mathrm{nF}$（$\\tau = 1\\,\\mathrm{ms} \\gg$ 抖动周期），把抖动压成缓慢变化的电平。</div></div><div class="step-item"><div><strong>第二步：施密特整形</strong>。缓慢边沿会让普通门输出振荡，必须用施密特触发器（<a href="javascript:void(0)" onclick="App.loadDetail('dig-11')">555/门电路施密特</a>）的迟滞特性整形成干净边沿。</div></div><div class="step-item"><div><strong>第三步：软件消抖</strong>。MCU 侧再用 10~20 ms 定时器确认电平稳定（见<a href="javascript:void(0)" onclick="App.loadDetail('emb-04')">GPIO 输入</a>），或连续 N 次采样一致才认账。</div></div><div class="step-item"><div><strong>第四步：异步输入两拍同步</strong>。任何异步信号进时钟域前先过两级 D 触发器——第一拍可能进入亚稳态，第二拍把亚稳态隔离掉，这是跨时钟域设计的标准动作。</div></div></div>
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>同步设计消除冒险</strong>：现代数字系统几乎都用同步设计——所有触发器共用时钟，只在时钟边沿采样输入。毛刺在时钟边沿之间出现，被触发器自动滤除。这是消除冒险最可靠的方法。</div></div>
 
@@ -2921,6 +2967,15 @@ const CourseData = {
         <h4 class="font-medium mt-6 mb-2">触发器之间的转换</h4>
         <div class="step-list"><div class="step-item"><div><strong>JK→D</strong>。接法：$J=D$，$K=\\bar{D}$。验证：$Q^{n+1}=D\\bar{Q^n}+DQ^n=D$ ✓</div></div><div class="step-item"><div><strong>JK→T</strong>。接法：$J=T$，$K=T$。验证：$Q^{n+1}=T\\bar{Q^n}+\\bar{T}Q^n=T\\oplus Q^n$ ✓</div></div><div class="step-item"><div><strong>D→JK</strong>。接法：$D=J\\bar{Q^n}+\\bar{K}Q^n$（需组合逻辑）</div></div></div>
 
+        <h4 class="font-medium mt-6 mb-2">激励表：设计时序电路的钥匙</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">功能表回答"给了输入，次态是什么"（分析用）；<strong>激励表反着查</strong>——"想让状态从 $Q^n$ 变到 $Q^{n+1}$，触发器输入该给什么"（设计用）。JK 的激励表最友好，任意状态跳变都只需 0/1/×：</p>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>$Q^n \\to Q^{n+1}$</th><th>J K</th><th>D</th><th>T</th></tr></thead><tbody><tr><td class="font-medium">0 → 0</td><td>0 ×</td><td>0</td><td>0</td></tr><tr><td class="font-medium">0 → 1</td><td>1 ×</td><td>1</td><td>1</td></tr><tr><td class="font-medium">1 → 0</td><td>× 1</td><td>0</td><td>1</td></tr><tr><td class="font-medium">1 → 1</td><td>× 0</td><td>1</td><td>0</td></tr></tbody></table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">设计<a href="javascript:void(0)" onclick="App.loadDetail('dig-09')">计数器</a>时正是拿状态表的每一行去查激励表，得到各触发器的驱动方程——激励表是从"状态图"走到"电路图"的桥。</p>
+
+        <h4 class="font-medium mt-6 mb-2">工程视角：现代芯片里只剩 D 触发器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">教科书里四种触发器并重，但走进 FPGA/ASIC 就会发现：<strong>物理上量产的只有 D 触发器</strong>。JK/T 在综合时被自动改写成 D + 组合逻辑，RS 的禁用态在同步设计里没有位置。写 Verilog 时一句 <code>always @(posedge clk) q &lt;= d;</code>（见<a href="javascript:void(0)" onclick="App.loadDetail('dig-14')">Verilog 入门</a>）就会综合出一个 D 触发器，时序报告里的 $t_{su}$/$t_h$ 检查全都围着它转。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">MCU 里的外设寄存器同样是触发器阵列：STM32 定时器的计数器 CNT 就是 16 个 T 触发器级联，每来一个计数脉冲翻转进位（见<a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">电机控制的脉冲发生</a>）——你在寄存器手册里读写的每一个位，最终都落到触发器这个 1 位记忆单元上。</p>
+
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>边沿触发 vs 电平触发</strong>：锁存器（电平触发）在时钟高电平期间输出跟随输入变化（透明），可能"穿通"。触发器（边沿触发）只在时钟上升沿/下降沿瞬间采样输入，其余时间保持——更可靠，是同步时序设计的首选。</div></div>
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>建立时间和保持时间</strong>：触发器要求输入信号在时钟边沿前后保持稳定——建立时间 $t_{su}$（边沿前）和保持时间 $t_h$（边沿后）。违反会导致亚稳态（输出不确定）。这是高速数字设计的关键参数。</div></div>
@@ -2942,6 +2997,13 @@ const CourseData = {
 
         <h4 class="font-medium mt-6 mb-2">状态图与状态表</h4>
         <div class="formula-block">状态图：圆圈表示状态，箭头表示转换（标注输入/输出）<br>状态表：表格形式，行=现态，列=输入，内容=次态/输出<div class="text-sm text-gray-500 mt-2">状态图直观，状态表便于列写，两者等价</div></div>
+
+        <h4 class="font-medium mt-6 mb-2">穆尔型 vs 米利型</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>维度</th><th>穆尔型（Moore）</th><th>米利型（Mealy）</th></tr></thead><tbody><tr><td class="font-medium">输出方程</td><td>$Z = f(Q)$，仅取决于状态</td><td>$Z = f(X, Q)$，还取决于输入</td></tr><tr><td class="font-medium">输出时机</td><td>与时钟同步，无毛刺</td><td>输入一变立即变，响应快但可能有毛刺</td></tr><tr><td class="font-medium">状态数</td><td>较多（输出要编码进状态）</td><td>较少</td></tr><tr><td class="font-medium">典型应用</td><td>控制流水线、<a href="javascript:void(0)" onclick="App.loadDetail('dig-14')">Verilog 状态机</a></td><td>协议解析（检测到特定输入立即输出）</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">自启动检查：别让电路掉进死角</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">用 $n$ 个触发器实现模 $M &lt; 2^n$ 计数器时，$2^n - M$ 个无效状态悬空。上电瞬间状态随机，若落入无效状态后回不到有效循环，电路就"死机"——<strong>自启动能力是必查项</strong>：</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：补全状态图</strong>。把无效状态也代入状态方程，画出它们的次态。</div></div><div class="step-item"><div><strong>第二步：判断</strong>。所有无效状态经若干拍都能进入有效循环 → 能自启动；存在孤立循环或死角 → 不能。</div></div><div class="step-item"><div><strong>第三步：修复</strong>。修改反馈逻辑（通常用<a href="javascript:void(0)" onclick="App.loadDetail('dig-02')">卡诺图</a>重新化简驱动方程，利用无关项时预留回归路径），或外加上电复位电路强制进入有效状态。</div></div></div>
 
         <h4 class="font-medium mt-6 mb-2">实例分析：同步计数器</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">分析电路：两个 JK 触发器，$J_1=K_1=1$，$J_2=K_2=Q_1$，时钟共用。求状态转换表和功能。</p>
@@ -2970,6 +3032,14 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">用 74LS161 实现模 12 计数器（0000~1011 循环）。</p>
         <div class="step-list"><div class="step-item"><div><strong>方法一：清零法</strong>。计到 1100（12）时清零。$\\overline{CR} = \\overline{Q_3 Q_2}$（与非门）。</div></div><div class="step-item"><div><strong>方法二：置数法</strong>。计到 1011（11）时置入 0000。$\\overline{LD} = \\overline{Q_3 Q_1 Q_0}$（与非门）。</div></div><div class="step-item"><div><strong>验证</strong>。状态序列：0→1→2→...→11→0，共 12 个状态。</div></div></div>
 
+        <h4 class="font-medium mt-6 mb-2">两种方法对比</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>维度</th><th>异步清零法</th><th>同步置数法</th></tr></thead><tbody><tr><td class="font-medium">反馈时机</td><td>计到 M（短暂出现）</td><td>计到 M-1（完整一个时钟周期）</td></tr><tr><td class="font-medium">可靠性</td><td>清零脉冲仅几个门延迟，存在毛刺风险</td><td>信号稳定一拍，下一沿同步动作</td></tr><tr><td class="font-medium">状态数</td><td>M 个（M 瞬时出现即清）</td><td>M 个（0 ~ M-1）</td></tr><tr><td class="font-medium">工程推荐</td><td>简单场合/题目要求</td><td>✓ 首选</td></tr></tbody></table></div>
+
+        <h4 class="font-medium mt-6 mb-2">工程实例：STM32 定时器就是两级计数器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">写字机发步进脉冲的 STM32 定时器，硬件本质就是"预分频计数器 + 重装计数器"级联（见<a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">电机控制实战</a>）：</p>
+        <div class="formula-block">定时周期 $T = \\dfrac{(PSC+1)(ARR+1)}{f_{clk}}$<br>PSC：预分频值（第一级，$f_{clk}$ 先除以 $PSC+1$）<br>ARR：自动重装值（第二级，计到 ARR 清零并产生更新事件/中断）<div class="text-sm text-gray-500 mt-2">乘积 (PSC+1)(ARR+1) 就是"数多少个时钟周期"——任意进制计数的活学活用</div></div>
+        <div class="step-list"><div class="step-item"><div><strong>例 1：1 ms 系统节拍</strong>。$f_{clk}=72\\,\\mathrm{MHz}$，取 $PSC=71$（1 MHz 计数）、$ARR=999$：$T = 1000/10^6 = 1\\,\\mathrm{ms}$ ✓</div></div><div class="step-item"><div><strong>例 2：20 kHz 步进脉冲</strong>。同样 $PSC=71$，$ARR = 10^6/20000 - 1 = 49$；PWM 占空比寄存器 CCR 决定脉冲宽度，频率由 ARR 决定——<a href="javascript:void(0)" onclick="App.loadDetail('emb-05')">PWM 输出</a>就是计数器 + 比较器。</div></div><div class="step-item"><div><strong>例 3：改速度 = 改 ARR</strong>。梯形加减速每个插补周期微调 ARR，脉冲频率随之连续变化——计数器"任意进制"改写就是电机调速（工具箱「嵌入式」分类的 PWM 参数计算器可验算）。</div></div></div>
+
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>分频器</strong>：n 位二进制计数器可实现 $2^n$ 分频——每 $2^n$ 个时钟输出一个脉冲。级联多片可实现任意分频比。这是时钟系统设计的基础。</div></div>
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>清零法的毛刺</strong>：异步清零法中，清零信号持续时间极短（几个门延迟），可能产生毛刺。工程中推荐用同步置数法，或在清零信号后加锁存器。</div></div>
@@ -2990,9 +3060,16 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">4 位 SIPO 移位寄存器，串行输入 1011（先入 1），求各时钟周期的并行输出。</p>
         <div class="step-list"><div class="step-item"><div><strong>初始</strong>。$Q_3Q_2Q_1Q_0 = 0000$</div></div><div class="step-item"><div><strong>第 1 个时钟</strong>。移入 1，$Q_3Q_2Q_1Q_0 = 0001$</div></div><div class="step-item"><div><strong>第 2 个时钟</strong>。移入 0，$Q_3Q_2Q_1Q_0 = 0010$</div></div><div class="step-item"><div><strong>第 3 个时钟</strong>。移入 1，$Q_3Q_2Q_1Q_0 = 0101$</div></div><div class="step-item"><div><strong>第 4 个时钟</strong>。移入 1，$Q_3Q_2Q_1Q_0 = 1011$（并行输出 = 串行输入）</div></div></div>
 
+        <h4 class="font-medium mt-6 mb-2">工程实例：74HC595 三根线点亮一堆灯</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">MCU 引脚不够用时的标准答案是 74HC595（8 位 SIPO）：DATA、SHIFT（移位时钟）、LATCH（锁存）三根线，串行移入 8 位后 LATCH 一拉，8 个输出口同时更新。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：移位</strong>。每个 SHIFT 上升沿把 DATA 上的 1 位推进移位寄存器，8 拍送完一字节。</div></div><div class="step-item"><div><strong>第二步：锁存</strong>。LATCH 上升沿把移位寄存器内容复制到输出锁存器——移位过程中输出不变，灯不会"爬行"。</div></div><div class="step-item"><div><strong>第三步：级联</strong>。把 $Q_H'$ 接下一片的 DATA，n 片菊花链首尾相连，仍然只用 3 根线——写字机的限位指示灯阵列就是这么扩展的（见<a href="javascript:void(0)" onclick="App.loadDetail('emb-06')">串行通信</a>）。</div></div><div class="step-item"><div><strong>第四步：软件时序</strong>。三根线按位翻转 GPIO 即可，也可以用硬件 SPI 的 MOSI/SCK 加一根 GPIO 当 LATCH，速度从 kHz 级提到 MHz 级。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">工程视角：SPI 本身就是移位寄存器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">协议不必神秘：SPI 的硬件本质就是<strong>主从两个移位寄存器首尾相接成一个环</strong>——每个 SCK 边沿，主设备移出一位、从设备同时移出一位，8 拍之后双方完成一次字节交换，所以 SPI 天然全双工。UART 则是"起止位 + 固定波特率"的串行流，接收端用 16 倍过采样定位位中心，再由移位寄存器串并转换成字节（详见<a href="javascript:void(0)" onclick="App.loadDetail('linux-06')">串口与总线实战</a>）。看懂移位寄存器，UART/SPI/74HC595/LED 点阵是同一件事的四种包装。</p>
+
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>串并转换的工程价值</strong>：串行通信（如 UART）用 1 根数据线传输，节省线缆；并行处理（如 CPU 内部）速度快。移位寄存器是两者之间的桥梁——发送时并→串，接收时串→并。</div></div>
 
-        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>环形计数器的自启动</strong>：环形计数器可能进入无效状态（如 0000）。需加反馈逻辑保证自启动——上电后能自动进入有效循环。扭环形计数器无此问题。</div></div>
+        <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>环形/扭环形的自启动</strong>：两者都可能落入无效状态——环形如全 0；扭环形如 4 位中的 $0101 \\leftrightarrow 1010$ 孤立循环（16 个状态只有 8 个有效）。必须加反馈逻辑保证自启动，上电后才能自动回到有效循环。</div></div>
 
         <div class="info-box info"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>与<a href="javascript:void(0)" onclick="App.loadDetail('dig-14')">Verilog</a>的联系</strong>：在 Verilog 中，移位寄存器用 always @(posedge clk) q &lt;= {q[N-2:0], serial_in} 实现。理解硬件结构有助于写出正确的 HDL 代码。</div></div>
       ` },
@@ -3012,6 +3089,13 @@ const CourseData = {
         <h4 class="font-medium mt-6 mb-2">实例计算：LED 闪烁电路</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">设计 1Hz LED 闪烁电路：$R_1=1k\\Omega$，$R_2=1M\\Omega$，求电容 C。</p>
         <div class="step-list"><div class="step-item"><div><strong>第一步：列公式</strong>。$T = 0.693(R_1+2R_2)C = 1s$</div></div><div class="step-item"><div><strong>第二步：求 C</strong>。$C = \\frac{1}{0.693 \\times (1k+2M)} \\approx 0.72\\mu F$</div></div><div class="step-item"><div><strong>第三步：选标准值</strong>。选 $C=1\\mu F$，实际频率约 0.7Hz。</div></div><div class="step-item"><div><strong>第四步：占空比</strong>。占空比 $= \\frac{R_1+R_2}{R_1+2R_2} \\approx 50\\%$（接近方波）。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例设计：触摸延时灯（单稳态）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">触摸开关后灯亮 11 秒自动熄灭：用 555 单稳态，$t_w = 1.1RC$。</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：定参数</strong>。取 $R = 1\\,\\mathrm{M\\Omega}$、$C = 10\\,\\mathrm{\\mu F}$：$t_w = 1.1 \\times 10^6 \\times 10^{-5} = 11\\,\\mathrm{s}$。</div></div><div class="step-item"><div><strong>第二步：触发</strong>。手指触摸使 TRI 脚电位低于 1/3Vcc，输出翻高、放电管截止，电容开始充电。</div></div><div class="step-item"><div><strong>第三步：定时</strong>。THR 充到 2/3Vcc 时输出自动翻低，灯灭——定时期间再触摸不影响（不可重触发）。</div></div><div class="step-item"><div><strong>第四步：工程细节</strong>。触摸片到 TRI 之间加 RC 滤波 + <a href="javascript:void(0)" onclick="App.loadDetail('dig-06')">消抖</a>，防止干扰误触发；这同样是<a href="javascript:void(0)" onclick="App.loadDetail('dig-06')">按键消抖</a>的硬件方案之一。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">工程视角：MCU 时代 555 还活着吗</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">定时、PWM、脉冲发生这些活早已被 <a href="javascript:void(0)" onclick="App.loadDetail('dig-09')">MCU 定时器</a>接管（改参数只需写寄存器，不用换电阻），但 555 并没有退役，它退守到三个"MCU 死了也得有人干活"的岗位：<strong>①上电复位</strong>——单稳态在电源稳定前拉住复位脚；<strong>②看门狗</strong>——独立 RC 振荡器监督主控，主程序跑飞没按时喂狗就硬复位（Linux 开发板的硬件看门狗同理，见<a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">整机联调</a>）；<strong>③纯硬件脉冲源</strong>——电机使能、蜂鸣器、备份时钟，不依赖任何软件。原则：关键安全链路上的"最后防线"要有独立于 CPU 的硬件存在。</p>
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>555 多谐振荡器原理</strong>：内部两个比较器 + RS 触发器 + 放电管。电容经 $R_1+R_2$ 充电到 2/3Vcc（触发器置位），经 $R_2$ 放电到 1/3Vcc（触发器复位），循环产生方波。占空比由 $R_1,R_2$ 决定，频率由 RC 决定。</div></div>
 
@@ -3034,6 +3118,14 @@ const CourseData = {
 
         <h4 class="font-medium mt-6 mb-2">容量扩展方法</h4>
         <div class="step-list"><div class="step-item"><div><strong>字扩展（地址不够）</strong>。多片并联，数据线/控制线共用，用高位地址做片选。如 4 片 1K×8 扩展为 4K×8。</div></div><div class="step-item"><div><strong>位扩展（数据位不够）</strong>。多片并联，地址/控制共用，数据位拼接。如 2 片 1K×8 扩展为 1K×16。</div></div><div class="step-item"><div><strong>字位同时扩展</strong>。先位扩展再字扩展，或反之。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例计算：写字机的字库要占多大 Flash</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">写字机要脱机写汉字，需在 MCU 固件里存一个 16×16 点阵字库，算一算容量：</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：单字占用</strong>。16×16 点阵 = 256 位 = $256/8 = 32$ 字节。</div></div><div class="step-item"><div><strong>第二步：字库总量</strong>。GB2312 一级汉字 3755 个：$3755 \\times 32 \\approx 117\\,\\mathrm{KB}$；只存常用 500 字则约 $15.6\\,\\mathrm{KB}$。</div></div><div class="step-item"><div><strong>第三步：核对面余量</strong>。STM32F103C8 共 64KB Flash：固件约 30KB + 字库 117KB 放不下 → 要么换 256KB 型号（F103VE），要么字库存 Linux 侧 SD 卡、按需下发笔画指令（本站写字机正是这个架构，见<a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">整机联调</a>）。</div></div><div class="step-item"><div><strong>第四步：RAM 同样要算</strong>。SRAM 20KB 既要跑栈和堆，又要放轨迹缓冲——一条 100 点的轨迹 × 4 字节坐标 × 2 轴 ≈ 800B，看似宽裕，但加上速度规划表就要精打细算了。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">工程视角：MCU 与 Linux 板的存储器地图</h4>
+        <div class="overflow-x-auto"><table class="compare-table"><thead><tr><th>维度</th><th>STM32（MCU）</th><th>Linux 开发板</th></tr></thead><tbody><tr><td class="font-medium">程序存储</td><td>片上 Flash（NOR 型，XIP 就地执行）</td><td>SD 卡 / eMMC 上的内核 + rootfs</td></tr><tr><td class="font-medium">运行内存</td><td>片上 SRAM（几十~几百 KB）</td><td>DRAM 1~8 GB（DDR）</td></tr><tr><td class="font-medium">掉电保留</td><td>Flash 直接保留</td><td>文件系统（ext4）落在 eMMC/SD</td></tr><tr><td class="font-medium">参数存储</td><td>Flash 页擦写 / EEPROM 芯片</td><td>普通文件 + fsync</td></tr></tbody></table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">注意 Flash 的物理特性：<strong>写只能把 1 改成 0，擦除才能把 0 变回 1，且必须整页/整块擦</strong>（NOR 页典型 2KB），擦写寿命 1~10 万次——所以 MCU 存"运行参数"不能每秒写一次 Flash，要么 RAM 缓存 + 掉电时写，要么做磨损均衡（Linux 的 JFFS2/UBIFS 文件系统就是干这个的，见<a href="javascript:void(0)" onclick="App.loadDetail('linux-09')">系统构建</a>）。</p>
 
         <h4 class="font-medium mt-6 mb-2">ROM 实现组合逻辑</h4>
         <div class="formula-block">ROM 实现逻辑函数：<br>地址线 = 输入变量<br>数据线 = 输出函数<br>存储内容 = 真值表<div class="text-sm text-gray-500 mt-2">n 个输入、m 个输出的任意组合逻辑，可用 $2^n \\times m$ 的 ROM 实现</div></div>
@@ -3064,6 +3156,10 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">STM32 的 12 位 ADC，参考电压 3.3V。求分辨率和量化误差。</p>
         <div class="step-list"><div class="step-item"><div><strong>第一步：求分辨率</strong>。$\\Delta = \\frac{3.3V}{2^{12}} = \\frac{3.3}{4096} = 0.806mV$</div></div><div class="step-item"><div><strong>第二步：求量化误差</strong>。$\\pm\\frac{1}{2}$LSB $= \\pm 0.403mV$</div></div><div class="step-item"><div><strong>第三步：求可测量范围</strong>。$0$~$3.3V$，共 4096 个离散值</div></div><div class="step-item"><div><strong>第四步：求采样率</strong>。STM32F1 ADC 最快 1MSPS，可采集 500kHz 以下信号。</div></div></div>
 
+        <h4 class="font-medium mt-6 mb-2">工程实例：写字机的电机电流采样链路</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">写字机要用电机电流做堵转检测（后续还能接 TinyML 异常检测，见<a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">电机控制实战</a>）。典型链路：0.1Ω 采样电阻串联在驱动器地线上 → 电流在其上产生压降 → 运放放大 10 倍 → 12 位 ADC 采样。算一下分辨率够不够：</p>
+        <div class="step-list"><div class="step-item"><div><strong>第一步：电流到电压</strong>。1 A 电流 → $0.1\\,\\mathrm{\\Omega} \\times 1\\,\\mathrm{A} = 100\\,\\mathrm{mV}$，放大 10 倍后 1 V，满量程 3.3V 对应 3.3 A。</div></div><div class="step-item"><div><strong>第二步：电流分辨率</strong>。电压 LSB 0.806 mV 折算到电流：$0.806\\,\\mathrm{mV} / (0.1 \\times 10) \\approx 0.8\\,\\mathrm{mA}$——比堵转电流变化（百 mA 级）精细两个数量级，够用。</div></div><div class="step-item"><div><strong>第三步：定采样率</strong>。相电流里混着 20 kHz PWM 纹波，要还原包络至少 40 kSPS；工程上取 16 倍过采样平均，既抑纹波又等效多 2 位精度。</div></div><div class="step-item"><div><strong>第四步：算数据量</strong>。40 kSPS × 2 字节 = 80 KB/s——远超 MCU 串口带宽，所以采样值在 MCU 端先算滑窗特征（均值/方差），只上传特征给 Linux 侧（<a href="javascript:void(0)" onclick="App.loadDetail('emb-06')">串行通信</a>链路的带宽账要随时算）。</div></div></div>
+
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>ADC 类型选型</strong>：①逐次逼近型（SAR）——中速中精度（100kSPS~1MSPS），最常用；②并行比较型（Flash）——超快但功耗大、引脚多；③Σ-Δ 型——高精度低速度（音频、仪表）；④双积分型——低速高抗干扰（万用表）。STM32 内置的多为 SAR ADC。</div></div>
 
         <div class="info-box warning"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>采样定理的陷阱</strong>：$f_s \\geq 2f_{max}$ 是最低要求，实际工程中取 $f_s = (5\\sim10) f_{max}$ 以保证信号质量。采样前需加<a href="javascript:void(0)" onclick="App.loadDetail('circ-07')">抗混叠滤波器</a>（低通），滤除高于 $f_s/2$ 的频率分量。</div></div>
@@ -3091,6 +3187,30 @@ const CourseData = {
 
         <h4 class="font-medium mt-6 mb-2">常见错误与陷阱</h4>
         <div class="step-list"><div class="step-item"><div><strong>阻塞/非阻塞混用</strong>。时序逻辑必须用 &lt;=，组合逻辑用 =。混用会导致仿真与综合结果不一致。</div></div><div class="step-item"><div><strong>不完整分支</strong>。组合逻辑的 if/case 必须写全所有分支，否则综合出<a href="javascript:void(0)" onclick="App.loadDetail('dig-06')">锁存器</a>（非预期）。</div></div><div class="step-item"><div><strong>多驱动</strong>。同一个信号不能在多个 always 块中赋值（硬件上无法实现）。</div></div></div>
+
+        <h4 class="font-medium mt-6 mb-2">实例：三段式状态机（穆尔型）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">写字机的命令解析器（IDLE→收到帧头→收长度→收载荷→校验→执行）是典型<a href="javascript:void(0)" onclick="App.loadDetail('dig-08')">穆尔型状态机</a>。三段式写法：状态寄存、次态组合逻辑、输出组合逻辑各一个 always 块，职责分明最好维护：</p>
+        <div class="code-block"><span class="code-comment">// 1. 状态寄存器（时序，非阻塞）</span>
+<span class="code-keyword">always @(posedge clk)</span> <span class="code-keyword">begin</span>
+  <span class="code-keyword">if</span> (rst) state &lt;= S_IDLE;
+  <span class="code-keyword">else</span>     state &lt;= next_state;
+<span class="code-keyword">end</span>
+
+<span class="code-comment">// 2. 次态逻辑（组合，阻塞，分支写全）</span>
+<span class="code-keyword">always @(*)</span> <span class="code-keyword">begin</span>
+  <span class="code-keyword">case</span> (state)
+    S_IDLE:  next_state = rx_ok ? S_LEN  : S_IDLE;
+    S_LEN:   next_state = rx_ok ? S_LOAD : S_LEN;
+    S_LOAD:  next_state = cnt_done ? S_CHK : S_LOAD;
+    S_CHK:   next_state = crc_ok ? S_EXEC : S_IDLE;  <span class="code-comment">// 校验失败回空闲</span>
+    <span class="code-keyword">default</span>: next_state = S_IDLE;  <span class="code-comment">// 自启动：无效态回 S_IDLE</span>
+  <span class="code-keyword">endcase</span>
+<span class="code-keyword">end</span>
+
+<span class="code-comment">// 3. 输出逻辑（穆尔型：只看状态）</span>
+<span class="code-keyword">assign</span> exec_pulse = (state == S_EXEC);
+</div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">注意两处细节：default 分支保证<strong>自启动</strong>（对应<a href="javascript:void(0)" onclick="App.loadDetail('dig-08')">时序电路分析</a>里的无效状态回归）；输出只依赖 state，天然与时钟对齐无毛刺——若把 rx_ok 加进输出就成了米利型，响应快一拍但要防毛刺。</p>
 
         <div class="info-box tip"><svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>HDL ≠ 软件编程</strong>：Verilog 描述的是<strong>并行</strong>的硬件，不是顺序执行的程序。所有 assign 和 always 块同时执行（对应并行的硬件单元）。关键原则：①时序逻辑用非阻塞赋值（&lt;=），组合逻辑用阻塞赋值（=）；②避免锁存器；③时钟要单一全局时钟。</div></div>
 
@@ -5974,7 +6094,7 @@ const CourseData = {
             <tr><td class="font-medium"><strong>卷积和</strong></td><td>$x_1[n]*x_2[n] \\leftrightarrow X_1(z) \\cdot X_2(z)$</td><td>离散卷积 = Z 域乘积</td></tr>
             <tr><td class="font-medium">z 域微分</td><td>$n\\,x[n] \\leftrightarrow -z\\frac{dX(z)}{dz}$</td><td>用于求 $na^n u[n]$ 的变换</td></tr>
             <tr><td class="font-medium">初值定理</td><td>$x[0] = \\lim_{z\\to\\infty}X(z)$</td><td>由 $X(z)$ 直接读初值</td></tr>
-            <tr><td class="font-medium">终值定理</td><td>$\\lim_{n\\to\\infty}x[n] = \\lim_{z\\to 1}(z-1)X(z)$</td><td>要求 $(z-1)X(z)$ 的极点在单位圆内</td></div>
+            <tr><td class="font-medium">终值定理</td><td>$\\lim_{n\\to\\infty}x[n] = \\lim_{z\\to 1}(z-1)X(z)$</td><td>要求 $(z-1)X(z)$ 的极点在单位圆内</td></tr>
           </tbody>
         </table></div>
 
