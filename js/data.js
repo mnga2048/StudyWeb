@@ -10878,6 +10878,21 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           $$P_{loss} = P_{conduction} + P_{switching} = V_{on} \\cdot I_{load} + \\frac{1}{2} V_{bus} I_{load} (t_{on} + t_{off}) f_{sw}$$
           <div class="text-sm text-gray-500 mt-2">$V_{on}$：导通压降，$f_{sw}$：开关频率。MOSFET 的 $V_{on}$ 与 $R_{DS(on)}$ 成正比，IGBT 有固定导通压降约 1.5-2.5V</div>
         </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>维度</th><th>Si MOSFET</th><th>IGBT</th><th>SiC MOSFET</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">适用电压</td><td>≤ 200V（低压最优）</td><td>600V ~ 3.3kV</td><td>650V ~ 3.3kV</td></tr>
+            <tr><td class="font-medium">导通特性</td><td>电阻型 $R_{DS(on)}$，电流越大压降越大</td><td>固定压降 ~1.5-2.5V</td><td>电阻型，同耐压下电阻远小于 Si</td></tr>
+            <tr><td class="font-medium">开关频率</td><td>数百 kHz</td><td>5~20kHz</td><td>50~200kHz</td></tr>
+            <tr><td class="font-medium">典型场景</td><td>48V 机器人母线、DC-DC、LED</td><td>工业变频器、电动车主驱</td><td>车载充电机、高效电源、主驱新趋势</td></tr>
+          </tbody>
+        </table></div>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>例题：48V 机器人驱动器的损耗估算</strong><br>单相桥臂电流 10A，MOSFET $R_{DS(on)}$ = 5mΩ，开关时间合计 200ns，$f_{sw}$ = 20kHz</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>导通损耗</strong><br>任一时刻两管串联导通：$P_{cond} = 2 I^2 R = 2 \\times 100 \\times 0.005 = 1\\,\\text{W}$</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>开关损耗</strong><br>$P_{sw} = \\frac{1}{2} V I (t_{on}+t_{off}) f_{sw} = 0.5 \\times 48 \\times 10 \\times 200\\,\\text{ns} \\times 20\\,\\text{kHz} \\approx 0.96\\,\\text{W}$</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>校验结温</strong><br>单相约 2W、三相约 6W：若封装 $\\theta_{JA}$ = 20℃/W，温升 120℃ 超限——必须加散热片或大面积铺铜，把热阻压到 10℃/W 以内</div></div>
+        </div>
 
         <h4 class="font-medium mt-6 mb-2">电力电子在机器人中的应用</h4>
         <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
@@ -10947,6 +10962,34 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           <div class="text-sm text-gray-500 mt-2">$\\nu$：畸变因子（谐波影响），$\\cos\\varphi_1$：位移因子（基波功率因数）</div>
         </div>
 
+        <h4 class="font-medium mt-6 mb-2">滤波电容的工程算法</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          容量不是拍脑袋给的——按"两次充电峰之间电容放电多少"反推：
+        </p>
+        <div class="formula-block">
+          $$C \\ge \\frac{I_{dc} \\cdot T/2}{\\Delta U_{ripple}}$$
+          <div class="text-sm text-gray-500 mt-2">全桥整流每半个工频周期（10ms@50Hz）充一次电，放电深度就是纹波</div>
+        </div>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>例题需求</strong><br>220V 市电全桥整流，负载电流 1A，要求纹波 ≤ 2V</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>算容量</strong><br>C = 1 × 0.01 / 2 = 5000μF → 选 4700μF/400V 标称值</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>校验电压应力</strong><br>电容耐压 ≥ 峰值 √2×220 ≈ 311V，取 400V 档</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>别忘了浪涌</strong><br>上电瞬间电容如同短路，充电电流可达数十倍额定值——串 NTC 热敏电阻或旁路继电器限流，否则整流桥与电容寿命骤减</div></div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>方案</th><th>器件数</th><th>输出脉动</th><th>利用率</th><th>典型应用</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">单相半波</td><td>1 管</td><td>大（基频 50Hz）</td><td>低（0.45$U_2$）</td><td>小功率待机电源</td></tr>
+            <tr><td class="font-medium">单相全桥</td><td>4 管</td><td>中（100Hz）</td><td>0.9$U_2$</td><td>适配器、小功率设备</td></tr>
+            <tr><td class="font-medium">三相全桥</td><td>6 管</td><td>小（300Hz）</td><td>高（2.34$U_2$）</td><td>工业大功率电源</td></tr>
+            <tr><td class="font-medium">同步整流</td><td>MOSFET 替二极管</td><td>同上</td><td>效率再 +3~5%</td><td>低压大电流（5V/20A 级）</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>为什么要有 PFC</strong>：电容滤波只在峰值附近"吸"窄脉冲电流，电流波形严重畸变（功率因数可低至 0.5~0.6），大量谐波注入电网。法规要求 75W 以上电源做功率因数校正：无源 PFC（电感+电容）简单，有源 PFC（Boost 拓扑强迫电流跟随正弦）可达 0.99——笔记本电源"砖头"里就有它。</div>
+        </div>
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <div><strong>跨节互链</strong>：整流电路是<a href="javascript:void(0)" onclick="App.loadDetail('ana-02')">模拟电路二极管整流</a>的功率扩展。三相可控整流的触发角控制与<a href="javascript:void(0)" onclick="App.loadDetail('circ-06')">正弦稳态分析</a>中的相位概念相关。</div>
@@ -11006,6 +11049,19 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           </tbody>
         </table></div>
 
+        <h4 class="font-medium mt-6 mb-2">设计实例：24V → 5V/2A 降压模块</h4>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>定占空比与频率</strong><br>D = 5/24 ≈ 0.208；取 $f_{sw}$ = 100kHz（成品芯片典型值）</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>算电感</strong><br>取纹波电流 $\\Delta I_L$ = 30% 负载 = 0.6A：L = (24−5)×0.208/(100k×0.6) ≈ 66μH → 选 68μH 标称</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>算输出电容</strong><br>要求纹波 20mV：C = 0.6/(8×100k×0.02) ≈ 37.5μF → 选 47μF 低 ESR 电容（ESR 引起的纹波常更大）</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>选开关器件</strong><br>MOSFET 耐压 ≥ 2×24V 取 60V 级、$R_{DS(on)}$ &lt; 20mΩ；续流二极管选肖特基（快恢复、低压降）</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>布局与校验</strong><br>功率环路面积最小化、输入电容贴近开关管；实测纹波/温升/效率（应 &gt; 90%）后收工</div></div>
+        </div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>工程现实：直接用成品芯片</strong>：MP1584/TPS5430 一类同步 Buck 芯片把 MOS、补偿、保护全集成，外围只剩电感电容——自己算一遍上面五步是为了看懂数据手册并做故障判断；大电流场景用"控制器+外置 MOS"方案。同步整流（MOS 替代续流二极管）在低压输出时能把效率再抬 3~5 个点。</div>
+        </div>
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <div><strong>跨节互链</strong>：DC-DC 变换器的控制环路设计需要<a href="javascript:void(0)" onclick="App.loadDetail('act-03')">传递函数</a>分析。占空比调节本质上是<a href="javascript:void(0)" onclick="App.loadDetail('pwr-06')">PWM 控制</a>。输出滤波器设计与<a href="javascript:void(0)" onclick="App.loadDetail('circ-07')">频率响应与滤波器</a>直接相关。</div>
@@ -11060,6 +11116,23 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           <div class="step-item"><div><strong>第二步：计算作用时间</strong>。$T_1, T_2$ 为两个有效矢量的作用时间，$T_0$ 为零矢量时间。$T_1 + T_2 + T_0 = T_{sw}$。</div></div>
           <div class="step-item"><div><strong>第三步：生成开关序列</strong>。按照七段式或五段式安排开关切换顺序，确保每次只切换一个开关管。</div></div>
         </div>
+
+        <h4 class="font-medium mt-6 mb-2">电压利用率：为什么 FOC 都用 SVPWM</h4>
+        <div class="formula-block">
+          $$U_{1,SPWM} = \\frac{\\sqrt{3}}{2} M V_{dc} \\;\\;(M \\le 1), \\quad U_{1,SVPWM} = V_{dc}$$
+          <div class="text-sm text-gray-500 mt-2">同为线电压基波幅值：SPWM 线性区上限约 0.866$V_{dc}$，SVPWM 通过零矢量重分配做到 $V_{dc}$——同样的母线电压多出 15% 的调速范围，这就是 SVPWM 的核心优势</div>
+        </div>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>调制方式</th><th>线电压利用率</th><th>谐波</th><th>实现</th><th>应用</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">方波（六拍）</td><td>高但不可调</td><td>5/7 次谐波大</td><td>最简单</td><td>方波无刷电机驱动</td></tr>
+            <tr><td class="font-medium">SPWM</td><td>0.866$V_{dc}$</td><td>集中在载波附近</td><td>简单（载波比较）</td><td>UPS、老式变频器</td></tr>
+            <tr><td class="font-medium">SVPWM</td><td>$V_{dc}$（+15%）</td><td>同频段更优</td><td>扇区判断+矢量合成</td><td><strong>FOC 标配</strong>、现代变频器</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          输出侧的 LC 滤波器截止频率取 $f_{sw}/10$ 左右（如 20kHz 开关 → 2kHz 截止），既滤除开关纹波又不衰减基波——滤波器设计与 <a href="javascript:void(0)" onclick="App.loadDetail('circ-07')">circ-07 频率响应</a>同一套方法。
+        </p>
 
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -11117,6 +11190,29 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           <div class="text-sm text-gray-500 mt-2">$t_{off,max}$：关断时间最大值，$t_{on,min}$：导通时间最小值，$t_{margin}$：安全裕量。通常 0.5~2μs</div>
         </div>
 
+        <h4 class="font-medium mt-6 mb-2">上管怎么驱动：自举电路</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          H 桥的"上管"（Q1/Q3）源极电位随开关在 0~$V_{cc}$ 之间浮动，要让它可靠导通，栅极必须比源极高 10V 左右——需要一个"飘"起来的电源。<strong>自举（bootstrap）</strong>是最经济的方案：下管导通时二极管给 $C_{boot}$ 充电到 $V_{cc}$；下管关断后，这块电容浮在上管源极上为栅极供电。
+        </p>
+        <div class="formula-block">
+          $$C_{boot} \\ge \\frac{10\\,Q_g}{\\Delta V_{boot}} = \\frac{10 \\times 30\\,\\text{nC}}{0.5\\,\\text{V}} = 0.6\\,\\mu\\text{F}$$
+          <div class="text-sm text-gray-500 mt-2">按栅极电荷 $Q_g$ 的 10 倍裕量取值（常见 0.1~1μF）。代价：占空比接近 100% 时自举电容得不到刷新，上管会"掉电"——所以自举方案占空比通常留 95% 上限</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">三种驱动方案选型</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>方案</th><th>代表</th><th>电流能力</th><th>集成度</th><th>适合</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">老式集成桥</td><td>L298N</td><td>2A（压降大发热狠）</td><td>高</td><td>教学演示（现代项目不推荐）</td></tr>
+            <tr><td class="font-medium">分立 MOS + 驱动芯片</td><td>IR2104 + MOS</td><td>数十 A（按管选）</td><td>中</td><td>大功率自制驱动器</td></tr>
+            <tr><td class="font-medium">现代集成驱动</td><td>DRV8833/BTS7960</td><td>1.5~43A</td><td>高（含死区/过流/过温）</td><td><strong>机器人项目首选 ✅</strong></td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="info-box info">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div><strong>再生制动与能耗制动</strong>：减速时电机变成发电机，电流经体二极管回流母线——若电池可吸收（如机器人锂电池）即再生制动；不能吸收时母线电压会泵升，需制动电阻消耗（能耗制动）。<a href="javascript:void(0)" onclick="App.loadDetail('motor-05')">步进电机驱动器</a>（TMC2209 等）内部就是两个带细分控制的 H 桥。</div>
+        </div>
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <div><strong>跨节互链</strong>：H 桥的驱动芯片（如 IR2110、DRV8302）集成了自举电路和死区控制，简化了<a href="javascript:void(0)" onclick="App.loadDetail('motor-04')">PMSM 电机</a>驱动器设计。全桥逆变器（<a href="javascript:void(0)" onclick="App.loadDetail('pwr-04')">逆变电路</a>）本质上是三个 H 桥的组合。</div>
@@ -11173,9 +11269,24 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           <div class="step-item"><div><strong>第四步：配置互补输出</strong>。同一桥臂的上下管由互补 PWM 信号驱动。</div></div>
         </div>
 
+        <h4 class="font-medium mt-6 mb-2">从 PWM 还原模拟电压：输出滤波设计</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          有时 PWM 不是驱动电机，而是要当"廉价 DAC"输出模拟电压（如给舵机内部电路、运放基准供电）——一阶 RC 低通就能把平均电压滤出来：
+        </p>
+        <div class="formula-block">
+          $$f_c = \\frac{1}{2\\pi RC} \\ll f_{sw}$$
+          <div class="text-sm text-gray-500 mt-2">截止频率取开关频率的 1/10 以下，纹波衰减 20dB/dec；想要更干净用二阶 RC 或 LC</div>
+        </div>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>例题需求</strong><br>20kHz PWM、占空比 0~100% 可调，输出 0~3.3V 模拟电压，纹波 &lt; 10mV</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>定截止频率</strong><br>取 $f_c$ = 2kHz（$f_{sw}/10$）：R = 1kΩ 时 C = 1/(2π×1k×2k) ≈ 79.6nF → 取 82nF 标称</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>校验纹波与负载</strong><br>纹波 $\\approx V_{cc} \\cdot f_c/f_{sw}$ ≈ 330mV 不达标——串两级 RC（-40dB/dec）或把 $f_c$ 压到 200Hz；负载阻抗要远大于 R，否则分压失真</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>验证</strong><br>示波器交流耦合看纹波峰峰值；占空比扫 0/25/50/75/100% 对应输出应为线性阶梯</div></div>
+        </div>
+
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <div><strong>跨节互链</strong>：PWM 的开关频率选择需要权衡<a href="javascript:void(0)" onclick="App.loadDetail('pwr-01')">开关损耗</a>和<a href="javascript:void(0)" onclick="App.loadDetail('pwr-04')">输出谐波</a>。STM32 的高级定时器支持中心对齐 PWM 模式，与<a href="javascript:void(0)" onclick="App.loadDetail('motor-04')">FOC</a>配合实现 PMSM 驱动。</div>
+          <div><strong>跨节互链</strong>：PWM 的开关频率选择需要权衡<a href="javascript:void(0)" onclick="App.loadDetail('pwr-01')">开关损耗</a>和<a href="javascript:void(0)" onclick="App.loadDetail('pwr-04')">输出谐波</a>。STM32 的高级定时器支持中心对齐 PWM 模式，与<a href="javascript:void(0)" onclick="App.loadDetail('motor-04')">FOC</a>配合实现 PMSM 驱动。写字机抬笔舵机的 50Hz PWM（<a href="javascript:void(0)" onclick="App.loadDetail('linux-07')">linux-07</a>）与本节滤波法同源。</div>
         </div>
         <div class="info-box info">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
