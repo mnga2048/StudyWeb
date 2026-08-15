@@ -10118,6 +10118,48 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           <li><strong>直驱关节</strong>：大力矩 PMSM 直接驱动，省去减速器（如<span class="font-medium">直驱机器人</span>）</li>
         </ul>
 
+        <h4 class="font-medium mt-6 mb-2">电机的能量流与损耗</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          电机是能量转换装置，输入电功率不可能全部变成机械功率。按能量流方向，功率平衡方程为：
+        </p>
+        <div class="formula-block">
+          $$P_{in} = P_{out} + p_{Cu} + p_{Fe} + p_{mech} + p_{ad}$$
+          <div class="text-sm text-gray-500 mt-2">$p_{Cu}$：绕组铜损（$I^2R$，随负载变化）；$p_{Fe}$：铁损（磁滞+涡流）；$p_{mech}$：机械损耗（轴承+风摩）；$p_{ad}$：杂散损耗</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>铜损</strong>：$p_{Cu} = I^2 R$，与电流平方成正比，是电机发热的主要来源，决定了电机的连续电流定额</li>
+          <li><strong>铁损</strong>：与磁通密度和频率成正比，转速越高铁损越大——这正是高速电机设计的核心矛盾</li>
+          <li><strong>温度红线</strong>：绕组受绝缘等级限制（B 级 130°C / F 级 155°C / H 级 180°C）；钕铁硼永磁体在高温下不可逆退磁，是 PMSM 过载时间的决定因素</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">铭牌数据：读懂电机的"身份证"</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>铭牌参数</th><th>含义</th><th>选型用途</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">额定功率 $P_N$（kW/W）</td><td>额定工况下轴端输出的机械功率</td><td>负载功率 ≤ 额定功率</td></tr>
+            <tr><td class="font-medium">额定电压/电流</td><td>长期安全运行的电源条件</td><td>匹配驱动器与供电电源</td></tr>
+            <tr><td class="font-medium">额定转速 $n_N$（rpm）</td><td>额定工况下的转速</td><td>结合减速比核算终端速度</td></tr>
+            <tr><td class="font-medium">额定转矩 $T_N$</td><td>$T_N = 9550 P_N / n_N$（N·m）</td><td>与折算负载转矩对比</td></tr>
+            <tr><td class="font-medium">绝缘/温升等级</td><td>B/F/H 级决定绕组温升上限</td><td>密闭、高温环境选 F/H 级</td></tr>
+            <tr><td class="font-medium">防护等级 IPxx</td><td>第一位防尘、第二位防水</td><td>油污/粉尘环境选 IP54 以上</td></tr>
+          </tbody>
+        </table></div>
+
+        <h4 class="font-medium mt-6 mb-2">例题：两轴写字机 X 轴电机选型</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          用贯穿本站的<a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">两轴写字机</a>项目走一遍完整选型流程。已知：笔架移动部件总质量 $m = 0.4\\text{kg}$，GT2 同步带 + 20 齿带轮（每转进给 $= 20 \\times 2 = 40\\text{mm}$），最大速度 $v = 120\\text{mm/s}$，加速度 $a = 2\\text{m/s}^2$，导轨摩擦阻力估算 $F_f = 0.4\\text{N}$，同步带传动效率 $\\eta = 0.95$。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：算最大负载力</strong>。加速段最费力：$F = ma + F_f = 0.4 \\times 2 + 0.4 = 1.2\\text{N}$；匀速段仅剩摩擦力 0.4N，可见惯量负载主导。</div></div>
+          <div class="step-item"><div><strong>第二步：折算电机轴负载转矩</strong>。带轮半径 $r = 40/(2\\pi) \\approx 6.37\\text{mm}$，$T_L = Fr/\\eta = 1.2 \\times 6.37 \\times 10^{-3} / 0.95 \\approx 8\\text{mN·m}$。</div></div>
+          <div class="step-item"><div><strong>第三步：算最高转速</strong>。$n = v/\\text{每转进给} = 0.12/0.04 = 3\\text{r/s} = 180\\text{rpm}$。低速场合，<a href="javascript:void(0)" onclick="App.loadDetail('motor-05')">步进电机</a>的矩频特性完全够用。</div></div>
+          <div class="step-item"><div><strong>第四步：按保持转矩选型</strong>。步进电机建议保持转矩 ≥ 负载转矩的 5 倍：$T_{hold} \\ge 5 \\times 8 = 40\\text{mN·m}$。NEMA17 步进电机保持转矩 0.26~0.4 N·m，裕量充足。</div></div>
+          <div class="step-item"><div><strong>第五步：校验惯量匹配</strong>。折算惯量 $J_L = mr^2 = 0.4 \\times (6.37 \\times 10^{-3})^2 \\approx 1.6 \\times 10^{-5}\\text{kg·m}^2$；NEMA17 转子惯量约 $5.4 \\times 10^{-6}\\text{kg·m}^2$，惯量比约 3:1，在推荐范围内（步进电机建议 ≤ 5:1）。</div></div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+          结论：NEMA17 + 20 齿 GT2 带轮方案成立，这也是桌面级写字机/3D 打印机的通用配置（结构部分见<a href="javascript:void(0)" onclick="App.loadDetail('print-08')">写字机整机结构设计</a>）。
+        </p>
+
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <div><strong>选型要点</strong>：机器人电机选型需考虑：①连续转矩和峰值转矩需求；②转速范围；③惯量匹配（电机转子惯量与负载惯量的比值，理想值 1:1~1:10）；④散热条件；⑤<a href="javascript:void(0)" onclick="App.loadDetail('robo-08')">轨迹规划</a>中的速度/加速度曲线。</div>
@@ -10185,6 +10227,45 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           </tbody>
         </table></div>
 
+        <h4 class="font-medium mt-6 mb-2">机械特性：转速-转矩关系</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          把转速公式与转矩公式联立（消去 $I_a$），得到他励直流电机的<strong>机械特性方程</strong>：
+        </p>
+        <div class="formula-block">
+          $$n = \\frac{U_a}{C_e\\Phi} - \\frac{R_a}{C_e C_t \\Phi^2} T = n_0 - \\beta T$$
+          <div class="text-sm text-gray-500 mt-2">$n_0 = U_a/(C_e\\Phi)$：理想空载转速（$T=0$ 时的转速）；$\\beta = R_a/(C_eC_t\\Phi^2)$：特性斜率，$\\beta$ 越小特性越"硬"</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>固有特性</strong>：额定电压、额定磁通、电枢不串电阻时的特性，斜率由 $R_a$ 决定，通常很硬（额定转速降仅为 $n_0$ 的百分之几）</li>
+          <li><strong>人为特性</strong>：降压（$n_0$ 下移、斜率不变）、串电阻（$n_0$ 不变、斜率变大变软）、弱磁（$n_0$ 上移、斜率变大）</li>
+          <li><strong>硬度的意义</strong>：特性越硬，负载波动引起的转速变化越小——这是恒速类负载（机床主轴）追求的特性</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">例题：由额定数据求机械特性</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          一台他励直流电机铭牌：$U_N = 220\\text{V}$，$P_N = 2.2\\text{kW}$，$n_N = 1500\\text{rpm}$，额定电枢电流 $I_{aN} = 12\\text{A}$，电枢电阻 $R_a = 1.0\\Omega$。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：求 $C_e\\Phi$</strong>。稳态时 $U = C_e\\Phi n + I_aR_a$，代入额定数据：$C_e\\Phi = (220 - 12 \\times 1)/1500 = 0.139\\text{V/(r/min)}$。</div></div>
+          <div class="step-item"><div><strong>第二步：求理想空载转速</strong>。$n_0 = U_N/(C_e\\Phi) = 220/0.139 \\approx 1586\\text{rpm}$。</div></div>
+          <div class="step-item"><div><strong>第三步：求额定转矩与转速降</strong>。$T_N = 9550P_N/n_N = 9550 \\times 2.2/1500 = 14.0\\text{N·m}$；额定转速降 $\\Delta n_N = 1586 - 1500 = 86\\text{rpm}$，仅占 $n_0$ 的 5.4%，特性较硬。</div></div>
+          <div class="step-item"><div><strong>第四步：校验直接启动电流</strong>。启动瞬间 $n=0$、$E=0$，$I_{st} = U_N/R_a = 220\\text{A}$，达额定电流的 18 倍——必须限流启动。</div></div>
+          <div class="step-item"><div><strong>第五步：设计启动电阻</strong>。若限流到 $2I_N = 24\\text{A}$：$R_{total} = 220/24 \\approx 9.2\\Omega$，需外串 $9.2 - 1.0 = 8.2\\Omega$，随转速升高分级切除。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">启动与制动方法</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>方法</th><th>原理</th><th>特点与适用</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">直接启动</td><td>电枢直接加全压</td><td>启动电流 10~20 倍额定，仅适合小功率电机</td></tr>
+            <tr><td class="font-medium">降压启动</td><td>可控电源从低压渐升</td><td>平滑无级，需斩波器/可控整流，最常用</td></tr>
+            <tr><td class="font-medium">串电阻启动</td><td>电枢串电阻分级切除</td><td>简单可靠但能耗大，用于老式设备</td></tr>
+            <tr><td class="font-medium">能耗制动</td><td>断开电源，电枢接制动电阻</td><td>动能消耗在电阻上，用于快速停车</td></tr>
+            <tr><td class="font-medium">反接制动</td><td>电枢电压反接</td><td>制动力最强，必须限流并在零速时切断防反转</td></tr>
+            <tr><td class="font-medium">回馈制动</td><td>使 $n &gt; n_0$，电机变发电机</td><td>电能回馈电源，电动车减速/下坡回收能量</td></tr>
+          </tbody>
+        </table></div>
+
         <h4 class="font-medium mt-6 mb-2">无刷直流电机（BLDC）</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
           BLDC 电机用电子换向取代机械换向器和电刷，提高了可靠性和寿命。其本质是用<a href="javascript:void(0)" onclick="App.loadDetail('pwr-06')">PWM</a> 驱动的三相逆变器对永磁同步电机施加方波电流。
@@ -10194,6 +10275,9 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           <li><strong>缺点</strong>：需要位置传感器（霍尔传感器）和电子换向电路</li>
           <li><strong>反电动势波形</strong>：梯形波（区别于 PMSM 的正弦波）</li>
         </ul>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2 mt-3">
+          <strong>六步换向</strong>是 BLDC 的核心控制逻辑：三个霍尔传感器给出转子位置，控制器每 60° 电角度切换一次三相桥的导通组合（上桥一相 + 下桥一相 + 一相悬空），一个电角度周期共 6 种状态，故称"六步"。悬空相的反电动势过零点可反推转子位置，这就是<strong>无感 BLDC 控制</strong>的原理——无人机舵机、电脑风扇大多如此省掉霍尔传感器。
+        </p>
 
         <div class="info-box tip">
           <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -10245,6 +10329,51 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           <div class="text-sm text-gray-500 mt-2">$R_2'$：转子铜损电阻，$R_2'(1-s)/s$：等效机械负载电阻。转差率 $s$ 越小，等效负载电阻越大</div>
         </div>
 
+        <h4 class="font-medium mt-6 mb-2">电磁转矩与 T-s 机械特性</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          由等效电路可推导电磁转矩的参数表达式（忽略激磁支路时）：
+        </p>
+        <div class="formula-block">
+          $$T = \\frac{3 p_n U^2 R_2'/s}{\\omega_s \\left[\\left(R_1 + R_2'/s\\right)^2 + \\left(X_1 + X_2'\\right)^2\\right]}$$
+          <div class="text-sm text-gray-500 mt-2">$\\omega_s$：同步角速度。转矩与<strong>电压平方</strong>成正比——电网电压跌落 10%，最大转矩约降 19%，这是异步电机对电压敏感的原因</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          对 $s$ 求极值可得<strong>临界转差率</strong>与<strong>最大转矩</strong>：
+        </p>
+        <div class="formula-block">
+          $$s_m \\approx \\frac{R_2'}{X_1 + X_2'}, \\quad T_{max} \\approx \\frac{3p_nU^2}{2\\omega_s(X_1+X_2')}, \\quad \\lambda = \\frac{T_{max}}{T_N} = 1.8 \\sim 2.5$$
+          <div class="text-sm text-gray-500 mt-2">$\\lambda$：过载倍数。$0 &lt; s &lt; s_m$ 为稳定运行区（曲线斜率为负），$s_m &lt; s &lt; 1$ 为不稳定区</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>物理式</strong>：$T = C_T\\Phi I_2'\\cos\\varphi_2$——转矩与主磁通及转子电流<strong>有功分量</strong>成正比</li>
+          <li><strong>转子串电阻</strong>：$s_m$ 与 $R_2'$ 成正比增大，启动转矩提升（绕线式电机的启动手段），但同步转速与 $T_{max}$ 不变</li>
+          <li><strong>稳定运行判据</strong>：额定工作点必须落在稳定区，且留有 1.8 倍以上过载余量</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">例题：三相异步电机额定数据计算</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          一台三相异步电机铭牌：$U_N = 380\\text{V}$，$P_N = 7.5\\text{kW}$，$f = 50\\text{Hz}$，磁极对数 $p_n = 2$，$n_N = 1450\\text{rpm}$，功率因数 $\\cos\\varphi = 0.85$，效率 $\\eta = 87\\%$。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：同步转速</strong>。$n_s = 60f/p_n = 60 \\times 50/2 = 1500\\text{rpm}$。</div></div>
+          <div class="step-item"><div><strong>第二步：额定转差率</strong>。$s_N = (1500-1450)/1500 = 3.3\\%$，落在典型范围 2%~6% 内。</div></div>
+          <div class="step-item"><div><strong>第三步：额定转矩</strong>。$T_N = 9550P_N/n_N = 9550 \\times 7.5/1450 \\approx 49.4\\text{N·m}$。</div></div>
+          <div class="step-item"><div><strong>第四步：额定线电流</strong>。输入功率 $P_{in} = P_N/\\eta = 8.62\\text{kW}$，$I_N = P_{in}/(\\sqrt{3}U_N\\cos\\varphi) = 8620/(1.732 \\times 380 \\times 0.85) \\approx 15.4\\text{A}$。</div></div>
+          <div class="step-item"><div><strong>第五步：校核启动</strong>。直接启动电流约 $6I_N \\approx 92\\text{A}$，若变压器容量不足，改用 Y-Δ 启动：电流与转矩均降为直接启动的 1/3。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">异步电机的启动方式</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>启动方式</th><th>启动电流</th><th>启动转矩</th><th>特点与适用</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">直接启动</td><td>1（4~7 倍额定）</td><td>全转矩</td><td>需大容量电源，仅限小功率电机</td></tr>
+            <tr><td class="font-medium">Y-Δ 启动</td><td>1/3</td><td>1/3</td><td>只适用于正常运行 Δ 接法、空载/轻载启动</td></tr>
+            <tr><td class="font-medium">自耦变压器</td><td>抽头可调（约 0.42）</td><td>随电压²降低</td><td>转矩损失比 Y-Δ 小，但设备笨重</td></tr>
+            <tr><td class="font-medium">软启动器</td><td>晶闸管调压限流</td><td>随电压²降低</td><td>电压平滑上升，机械冲击小</td></tr>
+            <tr><td class="font-medium">变频启动</td><td>约额定电流</td><td>可达 1.5~2 倍额定</td><td>低频恒转矩启动，性能最好成本最高</td></tr>
+          </tbody>
+        </table></div>
+
         <h4 class="font-medium mt-6 mb-2">交流电机的调速方法</h4>
         <div class="overflow-x-auto"><table class="compare-table">
           <thead><tr><th>方法</th><th>原理</th><th>调速范围</th><th>效率</th></tr></thead>
@@ -10280,6 +10409,20 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           <li><strong>气隙磁场</strong>：正弦分布（区别于 BLDC 的梯形波）</li>
           <li><strong>冷却</strong>：自然冷却或水冷，大功率时需要强制冷却</li>
         </ul>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2 mt-3">
+          按永磁体在转子上的安放方式，PMSM 分为两大类，控制策略也随之不同：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>表贴式 SPM</th><th>内嵌式 IPM</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">磁体位置</td><td>贴在转子表面</td><td>埋入转子铁芯内部</td></tr>
+            <tr><td class="font-medium">电感关系</td><td>$L_d = L_q$</td><td>$L_q &gt; L_d$（交轴磁阻小）</td></tr>
+            <tr><td class="font-medium">磁阻转矩</td><td>无</td><td>有，可利用 $\\frac{3}{2}p_n(L_d-L_q)i_di_q$ 增出力</td></tr>
+            <tr><td class="font-medium">弱磁能力</td><td>弱磁电流大、高速区弱</td><td>利用磁阻效应，高速区优（电动车首选）</td></tr>
+            <tr><td class="font-medium">机械强度</td><td>表面磁体高速需绑扎</td><td>磁体受铁芯保护，允许更高转速</td></tr>
+            <tr><td class="font-medium">典型应用</td><td>伺服电机、协作机器人</td><td>电动车驱动电机（特斯拉、比亚迪）</td></tr>
+          </tbody>
+        </table></div>
 
         <h4 class="font-medium mt-6 mb-2">PMSM 的数学模型</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
@@ -10315,6 +10458,18 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           <div class="step-item"><div><strong>第三步：Park 变换</strong>。dq 坐标系：$i_d = i_\\alpha \\cos\\theta + i_\\beta \\sin\\theta$，$i_q = -i_\\alpha \\sin\\theta + i_\\beta \\cos\\theta$。</div></div>
           <div class="step-item"><div><strong>第四步：PI 调节</strong>。$i_d$、$i_q$ 分别由 PI 控制器调节，输出 $u_d, u_q$。</div></div>
           <div class="step-item"><div><strong>第五步：逆 Park + SVPWM</strong>。将控制电压转换为三相 PWM 信号驱动逆变器。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">例题：关节电机的转矩常数与电流给定</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          协作机器人关节采用表贴式 PMSM：极对数 $p_n = 5$，永磁磁链 $\\psi_f = 0.08\\text{Wb}$，配 1:50 谐波减速器（效率 $\\eta = 0.85$）。关节需要连续输出转矩 $T_{joint} = 24\\text{N·m}$，关节侧最高转速 $30°/\\text{s}$。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：算转矩常数</strong>。表贴式 $L_d = L_q$，$i_d=0$ 控制下 $K_t = \\frac{3}{2}p_n\\psi_f = 1.5 \\times 5 \\times 0.08 = 0.6\\text{N·m/A}$。</div></div>
+          <div class="step-item"><div><strong>第二步：折算电机侧转矩</strong>。$T_m = T_{joint}/(i \\cdot \\eta) = 24/(50 \\times 0.85) \\approx 0.56\\text{N·m}$。</div></div>
+          <div class="step-item"><div><strong>第三步：算电流给定</strong>。$i_q = T_m/K_t = 0.56/0.6 \\approx 0.94\\text{A}$——这就是速度环输出的电流限幅依据。</div></div>
+          <div class="step-item"><div><strong>第四步：校核峰值</strong>。碰撞检测等瞬间需求 2 倍转矩 → $i_q \\approx 1.9\\text{A}$，对照电机 3 倍过载能力（约 2.8A），裕量充足。</div></div>
+          <div class="step-item"><div><strong>第五步：校核转速</strong>。关节 $30°/s = 1/12\\text{r/s}$，电机侧 $= 50/12 \\approx 4.2\\text{r/s} = 250\\text{rpm}$，远低于基速 3000rpm，无需弱磁。</div></div>
         </div>
 
         <div class="info-box tip">
@@ -10362,6 +10517,50 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           <li><strong>微步驱动</strong>：通过控制两相电流的正弦/余弦比例，实现细分。16 细分时步距角 0.1125°</li>
         </ul>
 
+        <h4 class="font-medium mt-6 mb-2">脉冲当量：从脉冲到毫米</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          直线运动系统中，"每脉冲移动距离"（脉冲当量）是精度的起点：
+        </p>
+        <div class="formula-block">
+          $$\\delta = \\frac{\\text{每转进给量}}{\\text{每转脉冲数}} = \\frac{\\text{导程}}{\\frac{360°}{\\theta_s} \\times \\text{细分倍数}}$$
+          <div class="text-sm text-gray-500 mt-2">$\\delta$：脉冲当量（mm/脉冲）。细分不提高定位精度（取决于电机和机械），但让运动更平滑</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">例题：写字机 X 轴分辨率计算</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          <a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">两轴写字机</a>用 NEMA17 混合式步进电机（步距角 $1.8°$）+ 20 齿 GT2 同步带（每转进给 40mm），驱动器设 16 细分。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：每转整步数</strong>。$360°/1.8° = 200$ 步/转。</div></div>
+          <div class="step-item"><div><strong>第二步：算微步数</strong>。16 细分后 $200 \\times 16 = 3200$ 微步/转。</div></div>
+          <div class="step-item"><div><strong>第三步：算脉冲当量</strong>。$\\delta = 40/3200 = 0.0125\\text{mm/脉冲} = 12.5\\mu\\text{m}$。要画 100mm 直线，发送 $100/0.0125 = 8000$ 个脉冲。</div></div>
+          <div class="step-item"><div><strong>第四步：定脉冲频率</strong>。笔架 120mm/s 需要 $120/0.0125 = 9600\\text{Hz}$ 脉冲——恰好接近常用驱动器 10kHz 上限，选型时留意。</div></div>
+          <div class="step-item"><div><strong>第五步：认识精度真相</strong>。微步分辨率 12.5μm ≠ 定位精度 12.5μm：皮带弹性、导轨背隙通常带来 ±0.05mm 级误差，精度由机械决定。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">加减速控制：步进电机的"命门"</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          步进电机有<strong>最大启动（空载牵入）频率</strong>——通常仅几百 Hz 到几 kHz。直接以高频启动会丢步，必须从低频加速到目标频率；急停同理需要减速曲线。这就是<a href="javascript:void(0)" onclick="App.loadDetail('linux-13')">运动规划与加减速</a>一节的核心问题：
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>梯形速度曲线</strong>：加速度恒定，规划简单，但加速度突变引起振动</li>
+          <li><strong>S 曲线</strong>：加速度连续变化，平滑无冲击，高端固件（Klipper）默认</li>
+          <li><strong>共振区</strong>：全步驱动下约 100~200rpm 存在共振点，微步驱动可显著缓解</li>
+          <li><strong>加加速度（Jerk）限制</strong>：限制加速度的变化率，是 3D 打印机消除"环纹"的关键参数</li>
+        </ul>
+        <div class="code-block">
+<span class="code-comment">// 梯形加减速：查表法生成脉冲间隔（简化示意，与 print-02 的 Marlin 同思路）</span>
+<span class="code-keyword">void</span> <span class="code-func">ramp_move</span>(<span class="code-keyword">int</span> steps, <span class="code-keyword">int</span> f_start, <span class="code-keyword">int</span> f_max) {
+  <span class="code-keyword">int</span> freq = f_start;                       <span class="code-comment">// 从牵入频率以下起步</span>
+  <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i &lt; steps; i++) {
+    <span class="code-func">pulse_step</span>();                          <span class="code-comment">// 发一个脉冲 = 一个微步</span>
+    <span class="code-func">delay_us</span>(<span class="code-number">1000000</span> / freq);            <span class="code-comment">// 脉冲间隔由当前频率决定</span>
+    <span class="code-keyword">if</span> (i &lt; steps/<span class="code-number">2</span> &amp;&amp; freq &lt; f_max) freq += <span class="code-number">10</span>;      <span class="code-comment">// 前半程加速</span>
+    <span class="code-keyword">else if</span> (i &gt;= steps/<span class="code-number">2</span> &amp;&amp; freq &gt; f_start) freq -= <span class="code-number">10</span>; <span class="code-comment">// 后半程减速</span>
+  }
+}
+</div>
+
         <h4 class="font-medium mt-6 mb-2">步进电机 vs 伺服电机</h4>
         <div class="overflow-x-auto"><table class="compare-table">
           <thead><tr><th>特性</th><th>步进电机</th><th>伺服电机（PMSM）</th></tr></thead>
@@ -10408,6 +10607,53 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           $$\\begin{bmatrix} i_d \\\\ i_q \\end{bmatrix} = \\begin{bmatrix} \\cos\\theta_e & \\sin\\theta_e \\\\ -\\sin\\theta_e & \\cos\\theta_e \\end{bmatrix} \\begin{bmatrix} i_\\alpha \\\\ i_\\beta \\end{bmatrix}$$
           <div class="text-sm text-gray-500 mt-2">$d$ 轴与转子磁链方向对齐，$q$ 轴超前 $d$ 轴 90°</div>
         </div>
+        <div class="svg-figure">
+          <svg width="340" height="230" viewBox="0 0 340 230">
+            <circle cx="120" cy="120" r="75" fill="none" stroke="currentColor" stroke-opacity="0.25" stroke-dasharray="4 3"/>
+            <line x1="120" y1="120" x2="205" y2="120" stroke="currentColor" stroke-width="1.5"/>
+            <text x="210" y="124" font-size="13" fill="currentColor">α</text>
+            <line x1="120" y1="120" x2="120" y2="35" stroke="currentColor" stroke-width="1.5"/>
+            <text x="115" y="28" font-size="13" fill="currentColor">β</text>
+            <line x1="120" y1="120" x2="185" y2="82.5" stroke="#6366f1" stroke-width="2"/>
+            <text x="189" y="80" font-size="13" fill="#6366f1">d</text>
+            <line x1="120" y1="120" x2="82.5" y2="55" stroke="#6366f1" stroke-width="2"/>
+            <text x="70" y="52" font-size="13" fill="#6366f1">q</text>
+            <line x1="120" y1="120" x2="157.5" y2="55" stroke="#10b981" stroke-width="2"/>
+            <text x="160" y="50" font-size="13" fill="#10b981">i&#8347;</text>
+            <line x1="157.5" y1="55" x2="185" y2="82.5" stroke="#10b981" stroke-width="1" stroke-dasharray="3 2" stroke-opacity="0.6"/>
+            <path d="M 150 120 A 30 30 0 0 0 146 105" fill="none" stroke="currentColor" stroke-opacity="0.6"/>
+            <text x="152" y="112" font-size="11" fill="currentColor">θ&#8337;</text>
+            <text x="128" y="68" font-size="11" fill="#10b981">γ</text>
+            <text x="230" y="150" font-size="12" fill="currentColor">γ = θ&#7522; − θ&#8337;（电流矢量与 d 轴夹角）</text>
+            <text x="230" y="168" font-size="12" fill="#6366f1">i&#8336; = I&#8347;cosγ（磁通分量）</text>
+            <text x="230" y="186" font-size="12" fill="#6366f1">i&#8348; = I&#8347;sinγ（转矩分量）</text>
+          </svg>
+          <p class="svg-caption">图：αβ 静止坐标系与随转子旋转的 dq 坐标系。把三相电流合成矢量投影到 dq 轴，交流量变成直流量</p>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">例题：Park 变换数值计算</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          电机稳态运行时测得定子电流合成矢量幅值 $I_s = 10\\text{A}$，位于 α 轴正向 $\\theta_i = 60°$ 处；当前转子电角度 $\\theta_e = 30°$。求 dq 轴电流分量。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：先得 αβ 分量</strong>。$i_\\alpha = 10\\cos 60° = 5\\text{A}$，$i_\\beta = 10\\sin 60° = 8.66\\text{A}$。</div></div>
+          <div class="step-item"><div><strong>第二步：算电流矢量与 d 轴夹角</strong>。$\\gamma = \\theta_i - \\theta_e = 30°$——电流超前 d 轴，说明既有磁通分量又有转矩分量。</div></div>
+          <div class="step-item"><div><strong>第三步：几何法直接分解</strong>。$i_d = I_s\\cos\\gamma = 10 \\times 0.866 = 8.66\\text{A}$，$i_q = I_s\\sin\\gamma = 10 \\times 0.5 = 5\\text{A}$。</div></div>
+          <div class="step-item"><div><strong>第四步：用矩阵公式验证</strong>。$i_d = i_\\alpha\\cos\\theta_e + i_\\beta\\sin\\theta_e = 5 \\times 0.866 + 8.66 \\times 0.5 = 8.66\\text{A}$ ✓ 两种方法一致。</div></div>
+          <div class="step-item"><div><strong>第五步：物理解读</strong>。若目标是 $i_d=0$ 控制，说明当前定子电流矢量没有对准 q 轴——控制器应调整相位，让全部 10A 都变成 $i_q$，转矩能力才被充分利用。</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">两种 Clarke 变换：等幅值 vs 等功率</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>特性</th><th>等幅值变换</th><th>等功率变换</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">矩阵系数</td><td>$2/3$</td><td>$\\sqrt{2/3}$</td></tr>
+            <tr><td class="font-medium">变换后幅值</td><td>等于单相幅值（直观）</td><td>不等于单相幅值</td></tr>
+            <tr><td class="font-medium">功率关系</td><td>$P = \\frac{3}{2}(u_\\alpha i_\\alpha + u_\\beta i_\\beta)$，带系数</td><td>$P = u_\\alpha i_\\alpha + u_\\beta i_\\beta$，无系数</td></tr>
+            <tr><td class="font-medium">转矩公式系数</td><td>$T = \\frac{3}{2}p_n\\psi_f i_q$</td><td>$T = p_n\\psi_f i_q$（形式更简）</td></tr>
+            <tr><td class="font-medium">注意事项</td><td colspan="2">两套体系自洽但<strong>不可混用</strong>——DSP 库、论文、教材可能各用一套，套公式前先确认系数约定</td></tr>
+          </tbody>
+        </table></div>
 
         <h4 class="font-medium mt-6 mb-2">直流电机的 dq 模型</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
@@ -10474,6 +10720,18 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           <div class="step-item"><div><strong>抗饱和</strong>：积分项需加抗饱和（Anti-windup）处理，防止输出饱和时积分持续累积导致超调。</div></div>
         </div>
 
+        <h4 class="font-medium mt-6 mb-2">例题：电流环 PI 参数整定（极点对消法）</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          已知 PMSM 相绕组等效参数：$R = 0.5\\Omega$，$L = 2\\text{mH}$；PWM 载波频率 20kHz。用极点对消法整定电流环 PI 参数。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：定带宽目标</strong>。电流环带宽取 PWM 频率的 1/20：$f_c = 1\\text{kHz}$，即 $\\omega_c = 2\\pi f_c \\approx 6283\\text{rad/s}$。</div></div>
+          <div class="step-item"><div><strong>第二步：对消电机极点</strong>。绕组传函为 $1/(Ls+R)$，令 PI 零点对消极点：$K_i/K_p = R/L = 250\\text{s}^{-1}$。</div></div>
+          <div class="step-item"><div><strong>第三步：算 $K_p$</strong>。零极点对消后开环化为 $K_p/(Ls)$，穿越频率即 $\\omega_c = K_p/L$，故 $K_p = \\omega_c L = 6283 \\times 0.002 \\approx 12.6\\text{V/A}$。</div></div>
+          <div class="step-item"><div><strong>第四步：算 $K_i$</strong>。$K_i = K_p \\times R/L = 12.6 \\times 250 \\approx 3150$。</div></div>
+          <div class="step-item"><div><strong>第五步：验证</strong>。闭环近似一阶惯性，上升时间约 $0.35/f_c = 0.35\\text{ms}$，带电机仿真验证阶跃电流无振荡、无稳态误差后冻结参数，再往外整定速度环（带宽再降 5 倍以上）。</div></div>
+        </div>
+
         <h4 class="font-medium mt-6 mb-2">交流电机 V/f 控制</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
           最简单的交流电机调速方法。保持电压与频率之比恒定：
@@ -10490,6 +10748,18 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           <li><strong>缺点</strong>：动态响应慢、低速转矩脉动大、无法精确控制转矩</li>
           <li><strong>适用</strong>：风机、水泵等对动态性能要求不高的场合</li>
         </ul>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2 mt-3">
+          把主流交流调速策略放在一起对比，选型时对号入座：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>策略</th><th>位置传感器</th><th>转矩精度</th><th>动态响应</th><th>成本</th><th>典型应用</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">V/f 开环</td><td>不需要</td><td>差</td><td>慢</td><td>低</td><td>风机、水泵、传送带</td></tr>
+            <tr><td class="font-medium">无感 FOC</td><td>不需要（观测器估计）</td><td>中</td><td>中</td><td>中</td><td>变频家电、无人机、电动工具</td></tr>
+            <tr><td class="font-medium">有感 FOC</td><td>编码器/旋变</td><td>优</td><td>快</td><td>高</td><td>机器人关节、机床伺服</td></tr>
+            <tr><td class="font-medium">直接转矩控制 DTC</td><td>需要位置估计</td><td>较粗（转矩脉动大）</td><td>极快</td><td>中</td><td>大功率牵引（ABB 系变频器）</td></tr>
+          </tbody>
+        </table></div>
 
         <h4 class="font-medium mt-6 mb-2">弱磁控制</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
@@ -10534,6 +10804,23 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
           <div><strong>串级控制的优点</strong>：①内环快速抑制扰动（如电压波动、负载变化）；②外环只需处理慢动态；③电流环限制最大电流保护电机。设计时从内向外逐环整定。</div>
         </div>
 
+        <h4 class="font-medium mt-6 mb-2">位置反馈：编码器怎么选</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>类型</th><th>原理</th><th>断电记忆</th><th>特点</th></tr></thead>
+          <tbody>
+            <tr><td class="font-medium">增量式光电编码器</td><td>ABZ 三路脉冲，计数测位</td><td>否（需回零）</td><td>便宜，最高 2500 线常见，需防丢脉冲</td></tr>
+            <tr><td class="font-medium">绝对式单圈</td><td>码盘直读绝对角度</td><td>是</td><td>上电即知位置，17~23 位典型</td></tr>
+            <tr><td class="font-medium">绝对式多圈</td><td>单圈 + 圈计数（电池/机械齿轮）</td><td>是</td><td>机器人关节、云台首选，免回零</td></tr>
+            <tr><td class="font-medium">磁编码器</td><td>霍尔阵列测磁场角</td><td>是</td><td>抗粉尘油污、耐震动，精度略低（12~14 位）</td></tr>
+            <tr><td class="font-medium">旋转变压器</td><td>电磁感应测角</td><td>是</td><td>极可靠耐高温，牵引/军工电机用</td></tr>
+          </tbody>
+        </table></div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>测速方法</strong>：增量式靠脉冲计数（M 法，高速准）或脉冲间隔（T 法，低速准），或 M/T 混合</li>
+          <li><strong>总线编码器</strong>：EnDat / BiSS / 多圈 SSI，抗干扰强，高端伺服标配</li>
+          <li><strong>写字机方案</strong>：步进开环 + 两端<a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">限位开关回零</a>，是成本敏感场合的务实选择</li>
+        </ul>
+
         <h4 class="font-medium mt-6 mb-2">三种控制模式</h4>
         <div class="overflow-x-auto"><table class="compare-table">
           <thead><tr><th>模式</th><th>控制目标</th><th>应用场景</th><th>机器人应用</th></tr></thead>
@@ -10557,6 +10844,32 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
         <div class="formula-block">
           $$\\text{定位精度} = \\frac{\\text{编码器分辨率}}{\\text{减速比}}$$
           <div class="text-sm text-gray-500 mt-2">17 位编码器（131072 脉冲/转）+ 100:1 谐波减速器 → 理论精度 $360°/(131072 \\times 100) \\approx 0.000028°$</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">前馈控制：让伺服"未卜先知"</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          反馈是"发现误差再纠正"，天然滞后；前馈（Feedforward）则根据参考轨迹<strong>提前</strong>给出控制量，两者叠加是高性能伺服的标准做法：
+        </p>
+        <div class="formula-block">
+          $$u = \\underbrace{K_p e + K_i \\int e\\,dt}_{\\text{反馈 PID}} + \\underbrace{K_v \\dot{q}_{ref} + K_a \\ddot{q}_{ref}}_{\\text{速度/加速度前馈}} + \\underbrace{\\hat{g}(q) + \\hat{f}(\\dot{q})}_{\\text{重力/摩擦模型前馈}}$$
+          <div class="text-sm text-gray-500 mt-2">$K_v \\approx$ 需要克服的速度项系数（近似 $J$ 相关），$\\hat{g}(q)$：重力矩模型。前馈不改变闭环稳定性，只减小跟踪误差</div>
+        </div>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>效果</strong>：高速轮廓跟踪（如激光切割拐角）时，纯反馈滞后造成圆角和轮廓误差，加速度前馈可将其降低一个数量级</li>
+          <li><strong>机器人重力补偿</strong>：机械臂静态保持时重力矩全靠积分器"顶住"，会缓慢下垂抖动；用重力模型前馈直接输出，积分器只处理残差——详见<a href="javascript:void(0)" onclick="App.loadDetail('robo-10')">机器人动力学控制</a></li>
+          <li><strong>代价</strong>：前馈依赖模型准确度，参数（$J$、摩擦系数）辨识不准时效果打折，需与<a href="javascript:void(0)" onclick="App.loadDetail('mct-11')">参数/状态估计</a>配合</li>
+        </ul>
+
+        <h4 class="font-medium mt-6 mb-2">例题：分辨率 ≠ 精度</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          某关节伺服：电机端 17 位绝对式编码器（131072 刻线/转）+ 1:50 谐波减速器（传动误差 ±1 角分）。分析输出端的分辨率与实际精度。
+        </p>
+        <div class="step-list">
+          <div class="step-item"><div><strong>第一步：算电机侧分辨率</strong>。$360°/131072 \\approx 0.001° = 3.6\\text{角秒}$。</div></div>
+          <div class="step-item"><div><strong>第二步：折算到输出轴</strong>。$3.6/50 \\approx 0.07\\text{角秒}$——理论分辨率惊人地小。</div></div>
+          <div class="step-item"><div><strong>第三步：对照传动误差</strong>。减速器传动误差 ±1 角分 = ±60 角秒，是分辨率的大约 850 倍，成为精度短板。</div></div>
+          <div class="step-item"><div><strong>第四步：算实际精度</strong>。系统精度 ≈ 传动误差 + 编码器安装偏心 + 联轴器扭转，估计 ±1.5 角分（±0.025°），即 ±435 角秒量级。</div></div>
+          <div class="step-item"><div><strong>第五步：提升手段</strong>。机械上换高精度减速器代价大；工程上用<strong>标定补偿</strong>——测出误差随位置的变化表存入控制器查表修正（<a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">写字机标定补偿</a>同思路），可吃掉大部分系统性误差。</div></div>
         </div>
 
         <div class="info-box tip">
