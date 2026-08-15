@@ -5233,6 +5233,22 @@ const CourseData = {
           </tbody>
         </table>
 
+        <h4 class="font-medium mt-6 mb-2">本板块贯穿案例：写字机笔架</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          与本站 <a href="javascript:void(0)" onclick="App.loadDetail('linux-10')">Linux 写字机</a>、<a href="javascript:void(0)" onclick="App.loadDetail('print-08')">3D 打印结构件</a>、<a href="javascript:void(0)" onclick="App.loadDetail('motor-01')">电机选型</a>是同一台机器。取 X 轴笔架为对象：质量 $m = 0.4\\text{kg}$（motor-01 选型结论），导轨与同步带等效黏性阻尼 $c = 2\\text{N·s/m}$，电机推力 $F$ 为输入：
+        </p>
+        <div class="formula-block">$$m\\ddot{p} = F - c\\dot{p} \\;\\Rightarrow\\; \\begin{cases} \\dot{x}_1 = x_2 \\\\ \\dot{x}_2 = -\\frac{c}{m}x_2 + \\frac{1}{m}F \\end{cases}$$
+          <div class="text-sm text-gray-500 mt-2">状态 $x_1 = p$（位置）、$x_2 = \\dot{p}$（速度）——两个独立储能（动能）相关变量。数值矩阵将在 <a href="javascript:void(0)" onclick="App.loadDetail('mct-02')">mct-02</a> 落地，之后一路贯穿求解、能控能观、极点配置、观测器、LQR、卡尔曼到离散实现</div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          为什么这个案例适合现代控制？因为它恰好暴露了传递函数的三个短板：
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>状态不全可测</strong>：编码器只给位置，速度要么差分（放大噪声）要么估计——正是<a href="javascript:void(0)" onclick="App.loadDetail('mct-07')">观测器</a>的用武之地</li>
+          <li><strong>要分别控制两个状态</strong>：位置准 + 速度稳，本质是全状态反馈 $u = -K\\mathbf{x}$，工程里的"速度环+位置环双闭环"（<a href="javascript:void(0)" onclick="App.loadDetail('motor-07')">motor-07</a>）就是它的手工近似</li>
+          <li><strong>实现必然数字化</strong>：1kHz 定时器中断里跑的控制律是离散状态方程（<a href="javascript:void(0)" onclick="App.loadDetail('mct-10')">mct-10</a>），与 linux-12 的 STM32 执行层直接对接</li>
+        </ul>
+
         <div class="info-box tip">💡 <strong>记忆口诀</strong>："传函看外，状态看内"——传递函数只看输入输出之间的外部表现，状态空间则深入系统内部追踪每一个状态变量的演化。</div>
         <div class="info-box warning">⚠️ <strong>常见误区</strong>：不要以为学了现代控制就要抛弃经典控制。工程实际中，PID 控制器依然占据 90% 以上的工业应用。现代控制是对经典控制的"升维"，两者互补而非替代。</div>
         <div class="info-box info">📘 <strong>历史脉络</strong>：1960 年 R.E. Kalman 发表里程碑论文，正式奠定了状态空间方法的数学基础。同年他提出了卡尔曼滤波器，成为阿波罗登月导航的核心算法。参见<a href="javascript:void(0)" onclick="App.loadDetail('act-01')">控制系统的基本概念</a>。</div>
@@ -5253,7 +5269,8 @@ const CourseData = {
         <h4 class="font-medium mt-6 mb-2">能控标准形（Controllable Canonical Form）</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">对于 $n$ 阶传递函数：</p>
         <div class="formula-block">$$G(s) = \\frac{b_0 s^n + b_1 s^{n-1} + \\cdots + b_n}{s^n + a_1 s^{n-1} + \\cdots + a_n}$$</div>
-        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">其能控标准形实现中，$A$ 矩阵为友矩阵形式，最后一行为系数 $-a_n, -a_{n-1}, \\ldots, -a_1$，$B$ 为单位向量。</p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">其能控标准形实现中，$A$ 矩阵为友矩阵形式，最后一行为系数 $-a_n, -a_{n-1}, \\ldots, -a_1$，$B$ 为单位向量。以 $n=2$ 为例写出显式形式：</p>
+        <div class="formula-block">$$A_c = \\begin{bmatrix} 0 & 1 \\\\ -a_2 & -a_1 \\end{bmatrix}, \\quad B_c = \\begin{bmatrix} 0 \\\\ 1 \\end{bmatrix}, \\quad C_c = \\begin{bmatrix} b_2 & b_1 \\end{bmatrix}$$</div>
 
         <h4 class="font-medium mt-6 mb-2">能观标准形（Observable Canonical Form）</h4>
         <div class="formula-block">$$A_o = A_c^T, \\quad C_o = \\begin{bmatrix} 0 & 0 & \\cdots & 1 \\end{bmatrix}$$</div>
@@ -5267,6 +5284,26 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
           同理，RLC 电路取电容电压和电感电流为状态变量，机械-电气系统的状态变量选取原则一致：选所有独立储能元件的储能变量。
         </p>
+
+        <h4 class="font-medium mt-6 mb-2">例题：写字机笔架的数值模型</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          把 mct-01 的贯穿案例落地成数值矩阵：笔架质量 $m = 0.4\\text{kg}$，阻尼 $c = 2\\text{N·s/m}$，输入为电机推力 $F$，编码器测量位置 $p$。
+        </p>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>列物理方程</strong><br>牛顿第二定律：$0.4\\ddot{p} = F - 2\\dot{p}$，即 $\\ddot{p} = -5\\dot{p} + 2.5F$</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>选状态变量</strong><br>$x_1 = p$（位置）、$x_2 = \\dot{p}$（速度），得 $\\dot{x}_1 = x_2$、$\\dot{x}_2 = -5x_2 + 2.5F$</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>写出矩阵</strong><br>$A = \\begin{bmatrix}0&1\\\\0&-5\\end{bmatrix}$，$B = \\begin{bmatrix}0\\\\2.5\\end{bmatrix}$，$C = \\begin{bmatrix}1&0\\end{bmatrix}$</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>验证传递函数</strong><br>$G(s) = C(sI-A)^{-1}B = \\frac{2.5}{s(s+5)}$，与直接拉氏变换结果一致 ✓</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>物理解读</strong><br>极点为 $0$ 和 $-5$：$-5$ 对应机械时间常数 $0.2\\text{s}$（阻尼主导），$0$ 是"自由滑动"积分模态——无弹簧回复力，位置自身不稳定也不发散，必须靠控制律镇定</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">再举一例：直流电机的两状态模型</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          取电枢电流 $i_a$ 与转速 $\\omega$ 为状态（电气+机械两个储能环节），<a href="javascript:void(0)" onclick="App.loadDetail('motor-02')">motor-02 的电压/转矩方程</a>直接搬过来：
+        </p>
+        <div class="formula-block">$$\\begin{bmatrix}\\dot{i}_a \\\\ \\dot{\\omega}\\end{bmatrix} = \\begin{bmatrix}-R_a/L_a & -K_e/L_a \\\\ K_t/J & -B/J\\end{bmatrix}\\begin{bmatrix}i_a \\\\ \\omega\\end{bmatrix} + \\begin{bmatrix}1/L_a \\\\ 0\\end{bmatrix}u_a$$
+          <div class="text-sm text-gray-500 mt-2">电气时间常数 $L_a/R_a$（毫秒级）与机械时间常数 $J/B$（几十毫秒级）分离——这正是双闭环"内环快、外环慢"（<a href="javascript:void(0)" onclick="App.loadDetail('motor-07')">motor-07</a>）的物理根源</div>
+        </div>
 
         <h4 class="font-medium mt-6 mb-2">建模方法总结</h4>
         <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
@@ -5337,6 +5374,33 @@ const CourseData = {
           <li><strong>导数关系</strong>：$\\dot{\\Phi}(t)=A\\Phi(t)=\\Phi(t)A$，状态转移满足原系统方程</li>
         </ul>
 
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2 mt-3">
+          <strong>几何意义</strong>：把状态画在平面上（横轴位置、纵轴速度），$\\Phi(t)$ 就是把每个点沿系统轨迹"搬运" $t$ 秒的映射——断电后的笔架状态点会沿着一条衰减曲线滑向速度轴零点，最终停在横轴某处。$e^{At}$ 的作用对象不是单个数，而是整个状态平面。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">例题：断电后笔架滑行多远？</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          写字机笔架模型（<a href="javascript:void(0)" onclick="App.loadDetail('mct-02')">mct-02</a>）$A = \\begin{bmatrix}0&1\\\\0&-5\\end{bmatrix}$，初始位置 $x_1(0) = 0.05\\text{m}$、初始速度 $x_2(0) = 0.2\\text{m/s}$，推力撤销（自由响应）。求 0.1s、0.2s 时刻的状态与最终滑行距离。
+        </p>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>求状态转移矩阵</strong><br>对角/三角结构可直接积分：$e^{At} = \\begin{bmatrix}1 & \\frac{1-e^{-5t}}{5} \\\\ 0 & e^{-5t}\\end{bmatrix}$</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>速度响应</strong><br>$x_2(t) = 0.2e^{-5t}$：0.1s 时 0.122 m/s，0.2s 时 0.074 m/s——以 0.2s 时间常数指数衰减</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>位置响应</strong><br>$x_1(t) = 0.05 + 0.2 \\cdot \\frac{1-e^{-5t}}{5} = 0.05 + 0.04(1-e^{-5t})$</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>最终滑行距离</strong><br>$t \\to \\infty$：$x_1 = 0.09\\text{m}$，滑行 40mm——正好等于 $mv_0/c = 0.4 \\times 0.2/2$，与动量-阻尼冲量守恒的物理直觉一致 ✓</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>工程含义</strong><br>断电滑行 40mm 说明写字机不能"急停"——这正是<a href="javascript:void(0)" onclick="App.loadDetail('linux-13')">运动规划</a>必须提前减速到零再停脉冲的原因，也是刹车/急停必须靠控制律强拉的原因</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">用计算机算 e^{At}</h4>
+        <div class="code-block">
+<span class="code-comment"># Python：scipy 数值求解矩阵指数与自由响应</span>
+<span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np
+<span class="code-keyword">from</span> scipy.linalg <span class="code-keyword">import</span> expm
+A = np.array([[<span class="code-number">0</span>, <span class="code-number">1</span>], [<span class="code-number">0</span>, -<span class="code-number">5</span>]])
+x0 = np.array([<span class="code-number">0.05</span>, <span class="code-number">0.2</span>])
+<span class="code-keyword">for</span> t <span class="code-keyword">in</span> [<span class="code-number">0</span>, <span class="code-number">0.1</span>, <span class="code-number">0.2</span>, <span class="code-number">0.5</span>]:
+    print(t, expm(A*t) @ x0)   <span class="code-comment"># → [位置, 速度] 逐步收敛到 [0.09, 0]</span>
+</div>
+
         <table class="compare-table">
           <thead><tr><th>方法</th><th>适用条件</th><th>计算量</th><th>特点</th></tr></thead>
           <tbody>
@@ -5377,6 +5441,27 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
           对偶原理建立了能控性与能观性之间的深刻联系：一个系统能控，当且仅当其对偶系统能观。这意味着能观性判据无需另起炉灶，只需将 $(A,B,C)$ 替换为 $(A^T,C^T,B^T)$ 后用能控性判据即可。
         </p>
+
+        <h4 class="font-medium mt-6 mb-2">例题：笔架能控吗？能观吗？</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          对写字机笔架 $A = \\begin{bmatrix}0&1\\\\0&-5\\end{bmatrix}$，$B = \\begin{bmatrix}0\\\\2.5\\end{bmatrix}$，$C = \\begin{bmatrix}1&0\\end{bmatrix}$（编码器测位置）逐一检验。
+        </p>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>构造能控性矩阵</strong><br>$\\mathcal{C} = [B \\; AB] = \\begin{bmatrix}0&2.5\\\\2.5&-12.5\\end{bmatrix}$，$\\det\\mathcal{C} = -6.25 \\neq 0$，满秩 ✓ 完全能控</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>物理直觉</strong><br>推力直接改变速度，速度积分改变位置——两个状态都能被 $F$ 波及，"推力够不着的状态"不存在</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>构造能观性矩阵</strong><br>$\\mathcal{O} = \\begin{bmatrix}C \\\\ CA\\end{bmatrix} = \\begin{bmatrix}1&0\\\\0&1\\end{bmatrix}$，满秩 ✓ 完全能观</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>反例：只测速度会怎样</strong><br>若 $C = \\begin{bmatrix}0&1\\end{bmatrix}$（只有测速计），$\\mathcal{O} = \\begin{bmatrix}0&1\\\\0&-5\\end{bmatrix}$ 秩为 1——<strong>位置不能观</strong>！速度序列里根本没有位置的任何信息（同一速度对应无穷多个位置）</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>结论落地</strong><br>写字机用位置编码器是"对的传感器"：位置能观，速度虽然不直接测、但可由（位置序列 + 模型）估计——这正是<a href="javascript:void(0)" onclick="App.loadDetail('mct-07')">mct-07 观测器</a>要干的事</div></div>
+        </div>
+
+        <table class="compare-table">
+          <thead><tr><th>测量方案</th><th>直接测到</th><th>能观性</th><th>工程可行性</th></tr></thead>
+          <tbody>
+            <tr><td><strong>位置编码器</strong></td><td>位置</td><td>位置✓ 速度✓（可估计）</td><td>✅ 写字机/3D 打印机标配</td></tr>
+            <tr><td><strong>测速计/编码器差分</strong></td><td>速度</td><td>速度✓ 位置✗（永远丢积分常数）</td><td>❌ 除非另加回零开关补初值</td></tr>
+            <tr><td><strong>位置+速度双测</strong></td><td>两者</td><td>全部✓</td><td>成本高，伺服高端方案</td></tr>
+          </tbody>
+        </table>
 
         <h4 class="font-medium mt-6 mb-2">能控性判据详解</h4>
         <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
@@ -5432,6 +5517,28 @@ const CourseData = {
         <h4 class="font-medium mt-6 mb-2">线性系统的 Lyapunov 方程</h4>
         <div class="formula-block">$$A^T P + PA = -Q$$</div>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">其中 $Q>0$ 为正定矩阵（通常取 $Q=I$）。若 Lyapunov 方程有唯一正定解 $P>0$，则系统渐近稳定。</p>
+
+        <h4 class="font-medium mt-6 mb-2">例题：倒立摆的能量函数</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          非线性系统没有特征值可看，能量法是主角。以单摆（含黏性阻尼 $d$）为例——它也是<a href="javascript:void(0)" onclick="App.loadDetail('robo-01')">机器人学</a>里倒立摆的一维骨架：
+        </p>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>写物理方程</strong><br>$ml^2\\ddot{\\theta} = mgl\\sin\\theta - d\\dot{\\theta}$（重力驱动、阻尼耗散）</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>选能量函数</strong><br>$V = \\frac{1}{2}ml^2\\dot{\\theta}^2 + mgl(1-\\cos\\theta) \\ge 0$，仅在 $\\theta=0, \\dot{\\theta}=0$（下垂平衡点）处为零</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>沿轨迹求导</strong><br>$\\dot{V} = ml^2\\dot{\\theta}\\ddot{\\theta} + mgl\\dot{\\theta}\\sin\\theta = -d\\dot{\\theta}^2 \\le 0$——物理量自动抵消，只剩耗散项</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>LaSalle 不变集</strong><br>$\\dot{V}=0$ 只在 $\\dot{\\theta}=0$ 成立，但"速度恒零"的不变集只有平衡点 $\\theta = 0$ 与 $\\pi$——下垂点渐近稳定，倒立点（$\\pi$）不稳定</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>控制启示</strong><br>要在倒立点稳定，控制器必须"注入能量"把 $V$（以倒立点为零点重定义）压下去——倒立摆控制的设计目标由此自然导出</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">内部稳定 vs BIBO：对消的隐患</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          mct-01 的例子 $G(s) = \\frac{s+1}{s^2+3s+2} = \\frac{1}{s+2}$：对消后极点 $-1$ 在左半平面，BIBO 稳定没问题。但若对消的是<strong>右半平面或虚轴上的极点</strong>（如 $\\frac{s-1}{(s-1)(s+2)}$），传递函数"看起来稳定"，内部模态却指数发散——只是它恰好不能控或不能观，从输入激不起、从输出看不见，一旦受初始扰动或建模误差激励就会炸。工程铁律：
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <li><strong>绝不作右半平面/虚轴零极点对消</strong>——控制器设计要"对消"的只能是稳定的左半平面极点，且要留裕度（极点离虚轴太近也不建议对消）</li>
+          <li><strong>判稳要判内部</strong>：用 $A$ 的全部特征值（或 Lyapunov 方程），而不是化简后的 $G(s)$ 极点</li>
+          <li><strong>理论关系</strong>：系统能控且能观时，BIBO 稳定 ⟺ 渐近稳定——结构完整时内外稳定性才等价</li>
+        </ul>
 
         <table class="compare-table">
           <thead><tr><th>稳定性类型</th><th>定义</th><th>判据</th><th>适用范围</th></tr></thead>
@@ -5489,6 +5596,29 @@ const CourseData = {
           <li><strong>Step 4</strong>：用 Ackermann 公式或直接比较法求 $K$</li>
         </ul>
 
+        <h4 class="font-medium mt-6 mb-2">例题：写字机位置环设计</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          给笔架配位置环。要求：超调 $\\sigma\\% \\leq 5\\%$，调节时间 $t_s(2\\%) \\leq 0.4\\text{s}$。
+        </p>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>验证能控</strong><br>mct-04 已验证 $\\text{rank}\\,\\mathcal{C} = 2$，极点可任意配置 ✓</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>由指标反算极点</strong><br>$\\sigma\\% = e^{-\\pi\\zeta/\\sqrt{1-\\zeta^2}} \\le 5\\% \\Rightarrow \\zeta \\ge 0.69$，取 $\\zeta = 0.707$；$t_s = 4/(\\zeta\\omega_n) \\le 0.4 \\Rightarrow \\zeta\\omega_n \\ge 10$（公式见<a href="javascript:void(0)" onclick="App.loadDetail('act-05')">act-05 时域分析</a>）→ 期望极点 $-10 \\pm j10$</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>写闭环特征式</strong><br>$A - BK = \\begin{bmatrix}0&1\\\\-2.5k_1&-5-2.5k_2\\end{bmatrix}$，$\\det(sI-(A-BK)) = s^2 + (5+2.5k_2)s + 2.5k_1$</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>对比系数</strong><br>期望式 $(s+10)^2 + 100 = s^2 + 20s + 200$：$k_1 = 80$，$k_2 = 6$，即 $K = [80 \\; 6]$</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>物理校验增益</strong><br>5mm 位置误差产生控制力 $u = 80 \\times 0.005 = 0.4\\text{N}$，远小于步进系统可输出的数十 N 推力——增益不激进，可行 ✓（这正是"极点别配太远"警告的定量体现）</div></div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          注意 $K = [k_1 \\; k_2] = [80 \\; 6]$ 的物理身份：<strong>$k_1$ 是位置比例反馈（P），$k_2$ 是速度反馈（D 的反馈形态）</strong>——状态反馈在二阶系统上就是 PD 控制，与 <a href="javascript:void(0)" onclick="App.loadDetail('motor-07')">motor-07 双闭环</a>的位置环+速度环殊途同归，只是设计路径从"试凑"变成了"一步到位"。
+        </p>
+
+        <h4 class="font-medium mt-6 mb-2">跟踪问题：加入积分增广</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          $u = -K\\mathbf{x}$ 只能把状态拉回零点；要跟踪恒值指令 $r$ 并消除稳态误差，把误差积分 augment 成新状态：
+        </p>
+        <div class="formula-block">$$\\dot{x}_I = r - y = r - C\\mathbf{x} \\;\\Rightarrow\\; \\begin{bmatrix}\\dot{\\mathbf{x}} \\\\ \\dot{x}_I\\end{bmatrix} = \\begin{bmatrix}A & 0 \\\\ -C & 0\\end{bmatrix}\\begin{bmatrix}\\mathbf{x} \\\\ x_I\\end{bmatrix} + \\begin{bmatrix}B \\\\ 0\\end{bmatrix}u + \\begin{bmatrix}0 \\\\ 1\\end{bmatrix}r, \\quad u = -K\\mathbf{x} - k_I x_I$$
+          <div class="text-sm text-gray-500 mt-2">增广系统能控即可整体配置极点。这就是"位置环 PI"的状态空间写法——积分器保证对阶跃指令与常值负载扰动的稳态无差</div>
+        </div>
+
         <table class="compare-table">
           <thead><tr><th>方法</th><th>计算方式</th><th>适用阶数</th><th>特点</th></tr></thead>
           <tbody>
@@ -5523,6 +5653,32 @@ const CourseData = {
         <h4 class="font-medium mt-6 mb-2">分离原理</h4>
         <div class="formula-block">$$\\text{闭环极点} = \\text{控制器极点}(A-BK) \\cup \\text{观测器极点}(A-LC)$$</div>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2"><strong>分离原理</strong>：控制器增益 $K$ 和观测器增益 $L$ 可以独立设计，互不影响。</p>
+
+        <h4 class="font-medium mt-6 mb-2">例题：给笔架造一个速度观测器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          写字机只装位置编码器（mct-04 已验证能观），但 <a href="javascript:void(0)" onclick="App.loadDetail('mct-06')">mct-06</a> 的控制律 $K = [80 \\; 6]$ 需要速度。设计观测器把速度估计出来。
+        </p>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>选观测器极点</strong><br>规则"比控制器极点快 2~5 倍"：控制器主导极点在 $-10$，取观测器极点 $-15, -15$（估计比控制急，误差没传到输出就被压掉）</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>设增益列向量</strong><br>$L = [l_1, l_2]^T$，$A - LC = \\begin{bmatrix}-l_1&1\\\\-l_2&-5\\end{bmatrix}$，特征式 $s^2 + (l_1+5)s + (5l_1+l_2)$</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>对比系数</strong><br>期望 $(s+15)^2 = s^2+30s+225$：$l_1 = 25$，$l_2 = 225 - 125 = 100$，即 $L = [25 \\; 100]^T$</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>组装完整闭环</strong><br>控制器用 $\\hat{\\mathbf{x}}$ 代替 $\\mathbf{x}$：$u = -K\\hat{\\mathbf{x}}$。由分离原理，闭环 4 个极点 = 控制器 $\\{-10\\pm j10\\}$ ∪ 观测器 $\\{-15,-15\\}$，逐一可预期</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>工程校验噪声</strong><br>$l_2 = 100$ 意味着位置测量噪声会被放大进入速度估计——若编码器噪声偏大，把观测器极点收回到 $-12$ 一带换取平稳，"快"与"静"折中</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">速度怎么得：差分 vs 观测器</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>方案</th><th>原理</th><th>噪声特性</th><th>延迟</th></tr></thead>
+          <tbody>
+            <tr><td><strong>编码器差分</strong></td><td>$\\hat{v}_k = (p_k - p_{k-1})/T_s$</td><td>噪声方差 $\\propto 1/T_s^2$——采样越快噪声放大越狠</td><td>半个周期</td></tr>
+            <tr><td><strong>M/T 法测速</strong></td><td>正交编码计脉冲+计时</td><td>低速好转</td><td>低速时大</td></tr>
+            <tr><td><strong>观测器估计</strong></td><td>模型预测 + 位置校正</td><td>等效可调低通，平稳</td><td>极点越远越小</td></tr>
+            <tr><td><strong>卡尔曼滤波</strong></td><td>观测器 + 噪声统计最优</td><td>按信噪比自动加权</td><td>自适应</td></tr>
+          </tbody>
+        </table></div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          这也是 <a href="javascript:void(0)" onclick="App.loadDetail('linux-14')">linux-14 上位机</a>要显示"平滑速度曲线"的原因：直接差分的速度在屏上就是一团噪声毛刺，观测器/滤波后的才可读。
+        </p>
 
         <h4 class="font-medium mt-6 mb-2">降阶观测器</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">若 $p$ 个输出可直接测量，则只需要估计 $n-p$ 个状态，降低计算量和实现复杂度。降阶观测器将状态分为可直接测量部分 $\\mathbf{x}_a=C\\mathbf{y}$ 和不可测量部分 $\\mathbf{x}_b$，仅对 $\\mathbf{x}_b$ 设计观测器。</p>
@@ -5579,6 +5735,34 @@ const CourseData = {
         <div class="formula-block">$$\\mathbf{u}^*(t) = -K\\mathbf{x}(t), \\quad K = R^{-1}B^TP$$</div>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">最优代价为 $J^*=\\mathbf{x}^T(0)P\\mathbf{x}(0)$。</p>
 
+        <h4 class="font-medium mt-6 mb-2">$Q, R$ 怎么定：Bryson 法则</h4>
+        <div class="formula-block">$$Q_{ii} = \\frac{1}{(x_{i,\\max})^2}, \\quad R_{jj} = \\frac{1}{(u_{j,\\max})^2}$$
+          <div class="text-sm text-gray-500 mt-2">$x_{i,\\max}$：第 $i$ 个状态允许的最大偏差，$u_{j,\\max}$：第 $j$ 个输入允许的最大幅值。谁超限，谁的代价就占主导——把工程约束直接翻译成权重</div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">例题：笔架 LQR 一步到位</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          还是写字机笔架（$A = \\begin{bmatrix}0&1\\\\0&-5\\end{bmatrix}$，$B = \\begin{bmatrix}0\\\\2.5\\end{bmatrix}$）。工程约束：位置偏差不得超过 10mm，速度不超过 0.5m/s，推力不超过 5N。
+        </p>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>Bryson 定权重</strong><br>$Q = \\text{diag}(1/0.01^2, \\; 1/0.5^2) = \\text{diag}(10^4, 4)$，$R = 1/5^2 = 0.04$</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>解 Riccati 方程</strong><br>设 $P = \\begin{bmatrix}a&b\\\\b&c\\end{bmatrix}$ 代入 CARE，三个方程：$156.25b^2 = 10^4$；$a - 5b = 156.25bc$；$156.25c^2 + 10c - 20 = 0$</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>解出 P</strong><br>$b = 8$，$c \\approx 0.327$，$a \\approx 449$，验证 $P &gt; 0$（$449 &gt; 0$，$\\det P \\approx 82.8 &gt; 0$）✓</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>算最优增益</strong><br>$K = R^{-1}B^TP = 25 \\times [20, \\; 0.818] = [500, \\; 20.5]$；闭环特征式 $s^2 + 56s + 1250$，极点 $\\approx -28 \\pm j21$（$\\zeta \\approx 0.79$，$t_s \\approx 0.15\\text{s}$）</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>读出最优代价</strong><br>从 10mm 初始偏差回稳的最优代价 $J^* = \\mathbf{x}^T(0)P\\mathbf{x}(0) = 449 \\times 0.01^2 \\approx 0.045$——任何其他线性控制律的代价都 ≥ 此值</div></div>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          对比 <a href="javascript:void(0)" onclick="App.loadDetail('mct-06')">mct-06 手工极点配置</a>的 $K=[80\\;6]$（$t_s\\approx0.4$s）：Bryson 权重下 LQR 给出激进得多的设计（$K_1$ 大 6 倍），因为"10mm 偏差 + 5N 推力上限"的约束本身偏紧。嫌太猛就放大 $R$（即压低允许推力），这就是 LQR 的调参方式——改的是<strong>工程指标</strong>，不是抽象的极点位置：
+        </p>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>调参动作</th><th>闭环表现</th><th>副作用</th></tr></thead>
+          <tbody>
+            <tr><td><strong>$q_1 \\uparrow$（位置权重）</strong></td><td>刚度变大、回位更快</td><td>增益变大、控制量更容易饱和</td></tr>
+            <tr><td><strong>$q_2 \\uparrow$（速度权重）</strong></td><td>阻尼变大、超调变小</td><td>响应变慢</td></tr>
+            <tr><td><strong>$R \\uparrow$（能量权重）</strong></td><td>省力、平稳</td><td>响应变慢、稳态偏差可能变大</td></tr>
+          </tbody>
+        </table></div>
+
         <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
           <li><strong>$Q$ 矩阵</strong>：状态偏差的惩罚权重，$Q$ 越大 → 越强调状态快速归零</li>
           <li><strong>$R$ 矩阵</strong>：控制能量的惩罚权重，$R$ 越大 → 越节省控制能量</li>
@@ -5631,6 +5815,28 @@ const CourseData = {
           <li><strong>Kalman 增益</strong> $K_k$：决定"更相信模型"还是"更相信测量"</li>
         </ul>
 
+        <h4 class="font-medium mt-6 mb-2">例题：笔架位置+速度的 KF 估计</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          写字机笔架只有位置编码器，用 KF 同时估计位置与速度。采样 $T_s = 0.01\\text{s}$（100Hz），匀速运动模型 $A = \\begin{bmatrix}1&T_s\\\\0&1\\end{bmatrix}$，$C = [1\\;0]$；编码器噪声 $\\sigma_p = 0.1\\text{mm}$ → $R = \\sigma_p^2 = 10^{-8}\\text{m}^2$；未建模加速度取 $\\sigma_a = 0.5\\text{m/s}^2$ → $Q = \\sigma_a^2\\begin{bmatrix}T_s^3/3 & T_s^2/2 \\\\ T_s^2/2 & T_s\\end{bmatrix}$。
+        </p>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>初始化</strong><br>$\\hat{\\mathbf{x}}_0 = [0, 0]^T$，$P_0 = \\text{diag}(10^{-4}, 10^{-2})$——位置约 1cm、速度约 0.1m/s 的不确定度</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>预测</strong><br>$\\hat{\\mathbf{x}}_{1|0} = A\\hat{\\mathbf{x}}_0 = [0,0]^T$；$P_{1|0} = AP_0A^T + Q \\approx \\begin{bmatrix}1.0\\times10^{-4} & 1.1\\times10^{-4} \\\\ 1.1\\times10^{-4} & 1.25\\times10^{-2}\\end{bmatrix}$</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>算增益</strong><br>$K_1 = \\frac{P_{11}}{P_{11}+R} \\approx \\frac{10^{-4}}{10^{-4}+10^{-8}} \\approx [0.999, \\; 1.1]^T$——位置增益≈1（初值不可信，几乎全采信测量）</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>更新</strong><br>首个测量 $y_1 = 0.5\\text{mm}$：新息 $= y_1 - 0 = 5\\times10^{-4}$，$\\hat{\\mathbf{x}}_1 = [0.5\\text{mm}, \\; 0.57\\text{mm/s}]^T$——<strong>只测了位置，速度同时获得修正</strong>（靠 $P$ 中的位置-速度相关性）</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>收敛后</strong><br>几步之后 $P$ 稳态、$K$ 趋常值：速度估计的等效带宽自动落在"模型带宽"与"编码器噪声"之间——比差分干净，比纯模型跟手</div></div>
+        </div>
+
+        <div class="code-block">
+<span class="code-comment">// KF 五公式骨架（C 伪码，嵌入 linux-14 上位机/STM32 均可）</span>
+<span class="code-keyword">void</span> <span class="code-func">kf_step</span>(<span class="code-keyword">float</span> y) {          <span class="code-comment">// y = 编码器位置读数</span>
+  x_pred = A * x;  P_pred = A*P*A_T + Q;      <span class="code-comment">// ①② 预测</span>
+  K = P_pred*C_T / (C*P_pred*C_T + R);        <span class="code-comment">// ③ 增益</span>
+  x = x_pred + K * (y - C*x_pred);            <span class="code-comment">// ④ 新息校正</span>
+  P = (I - K*C) * P_pred;                     <span class="code-comment">// ⑤ 协方差收缩</span>
+}
+</div>
+
         <table class="compare-table">
           <thead><tr><th>比较维度</th><th>Luenberger 观测器</th><th>Kalman 滤波器</th></tr></thead>
           <tbody>
@@ -5671,6 +5877,39 @@ const CourseData = {
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
           推导思路：在 $[kT_s, (k+1)T_s)$ 区间内假设 $\\mathbf{u}(t)=\\mathbf{u}_k$（常值），对连续状态方程积分得 $\\mathbf{x}((k+1)T_s)=e^{AT_s}\\mathbf{x}(kT_s)+\\int_0^{T_s}e^{A\\tau}Bd\\tau \\cdot \\mathbf{u}_k$。当 $A$ 可逆时，$\\int_0^{T_s}e^{A\\tau}Bd\\tau=A^{-1}(e^{AT_s}-I)B$。
         </p>
+
+        <h4 class="font-medium mt-6 mb-2">例题：把笔架控制器搬进定时器</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          把写字机笔架模型（$A = \\begin{bmatrix}0&1\\\\0&-5\\end{bmatrix}$，$B = \\begin{bmatrix}0\\\\2.5\\end{bmatrix}$）离散到 $T_s = 0.01\\text{s}$（100Hz），并用极点映射验证。
+        </p>
+        <div class="step-list">
+          <div class="step"><span class="step-num">1</span><div class="step-content"><strong>算 G</strong><br>利用三角结构 $G = e^{AT_s} = \\begin{bmatrix}1 & \\frac{1-e^{-0.05}}{5} \\\\ 0 & e^{-0.05}\\end{bmatrix} = \\begin{bmatrix}1 & 0.00975 \\\\ 0 & 0.9512\\end{bmatrix}$</div></div>
+          <div class="step"><span class="step-num">2</span><div class="step-content"><strong>算 H</strong><br>$H = A^{-1}(G-I)B = \\begin{bmatrix}1.23\\times10^{-4} \\\\ 0.0244\\end{bmatrix}^T$（位置项远小于速度项——10ms 内推力主要改变速度）</div></div>
+          <div class="step"><span class="step-num">3</span><div class="step-content"><strong>极点映射验证</strong><br>连续极点 $\\{0, -5\\}$ → 离散极点 $\\{e^0, e^{-5 \\times 0.01}\\} = \\{1, 0.9512\\}$，与 $G$ 的特征值一致 ✓</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>闭环离散化</strong><br>把 <a href="javascript:void(0)" onclick="App.loadDetail('mct-06')">mct-06 的 $K$</a> 与 <a href="javascript:void(0)" onclick="App.loadDetail('mct-07')">mct-07 的 $L$</a> 直接套进离散方程——$G_{cl} = G - HK$ 的特征值为 $e^{\\lambda_{cl} T_s}$，闭环稳定条件变为落在单位圆内</div></div>
+          <div class="step"><span class="step-num">5</span><div class="step-content"><strong>校核采样率</strong><br>闭环极点约 $|\\lambda| \\approx 35\\text{rad/s}$，按"采样频率 ≥ 10 倍闭环带宽"：$f_s \\ge 10 \\times 35/2\\pi \\approx 56\\text{Hz}$——100Hz 达标，MCU 侧用 1kHz 更从容（<a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">linux-12 实测架构</a>）</div></div>
+        </div>
+
+        <h4 class="font-medium mt-6 mb-2">采样周期怎么选</h4>
+        <div class="overflow-x-auto"><table class="compare-table">
+          <thead><tr><th>倾向</th><th>好处</th><th>代价/风险</th></tr></thead>
+          <tbody>
+            <tr><td><strong>采样太慢</strong></td><td>CPU 负载低、执行器跟得上</td><td>相位滞后吃掉稳定裕度、高频扰动漏采样、极端时能控性丢失（本节开头警告）</td></tr>
+            <tr><td><strong>采样太快</strong></td><td>相位滞后小、近似连续设计</td><td>差分/量化噪声放大、PWM 分辨率不足、CPU 占用挤占其他任务</td></tr>
+            <tr><td><strong>工程经验值</strong></td><td colspan="2">电流环 10~20kHz、速度环 ~1kHz、位置环 100~500Hz（写字机/伺服典型分层，与 <a href="javascript:void(0)" onclick="App.loadDetail('motor-08')">motor-08 三环带宽表</a>对应）</td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="code-block">
+<span class="code-comment">// 1kHz 定时器中断：离散观测器 + 状态反馈（mct-06/07 的落地形态）</span>
+<span class="code-keyword">void</span> <span class="code-func">TIM1_ISR</span>(<span class="code-keyword">void</span>) {
+  p = <span class="code-func">encoder_read</span>();                     <span class="code-comment">// 只测位置</span>
+  xh = G*xh + H*u;                        <span class="code-comment">// ① 模型预测（mct-10 离散矩阵）</span>
+  xh = xh + L*(p - C*xh);                 <span class="code-comment">// ② 位置校正（mct-07 观测器）</span>
+  u = -K*xh;                              <span class="code-comment">// ③ 状态反馈（mct-06 增益）</span>
+  <span class="code-func">pwm_set_duty</span>(u);                       <span class="code-comment">// ④ 输出到 H 桥（pwr-05）</span>
+}
+</div>
 
         <h4 class="font-medium mt-6 mb-2">离散系统的基本解</h4>
         <div class="formula-block">$$\\mathbf{x}_k = G^k\\mathbf{x}_0 + \\sum_{i=0}^{k-1}G^{k-1-i}H\\mathbf{u}_i$$</div>

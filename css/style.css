@@ -222,6 +222,15 @@
   background: var(--primary); color: white; display: flex; align-items: center;
   justify-content: center; font-size: 0.875rem; font-weight: 600;
 }
+/* 旧版步骤标记（.step/.step-num/.step-content，全站 279 处）：显式编号版，与 .step-item 同视觉 */
+.step { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid rgba(0,0,0,0.04); }
+[data-theme="dark"] .step { border-bottom-color: rgba(255,255,255,0.04); }
+.step .step-num {
+  flex-shrink: 0; width: 2rem; height: 2rem; border-radius: 50%;
+  background: var(--primary); color: white; display: flex; align-items: center;
+  justify-content: center; font-size: 0.875rem; font-weight: 600;
+}
+.step .step-content { flex: 1; }
 
 /* ====== 计算器 ====== */
 .calc-group { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; margin-bottom: 1rem; }
