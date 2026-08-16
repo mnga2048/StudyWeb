@@ -5610,6 +5610,9 @@ x0 = np.array([<span class="code-number">0.05</span>, <span class="code-number">
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
           注意 $K = [k_1 \\; k_2] = [80 \\; 6]$ 的物理身份：<strong>$k_1$ 是位置比例反馈（P），$k_2$ 是速度反馈（D 的反馈形态）</strong>——状态反馈在二阶系统上就是 PD 控制，与 <a href="javascript:void(0)" onclick="App.loadDetail('motor-07')">motor-07 双闭环</a>的位置环+速度环殊途同归，只是设计路径从"试凑"变成了"一步到位"。
         </p>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          这套"指标 → 极点 → K"的流程可在工具箱<strong>「状态空间设计器」</strong>中一键复算：预置笔架模型与 $-10 \\pm j10$ 期望极点，同时给出观测器增益与 LQR 增益——<a href="javascript:void(0)" onclick="Calculator.open('statespace-design')">点此打开</a>（自动验证能控性并算出闭环 $\\zeta/\\omega_n/\\sigma\\%/t_s$）。
+        </p>
 
         <h4 class="font-medium mt-6 mb-2">跟踪问题：加入积分增广</h4>
         <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
@@ -5666,6 +5669,10 @@ x0 = np.array([<span class="code-number">0.05</span>, <span class="code-number">
           <div class="step"><span class="step-num">5</span><div class="step-content"><strong>工程校验噪声</strong><br>$l_2 = 100$ 意味着位置测量噪声会被放大进入速度估计——若编码器噪声偏大，把观测器极点收回到 $-12$ 一带换取平稳，"快"与"静"折中</div></div>
         </div>
 
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          对偶算法（$L$ = 对偶系统 $(A^T, C^T)$ 极点配置的 $K^T$）与"$-15,-15$"的极点选择可在工具箱<strong>「状态空间设计器」</strong>的观测器区在线复算——预置笔架参数，输出 $L=[25 \\; 100]^T$ 与观测器闭环极点，<a href="javascript:void(0)" onclick="Calculator.open('statespace-design')">点此打开</a>。
+        </p>
+
         <h4 class="font-medium mt-6 mb-2">速度怎么得：差分 vs 观测器</h4>
         <div class="overflow-x-auto"><table class="compare-table">
           <thead><tr><th>方案</th><th>原理</th><th>噪声特性</th><th>延迟</th></tr></thead>
@@ -5709,7 +5716,7 @@ x0 = np.array([<span class="code-number">0.05</span>, <span class="code-number">
           <div class="step"><span class="step-num">1</span><div class="step-content"><strong>给定系统</strong><br>$A=\\begin{bmatrix}0&1\\\\-2&-3\\end{bmatrix}, C=\\begin{bmatrix}1&0\\end{bmatrix}$，期望观测器极点 $s=-5, -5$</div></div>
           <div class="step"><span class="step-num">2</span><div class="step-content"><strong>验证能观</strong><br>$\\mathcal{O}=\\begin{bmatrix}1&0\\\\0&1\\end{bmatrix}$，$\\text{rank}\\,\\mathcal{O}=2$ ✓</div></div>
           <div class="step"><span class="step-num">3</span><div class="step-content"><strong>设增益</strong><br>设 $L=[l_1, l_2]^T$，$\\det(sI-(A-LC))=s^2+(3+l_1)s+(3l_1+l_2+2)$</div></div>
-          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>对比系数</strong><br>对比 $(s+5)^2=s^2+10s+25$ 得 $l_1=7, l_2=4$</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>对比系数</strong><br>对比 $(s+5)^2=s^2+10s+25$ 得 $l_1=7, l_2=25-3\\times 7-2=2$，验证 $\det(A-LC)=3\\times 7+2+2=25$ ✓</div></div>
         </div>
       ` },
       { id: 'mct-08', title: '最优控制基础', desc: 'LQR 问题、Riccati 方程、性能指标', icon: '🏆', tags: ['难点'], goals: { eng: true }, content: `
@@ -5763,6 +5770,9 @@ x0 = np.array([<span class="code-number">0.05</span>, <span class="code-number">
           </tbody>
         </table></div>
 
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          Bryson 定权 → 解 Riccati → 算 $K$ 的全流程可在工具箱<strong>「状态空间设计器」</strong>的 LQR 区在线复算（Newton 数值迭代，预置 $Q=\\text{diag}(10^4,4)$、$R=0.04$，输出与手算一致的 $P$ 和 $K=[500\\;20.5]$）——<a href="javascript:void(0)" onclick="Calculator.open('statespace-design')">点此打开</a>，改 $q_1/q_2/R$ 即时看闭环极点如何随权重移动。
+        </p>
         <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
           <li><strong>$Q$ 矩阵</strong>：状态偏差的惩罚权重，$Q$ 越大 → 越强调状态快速归零</li>
           <li><strong>$R$ 矩阵</strong>：控制能量的惩罚权重，$R$ 越大 → 越节省控制能量</li>
@@ -5886,9 +5896,13 @@ x0 = np.array([<span class="code-number">0.05</span>, <span class="code-number">
           <div class="step"><span class="step-num">1</span><div class="step-content"><strong>算 G</strong><br>利用三角结构 $G = e^{AT_s} = \\begin{bmatrix}1 & \\frac{1-e^{-0.05}}{5} \\\\ 0 & e^{-0.05}\\end{bmatrix} = \\begin{bmatrix}1 & 0.00975 \\\\ 0 & 0.9512\\end{bmatrix}$</div></div>
           <div class="step"><span class="step-num">2</span><div class="step-content"><strong>算 H</strong><br>$H = A^{-1}(G-I)B = \\begin{bmatrix}1.23\\times10^{-4} \\\\ 0.0244\\end{bmatrix}^T$（位置项远小于速度项——10ms 内推力主要改变速度）</div></div>
           <div class="step"><span class="step-num">3</span><div class="step-content"><strong>极点映射验证</strong><br>连续极点 $\\{0, -5\\}$ → 离散极点 $\\{e^0, e^{-5 \\times 0.01}\\} = \\{1, 0.9512\\}$，与 $G$ 的特征值一致 ✓</div></div>
-          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>闭环离散化</strong><br>把 <a href="javascript:void(0)" onclick="App.loadDetail('mct-06')">mct-06 的 $K$</a> 与 <a href="javascript:void(0)" onclick="App.loadDetail('mct-07')">mct-07 的 $L$</a> 直接套进离散方程——$G_{cl} = G - HK$ 的特征值为 $e^{\\lambda_{cl} T_s}$，闭环稳定条件变为落在单位圆内</div></div>
+          <div class="step"><span class="step-num">4</span><div class="step-content"><strong>闭环离散化</strong><br>把 <a href="javascript:void(0)" onclick="App.loadDetail('mct-06')">mct-06 的 $K$</a> 与 <a href="javascript:void(0)" onclick="App.loadDetail('mct-07')">mct-07 的 $L$</a> 直接套进离散方程——$G_{cl} = G - HK$ 的特征值 $\\approx e^{\\lambda_{cl} T_s}$（把连续 $K$ 搬进定时器的 emulation 偏差为 $O(T_s^2)$，采样越快越吻合），闭环稳定条件变为落在单位圆内</div></div>
           <div class="step"><span class="step-num">5</span><div class="step-content"><strong>校核采样率</strong><br>闭环极点约 $|\\lambda| \\approx 35\\text{rad/s}$，按"采样频率 ≥ 10 倍闭环带宽"：$f_s \\ge 10 \\times 35/2\\pi \\approx 56\\text{Hz}$——100Hz 达标，MCU 侧用 1kHz 更从容（<a href="javascript:void(0)" onclick="App.loadDetail('linux-12')">linux-12 实测架构</a>）</div></div>
         </div>
+
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          $G = e^{AT_s}$ 与 $H$ 的每个数值可在工具箱<strong>「连续系统离散化」</strong>中复算——增广矩阵指数法，$A$ 奇异（本例含积分器）也精确；顺带输出极点映射对拍、$G-HK$ 闭环单位圆判稳与采样率校核，<a href="javascript:void(0)" onclick="Calculator.open('zoh-discretize')">点此打开</a>（预置 $T_s=0.01$s 与 $K=[80\\;6]$）。
+        </p>
 
         <h4 class="font-medium mt-6 mb-2">采样周期怎么选</h4>
         <div class="overflow-x-auto"><table class="compare-table">

@@ -125,6 +125,8 @@ const Calculator = {
     { id: 'routh', title: '劳斯表生成器', desc: '输入特征方程，自动判稳', icon: '⚖', category: '自动控制' },
     { id: 'pid-tune', title: 'PID 整定计算', desc: 'Ziegler-Nichols 参数计算', icon: '🔧', category: '自动控制' },
     { id: 'statespace', title: '状态空间求解', desc: '能控/能观性、特征值、稳定性', icon: '📐', category: '自动控制' },
+    { id: 'statespace-design', title: '状态空间设计器', desc: '极点配置 K / 观测器增益 L / LQR 三合一（Ackermann + Riccati）', icon: '🎛️', category: '自动控制' },
+    { id: 'zoh-discretize', title: '连续系统离散化', desc: 'ZOH 精确离散化 G/H + 极点映射 + 闭环单位圆判稳', icon: '💻', category: '自动控制' },
     // ===== 计算机 =====
     { id: 'matrix', title: '矩阵计算器', desc: '加/乘/逆/转置/行列式/特征值', icon: '⊞', category: '计算机' },
     { id: 'sort-vis', title: '排序复杂度对比', desc: '各排序算法步数估算', icon: '↕', category: '计算机' },
@@ -1309,6 +1311,422 @@ const Calculator = {
           行列式 |A| = <strong>${det.toFixed(4)}</strong><br>
           特征值（极点）：${eigenStr}<br>
           <span style="color:${stable?'var(--success)':'var(--danger)'}"><strong>${stable ? '✅ 系统渐近稳定' : '❌ 系统不稳定'}（所有特征值实部为负 ⟺ 稳定）</strong></span>`;
+      }
+    },
+
+    // ==================== 状态空间设计器（极点配置 / 观测器 / LQR 三合一） ====================
+    statespaceDesign: {
+      _presets: {
+        gantry: { A: [[0, 1], [0, -5]], B: [0, 2.5], C: [1, 0], cp: [[-10, 10], [-10, -10]], op: [[-15, 0], [-15, 0]], q1: 10000, q2: 4, r: 0.04, x0: [0.01, 0] },
+        dblint: { A: [[0, 1], [0, 0]], B: [0, 1], C: [1, 0], cp: [[-1, 1], [-1, -1]], op: [[-3, 0], [-3, 0]], q1: 1, q2: 1, r: 1, x0: [1, 0] }
+      },
+      render(el) {
+        const num = (id, v) => `<input type="number" step="any" id="${id}" value="${v}" class="w-full text-center py-1 rounded" style="border:1px solid var(--border);background:var(--bg)">`;
+        el.innerHTML = `
+          <div class="space-y-4">
+            <div class="info-box info"><div>二阶单输入系统三合一设计：<strong>① 极点配置</strong>——Ackermann 公式求状态反馈增益 K；<strong>② 观测器</strong>——对偶极点配置求增益 L；<strong>③ LQR</strong>——Newton 迭代解 Riccati 方程求最优增益。默认值即写字机笔架例题，与 mct-06/07/08 正文数值一致。</div></div>
+            <div class="flex gap-2 items-center flex-wrap">
+              <select id="sd-preset" class="px-2 py-1.5 rounded text-sm" style="border:1px solid var(--border);background:var(--bg)">
+                <option value="gantry">🖋️ 写字机笔架（mct-06/07/08 例题）</option>
+                <option value="dblint">📐 双积分器（教材经典系统）</option>
+              </select>
+              <button onclick="Calculator._calculators.statespaceDesign.loadPreset()" class="px-3 py-1.5 rounded text-sm font-medium" style="background:var(--primary);color:white">载入预置</button>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+              <div>
+                <div class="text-xs text-gray-500 mb-1">系统矩阵 A（2×2）</div>
+                <div class="grid grid-cols-2 gap-1">${num('sd-a00', 0)}${num('sd-a01', 1)}${num('sd-a10', 0)}${num('sd-a11', -5)}</div>
+              </div>
+              <div>
+                <div class="text-xs text-gray-500 mb-1">输入矩阵 B（2×1）</div>
+                <div class="grid grid-cols-1 gap-1">${num('sd-b0', 0)}${num('sd-b1', 2.5)}</div>
+              </div>
+              <div>
+                <div class="text-xs text-gray-500 mb-1">输出矩阵 C（1×2）</div>
+                <div class="grid grid-cols-2 gap-1">${num('sd-c0', 1)}${num('sd-c1', 0)}</div>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <div class="text-xs text-gray-500 mb-1">控制器期望极点 μ₁ / μ₂（实部，虚部）</div>
+                <div class="grid grid-cols-2 gap-1">${num('sd-p1r', -10)}${num('sd-p1i', 10)}${num('sd-p2r', -10)}${num('sd-p2i', -10)}</div>
+                <div class="text-xs text-gray-500 mt-1">笔架默认 -10±j10（σ%≤5%、ts≤0.4s 反算）；共轭对虚部互为相反数，重根两行相同</div>
+              </div>
+              <div>
+                <div class="text-xs text-gray-500 mb-1">观测器期望极点 ν₁ / ν₂（实部，虚部）</div>
+                <div class="grid grid-cols-2 gap-1">${num('sd-o1r', -15)}${num('sd-o1i', 0)}${num('sd-o2r', -15)}${num('sd-o2i', 0)}</div>
+                <div class="text-xs text-gray-500 mt-1">经验规则：比控制器主导极点快 2~5 倍（笔架取 -15, -15）</div>
+              </div>
+            </div>
+            <div class="grid grid-cols-4 gap-2">
+              <div><div class="text-xs text-gray-500 mb-1">LQR q₁</div>${num('sd-lq1', 10000)}</div>
+              <div><div class="text-xs text-gray-500 mb-1">q₂</div>${num('sd-lq2', 4)}</div>
+              <div><div class="text-xs text-gray-500 mb-1">R（&gt;0）</div>${num('sd-lr', 0.04)}</div>
+              <div class="text-xs text-gray-500" style="align-self:end">Q = diag(q₁,q₂)，R 为标量</div>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div><div class="text-xs text-gray-500 mb-1">初始状态 x₀(1)（笔架=位置偏差 m）</div>${num('sd-x01', 0.01)}</div>
+              <div><div class="text-xs text-gray-500 mb-1">x₀(2)（笔架=速度 m/s）</div>${num('sd-x02', 0)}</div>
+            </div>
+            <button onclick="Calculator._calculators.statespaceDesign.calc()" class="w-full px-4 py-2 rounded font-medium" style="background:var(--primary);color:white">开始设计（K + L + LQR）</button>
+            <div id="sd-result"></div>
+          </div>`;
+      },
+      loadPreset() {
+        const p = this._presets[document.getElementById('sd-preset')?.value || 'gantry'];
+        if (!p) return;
+        const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+        set('sd-a00', p.A[0][0]); set('sd-a01', p.A[0][1]); set('sd-a10', p.A[1][0]); set('sd-a11', p.A[1][1]);
+        set('sd-b0', p.B[0]); set('sd-b1', p.B[1]); set('sd-c0', p.C[0]); set('sd-c1', p.C[1]);
+        set('sd-p1r', p.cp[0][0]); set('sd-p1i', p.cp[0][1]); set('sd-p2r', p.cp[1][0]); set('sd-p2i', p.cp[1][1]);
+        set('sd-o1r', p.op[0][0]); set('sd-o1i', p.op[0][1]); set('sd-o2r', p.op[1][0]); set('sd-o2i', p.op[1][1]);
+        set('sd-lq1', p.q1); set('sd-lq2', p.q2); set('sd-lr', p.r);
+        set('sd-x01', p.x0[0]); set('sd-x02', p.x0[1]);
+        this.calc();
+      },
+      calc() {
+        const result = document.getElementById('sd-result');
+        if (!result) return;
+        const val = id => parseFloat(document.getElementById(id)?.value);
+        const A = [[val('sd-a00'), val('sd-a01')], [val('sd-a10'), val('sd-a11')]];
+        const b = [val('sd-b0'), val('sd-b1')], c = [val('sd-c0'), val('sd-c1')];
+        if (A.flat().some(isNaN) || b.some(isNaN) || c.some(isNaN)) {
+          result.innerHTML = '<span class="text-red-500">请输入完整的 A、B、C 矩阵</span>'; return;
+        }
+        const x0 = [val('sd-x01'), val('sd-x02')];
+        const link = (id, txt) => `<a href="javascript:void(0)" onclick="Calculator.close();App.loadDetail('${id}')" style="color:var(--primary)">${txt}</a>`;
+        let html = '';
+
+        // ① 极点配置（mct-06）
+        const pk = this._ackermann2(A, b, { re: val('sd-p1r'), im: val('sd-p1i') }, { re: val('sd-p2r'), im: val('sd-p2i') });
+        html += `<div class="p-3 rounded mb-3" style="background:var(--bg-secondary);border:1px solid var(--border)">
+          <div class="font-medium mb-2" style="color:var(--primary)">① 极点配置 u = −Kx（mct-06）</div>`;
+        if (pk.err) {
+          html += `<span class="text-red-500">✗ ${pk.err}</span></div>`;
+        } else {
+          const [k1, k2] = pk.K;
+          const Acl = [[A[0][0] - b[0] * k1, A[0][1] - b[0] * k2], [A[1][0] - b[1] * k1, A[1][1] - b[1] * k2]];
+          const lam = this._eig2(Acl);
+          html += `能控性：det[b, Ab] = ${this._fx(pk.detC)} ≠ 0 → rank 𝒞 = 2，<strong>完全能控 ✓</strong>（能控才能配）<br>
+            Ackermann：K = [0 1]·𝒞⁻¹·α<sub>d</sub>(A) = <strong>[${this._fx(k1)}, ${this._fx(k2)}]</strong><br>
+            闭环 A−BK = ${this._m2(Acl)}，极点 <strong>${lam.map(l => this._fc(l)).join('，')}</strong><br>
+            ${this._perf(lam) ? this._perf(lam) + '<br>' : ''}初始偏差 x₀ = (${this._fx(x0[0])}, ${this._fx(x0[1])}) 时反馈量 u(0) = K·x₀ = <strong>${this._fx(k1 * x0[0] + k2 * x0[1])}</strong>（B 的输入单位，笔架为 N——增益是否激进一目了然）
+            <div class="text-xs text-gray-500 mt-1">原理与手算过程：${link('mct-06', 'mct-06 状态反馈与极点配置')}</div></div>`;
+        }
+
+        // ② 观测器（mct-07，对偶极点配置）
+        const AT = [[A[0][0], A[1][0]], [A[0][1], A[1][1]]];
+        const ol = this._ackermann2(AT, c, { re: val('sd-o1r'), im: val('sd-o1i') }, { re: val('sd-o2r'), im: val('sd-o2i') });
+        html += `<div class="p-3 rounded mb-3" style="background:var(--bg-secondary);border:1px solid var(--border)">
+          <div class="font-medium mb-2" style="color:var(--primary)">② 观测器增益 L（mct-07，对偶原理）</div>`;
+        if (ol.err) {
+          html += `<span class="text-red-500">✗ ${ol.err.replace('不能控', '不能观').replace('det[b,Ab]', 'det[C;CA]')}</span></div>`;
+        } else {
+          const [l1, l2] = ol.K;
+          const Aol = [[A[0][0] - l1 * c[0], A[0][1] - l1 * c[1]], [A[1][0] - l2 * c[0], A[1][1] - l2 * c[1]]];
+          const lam = this._eig2(Aol);
+          html += `能观性：det[C; CA] = ${this._fx(c[0] * (c[0] * A[0][1] + c[1] * A[1][1]) - c[1] * (c[0] * A[0][0] + c[1] * A[1][0]))} ≠ 0 → <strong>完全能观 ✓</strong><br>
+            对偶设计：L = (Aᵀ, Cᵀ) 极点配置的 Kᵀ = <strong>[${this._fx(l1)}, ${this._fx(l2)}]ᵀ</strong><br>
+            观测器闭环 A−LC = ${this._m2(Aol)}，极点 <strong>${lam.map(l => this._fc(l)).join('，')}</strong>（估计误差按此速率收敛）<br>
+            分离原理：整个闭环极点 = {A−BK} ∪ {A−LC}，K 与 L 可独立设计
+            <div class="text-xs text-gray-500 mt-1">原理与手算过程：${link('mct-07', 'mct-07 观测器设计')}</div></div>`;
+        }
+
+        // ③ LQR（mct-08）
+        const lq = this._care2(A, b, val('sd-lq1'), val('sd-lq2'), val('sd-lr'));
+        html += `<div class="p-3 rounded" style="background:var(--bg-secondary);border:1px solid var(--border)">
+          <div class="font-medium mb-2" style="color:var(--primary)">③ LQR 最优增益（mct-08，Riccati）</div>`;
+        if (lq.err) {
+          html += `<span class="text-red-500">✗ ${lq.err}</span></div>`;
+        } else {
+          const { P, K } = lq;
+          const Acl = [[A[0][0] - b[0] * K[0], A[0][1] - b[0] * K[1]], [A[1][0] - b[1] * K[0], A[1][1] - b[1] * K[1]]];
+          const lam = this._eig2(Acl);
+          const Js = P[0][0] * x0[0] * x0[0] + 2 * P[0][1] * x0[0] * x0[1] + P[1][1] * x0[1] * x0[1];
+          html += `Riccati 解 P = ${this._m2(P)}（正定 ✓）<br>
+            最优增益 K = R⁻¹BᵀP = <strong>[${this._fx(K[0])}, ${this._fx(K[1])}]</strong><br>
+            闭环 A−BK 极点 <strong>${lam.map(l => this._fc(l)).join('，')}</strong>，${this._perf(lam)}<br>
+            最优代价 J* = x₀ᵀPx₀ = <strong>${this._fx(Js)}</strong>（任何其他线性控制律代价 ≥ 此值）<br>
+            u(0) = K·x₀ = <strong>${this._fx(K[0] * x0[0] + K[1] * x0[1])}</strong>（笔架例：恰好用满 5N 推力预算——Bryson 权重的物理含义）
+            <div class="text-xs text-gray-500 mt-1">Bryson 法则与调参方向：${link('mct-08', 'mct-08 最优控制基础')}</div></div>`;
+        }
+        result.innerHTML = html;
+      },
+
+      // ---- 纯数学方法（无 DOM，可独立测试） ----
+      _fx(v) {
+        if (v === null || v === undefined || !isFinite(v)) return '—';
+        if (Math.abs(v) < 1e-12) return '0';
+        const a = Math.abs(v);
+        return a >= 1e5 || a < 1e-4 ? v.toExponential(3) : String(parseFloat(v.toPrecision(6)));
+      },
+      _fc(z) {
+        if (Math.abs(z.im) < 1e-10) return this._fx(z.re);
+        return `${this._fx(z.re)} ${z.im > 0 ? '+' : '-'} ${this._fx(Math.abs(z.im))}j`;
+      },
+      _m2(M) {
+        return `[[${this._fx(M[0][0])}, ${this._fx(M[0][1])}], [${this._fx(M[1][0])}, ${this._fx(M[1][1])}]]`;
+      },
+      _eig2(M) {
+        const tr = M[0][0] + M[1][1], det = M[0][0] * M[1][1] - M[0][1] * M[1][0];
+        const d = tr * tr - 4 * det;
+        if (d >= 0) { const s = Math.sqrt(d); return [{ re: (tr + s) / 2, im: 0 }, { re: (tr - s) / 2, im: 0 }]; }
+        const s = Math.sqrt(-d);
+        return [{ re: tr / 2, im: s / 2 }, { re: tr / 2, im: -s / 2 }];
+      },
+      _perf(lams) {
+        const c = lams.find(l => Math.abs(l.im) > 1e-9);
+        if (!c || c.re >= 0) return '';
+        const wn = Math.hypot(c.re, c.im), z = -c.re / wn;
+        if (z <= 0 || z >= 1) return '';
+        return `ζ = ${this._fx(z)}，ωn = ${this._fx(wn)} rad/s，σ% = ${this._fx(100 * Math.exp(-Math.PI * z / Math.sqrt(1 - z * z)))}%，ts(2%) = ${this._fx(4 / (z * wn))}s`;
+      },
+      // Ackermann 公式（2×2 单输入）：K = [0 1]·Cm⁻¹·αd(A)，返回 {K, detC} 或 {err}
+      _ackermann2(A, b, m1, m2) {
+        const sumIm = m1.im + m2.im;
+        const prodRe = m1.re * m2.re - m1.im * m2.im, prodIm = m1.re * m2.im + m1.im * m2.re;
+        if (Math.abs(sumIm) > 1e-9 || Math.abs(prodIm) > 1e-9) return { err: '期望极点须为实数或共轭成对（两虚部互为相反数）' };
+        const a1 = -(m1.re + m2.re), a0 = prodRe;
+        const Ab = [A[0][0] * b[0] + A[0][1] * b[1], A[1][0] * b[0] + A[1][1] * b[1]];
+        const detC = b[0] * Ab[1] - Ab[0] * b[1];
+        if (Math.abs(detC) < 1e-10) return { detC, err: '系统不能控（det[b,Ab]≈0），极点不可任意配置' };
+        const A2 = [
+          [A[0][0] * A[0][0] + A[0][1] * A[1][0], A[0][0] * A[0][1] + A[0][1] * A[1][1]],
+          [A[1][0] * A[0][0] + A[1][1] * A[1][0], A[1][0] * A[0][1] + A[1][1] * A[1][1]]
+        ];
+        const alpha = [
+          [A2[0][0] + a1 * A[0][0] + a0, A2[0][1] + a1 * A[0][1]],
+          [A2[1][0] + a1 * A[1][0], A2[1][1] + a1 * A[1][1] + a0]
+        ];
+        // Cm⁻¹ = (1/detC)·[[Ab1, -Ab0], [-b1, b0]]，K 取 Cm⁻¹·α(A) 的第 2 行
+        const inv10 = -b[1] / detC, inv11 = b[0] / detC;
+        return { K: [inv10 * alpha[0][0] + inv11 * alpha[1][0], inv10 * alpha[0][1] + inv11 * alpha[1][1]], detC };
+      },
+      // 2×2 单输入 CARE：AᵀP+PA−PBR⁻¹BᵀP+Q=0（Q 取对角），Newton 迭代 + 回溯
+      _care2(A, b, q1, q2, r) {
+        if (!isFinite(q1) || !isFinite(q2) || !(r > 0)) return { err: 'q₁、q₂、R 须为有效数值且 R > 0' };
+        const resid = p => {
+          const [p11, p12, p22] = p;
+          const pb0 = p11 * b[0] + p12 * b[1], pb1 = p12 * b[0] + p22 * b[1];
+          return [
+            2 * (A[0][0] * p11 + A[1][0] * p12) - pb0 * pb0 / r + q1,
+            A[0][1] * p11 + (A[0][0] + A[1][1]) * p12 + A[1][0] * p22 - pb0 * pb1 / r,
+            2 * (A[0][1] * p12 + A[1][1] * p22) - pb1 * pb1 / r + q2
+          ];
+        };
+        const det3 = M => M[0][0] * (M[1][1] * M[2][2] - M[1][2] * M[2][1]) - M[0][1] * (M[1][0] * M[2][2] - M[1][2] * M[2][0]) + M[0][2] * (M[1][0] * M[2][1] - M[1][1] * M[2][0]);
+        // 多个起点依次尝试（量级悬殊的 Q/R 下初值影响收敛性）
+        const starts = [
+          [Math.max(Math.abs(q1), 1), 0, Math.max(Math.abs(q2), 1)],
+          [Math.sqrt(Math.max(q1, 1)), 0, Math.sqrt(Math.max(q2, 1))],
+          [1, 0, 1]
+        ];
+        let p = null;
+        for (const p0 of starts) {
+          let cur = p0.slice(), ok = false;
+          const n0 = Math.hypot(...resid(cur));
+          const tol = n0 * 1e-13 + 1e-12; // 尺度感知容差
+          for (let it = 0; it < 300; it++) {
+            const f0 = resid(cur), nf = Math.hypot(f0[0], f0[1], f0[2]);
+            if (nf < tol) { ok = true; break; }
+            const h = 1e-7 * Math.max(1, Math.hypot(cur[0], cur[1], cur[2]));
+            const J = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+            for (let j = 0; j < 3; j++) {
+              const pp = cur.slice(); pp[j] += h;
+              const fp = resid(pp);
+              for (let i = 0; i < 3; i++) J[i][j] = (fp[i] - f0[i]) / h; // J[i][j] = ∂f_i/∂p_j
+            }
+            const D = det3(J);
+            if (!isFinite(D) || Math.abs(D) < 1e-14) break;
+            const dp = [0, 1, 2].map(i => {
+              const M = J.map((row, k) => row.map((v, j) => j === i ? -f0[k] : v));
+              return det3(M) / D;
+            });
+            let t = 1, stepped = false;
+            for (let ls = 0; ls < 60; ls++) {
+              const pn = [cur[0] + t * dp[0], cur[1] + t * dp[1], cur[2] + t * dp[2]];
+              const fn = resid(pn);
+              if (Math.hypot(fn[0], fn[1], fn[2]) < nf) { cur = pn; stepped = true; break; }
+              t /= 2;
+            }
+            if (!stepped) break;
+          }
+          if (ok) { p = cur; break; }
+        }
+        if (!p) return { err: 'Riccati 迭代不收敛，请调整 Q/R 量级（或检查 (A,B) 是否可镇定）' };
+        const [p11, p12, p22] = p;
+        if (p11 <= 0 || p11 * p22 - p12 * p12 <= 0) return { err: 'Riccati 解非正定——(A,B) 可能不可镇定' };
+        return {
+          P: [[p11, p12], [p12, p22]],
+          K: [(p11 * b[0] + p12 * b[1]) / r, (p12 * b[0] + p22 * b[1]) / r]
+        };
+      }
+    },
+
+    // ==================== 连续系统离散化（ZOH 精确） ====================
+    zohDiscretize: {
+      _presets: {
+        gantry: { A: [[0, 1], [0, -5]], B: [0, 2.5], Ts: 0.01, K: [80, 6] },
+        dblint: { A: [[0, 1], [0, 0]], B: [0, 1], Ts: 0.1, K: [1, 1.7320508] }
+      },
+      render(el) {
+        const num = (id, v) => `<input type="number" step="any" id="${id}" value="${v}" class="w-full text-center py-1 rounded" style="border:1px solid var(--border);background:var(--bg)">`;
+        el.innerHTML = `
+          <div class="space-y-4">
+            <div class="info-box info"><div>零阶保持器（ZOH）精确离散化：x<sub>k+1</sub> = G·x<sub>k</sub> + H·u<sub>k</sub>，其中 G = e<sup>ATs</sup>，H = ∫₀<sup>Ts</sup>e<sup>Aτ</sup>dτ·B。采用<strong>增广矩阵指数法</strong>——A 奇异（如含积分器的笔架模型）也精确，无需 A⁻¹。默认值即 mct-10 笔架例题（Ts=0.01s，100Hz）。</div></div>
+            <div class="flex gap-2 items-center flex-wrap">
+              <select id="zd-preset" class="px-2 py-1.5 rounded text-sm" style="border:1px solid var(--border);background:var(--bg)">
+                <option value="gantry">🖋️ 写字机笔架 Ts=0.01s（mct-10 例题）</option>
+                <option value="dblint">📐 双积分器 Ts=0.1s</option>
+              </select>
+              <button onclick="Calculator._calculators.zohDiscretize.loadPreset()" class="px-3 py-1.5 rounded text-sm font-medium" style="background:var(--primary);color:white">载入预置</button>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+              <div>
+                <div class="text-xs text-gray-500 mb-1">系统矩阵 A（2×2）</div>
+                <div class="grid grid-cols-2 gap-1">${num('zd-a00', 0)}${num('zd-a01', 1)}${num('zd-a10', 0)}${num('zd-a11', -5)}</div>
+              </div>
+              <div>
+                <div class="text-xs text-gray-500 mb-1">输入矩阵 B（2×1）</div>
+                <div class="grid grid-cols-1 gap-1">${num('zd-b0', 0)}${num('zd-b1', 2.5)}</div>
+              </div>
+              <div>
+                <div class="text-xs text-gray-500 mb-1">采样周期 Ts（s）</div>
+                ${num('zd-ts', 0.01)}
+                <div class="text-xs text-gray-500 mt-1">反馈增益 K₁ / K₂（留空跳过闭环）</div>
+                <div class="grid grid-cols-2 gap-1 mt-1">${num('zd-k1', 80)}${num('zd-k2', 6)}</div>
+              </div>
+            </div>
+            <button onclick="Calculator._calculators.zohDiscretize.calc()" class="w-full px-4 py-2 rounded font-medium" style="background:var(--primary);color:white">离散化</button>
+            <div id="zd-result"></div>
+          </div>`;
+      },
+      loadPreset() {
+        const p = this._presets[document.getElementById('zd-preset')?.value || 'gantry'];
+        if (!p) return;
+        const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+        set('zd-a00', p.A[0][0]); set('zd-a01', p.A[0][1]); set('zd-a10', p.A[1][0]); set('zd-a11', p.A[1][1]);
+        set('zd-b0', p.B[0]); set('zd-b1', p.B[1]);
+        set('zd-ts', p.Ts); set('zd-k1', p.K[0]); set('zd-k2', p.K[1]);
+        this.calc();
+      },
+      calc() {
+        const result = document.getElementById('zd-result');
+        if (!result) return;
+        const val = id => parseFloat(document.getElementById(id)?.value);
+        const A = [[val('zd-a00'), val('zd-a01')], [val('zd-a10'), val('zd-a11')]];
+        const b = [val('zd-b0'), val('zd-b1')], Ts = val('zd-ts');
+        if (A.flat().some(isNaN) || b.some(isNaN) || !(Ts > 0)) {
+          result.innerHTML = '<span class="text-red-500">请输入有效的 A、B 矩阵和采样周期 Ts &gt; 0</span>'; return;
+        }
+        const { G, H } = this._zoh(A, b, Ts);
+        const lamA = this._eig2(A), lamG = this._eig2(G);
+        const maxAbsG = Math.max(...lamG.map(l => Math.hypot(l.re, l.im)));
+        const openVerdict = maxAbsG < 1 - 1e-9 ? '<span style="color:var(--success)"><strong>✅ 单位圆内，渐近稳定</strong></span>'
+          : maxAbsG > 1 + 1e-9 ? '<span style="color:var(--danger)"><strong>❌ 单位圆外，不稳定</strong></span>'
+          : '<span style="color:#f59e0b"><strong>🟡 |λ|=1 临界（含积分器/虚轴极点属正常）</strong></span>';
+        let html = `<div class="p-3 rounded mb-3" style="background:var(--bg-secondary);border:1px solid var(--border)">
+          <div class="font-medium mb-2" style="color:var(--primary)">ZOH 离散化结果（mct-10）</div>
+          G = e<sup>ATs</sup> = <strong>${this._m2(G)}</strong><br>
+          H = ∫₀<sup>Ts</sup>e<sup>Aτ</sup>dτ·B = <strong>[${this._fx(H[0])}, ${this._fx(H[1])}]ᵀ</strong><br>
+          离散方程：x<sub>k+1</sub> = G·x<sub>k</sub> + H·u<sub>k</sub>（u 在每个采样周期内保持不变——正是定时器中断里 u 的用法）
+        </div>
+        <div class="p-3 rounded mb-3" style="background:var(--bg-secondary);border:1px solid var(--border)">
+          <div class="font-medium mb-2" style="color:var(--primary)">开环极点映射对拍</div>`;
+        for (let i = 0; i < 2; i++) {
+          const mapped = this._cexp({ re: lamA[i].re * Ts, im: lamA[i].im * Ts });
+          html += `λ<sub>c${i + 1}</sub>(A) = ${this._fc(lamA[i])} → e<sup>λTs</sup> = ${this._fc(mapped)}，实际 λ<sub>d</sub>(G) = ${this._fc(lamG[i])} <span style="color:var(--success)">✓</span><br>`;
+        }
+        html += `|λ|<sub>max</sub> = ${this._fx(maxAbsG)}，${openVerdict}
+          <div class="text-xs text-gray-500 mt-1">ZOH 的精确性质：离散极点恒等于 e^(连续极点×Ts)——两条路算出的数一致说明 G 算对了</div>
+        </div>`;
+
+        // 闭环（把连续 K 搬进定时器）
+        const k1 = val('zd-k1'), k2 = val('zd-k2');
+        if (!isNaN(k1) && !isNaN(k2)) {
+          const K = [k1, k2];
+          const Gcl = [[G[0][0] - H[0] * K[0], G[0][1] - H[0] * K[1]], [G[1][0] - H[1] * K[0], G[1][1] - H[1] * K[1]]];
+          const lamD = this._eig2(Gcl);
+          const maxAbsD = Math.max(...lamD.map(l => Math.hypot(l.re, l.im)));
+          const clVerdict = maxAbsD < 1 ? '<span style="color:var(--success)"><strong>✅ 单位圆内，闭环稳定</strong></span>' : '<span style="color:var(--danger)"><strong>❌ 单位圆外，闭环不稳定</strong></span>';
+          const Acl = [[A[0][0] - b[0] * K[0], A[0][1] - b[0] * K[1]], [A[1][0] - b[1] * K[0], A[1][1] - b[1] * K[1]]];
+          const lamC = this._eig2(Acl);
+          const maxAng = Math.max(...lamC.map(l => Math.hypot(l.re, l.im)));
+          const fsNeed = 10 * maxAng / (2 * Math.PI), fs = 1 / Ts;
+          html += `<div class="p-3 rounded mb-3" style="background:var(--bg-secondary);border:1px solid var(--border)">
+            <div class="font-medium mb-2" style="color:var(--primary)">闭环 G−HK（emulation：连续 K 直接进定时器）</div>
+            λ(G−HK) = <strong>${lamD.map(l => this._fc(l)).join('，')}</strong>，|λ|<sub>max</sub> = ${this._fx(maxAbsD)}，${clVerdict}<br>`;
+          for (let i = 0; i < 2; i++) {
+            const ref = this._cexp({ re: lamC[i].re * Ts, im: lamC[i].im * Ts });
+            html += `对照连续设计：λ<sub>c</sub>(A−BK) = ${this._fc(lamC[i])} → e<sup>λTs</sup> = ${this._fc(ref)}（emulation 偏差 O(Ts²)，采样越快越吻合）<br>`;
+          }
+          html += `采样率校核：闭环 |λ<sub>c</sub>|<sub>max</sub> ≈ ${this._fx(maxAng)} rad/s → 建议 f<sub>s</sub> ≥ 10×带宽 ≈ <strong>${this._fx(fsNeed)} Hz</strong>；当前 f<sub>s</sub> = <strong>${this._fx(fs)} Hz</strong> ${fs >= fsNeed ? '<span style="color:var(--success)">✓ 达标</span>' : '<span style="color:var(--danger)">✗ 偏低</span>'}
+          </div>`;
+        }
+        html += `<div class="text-xs text-gray-500 p-3 rounded" style="background:var(--bg-secondary);border:1px solid var(--border)">推导、采样周期权衡与 1kHz 中断落地代码：<a href="javascript:void(0)" onclick="Calculator.close();App.loadDetail('mct-10')" style="color:var(--primary)">mct-10 离散状态空间</a>；K 从 <a href="javascript:void(0)" onclick="Calculator.close();App.loadDetail('mct-06')" style="color:var(--primary)">mct-06 极点配置</a> 或 <a href="javascript:void(0)" onclick="Calculator.close();App.loadDetail('mct-08')" style="color:var(--primary)">mct-08 LQR</a> 来，L 见 <a href="javascript:void(0)" onclick="Calculator.close();App.loadDetail('mct-07')" style="color:var(--primary)">mct-07 观测器</a>。</div>`;
+        result.innerHTML = html;
+      },
+
+      // ---- 纯数学方法（无 DOM，可独立测试） ----
+      _fx(v) {
+        if (v === null || v === undefined || !isFinite(v)) return '—';
+        if (Math.abs(v) < 1e-12) return '0';
+        const a = Math.abs(v);
+        return a >= 1e5 || a < 1e-4 ? v.toExponential(3) : String(parseFloat(v.toPrecision(6)));
+      },
+      _fc(z) {
+        if (Math.abs(z.im) < 1e-10) return this._fx(z.re);
+        return `${this._fx(z.re)} ${z.im > 0 ? '+' : '-'} ${this._fx(Math.abs(z.im))}j`;
+      },
+      _m2(M) {
+        return `[[${this._fx(M[0][0])}, ${this._fx(M[0][1])}], [${this._fx(M[1][0])}, ${this._fx(M[1][1])}]]`;
+      },
+      _eig2(M) {
+        const tr = M[0][0] + M[1][1], det = M[0][0] * M[1][1] - M[0][1] * M[1][0];
+        const d = tr * tr - 4 * det;
+        if (d >= 0) { const s = Math.sqrt(d); return [{ re: (tr + s) / 2, im: 0 }, { re: (tr - s) / 2, im: 0 }]; }
+        const s = Math.sqrt(-d);
+        return [{ re: tr / 2, im: s / 2 }, { re: tr / 2, im: -s / 2 }];
+      },
+      _cexp(z) {
+        const e = Math.exp(z.re);
+        return { re: e * Math.cos(z.im), im: e * Math.sin(z.im) };
+      },
+      _mul(X, Y) {
+        const R = Array.from({ length: X.length }, () => new Array(Y[0].length).fill(0));
+        for (let i = 0; i < X.length; i++)
+          for (let j = 0; j < Y[0].length; j++)
+            for (let l = 0; l < Y.length; l++) R[i][j] += X[i][l] * Y[l][j];
+        return R;
+      },
+      _matExp(M) {
+        const n = M.length;
+        let nrm = 0;
+        M.forEach(r => r.forEach(v => nrm = Math.max(nrm, Math.abs(v))));
+        let k = 0;
+        if (nrm > 0.5) k = Math.ceil(Math.log2(nrm / 0.5));
+        const Ms = M.map(r => r.map(v => v / Math.pow(2, k)));
+        let E = M.map((r, i) => r.map((_, j) => i === j ? 1 : 0));
+        let T = M.map((r, i) => r.map((_, j) => i === j ? 1 : 0));
+        for (let i = 1; i <= 40; i++) {
+          T = this._mul(T, Ms).map(r => r.map(v => v / i));
+          E = E.map((r, a) => r.map((v, b) => v + T[a][b]));
+          let tmax = 0;
+          T.forEach(r => r.forEach(v => tmax = Math.max(tmax, Math.abs(v))));
+          if (tmax < 1e-18) break;
+        }
+        for (let i = 0; i < k; i++) E = this._mul(E, E);
+        return E;
+      },
+      // 增广矩阵指数法：exp([[A,B],[0,0]]·Ts) 的右上块即 [G, H]
+      _zoh(A, b, Ts) {
+        const M = [
+          [A[0][0] * Ts, A[0][1] * Ts, b[0] * Ts],
+          [A[1][0] * Ts, A[1][1] * Ts, b[1] * Ts],
+          [0, 0, 0]
+        ];
+        const E = this._matExp(M);
+        return { G: [[E[0][0], E[0][1]], [E[1][0], E[1][1]]], H: [E[0][2], E[1][2]] };
       }
     },
 
