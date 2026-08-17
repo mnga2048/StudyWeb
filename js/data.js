@@ -19852,4 +19852,95 @@ const QuizData = {
     { question: '压缩感知（Compressed Sensing）对采样定理的意义是？', options: ['证明奈奎斯特定理错误', '对稀疏信号可用远低于 $2f_M$ 的采样率恢复，突破了传统采样限制', '把模拟信号直接变为数字', '消除了量化噪声'], answer: 1, explanation: '传统定理对任意带限信号成立；压缩感知利用信号的稀疏性（频域少数大分量），配合随机测量矩阵与非线性重构算法，用远少于奈奎斯特数的样本恢复信号——MRI 加速成像等已实用化。' },
   ],
 
+  // ========== C/C++ cpp-01~10 ==========
+  'cpp-01': [
+    { question: '嵌入式开发中推荐使用 int32_t/uint16_t 等固定宽度类型（stdint.h）的原因是？', options: ['写起来更短', '避免 sizeof(int) 等基本类型大小随平台变化带来的可移植性问题', '运算速度更快', '可以省略头文件'], answer: 1, explanation: 'C 标准只保证最小宽度，int 在不同平台可能是 2 或 4 字节。uint32_t 等固定宽度类型字面上锁定大小，跨平台（PC/STM32/DSP）通信与寄存器映射不再依赖"典型值"，这是嵌入式代码的可移植性铁律。' },
+    { question: 'C 语言中表达式 7/2 与 7.0/2 的值分别是？', options: ['3.5 和 3.5', '3 和 3.5', '3 和 3', '4 和 3.5'], answer: 1, explanation: '两个操作数都是 int 时执行整数除法，小数部分直接截断（7/2=3）；一旦有一侧是浮点（7.0），int 被提升为 double 做浮点除法得 3.5。求平均数、算百分比时踩这个坑最常见——先转换再除。' },
+    { question: '要写一个真正交换两个整数的 swap(a, b) 函数，参数必须？', options: ['用 int 类型按值传递', '用 int * 指针传递，函数内解引用写入', '用全局变量', '返回交换后的值'], answer: 1, explanation: 'C 默认传值拷贝——函数收到的是副本，修改副本不影响实参。传地址后通过 *a=*b 直接写回调用者的内存。这是"传值 vs 传址"的核心区别，也是理解指针价值的第一课。' },
+    { question: '逻辑与运算符 && 的"短路求值"是指？', options: ['两边总是都计算', '若左侧为假（0）则右侧不再计算，整体必为假', '结果总是 1', '只能用于位运算'], answer: 1, explanation: '&& 和 || 都短路：左侧已能确定结果时右侧被跳过。工程上大量依赖这一特性做安全访问，如 if (p != NULL &amp;&amp; p-&gt;count &gt; 0)——先判空再解引用，顺序不能颠倒。' },
+    { question: '表达式 char + int 和 int + double 的结果类型分别是？', options: ['char 和 int', 'int 和 double', '都是 int', '都是 double'], answer: 1, explanation: '隐式类型转换把"小类型"提升为"大类型"：char 先整型提升为 int；int 与 double 运算时被转换为 double。记忆法：向能容纳更大精度/范围的方向靠拢，避免数据丢失。' },
+    { question: '递归调用过深导致程序崩溃的原因是？', options: ['CPU 过热', '每次调用都分配栈帧（局部变量+参数+返回地址），超过栈容量（通常 1~8MB）即栈溢出', '代码段不够大', '编译器不支持递归'], answer: 1, explanation: '函数调用在栈上分配栈帧，递归 N 层就压 N 个栈帧，深度过大耗尽栈空间崩溃。尾部递归可被优化为循环，但 C 标准不保证——深度不可控时改用显式栈+循环更稳妥。' },
+  ],
+
+  'cpp-02': [
+    { question: '数组 int arr[5] 中，arr[i] 与下列哪个表达式完全等价？', options: ['*(arr + i)', 'arr + i', '&amp;arr[i]', '*(arr + 1)'], answer: 0, explanation: '编译器把下标访问 arr[i] 翻译为 *(arr+i)：数组名退化为首元素指针，i 按元素类型步进后解引用。arr+i 是地址（指向第 i 个元素），&amp;arr[i] 是取地址，都不取值。' },
+    { question: 'int arr[5]（每个 int 4 字节）中，arr+1 与 &amp;arr+1 分别偏移多少字节？', options: ['都是 4 字节', '4 字节 和 20 字节', '20 字节 和 4 字节', '都是 20 字节'], answer: 1, explanation: 'arr 退化为 int*，+1 步进一个元素（4 字节）；&amp;arr 类型是 int(*)[5]（指向整个数组），+1 跳过整个数组 5×4=20 字节。地址数值类型不同导致步长不同——经典笔试题。' },
+    { question: '关于数组名与 sizeof，正确的是？', options: ['数组名在所有场合都退化为指针', 'sizeof(arr) 仍返回整个数组的大小（如 5 个 int 为 20 字节），退化仅发生在表达式中', 'sizeof(arr) 等于 sizeof(int*)', '数组名可以整体赋值'], answer: 1, explanation: '退化规则有例外：sizeof(数组名)、&amp;数组名 时数组名保持数组身份。因此可在函数外用 sizeof(arr)/sizeof(arr[0]) 求元素个数，但把这个表达式传入函数内就失效（形参已是指针）。' },
+    { question: '刚声明未初始化的指针（如 int *p;）被称为野指针，正确做法是？', options: ['立即解引用测试', '声明后尽快初始化为有效地址或 NULL，使用前判空', '用 free 释放它', '忽略即可，C 会自动置空'], answer: 1, explanation: '未初始化指针的值是随机垃圾地址，解引用是未定义行为（可能崩溃可能默默改数据）。规范：声明即初始化；malloc 后判 NULL；free 后立即置 NULL 防悬空指针被误用。' },
+    { question: 'qsort(arr, 4, sizeof(int), asc) 中 asc 的作用是？', options: ['排序算法的名字', '函数指针作回调——qsort 通过它比较两个元素的大小，决定排序顺序', '数组长度', '缓存大小'], answer: 1, explanation: 'asc 是"返回 int、接收两个 const void*"的函数指针。qsort 是通用排序框架，比较规则由调用者注入——这是 C 语言实现多态与策略模式的标准手法（函数指针回调）。' },
+    { question: '访问 int arr[5] 的 arr[5] 元素（合法下标 0~4）属于？', options: ['编译错误', '运行时保证返回 0', '未定义行为（UB）——C 不检查边界，越界可能覆盖其他数据甚至返回地址', '自动扩容'], answer: 2, explanation: 'C 语言出于性能不做边界检查，越界读写是未定义行为：轻则数据错乱、重则崩溃或被利用为安全漏洞。防御手段：传长度参数、用宏/内联函数封装边界检查，或改用 C++ 容器（at() 会抛异常）。' },
+  ],
+
+  'cpp-03': [
+    { question: 'C 程序内存布局中，堆和栈的增长方向及典型大小是？', options: ['都向下增长，各 1MB', '堆向上增长（受物理内存限制），栈向下增长（通常 1~8MB）', '堆向下、栈向上，都无限制', '两者在同一区域交替使用'], answer: 1, explanation: '代码区→只读数据→全局/静态区→堆（向上）→栈（向下），两者相向而行中间是空洞。栈空间有限（局部大数组、深递归易爆）；堆很大但必须手动 malloc/free 管理，嵌入式 RAM 以 KB 计时更需精打细算。' },
+    { question: 'malloc 与 calloc 的关键区别是？', options: ['calloc 更快', 'calloc 把分配的内存清零，malloc 内容未初始化（随机值）', 'malloc 只能分配字符数组', 'calloc 不需要 free'], answer: 1, explanation: 'calloc(n, size) 按元素数×大小分配并全部清零，malloc(bytes) 只分配不清零。读取未初始化堆内存是常见 bug 来源；需要干净缓冲区（计数表、状态数组）时用 calloc 免去 memset。' },
+    { question: '"三大内存错误"指的是？', options: ['内存泄漏、悬空指针（free 后继续使用）、双重释放', '数组越界、除零、死循环', '类型不匹配、精度丢失、符号错误', '栈溢出、堆碎片、缓存失效'], answer: 0, explanation: 'malloc 后不 free 是泄漏（长跑程序内存持续增长）；free 后指针仍指向原地址成悬空指针；同一指针 free 两次破坏堆管理结构。防御三板斧：malloc 判 NULL、free 后置 NULL、用 Valgrind/ASan 检测。' },
+    { question: 'free(p) 之后立即执行 p = NULL 的目的是？', options: ['释放更多内存', '防止悬空指针被误用——再 free(p) 或解引用 NULL 会立刻崩溃暴露问题，而非悄悄破坏数据', '加快后续分配速度', 'C 标准强制要求'], answer: 1, explanation: 'free 后 p 的值不变（仍存旧地址），误用即 UB；置 NULL 后误用会立即崩溃在事故现场，易于定位。对同一非空指针 double free 是堆破坏，而对 NULL free 是安全的空操作——置空一举两得。' },
+    { question: '栈上局部变量与堆上动态内存的生命周期区别是？', options: ['两者都随程序结束释放', '栈变量随函数返回自动释放；堆内存必须手动 free，否则到程序结束都占着', '堆内存随函数返回自动释放', '两者都需要手动释放'], answer: 1, explanation: '栈帧在函数返回时自动弹出（返回局部变量地址即悬空指针）；堆内存跨越函数调用存活，直到显式 free 或进程退出。返回大结果要用 malloc/静态缓冲区/调用者传入缓冲区，不能返回局部数组地址。' },
+    { question: '检测内存泄漏与越界访问的常用工具/手段是？', options: ['printf 调试', 'Valgrind（--leak-check=full）运行检测泄漏，或编译加 -fsanitize=address（ASan）检测越界与悬空', '增加 sleep 延时', '改用浮点数'], answer: 1, explanation: 'Valgrind 在模拟执行中报告所有未释放块；ASan 编译期插桩，越界/UAF 当场报错并给调用栈。两者是 C/C++ 工程标配，配合防御式编程（判 NULL、goto 统一错误清理路径）双保险。' },
+  ],
+
+  'cpp-04': [
+    { question: 'struct { char id; int value; float ts; }（默认对齐）的 sizeof 是？', options: ['9 字节', '12 字节', '6 字节', '16 字节'], answer: 1, explanation: '对齐规则：每个成员起始地址须是其类型大小的整数倍。id 占 1 字节后填充 3 字节，value 在偏移 4 占 4 字节，ts 在偏移 8 占 4 字节——共 12 字节，不是成员简单相加的 9。' },
+    { question: '要让上述结构体紧凑排列为 9 字节，应使用？', options: ['volatile 关键字', '#pragma pack(1) 取消填充', '改用 union', '把成员都改成 char'], answer: 1, explanation: '#pragma pack(push,1) 指定按 1 字节对齐，取消填充，sizeof 变为 9。代价是未对齐访问在部分架构（如 Cortex-M0）上变慢或触发异常——通信协议紧凑性与本机访问效率要权衡。' },
+    { question: '关于 union（联合体），正确的是？', options: ['所有成员依次排列存储', '所有成员共享同一块内存，大小等于最大成员，同一时刻只有一个成员有效', 'sizeof 等于所有成员之和', 'union 不能含 struct 成员'], answer: 1, explanation: 'union 的成员重叠占用同一起始地址：写 word 再读 bytes.low 得到低 8 位——寄存器多义解读、类型双关的标准工具。也因此一次只有一个成员的值是可信的，写 A 读 B 得到的是内存重解释。' },
+    { question: '用位域（bitfield）映射跨平台通信协议字段的风险是？', options: ['没有任何风险', '位域的位序与跨字节布局是编译器相关的，不同平台可能不同——跨平台场景应改用手动位运算', '位域不能用于 GPIO 配置', '位域会增大结构体'], answer: 1, explanation: 'C 标准把位域内存布局（高位在前还是低位在前、能否跨字节）留给实现。同一段代码在不同编译器/大小端平台上布局可能不同，网络协议解析必须用移位与掩码手动拼装，保证字节序完全可控。' },
+    { question: '结构体指针 ps 访问成员 value 的标准写法是？', options: ['ps.value', 'ps-&gt;value（等价于 (*ps).value）', 'ps::value', '*ps.value'], answer: 1, explanation: '指针用箭头运算符 -&gt;，它把"解引用+点"合二为一；变量用点。链表节点 p-&gt;next-&gt;data 这类连续访问中箭头可读性远高于 (*p).next。' },
+    { question: '相对 #define 定义常量，enum 的优势是？', options: ['预处理速度更快', '有类型检查、带调试信息、作用域可控，且可用于 switch-case', '可以定义浮点常量', '不需要分号'], answer: 1, explanation: '#define 是编译前纯文本替换（无类型无作用域）；enum 是真正的语言构件：调试器能显示符号名、编译器检查类型与重复、限定在作用域内。定义状态机状态集合（IDLE/RUNNING/ERROR）用 enum 是 C 的最佳实践。' },
+  ],
+
+  'cpp-05': [
+    { question: '#define BAD_SQ(x) x*x，则 BAD_SQ(1+1) 展开后的值是？', options: ['4', '3（展开为 1+1*1+1）', '2', '编译错误'], answer: 1, explanation: '宏是纯文本替换：BAD_SQ(1+1) 展开成 1+1*1+1，乘法优先级高于加法得 3。正确写法是每个参数与整体都加括号：#define SQUARE(x) ((x)*(x)) 得 4——函数式宏的括号铁律。' },
+    { question: '把多条语句的函数式宏包成 do { ... } while(0) 的目的是？', options: ['循环执行多次', '让宏在 if/else 等语句中作为一个整体语句展开，避免分号错位破坏语法', '提高运行速度', '隐藏变量名'], answer: 1, explanation: '若宏体是 { a; b; }，则 if (cond) MACRO(); else ... 会被中间的分号截断，else 悬空报错。do{...}while(0) 恰好是一个需要分号结尾的语句，保证任何上下文展开都安全——Linux 内核宏的标准写法。' },
+    { question: '头文件保护（Include Guard）#ifndef/#define/#endif 的作用是？', options: ['加密头文件', '防止同一头文件被重复包含导致重复定义编译错误', '加快链接速度', '自动生成文档'], answer: 1, explanation: '多个 .c 都包含公共头、或头之间互相包含时，同一声明会被多次拉入。保护宏使第二次及以后的包含变成空操作。也可用 #pragma once（主流编译器支持）达到同样效果。' },
+    { question: 'fopen 的模式串中，"w" 与 "a" 的区别是？', options: ['都从头写入', '"w" 覆盖原文件从头写，"a" 追加到文件末尾；两者在文件不存在时都会创建新文件', '"a" 只能读', '"w" 会保留原内容'], answer: 1, explanation: '"w" 打开即清空重写（危险操作，日志千万别用）；"a" 每次写入定位到文件尾，是日志追加的正确姿势；"r" 文件不存在返回 NULL，不会创建。二进制读写加 b（"rb"/"wb"）。' },
+    { question: 'fopen 返回值必须立即判 NULL，因为？', options: ['编译器强制要求', '文件不存在、路径错误、权限不足都会返回 NULL，不判空直接用 fp 会崩溃', 'NULL 表示读到文件尾', '提高 I/O 速度'], answer: 1, explanation: 'fopen 失败返回 NULL 而不抛异常（C 无异常机制），对 NULL 调 fprintf/fread 即段错误。规范流程：fopen→判空（perror 报原因）→读写→检查 ferror→fclose。文件句柄是有限资源，用完必须关闭。' },
+    { question: '预处理运算符 # 与 ## 的功能分别是？', options: ['注释与换行', '# 将宏参数转成字符串字面量；## 拼接两个标识符', '条件编译与包含', '取模与整除'], answer: 1, explanation: 'STRINGIFY(x) 展开为 "x" 字符串（调试打印变量名常用）；CONCAT(a,b) 把 a、b 粘成新标识符 ab（批量生成函数名/变量名）。它们在宏展开阶段工作，是代码生成与反射式调试宏的基础。' },
+  ],
+
+  'cpp-06': [
+    { question: 'C++ 对象的构造与析构顺序是？', options: ['成员按声明顺序构造，析构逆序', '成员按声明顺序构造，析构也按声明顺序', '成员按字母序构造', '顺序不确定'], answer: 0, explanation: '构造：基类→成员按声明顺序→构造函数体；析构完全相反：析构函数体→成员逆序析构→基类。注意成员初始化顺序取决于声明顺序而非初始化列表书写顺序——列表乱写会掩盖真实初始化顺序。' },
+    { question: '构造函数使用初始化列表（: kp_(kp), ...）的主要优势是？', options: ['代码更短', '直接初始化成员而非先默认构造再赋值，对类类型成员少一次构造+赋值开销，且 const/引用成员只能这样初始化', '可以访问 private 成员', '自动处理异常'], answer: 1, explanation: '函数体内赋值意味着成员先被默认构造、再被覆盖；初始化列表一步到位。const 成员、引用成员、无默认构造的成员类型都必须走初始化列表——工程上建议无条件优先使用。' },
+    { question: '关于 this 指针与 const 成员函数，正确的是？', options: ['this 是显式参数，需要自己传入', 'this 是隐式指针指向调用对象；const 成员函数承诺不修改成员变量，编译器检查', 'static 成员函数也有 this', 'const 成员函数可以随意修改成员'], answer: 1, explanation: '成员函数访问 speed_ 实为 this-&gt;speed_。const 成员函数（如 int get_speed() const）里修改成员会编译报错——把不改状态的访问器标 const 是"const 正确性"的基本功。static 成员属于类、无 this，不能访问非静态成员。' },
+    { question: '"Rule of Three/Five" 指的是？', options: ['三个设计原则', '类一旦管理动态资源，就必须同时定义析构函数、拷贝构造、拷贝赋值（C++11 再加移动构造/移动赋值）', '最多三层层继承', '每个类至少五个方法'], answer: 1, explanation: '编译器默认生成的拷贝是浅拷贝：两个对象持同一块指针，析构时 double free。凡手动管理资源（new/malloc/fopen），五个特殊成员函数必须成套自定义（或 =delete 禁用），否则资源事故只是时间问题。' },
+    { question: '拷贝构造 Motor m2(m1) 与移动构造 Motor m2(std::move(m1)) 的区别是？', options: ['完全相同', '拷贝复制资源（原对象保持有效）；移动窃取资源（临时对象/源被置空），免深拷贝开销', '移动会删除原对象变量名', '拷贝更快'], answer: 1, explanation: '拷贝产生独立副本，代价随资源大小增长；移动把指针等句柄"过户"给新对象、源置空，近乎零成本——unique_ptr 只能移动不能拷贝正是靠它实现所有权转移。容器扩容时元素移动还是拷贝，性能差数倍。' },
+    { question: 'static 数据成员的特点是？', options: ['每个对象各有一份', '属于类本身，所有对象共享一份，需类外定义（或 inline 初始化），常用于计数器、单例', '不能被初始化', '只能是常量'], answer: 1, explanation: 'static 成员存于全局/静态区而非对象内部：无论创建多少对象都只有一份，通过 类名::成员 直接访问。典型用途：对象计数（构造++/析构--）、单例模式持有唯一实例。' },
+  ],
+
+  'cpp-07': [
+    { question: '基类析构函数声明为 virtual 的原因是？', options: ['加快析构速度', '用基类指针 delete 派生类对象时，虚析构保证先调用派生类析构再调用基类析构，避免派生类资源泄漏', 'C++ 语法强制所有析构都是虚的', '允许析构函数重载'], answer: 1, explanation: '非虚析构下 delete 基类指针只执行基类析构——派生类新成员的资源全漏。只要类可能被继承并通过基类指针管理，析构就必须是 virtual；反之 final 类或不作基类的类用非虚析构更高效。' },
+    { question: '声明纯虚函数（virtual double read() = 0）的效果是？', options: ['函数返回 0', '类成为抽象类，不能实例化，只能作为接口基类由派生类实现', '函数内联展开', '禁止派生类覆盖'], answer: 1, explanation: '纯虚函数只定义接口不提供实现，含纯虚函数的类是抽象类。派生类必须覆盖全部纯虚函数才能实例化——Sensor 基类声明 read()=0，TempSensor 实现它，这正是"接口与实现分离"。' },
+    { question: '虚函数动态绑定的实现机制是？', options: ['编译器直接内联', '对象头部存 vptr 指向虚函数表 vtable，调用时查表取函数地址跳转，运行时按实际类型决定', '宏展开', '解释执行字节码'], answer: 1, explanation: '含虚函数的类对应一张 vtable（函数地址表），对象头部藏 vptr。s-&gt;read() 被编译为"读 vptr→查 vtable[offset]→跳转"。代价：每对象多一个指针、每次调用多一次间接寻址——多态灵活性的底层成本。' },
+    { question: 'C++11 的 override 关键字的作用是？', options: ['强制内联', '显式声明覆盖基类虚函数，签名不匹配时编译器立即报错（防止"以为覆盖了其实重载了"的笔误）', '允许运算符重载', '声明接口继承'], answer: 1, explanation: '派生类函数签名与基类虚函数稍有出入（const 漏写、参数类型不同）时，它只是一个新函数而非覆盖，多态悄悄失效。加上 override 让编译器替你核对签名——现代 C++ 覆盖虚函数必写。' },
+    { question: '菱形继承（B、C 都继承 A，D 继承 B、C）的问题是及解法？', options: ['无法编译；改为多接口', 'D 中含有两份 A 的数据，访问二义；用虚继承（class B : virtual public A）使 A 只保留一份', 'D 不能调用 A 的方法；用友元', '没有问题'], answer: 1, explanation: '普通继承下 D 的对象里 A 子对象出现两次，d.aMember 二义报错。B、C 虚继承 A 后共享同一 A 子对象。虚继承引入运行间接寻址开销——优先考虑"组合替代继承"或把公共部分提为接口。' },
+    { question: '虚函数多态与模板泛型的绑定时机与性能对比是？', options: ['都在运行时绑定', '虚函数运行时动态绑定（vtable 查表有开销）；模板编译时静态实例化（可内联零开销，但每种类型一份代码可能使二进制膨胀）', '模板运行时绑定，虚函数编译期', '都没有开销'], answer: 1, explanation: '多态适合"运行时才知道具体类型"的场景（插件、传感器列表）；模板适合"编译期已知类型、追求性能"的场景（容器、数值计算）。STL 选模板、接口抽象选虚函数，两者互补而非替代。' },
+  ],
+
+  'cpp-08': [
+    { question: '需要"最快查找"且不要求有序遍历时，首选容器是？', options: ['vector', 'map（红黑树）', 'unordered_map（哈希表，均摊 O(1)）', 'list'], answer: 2, explanation: 'unordered_map 基于哈希表：查找/插入均摊 O(1)；map 基于红黑树 O(log n) 但保持键有序（范围查询、有序遍历选它）；vector 查找 O(n)（除非先排序再二分）。按"是否需要有序+查找频率"选型。' },
+    { question: 'vector 插入元素导致所有迭代器失效的原因是？', options: ['迭代器过期机制', 'push_back 触发扩容时重新分配内存并把元素搬到新址，旧迭代器指向已释放的旧内存', 'vector 不支持插入', '编译器 bug'], answer: 1, explanation: 'vector 是动态数组，容量不足时按倍增策略搬家，旧内存被释放——所有指向旧位置的迭代器/指针/引用全部悬空。规避：reserve 预分配；删除元素时用 erase 返回的新迭代器继续遍历。' },
+    { question: 'std::map 的底层数据结构与复杂度是？', options: ['哈希表，O(1)', '红黑树（自平衡二叉搜索树），查找/插入 O(log n) 且按键有序', '动态数组，O(n)', '链表，O(1)'], answer: 1, explanation: '红黑树保证树高平衡，操作稳定 O(log n)，中序遍历按键升序——这是与 unordered_map 的本质差异。需要范围查询（lower_bound/upper_bound）、最值、有序输出时必须用 map 而非哈希版。' },
+    { question: '"随机访问多、末端追加"与"频繁中间插删"分别适合的容器是？', options: ['list 与 vector', 'vector 与 list', '都用 vector', '都用 deque'], answer: 1, explanation: 'vector 内存连续：下标随机访问 O(1)、缓存友好，但中间插删要搬移 O(n)；list 双向链表：已知位置时插删 O(1)，但不支持随机访问、每节点额外指针开销且缓存不友好。没有银弹，按访问模式选。' },
+    { question: '函数模板 template&lt;typename T&gt; T max_of(const T&amp; a, const T&amp; b) 调用 max_of(3, 7) 时？', options: ['运行时用 if 判断类型', '编译器推导 T=int 并实例化一份 int 版本代码，无运行时开销', '必须显式写出 T', '生成解释执行的通用代码'], answer: 1, explanation: '模板是编译期代码生成：按调用处实际类型（可推导或显式指定）实例化出具体函数。每个用到的类型一份代码（可能导致二进制膨胀），换来内联与静态类型检查的零开销抽象。' },
+    { question: 'std::sort 的内部实现（IntroSort）是？', options: ['纯冒泡排序', '快排 + 堆排 + 插入排序的混合：正常走快排，递归过深切堆排保 O(n log n) 下界，小区间用插入排序减少常数', '纯归并排序', '计数排序'], answer: 1, explanation: '纯快排对病态输入退化 O(n²)；IntroSort 监控递归深度超限即切换堆排，整体锁定 O(n log n)，再以插入排序收尾小数组降低常数——工程级排序算法的混合设计典范。' },
+  ],
+
+  'cpp-09': [
+    { question: 'RAII（资源获取即初始化）的核心思想是？', options: ['手动调用 free 释放资源', '资源在构造函数中获取、析构函数中释放，对象离开作用域自动回收——把资源生命周期绑定到对象生命周期', '所有资源放全局区', '用 goto 统一跳转到清理代码'], answer: 1, explanation: '栈对象离开作用域时析构函数必然被调用（即使发生异常），资源随手回收。文件、锁、内存都能包装成 RAII 类（FileGuard、lock_guard、智能指针）——异常路径不再漏资源，这是现代 C++ 的基石。' },
+    { question: 'unique_ptr 的语义是？', options: ['可随意拷贝共享', '独占所有权：不可拷贝（编译错），只能 std::move 转移所有权，零开销替代裸指针', '自动垃圾回收', '引用计数管理'], answer: 1, explanation: '同一时刻只有一个 unique_ptr 拥对象：拷贝被 delete，转移用移动语义。无引用计数开销，性能等同裸指针；默认首选——需要共享所有权时才升级为 shared_ptr。' },
+    { question: 'shared_ptr 管理对象生命周期的方式是？', options: ['全局注册表', '引用计数：拷贝 +1、销毁 -1，归零时释放对象', '定时扫描', '由操作系统回收'], answer: 1, explanation: '每个 shared_ptr 拷贝使计数+1，析构使 -1，最后一个所有者负责释放。适合"多方持有、谁最后用完谁关灯"的场景。注意计数操作是原子的，多线程拷贝安全但有一定开销。' },
+    { question: '两个对象通过 shared_ptr 互相持有（A 引 B、B 引 A）的后果与解法是？', options: ['正常释放', '引用计数永不为零，内存泄漏；把其中一方改为 weak_ptr（不增加计数），使用时 lock() 检查对象是否存活', '编译错误；改用 union', '自动触发垃圾回收'], answer: 1, explanation: '循环引用使计数互相"托底"，归零条件永不满足。weak_ptr 观察而不拥有：lock() 返回有效 shared_ptr 说明对象存活，返回空说明已释放——父子节点、缓存场景的标准解法。' },
+    { question: '异常安全的"强保证"是指？', options: ['函数永不返回', '操作要么完全成功，要么像没发生过一样回滚（事务性），对象状态不变', '程序不打印错误', '只捕获不处理'], answer: 1, explanation: '三级保证：基本（不泄漏、可析构）、强（失败即回滚到调用前状态）、不抛（绝不抛异常，如析构与 swap）。RAII + copy-and-swap 惯用法是实现强保证的经典手段——先做完所有可能失败的工作再提交。' },
+    { question: 'catch 捕获异常时推荐按什么方式接收异常对象？', options: ['按值捕获', '按 const 引用捕获（const std::exception&amp; e），避免对象切片与多余拷贝，用 e.what() 取描述', '按指针 new 一份', '不捕获直接终止'], answer: 1, explanation: '按值捕获派生异常会被切基类部分丢失信息；const 引用零拷贝且保持多态，e.what() 输出错误描述。异常沿调用链向上传播直到匹配的 catch，全程栈展开，RAII 对象在此过程中逐一析构。' },
+  ],
+
+  'cpp-10': [
+    { question: 'auto i = 42; auto d = 3.14; 推导出的类型分别是？', options: ['都是 int', 'int 和 double（整数字面量→int，浮点字面量→double）', 'double 和 float', 'long 和 int'], answer: 1, explanation: 'auto 按初始化表达式推导：42 是 int、3.14 是 double、字面量字符串是 const char*。适合冗长的迭代器/模板类型声明；但 auto x = {1,2} 这类歧义写法要避免——推导结果可能出乎意料。' },
+    { question: 'Lambda 表达式 [threshold](int x){ return x &gt; threshold; } 中 [threshold] 的含义是？', options: ['函数名', '捕获列表：把外部变量 threshold 按值捕进 lambda 使用（[=] 全部按值、[&amp;] 全部按引用、[this] 捕获 this）', '返回类型', '命名空间'], answer: 1, explanation: '捕获列表是 lambda 与外部世界的接口：按值拷贝一份（默认只读）、按引用直接引用（注意 lambda 生命周期长于变量时的悬空风险）。lambda 本质是编译器生成的匿名函数对象，可替代函数指针回调。' },
+    { question: '右值引用 T&amp;&amp; 与移动语义的价值是？', options: ['让程序跑得更快但无语义差别', '绑定临时对象（右值），允许"窃取"其内部资源（如堆指针）避免深拷贝', '只能用于 bool', '替代 const 引用'], answer: 1, explanation: '临时对象反正要销毁，与其深拷贝其资源不如直接过户指针——移动构造把源指针拿来、源置空，O(n) 拷贝变 O(1) 移动。vector 扩容、函数返回大对象都因此受益，是 C++11 性能提升的最大来源。' },
+    { question: 'std::move(x) 的真实行为是？', options: ['立即移动/复制数据', '只是把左值 x 转换为右值引用的类型转换（static_cast&lt;T&amp;&amp;&gt;），真正移动发生在随后的移动构造/赋值中', '释放 x 的内存', '锁定 x 禁止修改'], answer: 1, explanation: 'std::move 一字节都不搬，仅改变值类别让重载决议选中移动版本。移动后的源对象处于"有效但未指定"状态，只能重新赋值或析构。误以为 move 之后源还能正常使用是高频错误。' },
+    { question: '移动构造函数中把 other.data_ 置为 nullptr 的目的是？', options: ['节省内存', '防止源对象析构时把已被"窃取"的资源 delete 掉（double free）', '语法要求必须置空', '让对象更小'], answer: 1, explanation: '资源指针已过户给新对象，若源析构时仍持旧指针就会释放同一块内存两次。置空后源析构 delete nullptr 是安全空操作——"偷完记得抹掉失主的钥匙"是移动语义的固定套路，同时移动操作应标 noexcept。' },
+    { question: '范围 for 中 for (const auto&amp; x : v) 使用 const 引用的好处是？', options: ['写法更酷', '只读访问且零拷贝——避免每个元素复制一份，对大对象（字符串、结构体）尤其重要', '可以修改元素', '遍历更快因为跳过了元素'], answer: 1, explanation: '按值遍历会为每个元素做一次拷贝；const auto&amp; 直接引用原元素，只读且无复制开销。需要就地修改时用 auto&amp;（x *= 2）。范围 for 与 auto、lambda 并列 C++11 三大效率/表达力改进。' },
+  ],
+
 };
