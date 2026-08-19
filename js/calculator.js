@@ -6,7 +6,7 @@ const Calculator = {
   _active: null,
 
   // 分类顺序
-  _categoryOrder: ['电路基础', '模拟电路', '数字电路', '信号处理', '自动控制', '计算机', '工程协议', '电机驱动', '嵌入式', '制造与工艺', '人工智能'],
+  _categoryOrder: ['电路基础', '模拟电路', '数字电路', '信号处理', '自动控制', '计算机', '工程协议', '电机驱动', '机器人', '嵌入式', '制造与工艺', '人工智能'],
 
   render(containerId) {
     const container = document.getElementById(containerId);
@@ -33,7 +33,7 @@ const Calculator = {
   },
 
   _categoryIcon(cat) {
-    const icons = {'电路基础':'🔵','模拟电路':'🟢','数字电路':'🟡','信号处理':'📡','自动控制':'🟣','计算机':'💻','工程协议':'🔌','电机驱动':'⚡','嵌入式':'🔩','制造与工艺':'🖨️','人工智能':'🧠'};
+    const icons = {'电路基础':'🔵','模拟电路':'🟢','数字电路':'🟡','信号处理':'📡','自动控制':'🟣','计算机':'💻','工程协议':'🔌','电机驱动':'⚡','机器人':'🤖','嵌入式':'🔩','制造与工艺':'🖨️','人工智能':'🧠'};
     return icons[cat] || '🔧';
   },
 
@@ -135,6 +135,10 @@ const Calculator = {
     { id: 'validator', title: '协议校验器', desc: 'CRC-8/16/32/Modbus/CAN 帧解析', icon: '🔐', category: '工程协议' },
     // ===== 电机驱动 =====
     { id: 'motor', title: '电机参数计算', desc: '转速-转矩-功率、步进脉冲', icon: '⚙️', category: '电机驱动' },
+
+    { id: 'euler-quat', title: '欧拉角⇄四元数⇄旋转矩阵', desc: 'ZYX/XYZ 三种表示互转 + 万向锁检测', icon: '🧭', category: '机器人' },
+
+    { id: 'tf-simplify', title: '传函化简与部分分式', desc: '分子分母系数 → 零极点/增益/部分分式展开/稳定性', icon: '🔀', category: '自动控制' },
     // ===== 嵌入式 =====
     { id: 'adc-calc', title: 'ADC 分辨率计算', desc: '位 N / Vref → LSB、量化误差、SINAD', icon: '📊', category: '嵌入式' },
     { id: 'pwm-calc', title: 'PWM 参数计算', desc: '时钟/频率 → ARR、PSC、占空比精度', icon: '🌊', category: '嵌入式' },
@@ -3194,6 +3198,478 @@ const Calculator = {
             <div class="text-sm">全账（+20% 开销）：<b style="color:var(--primary)">${this.fmt(total)}</b></div>
             ${modelSel === 'custom' ? '<div class="text-xs text-gray-500">自定义规模的层数/d_model 按 7B 立方根比例估算，仅数量级参考</div>' : ''}
             <div class="text-xs text-gray-500">依据：ai-04（KV Cache 公式）与 ai-12（内存全账与量化）。MCU 跑 LLM 目前不现实——MCU 端 AI 请走 TinyML 小模型路线（ai-11/13）。</div>
+          </div>`;
+      },
+    },
+
+    // ==================== 欧拉角⇄四元数⇄旋转矩阵（机器人） ====================
+    eulerQuat: {
+      mode: 'euler',   // 当前输入源：euler | quat | matrix
+
+      render(el) {
+        this._el = el;
+        el.innerHTML = `
+          <div class="space-y-4">
+            <div class="info-box info"><div><b>三种旋转表示互转</b>：输入任一种表示，实时同步另外两种 + 轴角。<b>ZYX 顺序</b>（默认）即 R = R<sub>z</sub>(ψ)·R<sub>y</sub>(θ)·R<sub>x</sub>(φ)，航空航天 yaw-pitch-roll 惯例；<b>XYZ 顺序</b>即 R = R<sub>x</sub>(φ)·R<sub>y</sub>(θ)·R<sub>z</sub>(ψ)。依据 robo-02 齐次变换与 robo-09 姿态表示。</div></div>
+            <div class="flex flex-wrap gap-2 items-center">
+              <span class="text-sm" style="color:var(--text-secondary)">输入源：</span>
+              <div id="eq-src" style="display:flex;gap:0.4rem;flex-wrap:wrap">
+                <button data-m="euler" style="padding:0.3rem 0.85rem;border-radius:9999px;font-size:0.78rem;border:1px solid var(--border);background:var(--bg-primary);cursor:pointer">欧拉角</button>
+                <button data-m="quat" style="padding:0.3rem 0.85rem;border-radius:9999px;font-size:0.78rem;border:1px solid var(--border);background:var(--bg-primary);cursor:pointer">四元数</button>
+                <button data-m="matrix" style="padding:0.3rem 0.85rem;border-radius:9999px;font-size:0.78rem;border:1px solid var(--border);background:var(--bg-primary);cursor:pointer">旋转矩阵</button>
+              </div>
+              <span class="text-xs" style="color:var(--text-secondary)">预置：</span>
+              <button id="eq-demo1" style="padding:0.3rem 0.7rem;border-radius:0.4rem;border:1px solid var(--border);background:var(--bg-primary);cursor:pointer;font-size:0.75rem">常规 ZYX(10°,20°,30°)</button>
+              <button id="eq-demo2" style="padding:0.3rem 0.7rem;border-radius:0.4rem;border:1px solid var(--danger);background:var(--bg-primary);cursor:pointer;font-size:0.75rem;color:var(--danger)">万向锁 θ=90°</button>
+            </div>
+            <div id="eq-input"></div>
+            <div id="eq-result"></div>
+          </div>`;
+        this._el.querySelector('#eq-src').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+          this.mode = b.dataset.m;
+          this._highlightSrc();
+          this._buildInput();
+          this.update();
+        }));
+        this._el.querySelector('#eq-demo1').addEventListener('click', () => {
+          this.mode = 'euler'; this._highlightSrc(); this._buildInput();
+          this._set('eq-ph', 10); this._set('eq-th', 20); this._set('eq-ps', 30);
+          this._el.querySelector('#eq-order').value = 'ZYX';
+          this.update();
+        });
+        this._el.querySelector('#eq-demo2').addEventListener('click', () => {
+          this.mode = 'euler'; this._highlightSrc(); this._buildInput();
+          this._set('eq-ph', 0); this._set('eq-th', 90); this._set('eq-ps', 30);
+          this._el.querySelector('#eq-order').value = 'ZYX';
+          this.update();
+        });
+        this._highlightSrc();
+        this._buildInput();
+        this.update();
+      },
+
+      _highlightSrc() {
+        this._el.querySelectorAll('#eq-src button').forEach(b => {
+          const on = b.dataset.m === this.mode;
+          b.style.background = on ? 'var(--primary)' : 'var(--bg-primary)';
+          b.style.borderColor = on ? 'var(--primary)' : 'var(--border)';
+          b.style.color = on ? '#fff' : '';
+        });
+      },
+
+      _set(id, v) { const e = this._el?.querySelector('#' + id); if (e) e.value = v; },
+      _get(id) { return parseFloat(this._el?.querySelector('#' + id)?.value || 0) || 0; },
+
+      _buildInput() {
+        const box = this._el.querySelector('#eq-input');
+        const inp = 'width:100%;padding:0.35rem 0.5rem;border:1px solid var(--border);background:var(--bg);border-radius:0.35rem;font-size:0.85rem';
+        if (this.mode === 'euler') {
+          box.innerHTML = `
+            <div class="grid grid-cols-4 gap-2 items-end">
+              <div><label class="text-xs" style="color:var(--text-secondary)">φ 绕X (roll)°</label><input type="number" id="eq-ph" value="10" step="any" style="${inp}"></div>
+              <div><label class="text-xs" style="color:var(--text-secondary)">θ 绕Y (pitch)°</label><input type="number" id="eq-th" value="20" step="any" style="${inp}"></div>
+              <div><label class="text-xs" style="color:var(--text-secondary)">ψ 绕Z (yaw)°</label><input type="number" id="eq-ps" value="30" step="any" style="${inp}"></div>
+              <div><label class="text-xs" style="color:var(--text-secondary)">旋转顺序</label>
+                <select id="eq-order" style="${inp}">
+                  <option value="ZYX">ZYX（y-p-r）</option>
+                  <option value="XYZ">XYZ</option>
+                </select></div>
+            </div>`;
+          ['eq-ph', 'eq-th', 'eq-ps', 'eq-order'].forEach(id => this._el.querySelector('#' + id).addEventListener('input', () => this.update()));
+        } else if (this.mode === 'quat') {
+          box.innerHTML = `
+            <div class="grid grid-cols-4 gap-2">
+              <div><label class="text-xs" style="color:var(--text-secondary)">w（实部）</label><input type="number" id="eq-qw" value="0.9515" step="any" style="${inp}"></div>
+              <div><label class="text-xs" style="color:var(--text-secondary)">x</label><input type="number" id="eq-qx" value="0.0381" step="any" style="${inp}"></div>
+              <div><label class="text-xs" style="color:var(--text-secondary)">y</label><input type="number" id="eq-qy" value="0.1893" step="any" style="${inp}"></div>
+              <div><label class="text-xs" style="color:var(--text-secondary)">z</label><input type="number" id="eq-qz" value="0.2393" step="any" style="${inp}"></div>
+            </div>
+            <div class="text-xs mt-1" style="color:var(--text-secondary)">默认值为 ZYX(10°,20°,30°) 对应四元数；不必归一化——自动归一后计算。</div>`;
+          ['eq-qw', 'eq-qx', 'eq-qy', 'eq-qz'].forEach(id => this._el.querySelector('#' + id).addEventListener('input', () => this.update()));
+        } else {
+          box.innerHTML = `
+            <div class="grid grid-cols-3 gap-2">
+              ${['m00', 'm01', 'm02', 'm10', 'm11', 'm12', 'm20', 'm21', 'm22'].map((id, i) => {
+                const def = [0.8138, -0.4410, 0.3785, 0.4698, 0.8826, 0.0180, -0.3420, 0.1632, 0.9254][i];
+                return `<div><label class="text-xs" style="color:var(--text-secondary)">m<sub>${id.slice(1)}</sub></label><input type="number" id="eq-${id}" value="${def}" step="any" style="${inp}"></div>`;
+              }).join('')}
+            </div>
+            <div class="text-xs mt-1" style="color:var(--text-secondary)">应输入正交矩阵（det=1），非正交时会显示偏差。</div>`;
+          Array.from({ length: 9 }, (_, i) => 'eq-m' + Math.floor(i / 3) + (i % 3)).forEach(id => this._el.querySelector('#' + id).addEventListener('input', () => this.update()));
+        }
+      },
+
+      // ---- 数学核心 ----
+      _rotM(axis, deg) {
+        const r = deg * Math.PI / 180, c = Math.cos(r), s = Math.sin(r);
+        if (axis === 'x') return [[1, 0, 0], [0, c, -s], [0, s, c]];
+        if (axis === 'y') return [[c, 0, s], [0, 1, 0], [-s, 0, c]];
+        return [[c, -s, 0], [s, c, 0], [0, 0, 1]];
+      },
+      _mul(A, B) {
+        const R = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+        for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++)
+          for (let k = 0; k < 3; k++) R[i][j] += A[i][k] * B[k][j];
+        return R;
+      },
+      _det3(M) {
+        return M[0][0] * (M[1][1] * M[2][2] - M[1][2] * M[2][1])
+             - M[0][1] * (M[1][0] * M[2][2] - M[1][2] * M[2][0])
+             + M[0][2] * (M[1][0] * M[2][1] - M[1][1] * M[2][0]);
+      },
+      _quatToM(q) {
+        const { w, x, y, z } = q;
+        return [
+          [1 - 2 * (y * y + z * z), 2 * (x * y - w * z), 2 * (x * z + w * y)],
+          [2 * (x * y + w * z), 1 - 2 * (x * x + z * z), 2 * (y * z - w * x)],
+          [2 * (x * z - w * y), 2 * (y * z + w * x), 1 - 2 * (x * x + y * y)],
+        ];
+      },
+      _mToQuat(M) {  // Shepperd 方法
+        const tr = M[0][0] + M[1][1] + M[2][2];
+        let w, x, y, z;
+        if (tr > 0) {
+          const S = Math.sqrt(tr + 1) * 2;
+          w = S / 4; x = (M[2][1] - M[1][2]) / S; y = (M[0][2] - M[2][0]) / S; z = (M[1][0] - M[0][1]) / S;
+        } else if (M[0][0] > M[1][1] && M[0][0] > M[2][2]) {
+          const S = Math.sqrt(1 + M[0][0] - M[1][1] - M[2][2]) * 2;
+          w = (M[2][1] - M[1][2]) / S; x = S / 4; y = (M[0][1] + M[1][0]) / S; z = (M[0][2] + M[2][0]) / S;
+        } else if (M[1][1] > M[2][2]) {
+          const S = Math.sqrt(1 + M[1][1] - M[0][0] - M[2][2]) * 2;
+          w = (M[0][2] - M[2][0]) / S; x = (M[0][1] + M[1][0]) / S; y = S / 4; z = (M[1][2] + M[2][1]) / S;
+        } else {
+          const S = Math.sqrt(1 + M[2][2] - M[0][0] - M[1][1]) * 2;
+          w = (M[1][0] - M[0][1]) / S; x = (M[0][2] + M[2][0]) / S; y = (M[1][2] + M[2][1]) / S; z = S / 4;
+        }
+        if (w < 0) { w = -w; x = -x; y = -y; z = -z; }   // 统一 w≥0（q 与 −q 同姿态）
+        return { w, x, y, z };
+      },
+      _mToEuler(M, order) {
+        if (order === 'ZYX') {
+          // θ = asin(−m20)；万向锁 |m20|≈1 时仅 (ψ∓φ) 组合可辨，取 φ=0
+          const s = Math.max(-1, Math.min(1, -M[2][0]));
+          const th = Math.asin(s) * 180 / Math.PI;
+          if (Math.abs(M[2][0]) > 0.9999) {
+            const pos = M[2][0] < 0;   // θ = +90°
+            return { ph: 0, th, ps: Math.atan2(-M[0][1], pos ? M[0][2] : -M[0][2]) * 180 / Math.PI, locked: true };
+          }
+          return { ph: Math.atan2(M[2][1], M[2][2]) * 180 / Math.PI, th, ps: Math.atan2(M[1][0], M[0][0]) * 180 / Math.PI, locked: false };
+        }
+        // XYZ: θ = asin(m02)；万向锁 |m02|≈1
+        const s = Math.max(-1, Math.min(1, M[0][2]));
+        const th = Math.asin(s) * 180 / Math.PI;
+        if (Math.abs(M[0][2]) > 0.9999) {
+          const pos = M[0][2] > 0;   // θ = +90°
+          return { ph: 0, th, ps: Math.atan2(pos ? M[1][0] : -M[1][0], pos ? -M[2][0] : M[2][0]) * 180 / Math.PI, locked: true };
+        }
+        return { ph: Math.atan2(-M[1][2], M[2][2]) * 180 / Math.PI, th, ps: Math.atan2(-M[0][1], M[0][0]) * 180 / Math.PI, locked: false };
+      },
+
+      update() {
+        const result = this._el.querySelector('#eq-result');
+        if (!result) return;
+        let M, eulerInfo = null, note = '';
+
+        if (this.mode === 'euler') {
+          const ph = this._get('eq-ph'), th = this._get('eq-th'), ps = this._get('eq-ps');
+          const order = this._el.querySelector('#eq-order')?.value || 'ZYX';
+          const Rx = this._rotM('x', ph), Ry = this._rotM('y', th), Rz = this._rotM('z', ps);
+          M = order === 'ZYX' ? this._mul(this._mul(Rz, Ry), Rx) : this._mul(this._mul(Rx, Ry), Rz);
+          eulerInfo = { ph, th, ps, order, locked: order === 'ZYX' ? Math.abs(Math.sin(th * Math.PI / 180)) > 0.9999 : Math.abs(Math.cos(th * Math.PI / 180)) > 0.9999 };
+          note = `R = R${order[0]}·R${order[1]}·R${order[2]}（${order} 乘序）`;
+        } else if (this.mode === 'quat') {
+          let w = this._get('eq-qw'), x = this._get('eq-qx'), y = this._get('eq-qy'), z = this._get('eq-qz');
+          const n = Math.hypot(w, x, y, z);
+          if (n < 1e-12) { result.innerHTML = '<div class="text-sm" style="color:var(--danger)">四元数范数为 0，无法表示旋转</div>'; return; }
+          if (Math.abs(n - 1) > 1e-9) note = `已归一化（|q|=${n.toFixed(5)} → 1）`;
+          w /= n; x /= n; y /= n; z /= n;
+          M = this._quatToM({ w, x, y, z });
+        } else {
+          M = [0, 1, 2].map(i => [0, 1, 2].map(j => this._get('eq-m' + i + j)));
+          const det = this._det3(M);
+          if (Math.abs(det - 1) > 0.01) note = `⚠ det(R) = ${det.toFixed(4)} ≠ 1，输入可能不是正交旋转矩阵`;
+        }
+
+        const q = this._mToQuat(M);
+        const order = this.mode === 'euler' ? eulerInfo.order : 'ZYX';
+        const eu = eulerInfo && this.mode === 'euler' ? { ph: eulerInfo.ph, th: eulerInfo.th, ps: eulerInfo.ps, locked: eulerInfo.locked } : this._mToEuler(M, order);
+        const ang = 2 * Math.acos(Math.max(-1, Math.min(1, q.w))) * 180 / Math.PI;
+        const sn = Math.sqrt(Math.max(1e-18, 1 - q.w * q.w));
+        const axis = ang < 0.01 ? null : { x: q.x / sn, y: q.y / sn, z: q.z / sn };
+
+        const locked = this.mode === 'euler' ? eulerInfo.locked : eu.locked;
+        const mtx = `<table style="border-collapse:collapse;font-family:ui-monospace,Consolas,monospace;font-size:0.82rem">
+          ${M.map(row => `<tr>${row.map(v => `<td style="border:1px solid var(--border);padding:0.3rem 0.55rem;text-align:right">${(Math.abs(v) < 5e-5 ? 0 : v).toFixed(4)}</td>`).join('')}</tr>`).join('')}
+        </table>`;
+
+        result.innerHTML = `
+          <div class="space-y-3">
+            ${note ? `<div class="text-xs" style="color:var(--text-secondary)">${note}</div>` : ''}
+            ${locked ? `
+            <div style="padding:0.7rem 0.9rem;border-radius:0.5rem;background:rgba(217,119,6,0.1);border:1px solid rgba(217,119,6,0.4)">
+              <div style="font-weight:600;color:var(--warning)">⚠ 万向锁（Gimbal Lock）</div>
+              <div class="text-xs mt-1" style="color:var(--text-secondary);line-height:1.6">中间角 θ = ±90° 使第一、三次旋转轴共线，丢失一个旋转自由度——此时 φ 与 ψ 不再独立，只有组合角 (ψ∓φ) 可辨识，无数组 (φ, ψ) 对应同一姿态（上方已取 φ=0 的规范解）。工程对策：姿态累积与插值用四元数/旋转矩阵（<a href="javascript:void(0)" onclick="App.loadDetail('robo-09')" style="color:var(--primary)">robo-09 力控制中的姿态误差</a>同理），仅在显示时转欧拉角。</div>
+            </div>` : ''}
+            <div class="grid grid-cols-1 gap-3">
+              <div class="p-3 rounded" style="background:var(--bg-secondary);border:1px solid var(--border)">
+                <div class="text-sm font-medium mb-2">旋转矩阵 R（${this.mode === 'euler' ? '由欧拉角生成' : this.mode === 'quat' ? '由四元数生成' : '输入值'}）${this.mode === 'euler' ? ` <span class="text-xs" style="color:var(--text-secondary)">${note}</span>` : ''}</div>
+                ${mtx}
+              </div>
+              <div class="p-3 rounded" style="background:var(--bg-secondary);border:1px solid var(--border)">
+                <div class="text-sm font-medium mb-1">四元数 q = w + xi + yj + zk（单位化）</div>
+                <div style="font-family:ui-monospace,Consolas,monospace;font-size:0.9rem">w = <b>${q.w.toFixed(6)}</b>，x = <b>${q.x.toFixed(6)}</b>，y = <b>${q.y.toFixed(6)}</b>，z = <b>${q.z.toFixed(6)}</b></div>
+                <div class="text-xs mt-1" style="color:var(--text-secondary)">q 与 −q 表示同一旋转（双倍覆盖）；w 分量即 cos(θ_axis/2)。</div>
+              </div>
+              <div class="p-3 rounded" style="background:var(--bg-secondary);border:1px solid var(--border)">
+                <div class="text-sm font-medium mb-1">欧拉角（${order} 顺序，φ=X θ=Y ψ=Z，单位°）</div>
+                <div style="font-family:ui-monospace,Consolas,monospace;font-size:0.9rem">φ = <b>${eu.ph.toFixed(2)}°</b>，θ = <b>${eu.th.toFixed(2)}°</b>，ψ = <b>${eu.ps.toFixed(2)}°</b>${locked ? ' <span style="color:var(--warning)">（φ=0 规范解，万向锁）</span>' : ''}</div>
+              </div>
+              <div class="p-3 rounded" style="background:var(--bg-secondary);border:1px solid var(--border)">
+                <div class="text-sm font-medium mb-1">轴角表示</div>
+                <div style="font-family:ui-monospace,Consolas,monospace;font-size:0.9rem">${axis ? `绕轴 [${axis.x.toFixed(4)}, ${axis.y.toFixed(4)}, ${axis.z.toFixed(4)}] 旋转 <b>${ang.toFixed(2)}°</b>` : '单位旋转（角度≈0°，轴无定义）'}</div>
+              </div>
+            </div>
+            <div class="text-xs" style="color:var(--text-secondary)">闭环校验：欧拉角 → 矩阵 → 四元数 → 矩阵 → 欧拉角往返应回到原值（万向锁点除外）。四元数乘法按 Hamilton 约定（i²=j²=k²=ijk=−1）。</div>
+          </div>`;
+      },
+    },
+
+    // ==================== 传函化简与部分分式（自动控制） ====================
+    tfSimplify: {
+      render(el) {
+        this._el = el;
+        el.innerHTML = `
+          <div class="space-y-4">
+            <div class="info-box info"><div><b>传递函数 → 零极点 / 部分分式</b>：输入分子分母多项式系数（<b>降幂</b>，逗号或空格分隔），如 "1 3 2" 表示 s²+3s+2。输出零点、极点（含重数）、增益、零极点形式、部分分式展开与稳定性。依据 act-05（时域分析）与 sig-05（逆变换）。</div></div>
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="text-sm">分子系数 b（降幂）</label><input type="text" id="tf-num" value="2" class="w-full px-3 py-2 rounded mt-1 text-sm" style="border:1px solid var(--border);background:var(--bg)"></div>
+              <div><label class="text-sm">分母系数 a（降幂）</label><input type="text" id="tf-den" value="1 3 2" class="w-full px-3 py-2 rounded mt-1 text-sm" style="border:1px solid var(--border);background:var(--bg)"></div>
+            </div>
+            <div class="flex flex-wrap gap-2 items-center">
+              <span class="text-xs" style="color:var(--text-secondary)">示例：</span>
+              <button data-n="2" data-d="1 3 2" class="tf-demo text-xs px-2 py-1 rounded" style="border:1px solid var(--border);background:var(--bg-primary)">① 2/(s²+3s+2)</button>
+              <button data-n="1 3" data-d="1 5 8 4" class="tf-demo text-xs px-2 py-1 rounded" style="border:1px solid var(--border);background:var(--bg-primary)">② (s+3)/((s+1)(s+2)²) 重根</button>
+              <button data-n="1" data-d="1 3 7 5" class="tf-demo text-xs px-2 py-1 rounded" style="border:1px solid var(--border);background:var(--bg-primary)">③ 1/((s+1)(s²+2s+5)) 复极点</button>
+              <button data-n="1 5" data-d="1 3 2" class="tf-demo text-xs px-2 py-1 rounded" style="border:1px solid var(--border);background:var(--bg-primary)">④ (s+5)/(s²+3s+2) 真分式</button>
+              <button data-n="1 3 2" data-d="1 1" class="tf-demo text-xs px-2 py-1 rounded" style="border:1px solid var(--border);background:var(--bg-primary)">⑤ 双直接项（假分式）</button>
+            </div>
+            <button id="tf-calc" class="w-full px-4 py-2 rounded font-medium" style="background:var(--primary);color:white">计算</button>
+            <div id="tf-result" class="p-3 rounded" style="background:var(--bg-secondary);border:1px solid var(--border);min-height:3rem"></div>
+          </div>`;
+        el.querySelectorAll('.tf-demo').forEach(b => b.addEventListener('click', () => {
+          this._el.querySelector('#tf-num').value = b.dataset.n;
+          this._el.querySelector('#tf-den').value = b.dataset.d;
+          this.calc();
+        }));
+        this._el.querySelector('#tf-calc').addEventListener('click', () => this.calc());
+      },
+
+      // ---- 复数与多项式工具 ----
+      _c(re, im = 0) { return { re, im }; },
+      _cadd(a, b) { return { re: a.re + b.re, im: a.im + b.im }; },
+      _csub(a, b) { return { re: a.re - b.re, im: a.im - b.im }; },
+      _cmul(a, b) { return { re: a.re * b.re - a.im * b.im, im: a.re * b.im + a.im * b.re }; },
+      _cdiv(a, b) { const d = b.re * b.re + b.im * b.im; return { re: (a.re * b.re + a.im * b.im) / d, im: (a.im * b.re - a.re * b.im) / d }; },
+      _cabs(a) { return Math.hypot(a.re, a.im); },
+      _cstr(a, prec = 4) {
+        if (Math.abs(a.im) < 1e-6) return (+a.re.toFixed(prec)).toString();
+        const re = Math.abs(a.re) < 1e-6 ? '' : a.re.toFixed(prec);
+        const sg = a.im >= 0 ? (re ? ' + ' : '') : (re ? ' − ' : '−');
+        return `${re}${sg}${Math.abs(a.im).toFixed(prec)}j`;
+      },
+      _cpx(a) { return a.im > 1e-9 || a.im < -1e-9; },
+
+      // 系数解析：降幂
+      _parse(str) {
+        return str.trim().split(/[\s,;]+/).filter(Boolean).map(Number).filter(v => !isNaN(v));
+      },
+
+      // 多项式字符串（降幂系数 → 可读式）
+      _polyStr(coeffs, v = 's') {
+        const n = coeffs.length - 1;
+        const parts = [];
+        coeffs.forEach((c, i) => {
+          const p = n - i;
+          if (Math.abs(c) < 1e-12) return;
+          const sign = c > 0 ? (parts.length ? ' + ' : '') : (parts.length ? ' − ' : '−');
+          const mag = Math.abs(c);
+          const magS = Math.abs(mag - 1) < 1e-12 && p > 0 ? '' : (+mag.toFixed(4)).toString();
+          parts.push(sign + magS + (p > 0 ? v + (p > 1 ? `<sup>${p}</sup>` : '') : ''));
+        });
+        return parts.length ? parts.join('') : '0';
+      },
+
+      // 多项式求值（复数点）
+      _polyVal(coeffs, s) {
+        let r = this._c(0);
+        coeffs.forEach(c => r = this._cadd(this._cmul(r, s), this._c(c)));
+        return r;
+      },
+
+      // Durand-Kerner 同步迭代求全部复根（降幂系数）
+      _roots(coeffs) {
+        let c = coeffs.slice();
+        while (c.length > 1 && Math.abs(c[0]) < 1e-12) c.shift();
+        const n = c.length - 1;
+        if (n < 1) return [];
+        const lead = c[0];
+        const monic = c.map(v => v / lead);
+        if (n === 1) return [this._cdiv(this._c(-monic[1]), this._c(1))];
+        let roots = [];
+        for (let k = 0; k < n; k++) {
+          const arg = 2 * Math.PI * k / n + 0.35;
+          roots.push(this._c(0.6 * Math.cos(arg) + 0.4, 0.6 * Math.sin(arg) + 0.7));
+        }
+        for (let iter = 0; iter < 600; iter++) {
+          let move = 0;
+          for (let i = 0; i < n; i++) {
+            let denom = this._c(1);
+            for (let j = 0; j < n; j++) {
+              if (j !== i) denom = this._cmul(denom, this._csub(roots[i], roots[j]));
+            }
+            const delta = this._cdiv(this._polyVal(monic, roots[i]), denom);
+            roots[i] = this._csub(roots[i], delta);
+            move = Math.max(move, this._cabs(delta));
+          }
+          if (move < 1e-14) break;
+        }
+        // 实系数多项式：把极小虚部归零（数值噪声）
+        roots = roots.map(r => (Math.abs(r.im) < 1e-8 * (1 + Math.abs(r.re)) ? this._c(r.re, 0) : r));
+        return roots;
+      },
+
+      // 多项式除以 (s − r)：综合除法（复数），返回 {q, rem}
+      _synthDiv(coeffs, r) {
+        const q = [coeffs[0]];
+        let cur = coeffs[0];
+        for (let i = 1; i < coeffs.length; i++) {
+          cur = this._cadd(coeffs[i], this._cmul(cur, r));
+          q.push(cur);
+        }
+        return { q: q.slice(0, -1), rem: q[q.length - 1] };
+      },
+
+      // 复数线性方程组高斯消元 M·x = b
+      _solveLin(M, b) {
+        const n = b.length;
+        const A = M.map((row, i) => row.map(v => ({ ...v })).concat([{ ...b[i] }]));
+        for (let col = 0; col < n; col++) {
+          let piv = col;
+          for (let r = col + 1; r < n; r++) if (this._cabs(A[r][col]) > this._cabs(A[piv][col])) piv = r;
+          if (this._cabs(A[piv][col]) < 1e-14) return null;
+          [A[col], A[piv]] = [A[piv], A[col]];
+          for (let r = 0; r < n; r++) {
+            if (r === col) continue;
+            const f = this._cdiv(A[r][col], A[col][col]);
+            for (let k = col; k <= n; k++) A[r][k] = this._csub(A[r][k], this._cmul(f, A[col][k]));
+          }
+        }
+        return A.map((row, i) => this._cdiv(row[n], row[i]));
+      },
+
+      calc() {
+        const result = this._el.querySelector('#tf-result');
+        const num = this._parse(this._el.querySelector('#tf-num')?.value || '');
+        const den = this._parse(this._el.querySelector('#tf-den')?.value || '');
+        if (num.length < 1 || den.length < 2 || Math.abs(den[0]) < 1e-12) {
+          result.innerHTML = '<div class="text-sm" style="color:var(--danger)">输入无效：分子至少 1 个系数，分母至少 2 个且首项不为 0</div>';
+          return;
+        }
+        const K = num[0] / den[0];
+        const zeros = this._roots(num);
+        const polesRaw = this._roots(den);
+
+        // 极点合并（按距离聚类，标注重数）
+        const poles = [];
+        polesRaw.forEach(p => {
+          const g = poles.find(q => this._cabs(this._csub(p, q.p)) < 1e-4 * (1 + this._cabs(p)));
+          if (g) g.m += 1; else poles.push({ p, m: 1 });
+        });
+
+        // 多项式长除法：num/den = 直接项 + R/den（deg R < deg den）
+        let rem = num.slice();
+        while (rem.length > 0 && Math.abs(rem[0]) < 1e-12) rem.shift();
+        const direct = [];
+        while (rem.length >= den.length) {
+          const f = rem[0] / den[0];
+          direct.push(f);
+          for (let j = 0; j < den.length; j++) rem[j] -= f * den[j];
+          rem.shift();
+        }
+        while (rem.length > 0 && Math.abs(rem[0]) < 1e-12) rem.shift();
+        direct.forEach((v, i) => { if (Math.abs(v) < 1e-12) direct[i] = 0; });
+        const hasDirect = direct.some(v => Math.abs(v) > 1e-12);
+
+        // 部分分式：对每个极点组（重数 m），基多项式 B_ij(s) = D_monic(s)/(s−p)^j，解线性方程组
+        const denM = den.map(v => v / den[0]);
+        const remM = rem.map(v => v / den[0]);
+        const basis = [];   // {p, j, coeffs}
+        poles.forEach(({ p, m }) => {
+          for (let j = 1; j <= m; j++) {
+            let B = denM.map(v => this._c(v));
+            for (let t = 0; t < j; t++) B = this._synthDiv(B, p).q;
+            basis.push({ p, j, coeffs: B });
+          }
+        });
+        const D = denM.length - 1;
+        const Rvec = new Array(D + 1).fill(0).map(() => this._c(0));
+        remM.forEach((v, i) => Rvec[D - (remM.length - 1 - i)] = this._c(v));
+        const M = basis.map(b => {
+          const col = new Array(D + 1).fill(0).map(() => this._c(0));
+          const off = D - (b.coeffs.length - 1);          // 右对齐：低次端贴常数位
+          b.coeffs.forEach((v, i) => col[off + i] = v);
+          return col;
+        });
+        const At = M[0].map((_, r) => M.map(col => col[r])).slice(1);   // 转置为行；去掉 s^D 位恒等 0=0 行（基多项式最高 D−1 次）
+        const resid = this._solveLin(At, Rvec.slice(1));
+
+        // 稳定性
+        const maxRe = Math.max(...poles.map(g => g.p.re));
+
+        const zz = zeros.map(z => this._cstr(z)).join('、') || '（无）';
+        const pp = poles.map(g => `${this._cstr(g.p)}${g.m > 1 ? `（×${g.m}）` : ''}`).join('、');
+        const zf = zeros.map(z => `(s − (${this._cstr(z)}))`).join('');
+        const pf = poles.map(g => `(s − (${this._cstr(g.p)}))${g.m > 1 ? `<sup>${g.m}</sup>` : ''}`).join('');
+
+        // 部分分式项分组渲染
+        let pfHtml = '';
+        if (resid) {
+          poles.forEach(({ p, m }) => {
+            const terms = [];
+            for (let j = 1; j <= m; j++) {
+              const r = resid[basis.findIndex(b => b.p === p && b.j === j)];
+              if (Math.abs(r.re) < 1e-8 && Math.abs(r.im) < 1e-8) continue;
+              terms.push(`<span style="white-space:nowrap">${this._cstr(r)} / (s − (${this._cstr(p)}))${j > 1 ? `<sup>${j}</sup>` : ''}</span>`);
+            }
+            if (terms.length) pfHtml += (pfHtml ? ' + ' : '') + terms.join(' + ');
+          });
+          if (!pfHtml) pfHtml = '0';
+        } else pfHtml = '<span style="color:var(--danger)">求解失败（极点重数识别异常）</span>';
+
+        const stable = maxRe < -1e-9, marginal = Math.abs(maxRe) <= 1e-9;
+
+        result.innerHTML = `
+          <div class="space-y-2 text-sm">
+            <div><b>G(s) =</b> [ ${this._polyStr(num)} ] / [ ${this._polyStr(den)} ]</div>
+            <div><b>增益</b> K = b<sub>m</sub>/a<sub>n</sub> = <b>${(+K.toFixed(4))}</b>（首一化后分子乘 K）</div>
+            <div><b>零点</b>（${zeros.length} 个）：${zz}</div>
+            <div><b>极点</b>（${polesRaw.length} 个，含重数）：${pp}</div>
+            <div style="font-family:ui-monospace,Consolas,monospace;font-size:0.82rem;background:var(--bg);padding:0.6rem 0.7rem;border-radius:0.4rem">
+              <b>零极点形式</b>：G(s) = ${(+K.toFixed(4))} · ${zf || '1'} / ${pf}
+            </div>
+            ${hasDirect ? `<div style="font-family:ui-monospace,Consolas,monospace;font-size:0.82rem;background:var(--bg);padding:0.6rem 0.7rem;border-radius:0.4rem">
+              <b>长除直接项</b>：${this._polyStr(direct)}（假分式部分，逆变换为冲激及其导数）
+            </div>` : ''}
+            <div style="font-family:ui-monospace,Consolas,monospace;font-size:0.82rem;background:var(--bg);padding:0.6rem 0.7rem;border-radius:0.4rem">
+              <b>部分分式展开</b>：G(s) = ${hasDirect ? '（直接项） + ' : ''}${pfHtml}
+            </div>
+            <div class="flex items-center gap-2">
+              <b>稳定性：</b>
+              ${stable ? '<span style="color:var(--success);font-weight:600">✅ 稳定（所有极点实部 < 0，max Re = ' + maxRe.toFixed(4) + '）</span>'
+                : marginal ? '<span style="color:var(--warning);font-weight:600">⚠ 临界稳定（存在虚轴极点，max Re = ' + maxRe.toFixed(4) + '）</span>'
+                : '<span style="color:var(--danger);font-weight:600">❌ 不稳定（存在右半平面极点，max Re = ' + maxRe.toFixed(4) + '）</span>'}
+            </div>
+            <div class="text-xs" style="color:var(--text-secondary)">求根用 Durand-Kerner 同步迭代；重极点的部分分式用留数线性方程组法（通分比较系数）。共轭复极点的留数必共轭，成对合并后对应实数二阶项。拉普拉斯逆变换时每项查表即可（act-03 / sig-05）。</div>
           </div>`;
       },
     },

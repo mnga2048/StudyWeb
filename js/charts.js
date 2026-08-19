@@ -2544,3 +2544,188 @@ Charts.register('hashtable-vis', function(el) {
   $('ht-reset').addEventListener('click', reset);
   el.querySelector('#ht-mth button').click();
 });
+
+// 机械臂正运动学可视化（嵌入 robo-02）：2R/3R 平面机械臂，关节角/连杆长度滑块可调，
+// Canvas 实时绘制连杆、关节角弧线与末端轨迹，同步显示 DH 参数表与末端位姿
+Charts.register('robot-arm-fk', function(el) {
+  let nJoints = 2;
+  const state = { th: [30, -70, 40], a: [1.0, 0.8, 0.6] };   // 角度制 / 单位长度
+  let trail = [];
+
+  el.innerHTML = `
+    <div style="padding:0.5rem 0 0">
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center;padding:0.5rem 0.75rem;background:var(--bg-secondary);border-radius:0.5rem;font-size:0.8rem">
+        <div id="fk-nj" style="display:flex;gap:0.4rem">
+          <button data-n="2" style="padding:0.28rem 0.85rem;border-radius:9999px;font-size:0.78rem;border:1px solid var(--border);background:var(--bg-primary);cursor:pointer">2R 机械臂</button>
+          <button data-n="3" style="padding:0.28rem 0.85rem;border-radius:9999px;font-size:0.78rem;border:1px solid var(--border);background:var(--bg-primary);cursor:pointer">3R 机械臂</button>
+        </div>
+        <button id="fk-clear" style="padding:0.28rem 0.8rem;border-radius:0.4rem;border:1px solid var(--border);background:var(--bg-primary);cursor:pointer;font-size:0.78rem">✕ 清除轨迹</button>
+        <span id="fk-info" style="color:var(--text-secondary);font-family:ui-monospace,Consolas,monospace;font-size:0.74rem"></span>
+      </div>
+      <canvas id="fk-canvas" width="680" height="420" style="width:100%;max-width:680px;display:block;margin:0.6rem auto 0;border:1px solid var(--border);border-radius:0.5rem"></canvas>
+      <div id="fk-ctrls" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0.35rem 1.5rem;padding:0.35rem 0.25rem 0"></div>
+      <div id="fk-dh" style="margin-top:0.7rem;overflow-x:auto"></div>
+      <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:0.45rem;line-height:1.55">拖动 θ 滑块观察末端描出的轨迹：2R 臂的工作空间是圆环 <strong>r<sub>max</sub> = a₁+a₂</strong>、<strong>r<sub>min</sub> = |a₁−a₂|</strong>；3R 臂若 a₃ 足够小则可覆盖整个圆盘。末端位姿由 DH 矩阵连乘得到（对应正文 $^0T_n$ 公式），姿态角 φ = θ₁+θ₂(+θ₃)。连杆长度 a 变化时坐标自动缩放。</div>
+    </div>`;
+  const $ = id => el.querySelector('#' + id);
+  const canvas = $('fk-canvas'), ctx = canvas.getContext('2d');
+
+  function cssVar(name, fallback) {
+    const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return v || fallback;
+  }
+
+  // 平面正运动学：连乘各连杆变换，返回各关节坐标与末端位姿
+  function fk() {
+    const pts = [{ x: 0, y: 0 }];
+    let ang = 0, x = 0, y = 0;
+    for (let i = 0; i < nJoints; i++) {
+      ang += state.th[i] * Math.PI / 180;
+      x += state.a[i] * Math.cos(ang);
+      y += state.a[i] * Math.sin(ang);
+      pts.push({ x, y });
+    }
+    return { pts, end: { x, y }, phi: ang };
+  }
+
+  function render() {
+    const { pts, end, phi } = fk();
+    const W = canvas.width, H = canvas.height;
+    const cx = W / 2, cy = H / 2;
+    const Lsum = state.a.slice(0, nJoints).reduce((s, v) => s + v, 0);
+    const scale = Math.min(W / 2, H / 2 - 12) / (Lsum + 0.35);
+    const toScr = p => ({ x: cx + p.x * scale, y: cy - p.y * scale });
+
+    ctx.clearRect(0, 0, W, H);
+    const cGrid = cssVar('--border', '#e2e8f0'), cAxis = cssVar('--text-secondary', '#64748b');
+    const cText = cssVar('--text', '#1e293b'), cPrimary = cssVar('--primary', '#2563eb');
+
+    // 网格
+    ctx.strokeStyle = cGrid; ctx.lineWidth = 1; ctx.globalAlpha = 0.45;
+    for (let g = 0; g <= Math.ceil(Lsum) + 1; g++) {
+      const r = g * scale;
+      ctx.beginPath(); ctx.moveTo(cx - r, cy); ctx.lineTo(cx + r, cy); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx, cy - r); ctx.lineTo(cx, cy + r); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+
+    // 工作空间边界（圆环）
+    const Lmax = Math.max(...state.a.slice(0, nJoints)), Lrest = Lsum - Lmax;
+    ctx.setLineDash([5, 5]); ctx.strokeStyle = cAxis; ctx.globalAlpha = 0.5;
+    ctx.beginPath(); ctx.arc(cx, cy, Lsum * scale, 0, 2 * Math.PI); ctx.stroke();
+    if (Lrest > 0.01) { ctx.beginPath(); ctx.arc(cx, cy, Lrest * scale, 0, 2 * Math.PI); ctx.stroke(); }
+    ctx.setLineDash([]); ctx.globalAlpha = 1;
+
+    // 坐标轴与刻度
+    ctx.strokeStyle = cAxis; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(20, cy); ctx.lineTo(W - 20, cy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx, 14); ctx.lineTo(cx, H - 14); ctx.stroke();
+    ctx.fillStyle = cAxis; ctx.font = '11px ui-monospace, Consolas, monospace';
+    ctx.fillText('x', W - 30, cy - 6); ctx.fillText('y', cx + 6, 24);
+    ctx.fillText('1', cx + scale + 2, cy + 13);
+
+    // 末端轨迹
+    if (trail.length > 1) {
+      ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1.6;
+      for (let i = 1; i < trail.length; i++) {
+        const p0 = toScr(trail[i - 1]), p1 = toScr(trail[i]);
+        ctx.globalAlpha = 0.25 + 0.75 * i / trail.length;
+        ctx.beginPath(); ctx.moveTo(p0.x, p0.y); ctx.lineTo(p1.x, p1.y); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    // 关节角弧线（θ₁ 从 x 正方向起）
+    const r0 = 0.42 * scale;
+    ctx.strokeStyle = cPrimary; ctx.lineWidth = 1.4; ctx.globalAlpha = 0.7;
+    const th1 = state.th[0] * Math.PI / 180;
+    ctx.beginPath(); ctx.arc(cx, cy, r0, -th1, 0, th1 > 0);
+    ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.fillStyle = cPrimary; ctx.font = '11px ui-monospace, Consolas, monospace';
+    ctx.fillText('θ₁', cx + r0 * Math.cos(th1 / 2) - 6, cy - r0 * Math.sin(th1 / 2) - 4);
+
+    // 连杆与关节
+    const scr = pts.map(toScr);
+    ctx.lineCap = 'round';
+    for (let i = 0; i < scr.length - 1; i++) {
+      ctx.strokeStyle = i === 0 ? cPrimary : cssVar('--warning', '#d97706');
+      ctx.lineWidth = 9 - i * 1.5;
+      ctx.globalAlpha = 0.85;
+      ctx.beginPath(); ctx.moveTo(scr[i].x, scr[i].y); ctx.lineTo(scr[i + 1].x, scr[i + 1].y); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    // 基座三角形
+    ctx.fillStyle = cText;
+    ctx.beginPath(); ctx.moveTo(cx - 11, cy + 16); ctx.lineTo(cx + 11, cy + 16); ctx.lineTo(cx, cy + 3); ctx.closePath(); ctx.fill();
+    // 关节圆点
+    scr.slice(0, -1).forEach((p, i) => {
+      if (i === 0) return;
+      ctx.fillStyle = cssVar('--bg', '#fff'); ctx.strokeStyle = cText; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(p.x, p.y, 5, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    });
+    // 末端点 + 姿态箭头
+    const pe = scr[scr.length - 1];
+    ctx.fillStyle = '#ef4444';
+    ctx.beginPath(); ctx.arc(pe.x, pe.y, 6, 0, 2 * Math.PI); ctx.fill();
+    const ax = pe.x + 22 * Math.cos(-phi), ay = pe.y + 22 * Math.sin(-phi);
+    ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(pe.x, pe.y); ctx.lineTo(ax, ay); ctx.stroke();
+    ctx.beginPath(); ctx.arc(ax, ay, 2.5, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = '#ef4444'; ctx.font = '11px ui-monospace, Consolas, monospace';
+    ctx.fillText('φ', ax + 4, ay - 4);
+
+    // 信息行
+    const deg = a => ((a * 180 / Math.PI + 540) % 360 - 180);
+    $('fk-info').textContent = `末端 (${end.x.toFixed(3)}, ${end.y.toFixed(3)}) · φ=${deg(phi).toFixed(1)}° · 可达域 [${Lrest.toFixed(2)}, ${Lsum.toFixed(2)}] · 轨迹 ${trail.length} 点`;
+
+    // DH 参数表
+    let rows = '';
+    for (let i = 0; i < nJoints; i++) {
+      rows += `<tr><td class="font-medium">${i + 1}</td><td>0</td><td>${state.a[i].toFixed(2)}</td><td>0</td><td>${state.th[i]}°</td></tr>`;
+    }
+    $('fk-dh').innerHTML = `<table class="compare-table" style="font-size:0.8rem">
+      <thead><tr><th>连杆 i</th><th>α<sub>i</sub>（扭角）</th><th>a<sub>i</sub>（长度）</th><th>d<sub>i</sub>（偏距）</th><th>θ<sub>i</sub>（关节角）</th></tr></thead>
+      <tbody>${rows}</tbody></table>`;
+  }
+
+  function buildCtrls() {
+    let html = '';
+    for (let i = 0; i < nJoints; i++) {
+      html += `<label style="font-size:0.78rem;color:var(--text-secondary)">θ<sub>${i + 1}</sub> 关节角 <span id="fk-thv-${i}" style="color:var(--primary);font-weight:600">${state.th[i]}°</span>
+        <input type="range" id="fk-th-${i}" min="-180" max="180" step="1" value="${state.th[i]}" style="width:100%;accent-color:var(--primary)"></label>
+        <label style="font-size:0.78rem;color:var(--text-secondary)">a<sub>${i + 1}</sub> 连杆长 <span id="fk-av-${i}" style="color:var(--primary);font-weight:600">${state.a[i].toFixed(2)}</span>
+        <input type="range" id="fk-a-${i}" min="0.2" max="2" step="0.05" value="${state.a[i]}" style="width:100%;accent-color:var(--primary)"></label>`;
+    }
+    $('fk-ctrls').innerHTML = html;
+    for (let i = 0; i < nJoints; i++) {
+      $('fk-th-' + i).addEventListener('input', e => {
+        state.th[i] = +e.target.value;
+        $('fk-thv-' + i).textContent = state.th[i] + '°';
+        const { end } = fk();
+        const last = trail[trail.length - 1];
+        if (!last || Math.hypot(end.x - last.x, end.y - last.y) > 0.004) {
+          trail.push({ ...end });
+          if (trail.length > 900) trail.shift();
+        }
+        render();
+      });
+      $('fk-a-' + i).addEventListener('input', e => {
+        state.a[i] = +e.target.value;
+        $('fk-av-' + i).textContent = state.a[i].toFixed(2);
+        trail = [];
+        render();
+      });
+    }
+  }
+
+  $('fk-nj').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    nJoints = +b.dataset.n;
+    $('fk-nj').querySelectorAll('button').forEach(x => { x.style.background = 'var(--bg-primary)'; x.style.borderColor = 'var(--border)'; x.style.color = ''; });
+    b.style.background = 'var(--primary)'; b.style.borderColor = 'var(--primary)'; b.style.color = '#fff';
+    trail = [];
+    buildCtrls();
+    render();
+  }));
+  $('fk-clear').addEventListener('click', () => { trail = []; render(); });
+  el.querySelector('#fk-nj button').click();
+});

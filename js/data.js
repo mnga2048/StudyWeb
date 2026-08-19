@@ -97,7 +97,7 @@ const CourseData = {
       { label: '知识板块', value: '21', color: 'blue' },
       { label: '知识点', value: '229', color: 'green' },
       { label: '交互图表', value: '22', color: 'purple' },
-      { label: '计算工具', value: '35', color: 'orange' },
+      { label: '计算工具', value: '39', color: 'orange' },
     ],
     sections: [
       { id: 'advanced-math', title: '高等数学', desc: '极限、微积分、级数、微分方程，工学类高数全考点', icon: '🔴', level: '应试' },
@@ -9805,6 +9805,12 @@ std::vector&lt;<span class="code-keyword">int</span>&gt; data = {<span class="co
         <div class="formula-block">
           $$^0T_1 = \\begin{bmatrix} c_1 & -s_1 & 0 & a_1 c_1 \\\\ s_1 & c_1 & 0 & a_1 s_1 \\\\ 0 & 0 & 1 & 0 \\\\ 0 & 0 & 0 & 1 \\end{bmatrix}, \\quad ^1T_2 = \\begin{bmatrix} c_2 & -s_2 & 0 & a_2 c_2 \\\\ s_2 & c_2 & 0 & a_2 s_2 \\\\ 0 & 0 & 1 & 0 \\\\ 0 & 0 & 0 & 1 \\end{bmatrix}$$
         </div>
+
+        <h4 class="font-medium mt-6 mb-2">交互实验：拖动关节看正运动学</h4>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
+          把上面的公式变成可以"上手"的实验——拖动关节角 $\\theta_i$ 与连杆长度 $a_i$，机械臂实时按 DH 矩阵连乘摆位，末端描出轨迹；工作空间边界（虚线圆环）、末端坐标 $(x,y)$、姿态角 $\\phi$ 与 DH 参数表同步更新。<strong>试一试</strong>：只动 $\\theta_2$ 保持 $\\theta_1$ 不变，观察末端轨迹是以关节 2 为圆心的圆弧；两角同速同向则末端走大圆。
+        </p>
+        <div class="chart-container" data-chart="robot-arm-fk" style="min-height:520px"></div>
 
         <h4 class="font-medium mt-6 mb-2">齐次变换的性质</h4>
         <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
