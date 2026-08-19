@@ -342,6 +342,13 @@
           </div>`;
         }).join('')}
       </div>
+
+      <!-- 知识图谱 -->
+      <h2 class="text-xl font-semibold mb-4">知识图谱</h2>
+      <div class="knowledge-card mb-8">
+        <p class="text-sm mb-3" style="color:var(--text-secondary)">21 板块 × 229 个知识点的依赖关系全景。节点颜色表示学习状态：<span style="color:#059669">绿色=已完成</span> · <span style="color:#d97706">橙色=学习中</span> · <span style="color:#cbd5e1">灰色=未开始</span>。点击节点跳转。</p>
+        <div class="chart-container chart-container-lg" data-chart="knowledge-graph"></div>
+      </div>
     </div>`;
   }
 
@@ -809,8 +816,13 @@
     const panel = document.getElementById('tab-' + tabId);
     if (panel) {
       panel.classList.add('active');
-      // 延迟渲染图表，确保容器可见
-      requestAnimationFrame(() => { Charts.renderAll('page-container'); });
+      // 清除该面板内图表的初始化标记，强制重新渲染（解决 display:none 容器尺寸为 0 的问题）
+      panel.querySelectorAll('[data-chart]').forEach(el => { delete el.dataset.init; });
+      requestAnimationFrame(() => {
+        Charts.renderAll('page-container');
+        // 渲染后强制所有 ECharts 实例 resize 到正确尺寸
+        Charts._instances.forEach(inst => { try { inst.resize(); } catch {} });
+      });
     }
   };
 
