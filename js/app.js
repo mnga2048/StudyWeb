@@ -28,6 +28,53 @@
     'ai': '人工智能与边缘部署',
   };
 
+  // ========== 主线学习链（第〇章总纲：pwr→motor→mct→sns→emb→robo→linux→print→ai） ==========
+  const MAINLINE_GROUPS = ['power-electronics', 'motor-drive', 'modern-control',
+    'sensor', 'embedded-sys', 'robotics', 'linux-dev', 'digital-mfg', 'ai'];
+  const mainlineIds = (function () {
+    const ids = [];
+    MAINLINE_GROUPS.forEach(g => (CourseData[g]?.sections || []).forEach(s => ids.push(s.id)));
+    return ids;
+  })();
+  const MAINLINE_SET = new Set(mainlineIds);
+
+  // 板块内拓扑排序：只看组内依赖边，同层稳定按原始编号序（如 linux-10 整机联调依赖 12/13/14，排到 14 之后）
+  function topoSortGroup(groupId) {
+    const sections = CourseData[groupId]?.sections || [];
+    const ids = sections.map(s => s.id);
+    const idx = {}; ids.forEach((id, i) => idx[id] = i);
+    const idSet = new Set(ids);
+    const inDeg = {}, adj = {};
+    ids.forEach(id => { inDeg[id] = 0; adj[id] = []; });
+    ids.forEach(id => {
+      (KnowledgeDeps[id] || []).forEach(d => {
+        if (idSet.has(d) && d !== id && !adj[d].includes(id)) { adj[d].push(id); inDeg[id]++; }
+      });
+    });
+    const ready = ids.filter(id => inDeg[id] === 0);
+    const result = [];
+    while (ready.length) {
+      ready.sort((a, b) => idx[a] - idx[b]);
+      const cur = ready.shift();
+      result.push(cur);
+      adj[cur].forEach(n => { if (--inDeg[n] === 0) ready.push(n); });
+    }
+    ids.forEach(id => { if (!result.includes(id)) result.push(id); });  // 环兜底
+    return result.map(id => sections[idx[id]]);
+  }
+
+  // 主线下一节推荐：主线链顺序中第一个未完成、且主线前置（跨板块前置也计入）全部完成的节
+  function getMainlineNext() {
+    for (const gid of MAINLINE_GROUPS) {
+      for (const s of topoSortGroup(gid)) {
+        if (Progress.get(s.id) === 'completed') continue;
+        const unmet = (KnowledgeDeps[s.id] || []).filter(d => MAINLINE_SET.has(d) && Progress.get(d) !== 'completed');
+        if (unmet.length === 0) return { section: s, groupId: gid };
+      }
+    }
+    return null;
+  }
+
   // ========== 侧边栏渲染 ==========
   // 容错解析 sessionStorage
   let collapsedGroups = {};
@@ -168,6 +215,11 @@
     const container = document.getElementById('page-container');
     if (!container) return;
     cleanupPageResources();
+    // 导航离开错题刷题模式的节时自动退出（回来默认恢复常规测验视图）
+    if (typeof Quiz !== 'undefined' && Quiz.wrongMode && pageId !== Quiz.wrongMode) {
+      Quiz.wrongMode = null;
+      Quiz._wrongSession = null;
+    }
 
     if (currentPage) sessionStorage.setItem('sw_scroll_' + currentPage, window.scrollY);
     History.add(pageId);
@@ -497,22 +549,28 @@
 
     const { learning, unlocked } = getRecommendedPath();
     const weakSections = getWeakSections();
+    const wrongStats = WrongBook.getStats();
 
     return `<div>
       <div class="page-hero">
         <h1>学习路径</h1>
-        <p>知识图谱 · 学习推荐 · 掌握度分析 · 学习统计</p>
+        <p>主线学习 · 知识图谱 · 学习推荐 · 错题本 · 掌握度分析 · 学习统计</p>
       </div>
 
       <div class="roadmap-tabs">
-        <button class="roadmap-tab active" onclick="switchRoadmapTab('graph', this)">📊 知识图谱</button>
+        <button class="roadmap-tab active" onclick="switchRoadmapTab('mainline', this)">🧭 主线学习</button>
+        <button class="roadmap-tab" onclick="switchRoadmapTab('graph', this)">📊 知识图谱</button>
         <button class="roadmap-tab" onclick="switchRoadmapTab('path', this)">🎯 学习推荐</button>
+        <button class="roadmap-tab" onclick="switchRoadmapTab('wrongbook', this)">📕 错题本${wrongStats.questions > 0 ? ` (${wrongStats.questions})` : ''}</button>
         <button class="roadmap-tab" onclick="switchRoadmapTab('heatmap', this)">🌡 掌握度</button>
         <button class="roadmap-tab" onclick="switchRoadmapTab('stats', this)">📈 学习统计</button>
       </div>
 
+      <!-- Tab 0: 主线学习 -->
+      <div id="tab-mainline" class="roadmap-panel active">${renderMainlineTab()}</div>
+
       <!-- Tab 1: 知识图谱 -->
-      <div id="tab-graph" class="roadmap-panel active">
+      <div id="tab-graph" class="roadmap-panel">
         <div class="knowledge-card mb-4">
           <p class="card-desc">${SECTION_GROUPS.length} 大板块 × ${AllKnowledgeIds.length} 个知识点的依赖关系图。节点颜色表示学习状态：<span style="color:#059669">绿色=已完成</span>、<span style="color:#d97706">橙色=学习中</span>、<span style="color:#cbd5e1">灰色=未开始</span>。点击节点跳转到对应知识点。</p>
         </div>
@@ -620,7 +678,118 @@
           <div class="chart-container chart-container-lg" data-chart="accuracy-bar"></div>
         </div>
       </div>
+
+      <!-- Tab 5: 错题本 -->
+      <div id="tab-wrongbook" class="roadmap-panel">${renderWrongBookTab()}</div>
     </div>`;
+  }
+
+  // ========== 主线学习视图（总纲第〇章招牌功能） ==========
+  function renderMainlineTab() {
+    const total = mainlineIds.length;
+    let completed = 0;
+    mainlineIds.forEach(id => { if (Progress.get(id) === 'completed') completed++; });
+    const pct = total ? Math.round(completed / total * 100) : 0;
+
+    // 全链线性序（板块顺序 × 组内拓扑序），用于"第 X/N 节"定位
+    const flat = [];
+    MAINLINE_GROUPS.forEach(gid => topoSortGroup(gid).forEach(s => flat.push({ id: s.id, gid })));
+    const next = getMainlineNext();
+    const nextPos = next ? flat.findIndex(x => x.id === next.section.id) + 1 : 0;
+
+    const nextCard = next ? `
+      <div class="mainline-next-card">
+        <div class="mnc-label">🧭 下一节推荐 · 主线第 ${nextPos}/${total} 节</div>
+        <div class="mnc-title">${next.section.icon || '📄'} ${next.section.title}</div>
+        <div class="mnc-meta">${GROUP_LABELS[next.groupId]} · 主线整体 ${completed}/${total} 节（${pct}%）${Progress.get(next.section.id) === 'learning' ? ' · 继续上次未完成的节' : ''}</div>
+        <button class="mnc-btn" onclick="navigateTo('${next.section.id}')">继续学习 →</button>
+      </div>` : `
+      <div class="mainline-next-card done">
+        <div class="mnc-label">🧭 下一节推荐</div>
+        <div class="mnc-title">🎉 主线 9 板块已全部学完！</div>
+        <div class="mnc-meta">去错题本清错题、或回查阅区（hm/la/circ/ana/dig/ds/sig/cpp/os/net）按需巩固。</div>
+      </div>`;
+
+    const chain = MAINLINE_GROUPS.map((gid, gi) => {
+      const g = CourseData[gid];
+      const sorted = topoSortGroup(gid);
+      const done = sorted.filter(s => Progress.get(s.id) === 'completed').length;
+      const gpct = sorted.length ? Math.round(done / sorted.length * 100) : 0;
+      const nodes = sorted.map(s => {
+        const st = Progress.get(s.id);
+        const statusCls = st === 'completed' ? 'done' : st === 'learning' ? 'learning' : '';
+        const isNext = next && next.section.id === s.id;
+        const unmet = (KnowledgeDeps[s.id] || []).filter(d => MAINLINE_SET.has(d) && Progress.get(d) !== 'completed');
+        const acc = Quiz.getAccuracy(s.id);
+        return `<a class="mainline-node ${statusCls} ${isNext ? 'current' : ''}" onclick="navigateTo('${s.id}')">
+          <span class="mln-status">${st === 'completed' ? '✓' : st === 'learning' ? '◐' : '○'}</span>
+          <span class="mln-title">${s.title}</span>
+          ${acc !== null ? `<span class="mln-quiz ${acc >= 0.6 ? 'ok' : 'bad'}">测 ${Math.round(acc * 100)}%</span>` : ''}
+          ${unmet.length > 0 ? `<span class="mln-blocked" title="主线前置未完成：${unmet.join('、')}">前置待学</span>` : ''}
+          ${isNext ? '<span class="mln-here">📍 你在这里</span>' : ''}
+        </a>`;
+      }).join('');
+      return `${gi > 0 ? '<div class="mainline-arrow">↓</div>' : ''}
+        <div class="mainline-board">
+          <div class="mlb-head" onclick="navigateTo('${gid}')">
+            <span class="mlb-icon">${g.icon || ''}</span>
+            <span class="mlb-title">${g.title}</span>
+            <span class="mlb-count ${done === sorted.length && sorted.length > 0 ? 'alldone' : ''}">${done}/${sorted.length} 节</span>
+            <div class="mlb-bar"><div class="mlb-bar-inner" style="width:${gpct}%"></div></div>
+          </div>
+          <div class="mlb-nodes">${nodes}</div>
+        </div>`;
+    }).join('');
+
+    return `
+      ${nextCard}
+      <div class="knowledge-card mb-4">
+        <p class="card-desc"><strong>主线区</strong>（没学过的知识，从头系统精学）：按 <strong>电力电子 → 电机与拖动 → 现代控制 → 传感器 → 嵌入式 → 机器人学 → Linux 实战 → 3D 打印 → AI</strong> 推进——读正文 → 做自测 → 能推导。板块内按 KnowledgeDeps 拓扑排序（如 linux-10 整机联调排在 12/13/14 之后）；跨板块前置未完成（如 mct-11 需 sns-07）会标 <span class="mln-blocked">前置待学</span> 并自动跳过推荐。📍 当前位置 = 第一个未完成且前置就绪的节。查阅区（学校已学板块）按需速查，不在主线链内。</p>
+      </div>
+      ${chain}`;
+  }
+
+  // ========== 错题本视图 ==========
+  function renderWrongBookTab() {
+    const stats = WrongBook.getStats();
+    const groups = WrongBook.groupByBoard();
+
+    if (stats.questions === 0) {
+      return `<div class="knowledge-card">
+        <h3>📕 错题本</h3>
+        <p class="card-desc">做自测时答错的题会自动记录到这里；点击"刷错题"只重练本节错题，答对自动移出、答错次数继续累计。目前还没有错题——去任意章节做几道自测吧。</p>
+      </div>`;
+    }
+
+    const groupHtml = groups.map(g => `
+      <div class="wrongbook-board">
+        <div class="wbb-head">
+          <span>${g.groupIcon || ''} ${g.groupTitle}</span>
+          <span class="wbb-count">${g.sections.reduce((a, s) => a + s.questionCount, 0)} 题</span>
+        </div>
+        ${g.sections.map(s => `
+          <div class="wrongbook-row">
+            <span class="wbr-icon">${s.icon || '📄'}</span>
+            <span class="wbr-title" onclick="navigateTo('${s.sectionId}')">${s.title}</span>
+            <span class="wbr-meta">错 ${s.questionCount} 题 · 累计 ${s.mistakeCount} 次${s.maxCount > 1 ? ` · 最多 ${s.maxCount} 次` : ''}</span>
+            <button class="wbr-btn" onclick="Quiz.startWrongMode('${s.sectionId}')">刷错题</button>
+          </div>`).join('')}
+      </div>`).join('');
+
+    return `
+      <div class="stat-card-grid mb-4">
+        <div class="stat-card"><div class="stat-value">${stats.questions}</div><div class="stat-label">待清错题</div></div>
+        <div class="stat-card"><div class="stat-value">${stats.sections}</div><div class="stat-label">涉及章节</div></div>
+        <div class="stat-card"><div class="stat-value">${stats.mistakes}</div><div class="stat-label">累计答错次数</div></div>
+        <div class="stat-card"><div class="stat-value">${groups.length}</div><div class="stat-label">涉及板块</div></div>
+      </div>
+      <div class="knowledge-card mb-4">
+        <p class="card-desc">按板块分组（仅显示有错题的板块）。点击"刷错题"进入该节错题重练：答对即移出、答错次数 +1，全部清零后自动提示返回。</p>
+      </div>
+      ${groupHtml}
+      <div class="mt-4 pt-3 border-t text-right" style="border-color:var(--border)">
+        <button class="text-sm hover:underline" style="color:var(--danger)" onclick="if(confirm('确定清空整个错题本？此操作不可恢复。')){WrongBook.clear();navigateTo('roadmap');}">清空错题本</button>
+      </div>`;
   }
 
   // ========== 占位提示 ==========
