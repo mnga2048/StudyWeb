@@ -246,6 +246,8 @@
           }
       }
       container.innerHTML = html;
+      // 复制按钮注入（须在下方 renderMathInElement 之前，公式 LaTeX 源尚未被 KaTeX 替换）
+      enhanceContentBlocks(container);
 
       requestAnimationFrame(() => {
         container.style.opacity = '1';
@@ -271,6 +273,16 @@
       } else {
         window.scrollTo(0, 0);
       }
+
+      // TOC 高亮初始化 + 键盘答题后的闪烁提示（错题模式与常规模式卡片 id 同构）
+      requestAnimationFrame(() => {
+        updateTocSpy();
+        if (typeof window._quizJustAnswered === 'number') {
+          const card = document.getElementById(`quiz-card-${pageId}-${window._quizJustAnswered}`);
+          window._quizJustAnswered = null;
+          if (card) { card.classList.add('just-answered'); setTimeout(() => card.classList.remove('just-answered'), 1800); }
+        }
+      });
 
       // 搜索高亮
       if (window._lastSearchKeyword) Search.highlightContent(window._lastSearchKeyword);
@@ -421,41 +433,159 @@
   }
 
   // ========== 知识点详情页 ==========
+  // 阅读时长估算：技术正文（公式/代码/表格混合）按 400 字/分钟
+  const READ_CPM = 400;
+
   function renderDetailPage(section) {
     const isFav = Favorites.has(section.id);
     const quiz = QuizData[section.id];
     const hasContent = section.content && section.content.trim();
-    return `<div>
-      <div class="page-hero">
-        <div class="flex items-center gap-2 text-sm mb-2" style="color:var(--text-secondary)">
-          <a href="#" onclick="navigateTo('${section.parent}');return false;" style="color:var(--primary)">${section.parentTitle}</a><span>/</span><span>${section.title}</span>
+
+    // 解析正文：给 h3/h4 编锚点 id（供 TOC 跳转），顺便统计字数
+    let contentHtml = section.content || '';
+    const tocEntries = [];
+    let headingCount = 0, readMinutes = 0, charCount = 0;
+    if (hasContent) {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = section.content;
+      charCount = (tmp.textContent || '').replace(/\s+/g, '').length;
+      readMinutes = Math.max(1, Math.ceil(charCount / READ_CPM));
+      tmp.querySelectorAll('h3, h4').forEach((h, i) => {
+        const text = h.textContent.trim();
+        if (!text) return;
+        h.id = 'toc-' + i;
+        headingCount++;
+        tocEntries.push({ id: h.id, text, level: h.tagName === 'H3' ? 1 : 2 });
+      });
+      contentHtml = tmp.innerHTML;
+    }
+    if (quiz) tocEntries.push({ id: 'toc-quiz-block', text: '自测练习', level: 1 });
+    tocEntries.push({ id: 'toc-notes-block', text: '我的笔记', level: 1 });
+    const hasToc = tocEntries.length >= 3;
+
+    // 上一篇/下一篇（板块内顺序）
+    const siblings = CourseData[section.parent]?.sections || [];
+    const sIdx = siblings.findIndex(s => s.id === section.id);
+    const prev = siblings[sIdx - 1];
+    const next = siblings[sIdx + 1];
+
+    const tocHtml = hasToc ? tocEntries.map(t =>
+      `<a class="toc-link level-${t.level}" data-target="${t.id}" onclick="scrollToToc('${t.id}')">${t.text}</a>`).join('') : '';
+    const metaHtml = hasContent ? `<div class="detail-meta">
+        <span>⏱ 约 ${readMinutes} 分钟</span><span class="dm-dot">·</span><span>${charCount.toLocaleString()} 字</span>${headingCount > 0 ? `<span class="dm-dot">·</span><span>${headingCount} 个小节</span>` : ''}
+      </div>` : '';
+
+    return `<div class="detail-layout">
+      <div class="detail-main">
+        <div class="page-hero">
+          <div class="flex items-center gap-2 text-sm mb-2" style="color:var(--text-secondary)">
+            <a href="#" onclick="navigateTo('${section.parent}');return false;" style="color:var(--primary)">${section.parentTitle}</a><span>/</span><span>${section.title}</span>
+          </div>
+          <h1><span style="font-size:1.5rem">${section.icon || ''}</span> ${section.title}</h1><p>${section.desc}</p>
+          ${metaHtml}
         </div>
-        <h1><span style="font-size:1.5rem">${section.icon || ''}</span> ${section.title}</h1><p>${section.desc}</p>
-      </div>
-      ${hasContent ? `<div class="prose max-w-none">${section.content}</div>` : renderPlaceholder('本节内容建设中', '📝', '该知识点的详细讲解正在编写，可先收藏，或前往已完成的板块学习。')}
-      ${quiz ? Quiz.render(section.id, quiz) : ''}
-      ${Notes.render(section.id)}
-      <div class="mt-8 pt-6 border-t flex items-center justify-between" style="border-color:var(--border)">
-        <div class="flex items-center gap-2 text-sm" style="color:var(--text-secondary)">
-          <span>学习状态：</span>
-          ${['pending', 'learning', 'completed'].map(s => {
-            const cur = Progress.get(section.id);
-            const label = { pending: '未开始', learning: '学习中', completed: '已完成' }[s];
-            const cls = cur === s ? (s === 'completed' ? 'status-completed' : s === 'learning' ? 'status-learning' : '') : '';
-            return `<button class="status-btn ${cls}" onclick="setProgress('${section.id}','${s}',this)">${label}</button>`;
-          }).join('')}
-          <span class="mx-1">|</span>
-          <button class="star-btn ${isFav ? 'starred' : ''}" onclick="toggleFav('${section.id}')">${isFav ? '★ 已收藏' : '☆ 收藏'}</button>
-          ${isFav ? `<span class="mx-1">|</span><span class="text-xs">分类：</span>${Object.entries(Favorites.CATS).map(([k, label]) => {
-            const cur = Favorites.getCategory(section.id) || 'review';
-            const active = cur === k;
-            return `<button class="fav-cat-btn ${active ? 'fav-cat-active' : ''}" onclick="setFavCategory('${section.id}','${k}')">${label}</button>`;
-          }).join('')}` : ''}
+        ${hasToc ? `<details class="detail-toc-inline"><summary>📑 本页目录（${headingCount} 个小节）</summary>${tocHtml}</details>` : ''}
+        ${hasContent ? `<div class="prose max-w-none">${contentHtml}</div>` : renderPlaceholder('本节内容建设中', '📝', '该知识点的详细讲解正在编写，可先收藏，或前往已完成的板块学习。')}
+        ${quiz ? `<div id="toc-quiz-block">${Quiz.render(section.id, quiz)}</div>` : ''}
+        <div id="toc-notes-block">${Notes.render(section.id)}</div>
+        <div class="mt-8 pt-6 border-t flex items-center justify-between flex-wrap gap-2" style="border-color:var(--border)">
+          <div class="flex items-center gap-2 text-sm" style="color:var(--text-secondary)">
+            <span>学习状态：</span>
+            ${['pending', 'learning', 'completed'].map(s => {
+              const cur = Progress.get(section.id);
+              const label = { pending: '未开始', learning: '学习中', completed: '已完成' }[s];
+              const cls = cur === s ? (s === 'completed' ? 'status-completed' : s === 'learning' ? 'status-learning' : '') : '';
+              return `<button class="status-btn ${cls}" onclick="setProgress('${section.id}','${s}',this)">${label}</button>`;
+            }).join('')}
+            <span class="mx-1">|</span>
+            <button class="star-btn ${isFav ? 'starred' : ''}" onclick="toggleFav('${section.id}')">${isFav ? '★ 已收藏' : '☆ 收藏'}</button>
+            ${isFav ? `<span class="mx-1">|</span><span class="text-xs">分类：</span>${Object.entries(Favorites.CATS).map(([k, label]) => {
+              const cur = Favorites.getCategory(section.id) || 'review';
+              const active = cur === k;
+              return `<button class="fav-cat-btn ${active ? 'fav-cat-active' : ''}" onclick="setFavCategory('${section.id}','${k}')">${label}</button>`;
+            }).join('')}` : ''}
+          </div>
+          <button class="text-sm hover:underline" style="color:var(--primary)" onclick="navigateTo('${section.parent}')">← 返回${section.parentTitle}</button>
         </div>
-        <button class="text-sm hover:underline" style="color:var(--primary)" onclick="navigateTo('${section.parent}')">← 返回${section.parentTitle}</button>
+        <div class="prev-next-nav">
+          ${prev ? `<a class="pn-card" onclick="navigateTo('${prev.id}')"><span class="pn-label">← 上一篇</span><span class="pn-title">${prev.icon || '📄'} ${prev.title}</span></a>` : '<span class="pn-card pn-empty"></span>'}
+          ${next ? `<a class="pn-card pn-next" onclick="navigateTo('${next.id}')"><span class="pn-label">下一篇 →</span><span class="pn-title">${next.icon || '📄'} ${next.title}</span></a>` : '<span class="pn-card pn-empty"></span>'}
+        </div>
       </div>
+      ${hasToc ? `<aside class="detail-toc"><div class="toc-box"><div class="toc-title">📑 本页目录</div>${tocHtml}</div></aside>` : ''}
     </div>`;
   }
+
+  // ========== 代码块/公式块复制按钮 ==========
+  // 必须在 KaTeX 渲染前注入：公式块要在源码被替换成 KaTeX DOM 前抓取 LaTeX 文本
+  function enhanceContentBlocks(container) {
+    container.querySelectorAll('.code-block, .formula-block').forEach(block => {
+      if (block.querySelector('.copy-btn')) return;
+      let payload;
+      if (block.classList.contains('formula-block')) {
+        const clone = block.cloneNode(true);
+        clone.querySelectorAll('.formula-text').forEach(n => n.remove());
+        payload = (clone.textContent || '').trim();   // 含 $$ 定界符的 LaTeX 源
+      } else {
+        payload = (block.textContent || '').trim();   // 高亮 span 的 textContent 即纯代码
+      }
+      const btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.type = 'button';
+      btn.textContent = '复制';
+      btn.title = '复制到剪贴板';
+      btn.dataset.payload = payload;   // 挂到 DOM 便于调试与测试
+      btn.addEventListener('click', () => copyText(payload, btn));
+      block.appendChild(btn);
+    });
+  }
+
+  function copyText(text, btn) {
+    const done = ok => {
+      btn.textContent = ok ? '✓ 已复制' : '✗ 失败';
+      btn.classList.toggle('copied', !!ok);
+      setTimeout(() => { btn.textContent = '复制'; btn.classList.remove('copied'); }, 1600);
+    };
+    const fallback = () => {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta);
+      ta.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch { ok = false; }
+      ta.remove();
+      return ok;
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => done(true), () => done(fallback()));
+    } else {
+      done(fallback());
+    }
+  }
+
+  // ========== TOC 滚动高亮（scroll-spy） ==========
+  function updateTocSpy() {
+    const links = document.querySelectorAll('.toc-link[data-target]');
+    if (!links.length) return;
+    const seen = new Set();
+    const ids = [];
+    links.forEach(l => { if (!seen.has(l.dataset.target)) { seen.add(l.dataset.target); ids.push(l.dataset.target); } });
+    let active = null;
+    for (const id of ids) {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top <= 110) active = id;
+    }
+    if (!active && ids.length) active = ids[0];   // 页面顶部时高亮第一项
+    links.forEach(l => l.classList.toggle('active', l.dataset.target === active));
+  }
+  window.updateTocSpy = updateTocSpy;
+
+  window.scrollToToc = function (id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 84, behavior: 'smooth' });
+  };
 
   // ========== 工具箱页 ==========
   function renderToolsPage() {
@@ -1004,6 +1134,18 @@
       const input = document.getElementById('search-input');
       if (input) { input.focus(); input.select(); }
     }
+    // quiz 快捷键：1-4 / A-D 作答当前题，Enter 跳下一题（帮助面板打开或焦点在按钮/链接上时不响应）
+    const helpOpen = !document.getElementById('help-panel')?.classList.contains('hidden');
+    if (!helpOpen && typeof Quiz !== 'undefined') {
+      const k = e.key.toLowerCase();
+      if (['1', '2', '3', '4'].includes(k)) {
+        if (Quiz.handleKey(+k - 1)) e.preventDefault();
+      } else if (['a', 'b', 'c', 'd'].includes(k)) {
+        if (Quiz.handleKey(k.charCodeAt(0) - 97)) e.preventDefault();
+      } else if (e.key === 'Enter' && tag !== 'BUTTON' && tag !== 'A' && tag !== 'SELECT') {
+        Quiz.handleEnter();
+      }
+    }
     if (e.key === 't' || e.key === 'T') applyTheme(document.documentElement.getAttribute('data-theme') !== 'dark');
     if (e.key === '?') {
       const p = document.getElementById('help-panel');
@@ -1018,7 +1160,7 @@
     }
   });
 
-  // 回到顶部 + 阅读进度条
+  // 回到顶部 + 阅读进度条 + TOC 滚动高亮
   const backToTop = document.getElementById('back-to-top');
   window.addEventListener('scroll', () => {
     if (window.scrollY > 300) { backToTop?.classList.remove('opacity-0', 'pointer-events-none'); backToTop?.classList.add('opacity-100'); }
@@ -1027,7 +1169,8 @@
     const pct = h > 0 ? (window.scrollY / h) * 100 : 0;
     const bar = document.getElementById('reading-bar-inner');
     if (bar) bar.style.width = Math.min(100, pct) + '%';
-  });
+    updateTocSpy();
+  }, { passive: true });
   backToTop?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
   // ========== 初始化 ==========

@@ -824,3 +824,110 @@
 .fav-cat-active { background: var(--primary); color: #fff; border-color: var(--primary); }
 .fav-cat-active:hover { color: #fff; }
 
+/* ==================== UI 第一档优化（v1.1.15） ==================== */
+
+/* ====== 代码块/公式块复制按钮（悬停浮现，触屏常显） ====== */
+.copy-btn {
+  position: absolute; top: 0.5rem; right: 0.5rem;
+  padding: 0.125rem 0.55rem; font-size: 0.6875rem; border-radius: 0.375rem;
+  border: 1px solid rgba(148,163,184,0.45); background: rgba(30,41,59,0.75);
+  color: #cbd5e1; cursor: pointer; opacity: 0; transition: all 0.15s; line-height: 1.5;
+}
+.code-block:hover .copy-btn, .formula-block:hover .copy-btn,
+.copy-btn:focus-visible, .copy-btn.copied { opacity: 1; }
+.copy-btn:hover { color: #fff; border-color: #cbd5e1; }
+.copy-btn.copied { color: #34d399; border-color: #34d399; }
+.formula-block .copy-btn { background: var(--bg-card); color: var(--text-secondary); border-color: var(--border); }
+.formula-block .copy-btn:hover { color: var(--text); border-color: var(--text-secondary); }
+.formula-block .copy-btn.copied { color: var(--success); border-color: var(--success); }
+@media (hover: none) { .copy-btn { opacity: 1; } }   /* 触屏无 hover，常显 */
+
+/* ====== 详情页双栏布局：正文 + 右侧目录 ====== */
+.detail-layout { display: flex; gap: 2rem; align-items: flex-start; }
+.detail-main { flex: 1; min-width: 0; }
+.detail-toc {
+  display: none; position: sticky; top: 5.25rem;
+  width: 13.5rem; flex-shrink: 0;
+  max-height: calc(100vh - 7rem); overflow-y: auto;
+}
+@media (min-width: 1024px) { .detail-toc { display: block; } }
+
+.toc-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.625rem; }
+.toc-title {
+  font-size: 0.75rem; font-weight: 600; color: var(--text);
+  padding: 0.25rem 0.6rem 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 0.375rem;
+}
+.toc-link {
+  display: block; padding: 0.28rem 0.6rem; font-size: 0.78rem; line-height: 1.45;
+  color: var(--text-secondary); border-left: 2px solid transparent;
+  cursor: pointer; text-decoration: none; transition: all 0.15s;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.toc-link:hover { color: var(--primary); }
+.toc-link.level-2 { padding-left: 1.35rem; font-size: 0.75rem; }
+.toc-link.active { color: var(--primary); border-left-color: var(--primary); background: rgba(37,99,235,0.06); font-weight: 500; }
+/* TOC 锚点统一预留顶栏高度 */
+[id^="toc-"] { scroll-margin-top: 5.25rem; }
+
+/* 窄屏（<1024px）：目录折叠条常驻正文顶部 */
+.detail-toc-inline {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 0.75rem;
+  padding: 0.625rem 0.875rem; margin-bottom: 1.25rem;
+}
+.detail-toc-inline summary {
+  cursor: pointer; font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary);
+  user-select: none; list-style: none; display: flex; align-items: center; justify-content: space-between;
+}
+.detail-toc-inline summary::-webkit-details-marker { display: none; }
+.detail-toc-inline summary::after { content: '▾'; font-size: 0.75rem; transition: transform 0.2s; }
+.detail-toc-inline[open] summary::after { transform: rotate(180deg); }
+.detail-toc-inline .toc-link { padding: 0.3rem 0.6rem; font-size: 0.8125rem; }
+.detail-toc-inline .toc-link.level-2 { padding-left: 1.4rem; }
+@media (min-width: 1024px) { .detail-toc-inline { display: none; } }   /* 宽屏用右侧栏，不重复 */
+
+/* ====== 详情页 meta 行（阅读时长/字数/小节数） ====== */
+.detail-meta {
+  display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+  margin-top: 0.625rem; font-size: 0.78rem; color: var(--text-secondary);
+}
+.detail-meta .dm-dot { opacity: 0.55; }
+
+/* ====== 上一篇/下一篇导航 ====== */
+.prev-next-nav { display: flex; gap: 1rem; margin-top: 1.25rem; }
+.pn-card {
+  flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.25rem;
+  padding: 0.875rem 1rem; border: 1px solid var(--border); border-radius: 0.75rem;
+  background: var(--bg-card); cursor: pointer; transition: all 0.2s;
+}
+.pn-card:hover { border-color: var(--primary); box-shadow: 0 2px 12px rgba(37,99,235,0.08); }
+.pn-card.pn-next { text-align: right; }
+.pn-card.pn-empty { visibility: hidden; }   /* 无上一篇/下一篇时占位保持左右对称 */
+.pn-label { font-size: 0.7rem; color: var(--primary); font-weight: 600; }
+.pn-title {
+  font-size: 0.875rem; font-weight: 500; color: var(--text);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.pn-card:hover .pn-title { color: var(--primary); }
+
+/* ====== quiz 键盘提示与高亮 ====== */
+.quiz-kbd-hint {
+  font-size: 0.6875rem; color: var(--text-secondary);
+  padding: 0.1rem 0.5rem; border-radius: 9999px;
+  background: var(--bg); border: 1px dashed var(--border); white-space: nowrap;
+}
+@media (max-width: 768px) { .quiz-kbd-hint { display: none; } }   /* 手机无键盘 */
+.quiz-card.just-answered { animation: quizFlash 1.8s ease; }
+.quiz-card.quiz-focus { animation: quizFlash 1.6s ease; }
+@keyframes quizFlash {
+  0% { box-shadow: 0 0 0 0 rgba(37,99,235,0.55); border-color: var(--primary); }
+  35% { box-shadow: 0 0 0 6px rgba(37,99,235,0.12); border-color: var(--primary); }
+  100% { box-shadow: 0 0 0 0 rgba(37,99,235,0); }
+}
+
+/* 手机端：上下篇导航堆叠 */
+@media (max-width: 640px) {
+  .prev-next-nav { flex-direction: column-reverse; }   /* 下一篇在上 */
+  .pn-card.pn-empty { display: none; }
+  .pn-card.pn-next { text-align: left; }
+}
+

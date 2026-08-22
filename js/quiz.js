@@ -58,6 +58,7 @@ const Quiz = {
         <h2 class="text-lg font-semibold mb-4 flex items-center gap-2 flex-wrap">
           <svg class="w-5 h-5" style="color:var(--primary)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           自测练习
+          <span class="quiz-kbd-hint">⌨ 1-4 作答 · Enter 下一题</span>
           <span class="quiz-score ${answered === 0 ? '' : (correctCount / answered >= 0.6 ? 'pass' : 'fail')} ml-auto" style="${answered === 0 ? 'display:none' : ''}">${correctCount}/${answered}</span>
           ${wrongCount > 0 ? `<button class="quiz-wrong-btn" onclick="Quiz.startWrongMode('${sectionId}')">📕 只刷错题 (${wrongCount})</button>` : ''}
         </h2>
@@ -79,7 +80,7 @@ const Quiz = {
       (opts.wrongMode && answered && prevResult.correct && opts.resolved) ? '<span class="wrong-resolved-badge">✓ 已移出错题本</span>' : '',
     ].filter(Boolean).join('');
     return `
-      <div class="quiz-card">
+      <div class="quiz-card" id="quiz-card-${sectionId}-${qi}" data-quiz-section="${sectionId}" data-quiz-q="${qi}" data-quiz-answer="${q.answer}">
         <div class="quiz-question">${qi + 1}. ${q.question} ${badges}</div>
         <div class="space-y-2">
           ${q.options.map((opt, oi) => {
@@ -111,7 +112,8 @@ const Quiz = {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
     if (isCorrect) WrongBook.resolve(sectionId, qi);
     else WrongBook.record(sectionId, qi);
-    // 重新渲染整页以更新得分
+    // 重新渲染整页以更新得分；标记刚答的题，渲染后闪烁高亮
+    window._quizJustAnswered = qi;
     navigateTo(sectionId);
   },
 
@@ -137,7 +139,38 @@ const Quiz = {
     else WrongBook.record(sectionId, qi);
     if (!this._wrongSession) this._wrongSession = {};
     this._wrongSession[qi] = { selected, correct: isCorrect };
+    window._quizJustAnswered = qi;
     navigateTo(sectionId);
+  },
+
+  // ============ 键盘快捷键（app.js keydown 委托） ============
+
+  // 1-4 / A-D 作答：作用于当前页第一个未作答的题（已答的题锁定不再记录）
+  handleKey(optionIdx) {
+    const sectionId = this.wrongMode || document.querySelector('.quiz-card')?.dataset.quizSection;
+    if (!sectionId || !QuizData[sectionId]) return false;
+    const cards = [...document.querySelectorAll(`.quiz-card[data-quiz-section="${sectionId}"]`)];
+    const card = cards.find(c => !c.querySelector('.quiz-option.disabled'));
+    if (!card) return false;
+    if (optionIdx >= card.querySelectorAll('.quiz-option').length) return false;
+    const qi = +card.dataset.quizQ;
+    const ans = +card.dataset.quizAnswer;
+    if (this.wrongMode === sectionId) this.answerWrong(sectionId, qi, optionIdx, ans);
+    else this.answer(sectionId, qi, optionIdx, ans);
+    return true;
+  },
+
+  // Enter：平滑滚动到下一个未作答的题（全部答完则到底部得分区）
+  handleEnter() {
+    const cards = [...document.querySelectorAll('.quiz-card')];
+    if (!cards.length) return false;
+    const unanswered = cards.filter(c => !c.querySelector('.quiz-option.disabled'));
+    const pick = unanswered.find(c => c.getBoundingClientRect().top > 90) || unanswered[unanswered.length - 1];
+    if (!pick) return false;
+    window.scrollTo({ top: pick.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' });
+    pick.classList.add('quiz-focus');
+    setTimeout(() => pick.classList.remove('quiz-focus'), 1600);
+    return true;
   },
 
   // 渲染错题重练：展示"当前错题 ∪ 本次会话已答"，答对的题保留展示并标记已移出
@@ -165,6 +198,7 @@ const Quiz = {
         <h2 class="text-lg font-semibold mb-4 flex items-center gap-2 flex-wrap">
           <svg class="w-5 h-5" style="color:var(--danger)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           错题重练
+          <span class="quiz-kbd-hint">⌨ 1-4 作答 · Enter 下一题</span>
           <span class="wrong-mode-tag">${remaining === 0 ? '已清零' : `${remaining} 题待清`}</span>
           <button class="quiz-wrong-btn exit ml-auto" onclick="Quiz.exitWrongMode('${sectionId}')">← 返回全部题目</button>
         </h2>
